@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Clipmark.App/Clipmark.App.csproj" />
+    <Project Path="src/Clipmark.Core/Clipmark.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Clipmark.Core.Tests/Clipmark.Core.Tests.csproj" />
+  </Folder>
+</Solution>

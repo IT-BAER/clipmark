@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Clipmark.App (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "Clipmark.App (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
