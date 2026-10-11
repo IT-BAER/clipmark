@@ -41,6 +41,10 @@
                 </DropDownButton>
             </StackPanel>
             <StackPanel x:Name="EditTools" Grid.Column="1" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
+                <ToggleButton x:Name="SelectButton" Tag="Select" Click="OnToolClick"
+                              ToolTipService.ToolTip="Select (V)" AutomationProperties.Name="Select">
+                    <FontIcon FontSize="16" Glyph="&#xE8B3;" />
+                </ToggleButton>
                 <ToggleButton x:Name="PenButton" Tag="Pen" Click="OnToolClick"
                               ToolTipService.ToolTip="Pen (P)" AutomationProperties.Name="Pen">
                     <FontIcon FontSize="16" Glyph="&#xEE56;" />
@@ -53,15 +57,27 @@
                               ToolTipService.ToolTip="Eraser (E)" AutomationProperties.Name="Eraser">
                     <FontIcon FontSize="16" Glyph="&#xE75C;" />
                 </ToggleButton>
+                <ToggleButton x:Name="TextButton" Tag="Text" Click="OnToolClick"
+                              ToolTipService.ToolTip="Text (T)" AutomationProperties.Name="Text">
+                    <FontIcon FontSize="16" Glyph="&#xE8D2;" />
+                </ToggleButton>
                 <ToggleSplitButton x:Name="ShapeButton" IsCheckedChanged="OnShapeCheckedChanged"
                                    ToolTipService.ToolTip="Shapes" AutomationProperties.Name="Shapes">
                     <ToggleSplitButton.Flyout>
                         <MenuFlyout x:Name="ShapeMenu" Placement="Bottom" />
                     </ToggleSplitButton.Flyout>
                 </ToggleSplitButton>
+                <ToggleButton x:Name="EyedropperButton" Tag="Eyedropper" Click="OnToolClick"
+                              ToolTipService.ToolTip="Eyedropper (I): copies the color as #RRGGBB" AutomationProperties.Name="Eyedropper">
+                    <FontIcon FontSize="16" Glyph="&#xEF3C;" />
+                </ToggleButton>
+                <ToggleButton x:Name="BucketButton" Tag="Bucket" Click="OnToolClick"
+                              ToolTipService.ToolTip="Fill (G): a rectangle or oval, else the canvas background" AutomationProperties.Name="Fill">
+                    <FontIcon FontSize="16" Glyph="&#xE771;" />
+                </ToggleButton>
                 <DropDownButton x:Name="StyleButton" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
                     <DropDownButton.Flyout>
-                        <MenuFlyout x:Name="StyleMenu" Placement="Bottom" />
+                        <Flyout x:Name="StyleFlyout" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
                 <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
@@ -77,6 +93,20 @@
                         ToolTipService.ToolTip="Cancel crop (Esc)" AutomationProperties.Name="Cancel crop">
                     <FontIcon FontSize="16" Glyph="&#xE711;" />
                 </Button>
+                <StackPanel x:Name="CropFields" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
+                    <TextBlock Text="X" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropX" Tag="X" PlaceholderText="X" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
+                               ToolTipService.ToolTip="Left edge (px); arithmetic such as 100+20 works" AutomationProperties.Name="Crop X" />
+                    <TextBlock Text="Y" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropY" Tag="Y" PlaceholderText="Y" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
+                               ToolTipService.ToolTip="Top edge (px)" AutomationProperties.Name="Crop Y" />
+                    <TextBlock Text="W" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropW" Tag="W" PlaceholderText="W" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
+                               ToolTipService.ToolTip="Width (px); arithmetic such as 800+20 works" AutomationProperties.Name="Crop width" />
+                    <TextBlock Text="H" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropH" Tag="H" PlaceholderText="H" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
+                               ToolTipService.ToolTip="Height (px)" AutomationProperties.Name="Crop height" />
+                </StackPanel>
                 <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
                 <Button x:Name="UndoButton" Click="OnUndo" IsEnabled="False"
                         ToolTipService.ToolTip="Undo (Ctrl+Z)" AutomationProperties.Name="Undo">

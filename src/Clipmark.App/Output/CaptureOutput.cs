@@ -75,10 +75,7 @@ internal static class CaptureOutput
     {
         nint pngMem = ToGlobal(png);
         nint dibMem = ToGlobal(ToDib(image));
-        bool opened = false;
-        for (int attempt = 0; attempt < 10 && !(opened = OpenClipboard(owner)); attempt++)
-            Thread.Sleep(20); // another app holds the clipboard
-        if (!opened)
+        if (!Open(owner))
         {
             GlobalFree(pngMem);
             GlobalFree(dibMem);
@@ -101,6 +98,40 @@ internal static class CaptureOutput
         {
             CloseClipboard();
         }
+    }
+
+    /// <summary>Puts Unicode text on the clipboard.</summary>
+    public static bool CopyTextToClipboard(nint owner, string text)
+    {
+        nint mem = ToGlobal(System.Text.Encoding.Unicode.GetBytes(text + "\0"));
+        if (!Open(owner))
+        {
+            GlobalFree(mem);
+            return false;
+        }
+        try
+        {
+            EmptyClipboard();
+            if (SetClipboardData(CF_UNICODETEXT, mem) != 0)
+                return true;
+            GlobalFree(mem);
+            return false;
+        }
+        finally
+        {
+            CloseClipboard();
+        }
+    }
+
+    private static bool Open(nint owner)
+    {
+        for (int attempt = 0; attempt < 10; attempt++)
+        {
+            if (OpenClipboard(owner))
+                return true;
+            Thread.Sleep(20); // another app holds the clipboard
+        }
+        return false;
     }
 
     /// <summary>Bottom-up 32 bpp BI_RGB DIB; transparent pixels become white because most DIB readers ignore alpha.</summary>

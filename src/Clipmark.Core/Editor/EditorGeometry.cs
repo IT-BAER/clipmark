@@ -29,6 +29,82 @@ public static class EditorGeometry
         return (end + head * Rotate(back, HeadAngle), end + head * Rotate(back, -HeadAngle));
     }
 
+    /// <summary>Area the object paints: its outline points mapped to world, grown by half the width (miter corners of a rotated rectangle by more).</summary>
+    public static FloatRect Extent(EditorObject o)
+    {
+        float grow = o is Shape { Kind: ShapeKind.Rectangle } && o.Rotation != 0 ? o.Width / 2 * MathF.Sqrt(2) : HalfStroke(o);
+        var r = new Vector2(grow);
+        var min = new Vector2(float.PositiveInfinity);
+        var max = new Vector2(float.NegativeInfinity);
+        foreach (var local in Outline(o))
+        {
+            var p = ToWorld(o, local);
+            min = Vector2.Min(min, p - r);
+            max = Vector2.Max(max, p + r);
+        }
+        return new FloatRect(min, max);
+    }
+
+    /// <summary>Unrotated geometry box without the width: stroke point bounds, or the Start/End box of a shape.</summary>
+    public static FloatRect LocalBox(EditorObject o) => o switch
+    {
+        Stroke { Points.Length: > 0 } s => new FloatRect(
+            s.Points.Aggregate(Vector2.Min), s.Points.Aggregate(Vector2.Max)),
+        Shape s => FloatRect.FromCorners(s.Start, s.End),
+        TextObject t => new FloatRect(t.Position, t.Position + t.Size),
+        _ => default,
+    };
+
+    /// <summary>How far paint reaches past the geometry: half the stroke width; 0 for text, whose Width is its font size.</summary>
+    public static float HalfStroke(EditorObject o) => o is TextObject ? 0 : o.Width / 2;
+
+    /// <summary>World point of a normalized anchor in the target's LocalBox.</summary>
+    public static Vector2 AnchorPoint(EditorObject target, Vector2 anchor)
+    {
+        var box = LocalBox(target);
+        return ToWorld(target, box.Min + anchor * (box.Max - box.Min));
+    }
+
+    /// <summary>Normalized anchor of a world point; a zero-size box side maps to its middle.</summary>
+    public static Vector2 AnchorOf(EditorObject target, Vector2 world)
+    {
+        var box = LocalBox(target);
+        var size = box.Max - box.Min;
+        var p = ToLocal(target, world) - box.Min;
+        return new(size.X > 0 ? p.X / size.X : 0.5f, size.Y > 0 ? p.Y / size.Y : 0.5f);
+    }
+
+    public static Vector2 ToWorld(EditorObject o, Vector2 local) => RotateAbout(o, local, o.Rotation);
+
+    public static Vector2 ToLocal(EditorObject o, Vector2 world) => RotateAbout(o, world, -o.Rotation);
+
+    private static Vector2 RotateAbout(EditorObject o, Vector2 p, float radians)
+    {
+        if (radians == 0) return p;
+        var box = LocalBox(o);
+        return Vector2.Transform(p, Matrix3x2.CreateRotation(radians, (box.Min + box.Max) / 2));
+    }
+
+    // Round caps and joins: every painted pixel lies within Width/2 of one of these points.
+    private static IEnumerable<Vector2> Outline(EditorObject o)
+    {
+        switch (o)
+        {
+            case Stroke s:
+                return s.Points;
+            case Shape { Kind: ShapeKind.Arrow } s:
+                var (left, right) = ArrowHead(s.Start, s.End, s.Width);
+                return [s.Start, s.End, left, right];
+            case Shape s:
+                return [s.Start, s.End, new(s.Start.X, s.End.Y), new(s.End.X, s.Start.Y)];
+            case TextObject t:
+                var max = t.Position + t.Size;
+                return [t.Position, max, new(t.Position.X, max.Y), new(max.X, t.Position.Y)];
+            default:
+                return [];
+        }
+    }
+
     public static ImmutableArray<Vector2> Thin(IEnumerable<Vector2> points, float minDistance)
     {
         var kept = ImmutableArray.CreateBuilder<Vector2>();

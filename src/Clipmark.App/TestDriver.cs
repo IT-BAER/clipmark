@@ -20,9 +20,12 @@ namespace Clipmark.App;
 /// <summary>
 /// Debug test mode (CLIPMARK_TEST_DIR): the cloaked app polls DIR\cmd.txt, runs it, deletes it and writes DIR\result.txt.
 /// Commands: open FILE | click NAME (automation name or menu item text) | expand NAME (open a split/drop-down menu)
-/// | drag [shift] X,Y X,Y... (image px)
+/// | drag [shift] [ctrl] [hold] X,Y X,Y... (image px; a point may be @rotate, @start, @end or @CropHandleName of the selection, plus an optional +DX,DY;
+/// hold = no release, to screenshot the drag) | release | hover X,Y (eyedropper loupe) | dblclick X,Y | type TEXT | nokey NAME [ctrl] (must not be handled)
+/// | assert count N | assert editing | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
 /// | shot FILE (window, plus FILE-popupN.png per open popup) | save FILE (export PNG) | wait MS
-/// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty.
+/// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
+/// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -90,23 +93,72 @@ internal sealed class TestDriver
                 break;
             case "drag":
                 var editor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
-                bool shift = arg.StartsWith("shift ");
-                var points = arg[(shift ? 6 : 0)..].Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(p => p.Split(','))
-                    .Select(p => new Vector2(float.Parse(p[0], CultureInfo.InvariantCulture), float.Parse(p[1], CultureInfo.InvariantCulture)))
+                var words = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                bool shift = words.Contains("shift"), ctrl = words.Contains("ctrl");
+                static Vector2 Parse(string xy) =>
+                    new(float.Parse(xy.Split(',')[0], CultureInfo.InvariantCulture), float.Parse(xy.Split(',')[1], CultureInfo.InvariantCulture));
+                var points = words.Where(w => w.Contains(',') || w.StartsWith('@'))
+                    .Select(w => w.StartsWith('@')
+                        ? (editor.SelectionHandle(w[1..].Split('+')[0]) ?? throw new InvalidOperationException($"no handle {w}"))
+                            + (w.Contains('+') ? Parse(w.Split('+')[1]) : Vector2.Zero)
+                        : Parse(w))
                     .ToArray();
-                editor.Press(points[0], shift);
+                editor.Press(points[0], shift, ctrl);
                 foreach (var p in points.Skip(1))
                     editor.Drag(p, shift);
-                editor.Release();
+                if (!words.Contains("hold"))
+                    editor.Release();
+                break;
+            case "hover":
+                var at3 = arg.Split(',');
+                (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Hover(
+                    new Vector2(float.Parse(at3[0], CultureInfo.InvariantCulture), float.Parse(at3[1], CultureInfo.InvariantCulture)));
+                await Task.Delay(100);
+                break;
+            case "dblclick":
+                var at2 = arg.Split(',');
+                (_page.Editor ?? throw new InvalidOperationException("no capture shown")).DoubleClick(
+                    new Vector2(float.Parse(at2[0], CultureInfo.InvariantCulture), float.Parse(at2[1], CultureInfo.InvariantCulture)));
+                await Task.Delay(200);
+                break;
+            case "type":
+                // type TEXT: replaces the text being edited; \n is a line break.
+                var textBox = _page.Editor?.TextEditor ?? throw new InvalidOperationException("no text being edited");
+                textBox.Text = arg.Replace("\\n", "\r");
+                break;
+            case "nokey":
+                var noKeyWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (_page.RunKey(Enum.Parse<Windows.System.VirtualKey>(noKeyWords[0]),
+                    noKeyWords.Contains("ctrl") ? Windows.System.VirtualKeyModifiers.Control : Windows.System.VirtualKeyModifiers.None))
+                    throw new InvalidOperationException("key was handled");
+                break;
+            case "assert" when arg.StartsWith("count "):
+                int count = _page.Editor?.Document?.Objects.Count ?? 0;
+                if (count != int.Parse(arg[6..], CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException($"{count} objects");
+                break;
+            case "assert" when arg == "editing":
+                if (_page.Editor?.IsEditingText != true)
+                    throw new InvalidOperationException("not editing text");
+                break;
+            case "release":
+                (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
                 break;
             case "shot":
                 await RenderAsync((UIElement)_page.XamlRoot.Content, arg);
                 int n = 0;
                 foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(_page.XamlRoot))
                 {
-                    if (popup.Child is not null)
-                        await RenderAsync(popup.Child, Path.ChangeExtension(arg, null) + $"-popup{n++}.png");
+                    string popupPath = Path.ChangeExtension(arg, null) + $"-popup{n++}.png";
+                    try
+                    {
+                        if (popup.Child is not null)
+                            await RenderAsync(popup.Child, popupPath);
+                    }
+                    catch (ArgumentException e) // RenderTargetBitmap cannot capture some content (ColorPicker ring)
+                    {
+                        File.WriteAllText(Path.ChangeExtension(popupPath, ".txt"), e.Message);
+                    }
                 }
                 break;
             case "save":
@@ -121,6 +173,55 @@ internal sealed class TestDriver
                 Interop.Native.PostMessage(Win32Interop.GetWindowFromWindowId(_page.XamlRoot.ContentIslandEnvironment.AppWindowId),
                     Interop.Native.WM_CLOSE, 0, 0);
                 await Task.Delay(500);
+                break;
+            case "key":
+                var keyWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var modifiers = Windows.System.VirtualKeyModifiers.None;
+                if (keyWords.Contains("shift")) modifiers |= Windows.System.VirtualKeyModifiers.Shift;
+                if (keyWords.Contains("ctrl")) modifiers |= Windows.System.VirtualKeyModifiers.Control;
+                if (!_page.RunKey(Enum.Parse<Windows.System.VirtualKey>(keyWords[0]), modifiers))
+                    throw new InvalidOperationException("key not handled");
+                await Task.Delay(100);
+                break;
+            case "wheel":
+                // wheel DELTA X,Y [shift]: the canvas wheel handling with a pointer at image px X,Y.
+                var wheelWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var at = wheelWords[1].Split(',');
+                _page.Wheel(int.Parse(wheelWords[0], CultureInfo.InvariantCulture), wheelWords.Contains("shift"),
+                    new Vector2(float.Parse(at[0], CultureInfo.InvariantCulture), float.Parse(at[1], CultureInfo.InvariantCulture)));
+                break;
+            case "color":
+                // color #RRGGBB: sets the open style flyout's color ring.
+                var picker = Descendants(VisualTreeHelper.GetOpenPopupsForXamlRoot(_page.XamlRoot).First().Child).OfType<ColorPicker>().First();
+                var hex = Convert.FromHexString(arg.TrimStart('#'));
+                picker.Color = Windows.UI.Color.FromArgb(255, hex[0], hex[1], hex[2]);
+                await Task.Delay(100);
+                break;
+            case "assert" when arg.StartsWith("has "):
+                if (Find(arg[4..]) is null)
+                    throw new InvalidOperationException("element not found");
+                break;
+            case "set":
+                // NAME may contain spaces: the value is the last word. The NumberBox evaluates on losing focus.
+                int cut = arg.LastIndexOf(' ');
+                var box = Find(arg[..cut]) as NumberBox ?? throw new InvalidOperationException("number box not found");
+                box.Focus(FocusState.Programmatic);
+                await Task.Delay(100);
+                var input = Descendants(box).OfType<TextBox>().First();
+                input.Text = arg[(cut + 1)..];
+                ((Control?)Find("Apply crop") ?? throw new InvalidOperationException("no focus target")).Focus(FocusState.Programmatic);
+                await Task.Delay(200);
+                break;
+            case "assert" when arg.StartsWith("crop "):
+                var frame = _page.Editor?.CropFrame ?? throw new InvalidOperationException("not cropping");
+                string actual = $"{frame.X},{frame.Y},{frame.Width},{frame.Height}";
+                if (actual != arg[5..])
+                    throw new InvalidOperationException($"crop frame is {actual}");
+                break;
+            case "assert" when arg.StartsWith("selected "):
+                int selected = _page.Editor?.Selection?.Selected.Count ?? 0;
+                if (selected != int.Parse(arg[9..], CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException($"{selected} selected");
                 break;
             case "assert":
                 string state = _page.Editor?.Document is not { } doc ? "empty" : doc.IsDirty ? "dirty" : "clean";
@@ -156,6 +257,17 @@ internal sealed class TestDriver
                 queue.Enqueue(VisualTreeHelper.GetChild(node, i));
         }
         return null;
+    }
+
+    private static IEnumerable<DependencyObject> Descendants(DependencyObject root)
+    {
+        for (int i = 0; i < VisualTreeHelper.GetChildrenCount(root); i++)
+        {
+            var child = VisualTreeHelper.GetChild(root, i);
+            yield return child;
+            foreach (var d in Descendants(child))
+                yield return d;
+        }
     }
 
     private static void Click(FrameworkElement element, bool open)

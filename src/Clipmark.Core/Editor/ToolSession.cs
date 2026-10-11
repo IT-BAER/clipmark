@@ -2,7 +2,8 @@ using System.Numerics;
 
 namespace Clipmark.Core.Editor;
 
-public enum EditorTool { Pen, Highlighter, Eraser, Rectangle, Ellipse, Line, Arrow }
+/// <summary>Shape tools come last (Rectangle and up); Text, Eyedropper and Bucket act on a click in the app, not in a drag session.</summary>
+public enum EditorTool { Select, Pen, Highlighter, Eraser, Text, Eyedropper, Bucket, Rectangle, Ellipse, Line, Arrow }
 
 /// <summary>One pointer drag with the current tool; commits to the document on <see cref="End"/> as one undo step.</summary>
 public sealed class ToolSession(EditorDocument document)
@@ -16,6 +17,8 @@ public sealed class ToolSession(EditorDocument document)
     public EditorTool Tool { get; set; }
     public Rgba Color { get; set; }
     public float Width { get; set; }
+    /// <summary>Distance in image px within which a line / arrow end attaches to an object; the app scales it with the zoom.</summary>
+    public float SnapTolerance { get; set; } = 6;
     public bool IsActive { get; private set; }
 
     /// <summary>In-progress stroke or shape (Id 0), drawn on top until the drag ends.</summary>
@@ -93,7 +96,12 @@ public sealed class ToolSession(EditorDocument document)
                 };
                 if (shift && shape is ShapeKind.Line or ShapeKind.Arrow)
                     end = EditorGeometry.SnapAngle(start, end);
-                Live = new Shape(0, shape, Color, Width, start, end);
+                Live = shape is ShapeKind.Line or ShapeKind.Arrow
+                    ? new Shape(0, shape, Color, Width, start, end)
+                    {
+                        StartAttach = document.Attach(start, SnapTolerance), EndAttach = document.Attach(end, SnapTolerance),
+                    }
+                    : new Shape(0, shape, Color, Width, start, end);
                 break;
         }
     }

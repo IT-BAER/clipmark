@@ -38,15 +38,36 @@ public sealed partial class MainPage : Page
     ];
 
     private static readonly string[] WidthNames = ["Thin", "Medium", "Thick"];
-    private static readonly float[] PenWidths = [2, 4, 8], HighlighterWidths = [12, 20, 32];
+    private static readonly float[] PenWidths = [2, 4, 8], HighlighterWidths = [12, 20, 32], TextSizes = [16, 24, 40];
 
-    // Per tool group (0 pen, 1 highlighter, 2 shapes): index into QuickColors and WidthNames.
-    private readonly int[] _colorIndex = [2, 3, 2];
-    private readonly int[] _widthIndex = [1, 1, 1];
+    private const float MaxStrokeWidth = 96;
+
+    // Per tool group (0 pen, 1 highlighter, 2 shapes, 3 text, 4 fill): color and stroke width (font size for text, unused for fill).
+    private readonly Rgba[] _color = [QuickColors[2].Color, QuickColors[3].Color, QuickColors[2].Color, QuickColors[2].Color, QuickColors[3].Color];
+    private readonly float[] _width = [PenWidths[1], HighlighterWidths[1], PenWidths[1], TextSizes[1], PenWidths[1]];
+    private readonly List<Button> _swatches = [], _presets = [];
+    // Built on first open of the style flyout (the color picker costs start time).
+    private ColorPicker? _picker;
+    private Slider? _widthSlider;
+    private static ColorPicker NewPicker() => new()
+    {
+        ColorSpectrumShape = ColorSpectrumShape.Ring, IsAlphaEnabled = false, IsMoreButtonVisible = false,
+        IsColorChannelTextInputVisible = false, IsHexInputVisible = true, Visibility = Visibility.Collapsed,
+    };
+    private bool _syncingStyle;
     private EditorTool _tool = EditorTool.Pen;
     private EditorTool _shape = EditorTool.Rectangle;
 
-    private int Group => _tool switch { EditorTool.Pen => 0, EditorTool.Highlighter => 1, _ => 2 };
+    private int Group => _tool switch { EditorTool.Pen => 0, EditorTool.Highlighter => 1, EditorTool.Text => 3, EditorTool.Bucket => 4, _ => 2 };
+
+    private static float[] PresetsFor(int group) => group switch { 1 => HighlighterWidths, 3 => TextSizes, _ => PenWidths };
+
+    private static float[] WidthsFor(EditorObject o) => o switch
+    {
+        Stroke { Kind: StrokeKind.Highlighter } => HighlighterWidths,
+        TextObject => TextSizes,
+        _ => PenWidths,
+    };
 
     public MainPage()
     {
@@ -70,34 +91,39 @@ public sealed partial class MainPage : Page
             ShapeMenu.Items.Add(item);
             Shortcut(key, VirtualKeyModifiers.None, () => SelectTool(tool));
         }
-        for (int i = 0; i < QuickColors.Length; i++)
+        StyleFlyout.Opening += (_, _) =>
         {
-            int index = i;
-            var item = new MenuFlyoutItem
+            if (StyleFlyout.Content is null)
             {
-                Text = QuickColors[i].Name,
-                Icon = new FontIcon { Glyph = "", Foreground = new SolidColorBrush(EditorCanvas.ToColor(QuickColors[i].Color)) },
-            };
-            item.Click += (_, _) => { _colorIndex[Group] = index; ApplyTool(); };
-            StyleMenu.Items.Add(item);
-        }
-        StyleMenu.Items.Add(new MenuFlyoutSeparator());
-        for (int i = 0; i < WidthNames.Length; i++)
+                BuildStyleFlyout();
+                ApplyTool();
+            }
+        };
+        Shortcut(VirtualKey.V, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Select));
+        Shortcut(VirtualKey.A, VirtualKeyModifiers.Control, () =>
         {
-            int index = i;
-            var item = new MenuFlyoutItem { Text = WidthNames[i] };
-            item.Click += (_, _) => { _widthIndex[Group] = index; ApplyTool(); };
-            StyleMenu.Items.Add(item);
-        }
+            SelectTool(EditorTool.Select);
+            _editor?.Select(s => s.SelectAll());
+        });
         Shortcut(VirtualKey.P, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Pen));
         Shortcut(VirtualKey.H, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Highlighter));
         Shortcut(VirtualKey.E, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Eraser));
+        Shortcut(VirtualKey.T, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Text));
+        Shortcut(VirtualKey.I, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Eyedropper));
+        Shortcut(VirtualKey.G, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Bucket));
         Shortcut(VirtualKey.Z, VirtualKeyModifiers.Control, () => _editor?.Undo());
         Shortcut(VirtualKey.Y, VirtualKeyModifiers.Control, () => _editor?.Redo());
         Shortcut(VirtualKey.C, VirtualKeyModifiers.Control, () => _ = CopyAsync());
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control, () => _ = SaveAsync());
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
-        PreviewKeyDown += OnCropKey;
+        // On the window root: after a canvas click nothing in the page has focus and keys start at the root.
+        KeyEventHandler editKeys = (_, e) =>
+        {
+            if (!e.Handled)
+                e.Handled = HandleKey(e.Key, Modifiers());
+        };
+        Loaded += (_, _) => ((UIElement)XamlRoot.Content).PreviewKeyDown += editKeys;
+        Unloaded += (_, _) => ((UIElement)XamlRoot.Content).PreviewKeyDown -= editKeys;
         KeyboardAcceleratorPlacementMode = KeyboardAcceleratorPlacementMode.Hidden;
         ApplyTool();
 #if DEBUG
@@ -149,9 +175,18 @@ public sealed partial class MainPage : Page
         _editor?.Close();
         _editor = new EditorCanvas(path);
         _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); };
+        _editor.CropFrameChanged += SyncCropFields;
+        _editor.ColorPicked += OnColorPicked;
+        _editor.Control.PointerWheelChanged += (_, e) =>
+        {
+            if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0 || _editor is not { } editor)
+                return; // Ctrl+wheel zooms in OnScrollerWheel
+            e.Handled = true; // keeps the scroll viewer from scrolling
+            Wheel(e.GetCurrentPoint(editor.Control).Properties.MouseWheelDelta, (e.KeyModifiers & VirtualKeyModifiers.Shift) != 0, editor.PointOf(e));
+        };
         ApplyTool();
         UpdateHistory();
-        ImageScroller.Content = _editor.Control;
+        ImageScroller.Content = _editor.Host;
         Hint.Visibility = Visibility.Collapsed;
         ImageScroller.Visibility = Visibility.Visible;
         EditTools.Visibility = Visibility.Visible;
@@ -222,36 +257,113 @@ public sealed partial class MainPage : Page
             ImageScroller.VerticalOffset + after.Y - before.Y, null, true);
     }
 
+    private readonly Dictionary<(VirtualKey, VirtualKeyModifiers), Func<bool>> _shortcuts = [];
+
     /// <summary>Page-wide shortcut; unless <paramref name="needsCapture"/> is false it does nothing until a capture is shown.</summary>
+    /// <remarks>Shortcuts are off while text is typed (text tool or a text field), so letters and Ctrl+Z / C / A reach the field.</remarks>
     private void Shortcut(VirtualKey key, VirtualKeyModifiers modifiers, Action action, bool needsCapture = true)
     {
-        var accelerator = new KeyboardAccelerator { Key = key, Modifiers = modifiers };
-        accelerator.Invoked += (_, e) =>
+        bool Run()
         {
-            e.Handled = true;
+            if (Typing)
+                return false;
             if (_editor is not null || !needsCapture)
                 action();
-        };
+            return true;
+        }
+        _shortcuts[(key, modifiers)] = Run;
+        var accelerator = new KeyboardAccelerator { Key = key, Modifiers = modifiers };
+        accelerator.Invoked += (_, e) => e.Handled = Run();
         KeyboardAccelerators.Add(accelerator);
     }
 
-    /// <summary>Enter applies and Esc cancels a crop; tunneling, so a focused button (often Crop itself) does not take Enter first.</summary>
-    private void OnCropKey(object sender, KeyRoutedEventArgs e)
+    private bool Typing => _editor?.IsEditingText == true || (XamlRoot is not null && FocusManager.GetFocusedElement(XamlRoot) is TextBox);
+
+    private static VirtualKeyModifiers Modifiers()
     {
-        if (!Cropping || e.Key is not (VirtualKey.Enter or VirtualKey.Escape))
-            return;
-        e.Handled = true;
-        if (e.Key == VirtualKey.Enter)
-            _editor?.ApplyCrop();
-        else
-            _editor?.CancelCrop();
+        var modifiers = VirtualKeyModifiers.None;
+        if (Down(VirtualKey.Shift)) modifiers |= VirtualKeyModifiers.Shift;
+        if (Down(VirtualKey.Control)) modifiers |= VirtualKeyModifiers.Control;
+        if (Down(VirtualKey.Menu)) modifiers |= VirtualKeyModifiers.Menu;
+        return modifiers;
+
+        static bool Down(VirtualKey k) =>
+            Microsoft.UI.Input.InputKeyboardSource.GetKeyStateForCurrentThread(k).HasFlag(Windows.UI.Core.CoreVirtualKeyStates.Down);
+    }
+
+    /// <summary>
+    /// Editing keys, tunneling so a focused button or the scroll viewer does not take them first: Enter / Esc in crop mode;
+    /// with a selection arrows nudge (Shift = 10 px), Page Up / Down reorder (Shift = front / back), Del deletes, Esc deselects.
+    /// </summary>
+    internal bool HandleKey(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (_editor is null)
+            return false;
+        // Text being edited keeps every key except Esc, which commits it.
+        if (_editor.IsEditingText)
+        {
+            if (key != VirtualKey.Escape)
+                return false;
+            _editor.CommitText();
+            return true;
+        }
+        // A focused text field keeps its editing keys (NumberBox evaluates on Enter); Esc still leaves the mode.
+        if (key != VirtualKey.Escape && FocusManager.GetFocusedElement(XamlRoot) is TextBox)
+            return false;
+        if (Cropping)
+        {
+            if (key == VirtualKey.Enter)
+                _editor.ApplyCrop();
+            else if (key == VirtualKey.Escape)
+                _editor.CancelCrop();
+            else
+                return false;
+            return true;
+        }
+        if (_tool == EditorTool.Eyedropper && key == VirtualKey.Escape)
+        {
+            SelectTool(_toolBeforePick);
+            return true;
+        }
+        if (_tool != EditorTool.Select || _editor.Selection is not { Selected.Count: > 0 })
+            return false;
+        bool shift = (modifiers & VirtualKeyModifiers.Shift) != 0;
+        float step = shift ? 10 : 1;
+        Action<SelectionSession>? command = key switch
+        {
+            VirtualKey.Left => s => s.Nudge(new(-step, 0)),
+            VirtualKey.Right => s => s.Nudge(new(step, 0)),
+            VirtualKey.Up => s => s.Nudge(new(0, -step)),
+            VirtualKey.Down => s => s.Nudge(new(0, step)),
+            VirtualKey.PageUp => s => s.Reorder(shift ? ZOrder.Front : ZOrder.Up),
+            VirtualKey.PageDown => s => s.Reorder(shift ? ZOrder.Back : ZOrder.Down),
+            VirtualKey.Delete => s => s.Delete(),
+            VirtualKey.Escape => s => s.Clear(),
+            _ => null,
+        };
+        if (command is null)
+            return false;
+        _editor.Select(command);
+        return true;
+    }
+
+    /// <summary>Runs a key as the keyboard would (editing keys, then shortcuts); false when nothing handles it.</summary>
+    internal bool RunKey(VirtualKey key, VirtualKeyModifiers modifiers)
+    {
+        if (HandleKey(key, modifiers))
+            return true;
+        return _shortcuts.TryGetValue((key, modifiers), out var run) && run();
     }
 
     private bool Cropping => _editor?.IsCropping == true;
 
+    private EditorTool _toolBeforePick = EditorTool.Pen;
+
     private void SelectTool(EditorTool tool)
     {
         _editor?.CancelCrop();
+        if (tool == EditorTool.Eyedropper && _tool != EditorTool.Eyedropper)
+            _toolBeforePick = _tool;
         _tool = tool;
         if (tool >= EditorTool.Rectangle)
             _shape = tool;
@@ -272,34 +384,61 @@ public sealed partial class MainPage : Page
     private void ApplyTool()
     {
         bool cropping = Cropping;
+        SelectButton.IsChecked = !cropping && _tool == EditorTool.Select;
         PenButton.IsChecked = !cropping && _tool == EditorTool.Pen;
         HighlighterButton.IsChecked = !cropping && _tool == EditorTool.Highlighter;
         EraserButton.IsChecked = !cropping && _tool == EditorTool.Eraser;
+        TextButton.IsChecked = !cropping && _tool == EditorTool.Text;
+        EyedropperButton.IsChecked = !cropping && _tool == EditorTool.Eyedropper;
+        BucketButton.IsChecked = !cropping && _tool == EditorTool.Bucket;
         ShapeButton.IsChecked = !cropping && _tool >= EditorTool.Rectangle;
         CropButton.IsChecked = cropping;
-        ApplyCropButton.Visibility = CancelCropButton.Visibility = cropping ? Visibility.Visible : Visibility.Collapsed;
+        ApplyCropButton.Visibility = CancelCropButton.Visibility = CropFields.Visibility = cropping ? Visibility.Visible : Visibility.Collapsed;
+        SyncCropFields();
         int shapeIndex = Array.FindIndex(Shapes, s => s.Tool == _shape);
         ShapeButton.Content = new FontIcon { Glyph = Shapes[shapeIndex].Glyph, FontSize = 16 };
         AutomationProperties.SetName(ShapeButton, "Shapes: " + Shapes[shapeIndex].Text);
         Mark(ShapeMenu, 0, Shapes.Length, shapeIndex);
 
         int group = Group;
-        var color = QuickColors[_colorIndex[group]];
-        float width = (group == 1 ? HighlighterWidths : PenWidths)[_widthIndex[group]];
-        StyleButton.IsEnabled = _tool != EditorTool.Eraser;
+        var shown = _color[group];
+        float shownWidth = _width[group];
+        float[] presets = PresetsFor(group);
+        // The style shows the text being edited, else with Select the topmost selected object.
+        var top = _editor?.EditingText ?? (_tool == EditorTool.Select && _editor?.Document is { } doc && _editor.Selection is { } sel
+            ? doc.Objects.LastOrDefault(o => sel.Selected.Contains(o.Id)) : null);
+        if (top is not null)
+        {
+            shown = top.Color with { A = 255 };
+            shownWidth = top.Width;
+            presets = WidthsFor(top);
+        }
+        StyleButton.IsEnabled = _tool != EditorTool.Eraser && (_tool != EditorTool.Select || top is not null);
         StyleButton.Content = new FontIcon
         {
-            Glyph = "", FontSize = 16, Foreground = new SolidColorBrush(EditorCanvas.ToColor(color.Color)),
+            Glyph = "\uEA3B", FontSize = 16, Foreground = new SolidColorBrush(EditorCanvas.ToColor(shown)),
         };
-        AutomationProperties.SetName(StyleButton, $"Color and width: {color.Name}, {WidthNames[_widthIndex[group]]}");
-        Mark(StyleMenu, 0, QuickColors.Length, _colorIndex[group]);
-        Mark(StyleMenu, QuickColors.Length + 1, WidthNames.Length, _widthIndex[group]);
+        int colorIndex = Array.FindIndex(QuickColors, c => c.Color == shown);
+        int widthIndex = Array.IndexOf(presets, shownWidth);
+        string colorName = colorIndex >= 0 ? QuickColors[colorIndex].Name : $"#{shown.R:X2}{shown.G:X2}{shown.B:X2}";
+        string widthName = widthIndex >= 0 ? WidthNames[widthIndex] : $"{shownWidth:0} px";
+        AutomationProperties.SetName(StyleButton, $"Color and width: {colorName}, {widthName}");
+        _syncingStyle = true;
+        for (int i = 0; i < _swatches.Count; i++)
+            MarkButton(_swatches[i], i == colorIndex);
+        for (int i = 0; i < _presets.Count; i++)
+            MarkButton(_presets[i], i == widthIndex);
+        if (_widthSlider is not null)
+            _widthSlider.Value = shownWidth;
+        if (_picker is not null)
+            _picker.Color = EditorCanvas.ToColor(shown);
+        _syncingStyle = false;
 
         if (_editor is not null)
         {
             _editor.Tool = _tool;
-            _editor.Color = color.Color;
-            _editor.StrokeWidth = width;
+            _editor.Color = _color[group];
+            _editor.StrokeWidth = _width[group];
         }
     }
 
@@ -323,6 +462,159 @@ public sealed partial class MainPage : Page
         }
     }
 
+    private static void MarkButton(Button button, bool current)
+    {
+        if (current)
+        {
+            button.BorderBrush = (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"];
+            AutomationProperties.SetItemStatus(button, "Selected");
+        }
+        else
+        {
+            button.ClearValue(Control.BorderBrushProperty);
+            button.ClearValue(AutomationProperties.ItemStatusProperty);
+        }
+    }
+
+    /// <summary>Style flyout: 6 quick colors, "More colors" (color ring), 3 width presets and a width slider.</summary>
+    private void BuildStyleFlyout()
+    {
+        var swatches = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        foreach (var (name, color) in QuickColors)
+        {
+            var button = new Button
+            {
+                Width = 40, Height = 36, Padding = new Thickness(0), BorderThickness = new Thickness(2),
+                Content = new FontIcon { Glyph = "", FontSize = 20, Foreground = new SolidColorBrush(EditorCanvas.ToColor(color)) },
+            };
+            AutomationProperties.SetName(button, name);
+            ToolTipService.SetToolTip(button, name);
+            button.Click += (_, _) => { SetColor(color); StyleFlyout.Hide(); };
+            _swatches.Add(button);
+            swatches.Children.Add(button);
+        }
+        var picker = _picker = NewPicker();
+        var slider = _widthSlider = new Slider { Minimum = 1, Maximum = MaxStrokeWidth, StepFrequency = 1, Header = "Width (mouse wheel)" };
+        var more = new Microsoft.UI.Xaml.Controls.Primitives.ToggleButton { Content = "More colors" };
+        AutomationProperties.SetName(more, "More colors");
+        more.Checked += (_, _) => picker.Visibility = Visibility.Visible; // Checked also fires for a UIA Toggle (Click does not)
+        more.Unchecked += (_, _) => picker.Visibility = Visibility.Collapsed;
+        AutomationProperties.SetName(picker, "Custom color");
+        picker.ColorChanged += (_, e) =>
+        {
+            if (!_syncingStyle)
+                SetColor(new Rgba(e.NewColor.R, e.NewColor.G, e.NewColor.B, 255));
+        };
+        var presets = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        for (int i = 0; i < WidthNames.Length; i++)
+        {
+            int index = i;
+            var button = new Button { Content = WidthNames[i], BorderThickness = new Thickness(2) };
+            button.Click += (_, _) =>
+            {
+                SetWidth(o => WidthsFor(o)[index], PresetsFor(Group)[index]);
+                StyleFlyout.Hide();
+            };
+            _presets.Add(button);
+            presets.Children.Add(button);
+        }
+        AutomationProperties.SetName(slider, "Width");
+        slider.ValueChanged += (_, e) =>
+        {
+            if (!_syncingStyle)
+                SetWidth(_ => (float)e.NewValue, (float)e.NewValue);
+        };
+        StyleFlyout.Content = new StackPanel { Spacing = 12, Children = { swatches, more, picker, presets, slider } };
+    }
+
+    /// <summary>New color for the text being edited, else the selection (Select tool) or the current tool group.</summary>
+    private void SetColor(Rgba color)
+    {
+        if (_editor?.IsEditingText == true)
+        {
+            _editor.RestyleText(color: color);
+            if (_tool == EditorTool.Text)
+                _color[Group] = color;
+        }
+        else if (_tool == EditorTool.Select)
+            _editor?.Select(s => s.Recolor(color));
+        else
+            _color[Group] = color;
+        ApplyTool();
+    }
+
+    /// <summary>New width (font size for text) for the text being edited, else per selected object (Select tool) or for the tool group.</summary>
+    private void SetWidth(Func<EditorObject, float> forObject, float forTool)
+    {
+        if (_editor?.EditingText is { } text)
+        {
+            _editor.RestyleText(size: forObject(text));
+            if (_tool == EditorTool.Text)
+                _width[Group] = forObject(text);
+        }
+        else if (_tool == EditorTool.Select)
+            _editor?.Select(s => s.Rewidth(forObject));
+        else
+            _width[Group] = forTool;
+        ApplyTool();
+    }
+
+    /// <summary>One wheel notch scales the width by about 20 % (at least 1 px), within 1..MaxStrokeWidth.</summary>
+    private static float StepWidth(float width, int notches)
+    {
+        float next = MathF.Round(width * MathF.Pow(1.2f, notches));
+        if (next == width)
+            next = width + Math.Sign(notches);
+        return Math.Clamp(next, 1, MaxStrokeWidth);
+    }
+
+    private int _wheelRest;
+
+    /// <summary>Plain wheel over the canvas = width of the tool or the selection (with a short size hint); Shift+wheel scrolls vertically.</summary>
+    internal void Wheel(int delta, bool shift, System.Numerics.Vector2 imagePoint)
+    {
+        if (_editor is null)
+            return;
+        if (shift)
+        {
+            ImageScroller.ChangeView(null, ImageScroller.VerticalOffset - delta, null);
+            return;
+        }
+        _wheelRest += delta;
+        int notches = _wheelRest / 120;
+        _wheelRest %= 120;
+        if (notches == 0 || Cropping || _tool is EditorTool.Eraser or EditorTool.Eyedropper or EditorTool.Bucket)
+            return;
+        if (_editor.EditingText is not null)
+        {
+            SetWidth(o => StepWidth(o.Width, notches), 0);
+            _editor.ShowSizeHint(imagePoint, _editor.EditingText!.Width);
+        }
+        else if (_tool == EditorTool.Select)
+        {
+            if (_editor.Selection is not { Selected.Count: > 0 })
+                return;
+            SetWidth(o => StepWidth(o.Width, notches), 0);
+            var top = _editor.Document!.Objects.Last(o => _editor.Selection.Selected.Contains(o.Id));
+            _editor.ShowSizeHint(imagePoint, top.Width);
+        }
+        else
+        {
+            SetWidth(_ => 0, StepWidth(_width[Group], notches));
+            _editor.ShowSizeHint(imagePoint, _width[Group]);
+        }
+    }
+
+    /// <summary>Eyedropper click: copies #RRGGBB, returns to the previous tool and gives it (or its selection) the color.</summary>
+    private void OnColorPicked(Rgba color)
+    {
+        var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        if (!CaptureOutput.CopyTextToClipboard(owner, ColorSample.Hex(color)))
+            ShowError("The clipboard is in use by another app; the color was not copied.");
+        SelectTool(_toolBeforePick);
+        SetColor(color);
+    }
+
     private void UpdateHistory()
     {
         UndoButton.IsEnabled = _editor?.Document?.CanUndo == true;
@@ -336,6 +628,37 @@ public sealed partial class MainPage : Page
         else
             _editor?.BeginCrop();
         ApplyTool();
+    }
+
+    private bool _syncingCrop;
+
+    /// <summary>Shows the crop frame in the X / Y / W / H fields.</summary>
+    private void SyncCropFields()
+    {
+        if (_editor?.CropFrame is not { } f)
+            return;
+        _syncingCrop = true;
+        (CropX.Value, CropY.Value, CropW.Value, CropH.Value) = (f.X, f.Y, f.Width, f.Height);
+        _syncingCrop = false;
+    }
+
+    /// <summary>A field (after NumberBox evaluated arithmetic such as 800+20) moves that edge or size; the other values stay.</summary>
+    private void OnCropField(NumberBox sender, NumberBoxValueChangedEventArgs e)
+    {
+        if (_syncingCrop || _editor?.CropFrame is not { } f)
+            return;
+        if (!double.IsNaN(sender.Value))
+        {
+            int v = (int)Math.Round(sender.Value);
+            _editor.SetCropFrame((string)sender.Tag switch
+            {
+                "X" => f with { X = v },
+                "Y" => f with { Y = v },
+                "W" => f with { Width = Math.Max(1, v) },
+                _ => f with { Height = Math.Max(1, v) },
+            });
+        }
+        SyncCropFields(); // shows the clamped result, or restores an empty or invalid field
     }
 
     private void OnApplyCrop(object sender, RoutedEventArgs e) => _editor?.ApplyCrop();

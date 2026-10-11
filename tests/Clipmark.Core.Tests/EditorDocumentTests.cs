@@ -385,4 +385,78 @@ public class EditorDocumentTests
         Assert.NotNull(doc.HitTest(new Vector2(94.8f, 3), 0.2f));
         Assert.Null(doc.HitTest(new Vector2(40, 5), 0));
     }
+
+    [Fact]
+    public void Replace_swaps_objects_by_id_in_place_as_one_undo_step()
+    {
+        var doc = WithThree(out int a, out int b, out int c);
+        var movedA = Pen(a, new Vector2(10, 10));
+        var movedC = Pen(c, new Vector2(20, 20));
+        doc.Replace([movedA, movedC]);
+
+        Assert.Equal([a, b, c], Ids(doc));
+        Assert.Equal(movedA, doc.Objects[0]);
+        Assert.Equal(movedC, doc.Objects[2]);
+        doc.Undo();
+        Assert.Equal(Pen(a, new Vector2(0, 0)), doc.Objects[0]);
+        Assert.Equal(Pen(c, new Vector2(2, 2)), doc.Objects[2]);
+    }
+
+    [Fact]
+    public void Replace_with_unchanged_or_unknown_objects_is_a_no_op()
+    {
+        var doc = WithThree(out int a, out _, out _);
+        int changes = 0;
+        doc.Changed += () => changes++;
+        doc.Replace([Pen(a, new Vector2(0, 0)), Pen(99, new Vector2(5, 5))]);
+        Assert.Equal(0, changes);
+    }
+
+    [Fact]
+    public void Replace_outside_an_applied_crop_grows_the_crop_and_the_bounds()
+    {
+        var doc = new EditorDocument(100, 80);
+        int id = doc.NewId();
+        doc.Add(Pen(id, new Vector2(50, 40)));
+        doc.SetCrop(new PixelRect(10, 10, 60, 50));
+        doc.Replace([Pen(id, new Vector2(120, 40))]);
+        Assert.Equal(new PixelRect(0, 0, 122, 80), doc.Bounds);
+        Assert.Equal(PixelRect.FromCorners(10, 10, 122, 60), doc.Crop);
+    }
+
+    [Theory]
+    [InlineData(ZOrder.Up, new[] { 1 }, new[] { 2, 1, 3, 4 })]
+    [InlineData(ZOrder.Up, new[] { 4 }, new[] { 1, 2, 3, 4 })]
+    [InlineData(ZOrder.Up, new[] { 1, 3 }, new[] { 2, 1, 4, 3 })]
+    [InlineData(ZOrder.Up, new[] { 3, 4 }, new[] { 1, 2, 3, 4 })]
+    [InlineData(ZOrder.Down, new[] { 4 }, new[] { 1, 2, 4, 3 })]
+    [InlineData(ZOrder.Down, new[] { 2, 4 }, new[] { 2, 1, 4, 3 })]
+    [InlineData(ZOrder.Down, new[] { 1, 2 }, new[] { 1, 2, 3, 4 })]
+    [InlineData(ZOrder.Front, new[] { 1, 3 }, new[] { 2, 4, 1, 3 })]
+    [InlineData(ZOrder.Back, new[] { 2, 4 }, new[] { 2, 4, 1, 3 })]
+    public void Reorder_moves_the_listed_objects_keeping_their_relative_order(ZOrder move, int[] ids, int[] expected)
+    {
+        var doc = new EditorDocument(100, 80);
+        for (int i = 1; i <= 4; i++)
+            doc.Add(Pen(doc.NewId(), new Vector2(i, i)));
+        int before = doc.Objects.Count;
+        doc.Reorder(ids, move);
+        Assert.Equal(expected, Ids(doc));
+        Assert.Equal(before, doc.Objects.Count);
+    }
+
+    [Fact]
+    public void Reorder_is_one_undo_step_and_a_no_op_when_nothing_moves()
+    {
+        var doc = WithThree(out int a, out _, out int c);
+        int changes = 0;
+        doc.Changed += () => changes++;
+        doc.Reorder([c], ZOrder.Up);
+        doc.Reorder([a], ZOrder.Back);
+        Assert.Equal(0, changes);
+        doc.Reorder([a], ZOrder.Front);
+        Assert.Equal(1, changes);
+        doc.Undo();
+        Assert.Equal(a, doc.Objects[0].Id);
+    }
 }

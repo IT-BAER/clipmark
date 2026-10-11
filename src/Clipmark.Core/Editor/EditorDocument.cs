@@ -7,9 +7,11 @@ namespace Clipmark.Core.Editor;
 public sealed class EditorDocument
 {
     private const int EllipseSegments = 64;
+    private const float AnchorSlack = 0.01f;
 
     // Bounds = image rect united with every object's outline; Crop = null means export Bounds.
-    private sealed record State(ImmutableList<EditorObject> Objects, PixelRect? Crop, PixelRect Bounds);
+    // Background = canvas color under the image (bucket on empty space); null = transparent.
+    private sealed record State(ImmutableList<EditorObject> Objects, PixelRect? Crop, PixelRect Bounds, Rgba? Background = null);
 
     // history[position] is the current state; entries after position are redo.
     private readonly List<State> _history;
@@ -31,6 +33,7 @@ public sealed class EditorDocument
     public IReadOnlyList<EditorObject> Objects => Current.Objects;
     public PixelRect? Crop => Current.Crop;
     public PixelRect Bounds => Current.Bounds;
+    public Rgba? Background => Current.Background;
     public bool CanUndo => _position > 0;
     public bool CanRedo => _position < _history.Count - 1;
     public bool IsDirty => _position != _cleanPosition;
@@ -50,7 +53,88 @@ public sealed class EditorDocument
     public void Remove(IReadOnlyCollection<int> ids)
     {
         var kept = Current.Objects.RemoveAll(o => ids.Contains(o.Id));
-        if (kept.Count != Current.Objects.Count) PushObjects(kept, Current.Crop);
+        if (kept.Count != Current.Objects.Count) PushObjects(Resolve(kept, new HashSet<int>()), Current.Crop);
+    }
+
+    /// <summary>
+    /// Swaps in changed objects by id, keeping their z position, as one undo step; attached line / arrow ends follow
+    /// (see <see cref="WithAttached"/>) and an applied crop grows to include every changed object.
+    /// </summary>
+    public void Replace(IReadOnlyCollection<EditorObject> changed)
+    {
+        var objects = Swap(changed);
+        if (objects == Current.Objects) return;
+        var crop = Current.Crop;
+        for (int i = 0; i < objects.Count && crop is { } c; i++)
+            if (objects[i] != Current.Objects[i]) crop = Union(c, OuterRect(objects[i]));
+        PushObjects(objects, crop);
+    }
+
+    /// <summary>
+    /// The changed objects plus the lines / arrows attached to them, as <see cref="Replace"/> would store them:
+    /// ends attached to a changed target move onto its anchor; changed ends that left their anchor detach.
+    /// </summary>
+    public IReadOnlyList<EditorObject> WithAttached(IReadOnlyCollection<EditorObject> changed)
+    {
+        var objects = Swap(changed);
+        return [.. objects.Where((o, i) => o != Current.Objects[i])];
+    }
+
+    /// <summary>Topmost object, not a line / arrow, whose local box grown by half its width plus the tolerance contains the point.</summary>
+    public EditorObject? SnapTarget(Vector2 point, float tolerance, int exclude = 0)
+    {
+        for (int i = Objects.Count - 1; i >= 0; i--)
+        {
+            var o = Objects[i];
+            if (o.Id == exclude || ObjectTransform.IsSegment(o)) continue;
+            var box = EditorGeometry.LocalBox(o);
+            var grow = new Vector2(EditorGeometry.HalfStroke(o) + tolerance);
+            if (new FloatRect(box.Min - grow, box.Max + grow).Contains(EditorGeometry.ToLocal(o, point))) return o;
+        }
+        return null;
+    }
+
+    /// <summary>Moves the listed objects in z-order (one step or to the end), keeping their relative order, as one undo step.</summary>
+    public void Reorder(IReadOnlyCollection<int> ids, ZOrder move)
+    {
+        var list = Current.Objects.ToList();
+        bool Listed(int i) => ids.Contains(list[i].Id);
+        switch (move)
+        {
+            case ZOrder.Up:
+                for (int i = list.Count - 2; i >= 0; i--)
+                    if (Listed(i) && !Listed(i + 1)) (list[i], list[i + 1]) = (list[i + 1], list[i]);
+                break;
+            case ZOrder.Down:
+                for (int i = 1; i < list.Count; i++)
+                    if (Listed(i) && !Listed(i - 1)) (list[i], list[i - 1]) = (list[i - 1], list[i]);
+                break;
+            default:
+                var listed = list.Where(o => ids.Contains(o.Id)).ToList();
+                var rest = list.Where(o => !ids.Contains(o.Id)).ToList();
+                list = move == ZOrder.Front ? [.. rest, .. listed] : [.. listed, .. rest];
+                break;
+        }
+        if (!list.SequenceEqual(Current.Objects)) Push(Current with { Objects = [.. list] });
+    }
+
+    /// <summary>
+    /// Bucket: fills the topmost rectangle or ellipse whose inside or outline holds the point, else sets the canvas background;
+    /// one undo step when anything changes.
+    /// </summary>
+    public void Fill(Vector2 point, Rgba color, float tolerance)
+    {
+        for (int i = Objects.Count - 1; i >= 0; i--)
+        {
+            if (Objects[i] is not Shape { Kind: ShapeKind.Rectangle or ShapeKind.Ellipse } s) continue;
+            var local = EditorGeometry.ToLocal(s, point);
+            if (Interior(s, local) || DistanceTo(s, local) <= EditorGeometry.HalfStroke(s) + tolerance)
+            {
+                Replace([s with { Fill = color }]);
+                return;
+            }
+        }
+        if (Background != color) Push(Current with { Background = color });
     }
 
     public void SetCrop(PixelRect rect)
@@ -80,7 +164,9 @@ public sealed class EditorDocument
         for (int i = Objects.Count - 1; i >= 0; i--)
         {
             var o = Objects[i];
-            if (DistanceTo(o, point) <= o.Width / 2 + tolerance) return o;
+            var local = EditorGeometry.ToLocal(o, point);
+            if (o is Shape { Fill: not null } filled && Interior(filled, local)) return o;
+            if (DistanceTo(o, local) <= EditorGeometry.HalfStroke(o) + tolerance) return o;
         }
         return null;
     }
@@ -103,41 +189,57 @@ public sealed class EditorDocument
         Push(Current with { Objects = objects, Bounds = bounds, Crop = crop is { } c ? c.Intersect(bounds) ?? c : null });
     }
 
+    /// <summary>Attachment of a line / arrow end dropped at the point, or null when no object is there.</summary>
+    public Attachment? Attach(Vector2 point, float tolerance, int exclude = 0) =>
+        SnapTarget(point, tolerance, exclude) is { } target ? new Attachment(target.Id, EditorGeometry.AnchorOf(target, point)) : null;
+
+    private ImmutableList<EditorObject> Swap(IReadOnlyCollection<EditorObject> changed)
+    {
+        var objects = Current.Objects;
+        var ids = new HashSet<int>();
+        foreach (var obj in changed)
+        {
+            int index = objects.FindIndex(o => o.Id == obj.Id);
+            if (index < 0 || objects[index] == obj) continue;
+            objects = objects.SetItem(index, obj);
+            ids.Add(obj.Id);
+        }
+        return ids.Count == 0 ? objects : Resolve(objects, ids);
+    }
+
+    // Ends attached to a changed target move onto its anchor; ends of changed lines that left their anchor, or whose target is gone, detach.
+    private static ImmutableList<EditorObject> Resolve(ImmutableList<EditorObject> objects, IReadOnlySet<int> changed)
+    {
+        var byId = objects.ToDictionary(o => o.Id);
+        for (int i = 0; i < objects.Count; i++)
+        {
+            if (objects[i] is not Shape s || (s.StartAttach is null && s.EndAttach is null)) continue;
+            bool moved = changed.Contains(s.Id);
+            var (start, startAttach) = End(s.Start, s.StartAttach);
+            var (end, endAttach) = End(s.End, s.EndAttach);
+            var next = s with { Start = start, End = end, StartAttach = startAttach, EndAttach = endAttach };
+            if (next != s) objects = objects.SetItem(i, next);
+
+            (Vector2, Attachment?) End(Vector2 point, Attachment? attach)
+            {
+                if (attach is not { } a || !byId.TryGetValue(a.Target, out var target)) return (point, null);
+                var anchored = EditorGeometry.AnchorPoint(target, a.Anchor);
+                if (changed.Contains(a.Target)) return (anchored, a);
+                return moved && Vector2.Distance(point, anchored) > AnchorSlack ? (point, null) : (point, a);
+            }
+        }
+        return objects;
+    }
+
     private static PixelRect Union(PixelRect a, PixelRect b) => PixelRect.FromCorners(Math.Min(a.X, b.X),
         Math.Min(a.Y, b.Y), Math.Max(a.Right, b.Right), Math.Max(a.Bottom, b.Bottom));
 
     /// <summary>Pixels the object paints, rounded outward.</summary>
     private static PixelRect OuterRect(EditorObject o)
     {
-        float r = o.Width / 2;
-        float left = float.PositiveInfinity, top = float.PositiveInfinity;
-        float right = float.NegativeInfinity, bottom = float.NegativeInfinity;
-        foreach (var p in Outline(o))
-        {
-            left = MathF.Min(left, p.X - r);
-            top = MathF.Min(top, p.Y - r);
-            right = MathF.Max(right, p.X + r);
-            bottom = MathF.Max(bottom, p.Y + r);
-        }
-        return PixelRect.FromCorners((int)MathF.Floor(left), (int)MathF.Floor(top),
-            (int)MathF.Ceiling(right), (int)MathF.Ceiling(bottom));
-    }
-
-    // Round caps and joins: every painted pixel lies within Width/2 of one of these points.
-    private static IEnumerable<Vector2> Outline(EditorObject o)
-    {
-        switch (o)
-        {
-            case Stroke s:
-                return s.Points;
-            case Shape { Kind: ShapeKind.Arrow } s:
-                var (left, right) = EditorGeometry.ArrowHead(s.Start, s.End, s.Width);
-                return [s.Start, s.End, left, right];
-            case Shape s:
-                return [s.Start, s.End, new(s.Start.X, s.End.Y), new(s.End.X, s.Start.Y)];
-            default:
-                return [];
-        }
+        var e = EditorGeometry.Extent(o);
+        return PixelRect.FromCorners((int)MathF.Floor(e.Min.X), (int)MathF.Floor(e.Min.Y),
+            (int)MathF.Ceiling(e.Max.X), (int)MathF.Ceiling(e.Max.Y));
     }
 
     private static float DistanceTo(EditorObject o, Vector2 p) => o switch
@@ -147,6 +249,7 @@ public sealed class EditorDocument
         Shape { Kind: ShapeKind.Arrow } s => ArrowDistance(p, s),
         Shape { Kind: ShapeKind.Rectangle } s => DistanceToPolyline(p, RectangleOutline(s)),
         Shape { Kind: ShapeKind.Ellipse } s => DistanceToPolyline(p, EllipseOutline(s)),
+        TextObject t => DistanceToBox(p, EditorGeometry.LocalBox(t)),
         _ => float.PositiveInfinity,
     };
 
@@ -159,6 +262,22 @@ public sealed class EditorDocument
             best = MathF.Min(best, EditorGeometry.DistanceToSegment(p, points[i - 1], points[i]));
         return best;
     }
+
+    /// <summary>Point (local frame) inside a rectangle's box or an ellipse.</summary>
+    private static bool Interior(Shape s, Vector2 p)
+    {
+        var box = EditorGeometry.LocalBox(s);
+        if (!box.Contains(p)) return false;
+        if (s.Kind != ShapeKind.Ellipse) return true;
+        var radius = (box.Max - box.Min) / 2;
+        if (radius.X == 0 || radius.Y == 0) return false;
+        var d = (p - (box.Min + box.Max) / 2) / radius;
+        return d.LengthSquared() <= 1;
+    }
+
+    // 0 inside: text is grabbed anywhere in its box.
+    private static float DistanceToBox(Vector2 p, FloatRect box) =>
+        Vector2.Distance(p, Vector2.Clamp(p, box.Min, box.Max));
 
     private static float ArrowDistance(Vector2 p, Shape s)
     {
