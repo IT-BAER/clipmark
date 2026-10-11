@@ -35,6 +35,7 @@ internal sealed class EditorCanvas
     };
     private readonly CanvasStrokeStyle _dash = new() { DashStyle = CanvasDashStyle.Dash };
     private CanvasBitmap? _image;
+    private byte[]? _imageBytes; // encoded base image, for a reload after a lost device
     private ToolSession? _session;
     private SelectionSession? _selection;
     private EditorTool _tool;
@@ -275,14 +276,53 @@ internal sealed class EditorCanvas
 
     internal static Windows.UI.Color ToColor(Rgba c) => Windows.UI.Color.FromArgb(c.A, c.R, c.G, c.B);
 
+    /// <summary>True when the file was an editable PNG whose objects loaded.</summary>
+    public bool FromEditable { get; private set; }
+
+    /// <summary>Raised with a user-facing message when an editable PNG's data cannot be used; the flattened image opens instead.</summary>
+    public event Action<string>? Problem;
+
+    /// <summary>
+    /// Opens the file as an image, or an editable PNG as its base image plus live objects. Damaged editable data falls back
+    /// to the flattened image (what every viewer shows).
+    /// </summary>
     private async Task LoadAsync(CanvasControl sender)
     {
-        using var stream = File.OpenRead(_path).AsRandomAccessStream();
-        _image = await CanvasBitmap.LoadAsync(sender, stream, 96);
+        if (_imageBytes is not null) // device lost: same image again
+        {
+            _image = await LoadBitmapAsync(sender, _imageBytes);
+            return;
+        }
+        byte[] file = await File.ReadAllBytesAsync(_path);
+        EditorDocument? loaded = null;
+        if (EditablePng.Read(file) is { } data)
+        {
+            try
+            {
+                loaded = DocumentJson.Parse(data.Json);
+                _image = await LoadBitmapAsync(sender, data.BasePng);
+                if (_image.SizeInPixels.Width != loaded.Width || _image.SizeInPixels.Height != loaded.Height)
+                    throw new InvalidDataException("The editable data does not match its base image.");
+                _imageBytes = data.BasePng;
+            }
+            catch (Exception e) when (e is InvalidDataException or ArgumentException or System.Runtime.InteropServices.COMException)
+            {
+                loaded = null;
+                _image?.Dispose();
+                _image = null;
+                Problem?.Invoke($"{e.Message} The image opens without its objects.");
+            }
+        }
+        if (_image is null)
+        {
+            _image = await LoadBitmapAsync(sender, file);
+            _imageBytes = file;
+        }
         var size = _image.SizeInPixels;
         if (Document is null)
         {
-            Document = new EditorDocument((int)size.Width, (int)size.Height);
+            FromEditable = loaded is not null;
+            Document = loaded ?? new EditorDocument((int)size.Width, (int)size.Height);
             Document.Changed += () =>
             {
                 _composite = null;
@@ -298,6 +338,12 @@ internal sealed class EditorCanvas
             _selection = new SelectionSession(Document);
             Changed?.Invoke();
         }
+    }
+
+    private static async Task<CanvasBitmap> LoadBitmapAsync(CanvasControl sender, byte[] bytes)
+    {
+        using var stream = new MemoryStream(bytes).AsRandomAccessStream();
+        return await CanvasBitmap.LoadAsync(sender, stream, 96);
     }
 
     private float Scale => Control.Dpi / 96;
@@ -580,8 +626,30 @@ internal sealed class EditorCanvas
         return new CapturedImage(crop.Width, crop.Height, bgra, transparent);
     }
 
-    /// <summary>Image plus annotations of an area at image pixel size, BGRA with straight alpha; true when any pixel is not opaque.</summary>
-    private (byte[] Bgra, bool Transparent) Render(PixelRect area)
+    /// <summary>The image with its redactions burned in, at its own size (the base image of an editable PNG).</summary>
+    public CapturedImage? ExportBase()
+    {
+        if (_image is null || Document is null)
+            return null;
+        var (bgra, transparent) = Render(new PixelRect(0, 0, Document.Width, Document.Height), baseOnly: true);
+        return new CapturedImage(Document.Width, Document.Height, bgra, transparent);
+    }
+
+    /// <summary>What text actions read: the image with its redactions inside the crop (annotations excluded), and where it starts.</summary>
+    public (CapturedImage Image, Vector2 Origin)? RecognitionSource()
+    {
+        if (_image is null || Document is null
+            || (Document.Crop ?? Document.Bounds).Intersect(new PixelRect(0, 0, Document.Width, Document.Height)) is not { } area)
+            return null;
+        var (bgra, transparent) = Render(area, baseOnly: true);
+        return (new CapturedImage(area.Width, area.Height, bgra, transparent), new Vector2(area.X, area.Y));
+    }
+
+    /// <summary>
+    /// Image plus annotations (or only the image and its redactions) of an area at image pixel size, BGRA with straight alpha;
+    /// true when any pixel is not opaque.
+    /// </summary>
+    private (byte[] Bgra, bool Transparent) Render(PixelRect area, bool baseOnly = false)
     {
         using var target = new CanvasRenderTarget(Control.Device, area.Width, area.Height, 96);
         using (var ds = target.CreateDrawingSession())
@@ -589,10 +657,12 @@ internal sealed class EditorCanvas
             ds.Clear(Microsoft.UI.Colors.Transparent);
             ds.TextAntialiasing = CanvasTextAntialiasing.Grayscale; // ClearType fringes on a transparent target
             ds.Transform = Matrix3x2.CreateTranslation(-area.X, -area.Y);
-            DrawBackground(ds);
-            ds.DrawImage(_image);
-            foreach (var o in Document!.Objects)
-                DrawObject(ds, o);
+            if (!baseOnly)
+                DrawBackground(ds);
+            DrawBase(ds);
+            if (!baseOnly)
+                foreach (var o in Document!.Objects)
+                    DrawObject(ds, o);
         }
         var bgra = target.GetPixelBytes();
         bool transparent = false;
@@ -671,7 +741,7 @@ internal sealed class EditorCanvas
         using (ds.CreateLayer(1, new Windows.Foundation.Rect(view.X, view.Y, view.Width, view.Height)))
         {
             DrawBackground(ds);
-            ds.DrawImage(_image);
+            DrawBase(ds);
             // A selection drag shows its transformed copies in place of the originals, keeping the z-order.
             // Attached arrows follow their targets in the preview.
             var live = _selection is { Live.Count: > 0 } sel ? Document.WithAttached(sel.Live).ToDictionary(o => o.Id) : [];
@@ -682,6 +752,7 @@ internal sealed class EditorCanvas
             }
             var dragged = _selection?.Live.Select(o => live.GetValueOrDefault(o.Id, o)) ?? [];
             DrawSnapTargets(ds, dragged.Append(_session?.Live), live);
+            DrawHighlights(ds);
         }
         if (_session?.Live is { } drawing)
             DrawObject(ds, drawing);
@@ -793,6 +864,42 @@ internal sealed class EditorCanvas
             DrawHandle(ds, HandlePoint(f, h), dip, round: false);
     }
 
+    /// <summary>The captured image and its redaction boxes.</summary>
+    private void DrawBase(CanvasDrawingSession ds)
+    {
+        ds.DrawImage(_image);
+        foreach (var r in Document!.Redactions)
+            ds.FillRectangle(r.X, r.Y, r.Width, r.Height, Microsoft.UI.Colors.Black);
+    }
+
+    private IReadOnlyList<FloatRect> _highlights = [];
+
+    /// <summary>Boxes of recognized words and QR codes (text actions), in image px; shown on screen only.</summary>
+    public IReadOnlyList<FloatRect> Highlights
+    {
+        get => _highlights;
+        set
+        {
+            _highlights = value;
+            Control.Invalidate();
+        }
+    }
+
+    private void DrawHighlights(CanvasDrawingSession ds)
+    {
+        if (_highlights.Count == 0)
+            return;
+        var accent = (Windows.UI.Color)Application.Current.Resources["SystemAccentColor"];
+        var fill = Windows.UI.Color.FromArgb(56, accent.R, accent.G, accent.B);
+        float dip = Scale / _zoom;
+        foreach (var r in _highlights)
+        {
+            var size = r.Max - r.Min;
+            ds.FillRectangle(r.Min.X, r.Min.Y, size.X, size.Y, fill);
+            ds.DrawRectangle(r.Min.X, r.Min.Y, size.X, size.Y, accent, dip);
+        }
+    }
+
     /// <summary>Canvas color under the image; shows where the image is transparent or the canvas grew past it.</summary>
     private void DrawBackground(CanvasDrawingSession ds)
     {
@@ -885,6 +992,7 @@ internal sealed class EditorCanvas
         Control.RemoveFromVisualTree();
         _image?.Dispose();
         _image = null;
+        _imageBytes = null;
         device?.Trim(); // the shared device stays alive; Trim frees its cached allocations
     }
 }

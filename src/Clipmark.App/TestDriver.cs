@@ -25,7 +25,9 @@ namespace Clipmark.App;
 /// | assert count N | assert editing | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
 /// | shot FILE (window, plus FILE-popupN.png per open popup) | save FILE (export PNG) | wait MS
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
-/// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates).
+/// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates)
+/// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
+/// | assert editable (opened with live objects) | assert message TEXT (open error bar contains).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -168,6 +170,38 @@ internal sealed class TestDriver
             case "saveas":
                 if (!await _page.SaveToAsync(Path.GetFullPath(arg)))
                     throw new InvalidOperationException("not saved");
+                break;
+            case "saveeditable":
+                if (!await _page.SaveToAsync(Path.GetFullPath(arg), editable: true))
+                    throw new InvalidOperationException("not saved");
+                break;
+            case "textwait":
+                // Waits until text actions finished reading the image (up to 20 s).
+                for (int t = 0; _page.TextActionsBusy; t += 100)
+                {
+                    if (t > 20000)
+                        throw new InvalidOperationException("text recognition did not finish");
+                    await Task.Delay(100);
+                }
+                break;
+            case "assert" when arg.StartsWith("status "):
+                string status = (Find("Text actions status") as TextBlock)?.Text ?? throw new InvalidOperationException("no status");
+                if (!status.Contains(arg[7..], StringComparison.Ordinal))
+                    throw new InvalidOperationException($"status is '{status}'");
+                break;
+            case "assert" when arg.StartsWith("redactions "):
+                int redactions = _page.Editor?.Document?.Redactions.Count ?? 0;
+                if (redactions != int.Parse(arg[11..], CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException($"{redactions} redactions");
+                break;
+            case "assert" when arg.StartsWith("message "):
+                var bar = Descendants(_page.XamlRoot.Content).OfType<InfoBar>().First();
+                if (!bar.IsOpen || bar.Message?.Contains(arg[8..], StringComparison.Ordinal) != true)
+                    throw new InvalidOperationException($"message is '{(bar.IsOpen ? bar.Message : "(closed)")}'");
+                break;
+            case "assert" when arg == "editable":
+                if (_page.Editor?.FromEditable != true)
+                    throw new InvalidOperationException("not opened as editable");
                 break;
             case "close":
                 Interop.Native.PostMessage(Win32Interop.GetWindowFromWindowId(_page.XamlRoot.ContentIslandEnvironment.AppWindowId),

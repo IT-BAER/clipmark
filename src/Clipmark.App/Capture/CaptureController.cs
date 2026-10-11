@@ -1,5 +1,7 @@
+using Clipmark.App.Editor;
 using Clipmark.App.Output;
 using Clipmark.Core.Settings;
+using Clipmark.Core.TextActions;
 
 namespace Clipmark.App.Capture;
 
@@ -32,6 +34,7 @@ internal sealed class CaptureController(nint clipboardOwner)
                 await Task.Delay(TimeSpan.FromSeconds(delay));
 
             CapturedImage? image;
+            bool extract = false;
             using (var frame = ScreenCapture.CaptureDesktop())
             {
                 var mode = modeOverride ?? settings.Mode;
@@ -41,13 +44,17 @@ internal sealed class CaptureController(nint clipboardOwner)
                 {
                     var session = new OverlaySession(frame, mode);
                     image = await session.RunAsync();
+                    extract = session.ExtractText;
                     if (session.Mode != mode && session.Mode != CaptureMode.AllMonitors)
                         AppSettings.Update(s => s with { Mode = session.Mode }); // pill choice sticks, like Snipping Tool
                 }
             }
             if (image is null)
                 return;
-            await DeliverAsync(image, AppSettings.Current);
+            if (extract)
+                await ExtractTextAsync(image);
+            else
+                await DeliverAsync(image, AppSettings.Current);
         }
         catch (Exception e)
         {
@@ -57,6 +64,25 @@ internal sealed class CaptureController(nint clipboardOwner)
         {
             _busy = false;
         }
+    }
+
+    /// <summary>Text extractor: OCR text of the region to the clipboard, a toast says what happened; no editor, no file.</summary>
+    private async Task ExtractTextAsync(CapturedImage image)
+    {
+        if (await TextRecognizer.RecognizeAsync(image, System.Numerics.Vector2.Zero) is not { } lines)
+        {
+            Failed?.Invoke("No text recognition language is installed (Settings > Time & language > Language & region).");
+            return;
+        }
+        if (lines.Count == 0)
+        {
+            CaptureOutput.ShowTextToast("No text found in the selection");
+            return;
+        }
+        if (CaptureOutput.CopyTextToClipboard(clipboardOwner, OcrText.Join(lines)))
+            CaptureOutput.ShowTextToast("Text copied to clipboard");
+        else
+            Failed?.Invoke("The clipboard is in use by another app; the text was not copied.");
     }
 
     private async Task DeliverAsync(CapturedImage image, ClipmarkSettings settings)

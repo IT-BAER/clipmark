@@ -3,6 +3,7 @@ using Clipmark.App.Output;
 using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
 using Clipmark.Core.Settings;
+using Clipmark.Core.TextActions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -115,7 +116,9 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.Y, VirtualKeyModifiers.Control, () => _editor?.Redo());
         Shortcut(VirtualKey.C, VirtualKeyModifiers.Control, () => _ = CopyAsync());
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control, () => _ = SaveAsync());
+        Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
+        Shortcut(VirtualKey.O, VirtualKeyModifiers.Control, () => _ = OpenAsync(), needsCapture: false);
         // On the window root: after a canvas click nothing in the page has focus and keys start at the root.
         KeyEventHandler editKeys = (_, e) =>
         {
@@ -174,7 +177,10 @@ public sealed partial class MainPage : Page
     {
         _editor?.Close();
         _editor = new EditorCanvas(path);
-        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); };
+        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); };
+        _editor.Problem += ShowError;
+        _textKey = null;
+        SyncTextActions();
         _editor.CropFrameChanged += SyncCropFields;
         _editor.ColorPicked += OnColorPicked;
         _editor.Control.PointerWheelChanged += (_, e) =>
@@ -206,6 +212,7 @@ public sealed partial class MainPage : Page
         OutputTools.Visibility = Visibility.Collapsed;
         Hint.Visibility = Visibility.Visible;
         UpdateHistory();
+        SyncTextActions();
     }
 
     private bool _confirming;
@@ -231,7 +238,7 @@ public sealed partial class MainPage : Page
             };
             return await dialog.ShowAsync() switch
             {
-                ContentDialogResult.Primary => await SaveAsync(),
+                ContentDialogResult.Primary => await SaveAsync(editable: _editor?.FromEditable == true),
                 ContentDialogResult.Secondary => true,
                 _ => false,
             };
@@ -684,10 +691,14 @@ public sealed partial class MainPage : Page
             ShowError("The clipboard is in use by another app; the capture was not copied.");
     }
 
-    private void OnSave(object sender, RoutedEventArgs e) => _ = SaveAsync();
+    private void OnSave(SplitButton sender, SplitButtonClickEventArgs e) => _ = SaveAsync();
 
-    /// <summary>Save as dialog (PNG or JPEG) in the save folder; true when the file was written.</summary>
-    private async Task<bool> SaveAsync()
+    private void OnSaveEditable(object sender, RoutedEventArgs e) => _ = SaveAsync(editable: true);
+
+    /// <summary>
+    /// Save as dialog in the save folder (PNG or JPEG; editable = PNG with the objects kept editable); true when the file was written.
+    /// </summary>
+    private async Task<bool> SaveAsync(bool editable = false)
     {
         if (_editor is null)
             return false;
@@ -700,20 +711,35 @@ public sealed partial class MainPage : Page
         };
         if (Directory.Exists(folder))
             picker.SuggestedFolder = folder;
-        picker.FileTypeChoices.Add("PNG image", [".png"]);
-        picker.FileTypeChoices.Add("JPEG image", [".jpg", ".jpeg"]);
+        if (editable)
+            picker.FileTypeChoices.Add("Editable PNG image", [".png"]);
+        else
+        {
+            picker.FileTypeChoices.Add("PNG image", [".png"]);
+            picker.FileTypeChoices.Add("JPEG image", [".jpg", ".jpeg"]);
+        }
         var result = await picker.PickSaveFileAsync();
-        return result is not null && await SaveToAsync(result.Path);
+        return result is not null && await SaveToAsync(result.Path, editable);
     }
 
-    /// <summary>Writes the export as JPEG (by extension) or PNG and marks the document saved.</summary>
-    internal async Task<bool> SaveToAsync(string path)
+    /// <summary>
+    /// Writes the export as JPEG (by extension) or PNG and marks the document saved. Editable adds the document and the
+    /// base image (redactions burned in) as a private PNG chunk.
+    /// </summary>
+    internal async Task<bool> SaveToAsync(string path, bool editable = false)
     {
         var editor = _editor;
-        if (editor?.Export() is not { } image)
+        if (editor?.Export() is not { } image || editor.Document is not { } doc)
             return false;
         string ext = Path.GetExtension(path).ToLowerInvariant();
-        var bytes = ext is ".jpg" or ".jpeg" ? await CaptureOutput.EncodeJpegAsync(image) : await CaptureOutput.EncodePngAsync(image);
+        bool jpeg = !editable && ext is ".jpg" or ".jpeg";
+        var bytes = jpeg ? await CaptureOutput.EncodeJpegAsync(image) : await CaptureOutput.EncodePngAsync(image);
+        if (editable)
+        {
+            if (editor.ExportBase() is not { } baseImage)
+                return false;
+            bytes = EditablePng.Embed(bytes, DocumentJson.Serialize(doc), await CaptureOutput.EncodePngAsync(baseImage));
+        }
         try
         {
             await File.WriteAllBytesAsync(path, bytes);
@@ -742,6 +768,143 @@ public sealed partial class MainPage : Page
         {
             ShowError($"The share sheet did not open: {e.Message}");
         }
+    }
+
+    private void OnOpen(object sender, RoutedEventArgs e) => _ = OpenAsync();
+
+    /// <summary>Open dialog for an image; an editable PNG opens with its objects. Asks about unsaved edits first.</summary>
+    private async Task OpenAsync()
+    {
+        var picker = new FileOpenPicker(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        foreach (var ext in new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tif", ".tiff" })
+            picker.FileTypeFilter.Add(ext);
+        string folder = AppSettings.Current.SaveFolder ?? CaptureOutput.DefaultFolder;
+        if (Directory.Exists(folder))
+            picker.SuggestedFolder = folder;
+        if (await picker.PickSingleFileAsync() is { } result && await ConfirmDiscardAsync())
+        {
+            Message.IsOpen = false;
+            ShowImage(result.Path);
+        }
+    }
+
+    // Text actions: inputs of the last run (redactions, crop), a run counter that drops stale results, and the recognized lines.
+    private (IReadOnlyList<PixelRect> Redactions, PixelRect? Crop)? _textKey;
+    private int _textRun;
+    private IReadOnlyList<OcrLine> _lines = [];
+
+    /// <summary>True while text recognition runs (test driver).</summary>
+    internal bool TextActionsBusy { get; private set; }
+
+    private void OnTextActions(object sender, RoutedEventArgs e) => SyncTextActions();
+
+    /// <summary>With Text actions on, reads the image again when its redactions or crop changed; off clears the highlights.</summary>
+    private void SyncTextActions()
+    {
+        if (TextActionsButton.IsChecked != true || _editor?.Document is not { } doc)
+        {
+            _textKey = null;
+            _textRun++;
+            _lines = [];
+            TextActionsBusy = false;
+            if (_editor is not null)
+                _editor.Highlights = [];
+            TextActionsBar.Visibility = Visibility.Collapsed;
+            return;
+        }
+        TextActionsBar.Visibility = Visibility.Visible;
+        if (_textKey is { } key && ReferenceEquals(key.Redactions, doc.Redactions) && key.Crop == doc.Crop)
+            return;
+        _textKey = (doc.Redactions, doc.Crop);
+        _ = RecognizeAsync(++_textRun, _editor);
+    }
+
+    private async Task RecognizeAsync(int run, EditorCanvas editor)
+    {
+        TextActionsBusy = true;
+        TextActionsStatus.Text = "Reading text…";
+        CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = false;
+        QrResults.Children.Clear();
+        editor.Highlights = [];
+        IReadOnlyList<OcrLine>? lines = [];
+        IReadOnlyList<QrCode> codes = [];
+        string? failure = null;
+        try
+        {
+            if (editor.RecognitionSource() is { } source)
+            {
+                lines = await TextRecognizer.RecognizeAsync(source.Image, source.Origin);
+                codes = await Task.Run(() => TextRecognizer.DecodeQr(source.Image, source.Origin));
+            }
+        }
+        catch (Exception e)
+        {
+            failure = "Text recognition failed: " + e.Message;
+        }
+        if (run != _textRun)
+            return;
+        TextActionsBusy = false;
+        _lines = lines ?? [];
+        editor.Highlights = [.. _lines.SelectMany(l => l.Words.Select(w => w.Box)), .. codes.Select(c => c.Box)];
+        string text = lines is null
+            ? "No text recognition language is installed (Settings > Time & language > Language & region)."
+            : _lines.Count == 0 ? "No text found." : _lines.Count == 1 ? "1 line of text." : $"{_lines.Count} lines of text.";
+        if (codes.Count > 0)
+            text += codes.Count == 1 ? " 1 QR code:" : $" {codes.Count} QR codes:";
+        TextActionsStatus.Text = failure ?? text;
+        CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
+        for (int i = 0; i < codes.Count; i++)
+            QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? "" : $" {i + 1}"));
+    }
+
+    /// <summary>Payload (shortened), Copy, and Open link for http / https.</summary>
+    private StackPanel QrItem(string payload, string number)
+    {
+        var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        var label = new TextBlock
+        {
+            Text = payload.Length > 48 ? payload[..47] + "…" : payload,
+            VerticalAlignment = VerticalAlignment.Center,
+            MaxWidth = 360,
+            TextTrimming = TextTrimming.CharacterEllipsis,
+        };
+        AutomationProperties.SetName(label, "QR code: " + payload);
+        ToolTipService.SetToolTip(label, payload);
+        var copy = new Button { Content = "Copy" };
+        AutomationProperties.SetName(copy, "Copy QR code" + number);
+        copy.Click += (_, _) => CopyText(payload, "QR code copied.");
+        item.Children.Add(label);
+        item.Children.Add(copy);
+        if (Uri.TryCreate(payload, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        {
+            var open = new Button { Content = "Open link" };
+            AutomationProperties.SetName(open, "Open link" + number);
+            ToolTipService.SetToolTip(open, uri.AbsoluteUri);
+            open.Click += async (_, _) => await Launcher.LaunchUriAsync(uri);
+            item.Children.Add(open);
+        }
+        return item;
+    }
+
+    private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines), "Text copied.");
+
+    private void CopyText(string text, string done)
+    {
+        var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        if (CaptureOutput.CopyTextToClipboard(owner, text))
+            TextActionsStatus.Text = done;
+        else
+            ShowError("The clipboard is in use by another app; the text was not copied.");
+    }
+
+    /// <summary>Blacks out email addresses and phone numbers in the image pixels as one undo step.</summary>
+    private void OnQuickRedact(object sender, RoutedEventArgs e)
+    {
+        var boxes = OcrText.Sensitive(_lines, 2);
+        if (boxes.Count == 0)
+            TextActionsStatus.Text = "No email addresses or phone numbers found.";
+        else
+            _editor?.Document?.Redact(boxes); // the change reads the image again
     }
 
     /// <summary>Ctrl+wheel zooms around the cursor; plain wheel scrolls.</summary>

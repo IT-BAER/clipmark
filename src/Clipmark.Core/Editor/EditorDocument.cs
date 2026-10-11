@@ -11,7 +11,11 @@ public sealed class EditorDocument
 
     // Bounds = image rect united with every object's outline; Crop = null means export Bounds.
     // Background = canvas color under the image (bucket on empty space); null = transparent.
-    private sealed record State(ImmutableList<EditorObject> Objects, PixelRect? Crop, PixelRect Bounds, Rgba? Background = null);
+    // Redactions = black boxes over the image pixels (image space, clipped); burned into the base image when it is stored.
+    private sealed record State(ImmutableList<EditorObject> Objects, PixelRect? Crop, PixelRect Bounds, Rgba? Background = null)
+    {
+        public ImmutableList<PixelRect> Redactions { get; init; } = [];
+    }
 
     // history[position] is the current state; entries after position are redo.
     private readonly List<State> _history;
@@ -34,6 +38,7 @@ public sealed class EditorDocument
     public PixelRect? Crop => Current.Crop;
     public PixelRect Bounds => Current.Bounds;
     public Rgba? Background => Current.Background;
+    public IReadOnlyList<PixelRect> Redactions => Current.Redactions;
     public bool CanUndo => _position > 0;
     public bool CanRedo => _position < _history.Count - 1;
     public bool IsDirty => _position != _cleanPosition;
@@ -137,6 +142,14 @@ public sealed class EditorDocument
         if (Background != color) Push(Current with { Background = color });
     }
 
+    /// <summary>Black boxes over the image pixels, clipped to the image, as one undo step.</summary>
+    public void Redact(IEnumerable<PixelRect> rects)
+    {
+        var image = new PixelRect(0, 0, Width, Height);
+        var added = rects.Select(r => r.Intersect(image)).OfType<PixelRect>().ToList();
+        if (added.Count > 0) Push(Current with { Redactions = Current.Redactions.AddRange(added) });
+    }
+
     public void SetCrop(PixelRect rect)
     {
         var clamped = rect.Intersect(Bounds);
@@ -180,13 +193,24 @@ public sealed class EditorDocument
         Changed?.Invoke();
     }
 
+    private void PushObjects(ImmutableList<EditorObject> objects, PixelRect? crop) => Push(Settled(objects, crop));
+
     // The crop never reaches past the bounds, so erasing an object that grew it trims it again.
-    private void PushObjects(ImmutableList<EditorObject> objects, PixelRect? crop)
+    private State Settled(ImmutableList<EditorObject> objects, PixelRect? crop)
     {
         var bounds = new PixelRect(0, 0, Width, Height);
         foreach (var o in objects)
             bounds = Union(bounds, OuterRect(o));
-        Push(Current with { Objects = objects, Bounds = bounds, Crop = crop is { } c ? c.Intersect(bounds) ?? c : null });
+        return Current with { Objects = objects, Bounds = bounds, Crop = crop is { } c ? c.Intersect(bounds) ?? c : null };
+    }
+
+    /// <summary>Document at a saved state, clean, without undo history; new ids continue after the highest loaded id.</summary>
+    internal static EditorDocument Restore(int width, int height, ImmutableList<EditorObject> objects, PixelRect? crop, Rgba? background)
+    {
+        var doc = new EditorDocument(width, height);
+        doc._history[0] = doc.Settled(objects, crop) with { Background = background };
+        doc._nextId = objects.IsEmpty ? 1 : objects.Max(o => o.Id) + 1;
+        return doc;
     }
 
     /// <summary>Attachment of a line / arrow end dropped at the point, or null when no object is there.</summary>

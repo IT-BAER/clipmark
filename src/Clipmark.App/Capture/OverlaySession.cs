@@ -17,7 +17,7 @@ internal sealed unsafe class OverlaySession : IDisposable
         (CaptureMode.FullScreen, '\uE7F4', "Full screen"), (CaptureMode.AllMonitors, '\uEBC6', "All monitors"),
         (CaptureMode.Freeform, '\uF408', "Freeform"),
     ];
-    private const int CloseButton = -1;
+    private const int CloseButton = -1, ExtractButton = -2;
 
     private readonly DesktopFrame _frame;
     private readonly TaskCompletionSource<CapturedImage?> _done = new();
@@ -31,8 +31,12 @@ internal sealed unsafe class OverlaySession : IDisposable
     private List<PixelPoint>? _path;
     private PixelRect? _decorated; // desktop area that currently shows highlight, border or label
     private int? _hoverButton;
+    private bool _extract;
 
     public CaptureMode Mode => _mode;
+
+    /// <summary>Text extractor toggled on in the pill: the picked region goes to OCR and the clipboard, not to the editor.</summary>
+    public bool ExtractText => _extract;
 
     public OverlaySession(DesktopFrame frame, CaptureMode mode)
     {
@@ -101,6 +105,11 @@ internal sealed unsafe class OverlaySession : IDisposable
         {
             if (button == CloseButton)
                 Finish(null);
+            else if (button == ExtractButton)
+            {
+                _extract = !_extract;
+                InvalidatePill();
+            }
             else if ((CaptureMode)button == CaptureMode.AllMonitors)
                 Finish(_frame.Cut(_frame.Screen.Bounds));
             else
@@ -239,10 +248,26 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     private int Dip(double v) => (int)Math.Round(v * PillScale);
 
+    // Pill order: the modes, a separator, Text extractor, Close.
+    private const int ButtonCount = 7;
+
+    private static int IdAt(int index) => index < PillButtons.Length ? (int)PillButtons[index].Mode
+        : index == PillButtons.Length ? ExtractButton : CloseButton;
+
+    private static int IndexOf(int id) => id == ExtractButton ? PillButtons.Length
+        : id == CloseButton ? PillButtons.Length + 1 : Array.FindIndex(PillButtons, p => (int)p.Mode == id);
+
+    private static (char Glyph, string Name) Face(int id) => id switch
+    {
+        CloseButton => ('', "Close"),
+        ExtractButton => ('', "Text extractor"),
+        _ => (PillButtons[IndexOf(id)].Glyph, PillButtons[IndexOf(id)].Name),
+    };
+
     /// <summary>Pill rect in desktop pixels, top-center on its monitor.</summary>
     private PixelRect PillRect()
     {
-        int count = PillButtons.Length + 1;
+        int count = ButtonCount;
         int w = Dip(8 + count * 44 + 9), h = Dip(52);
         var m = _pillHost.Monitor;
         return new PixelRect(m.X + (m.Width - w) / 2, m.Y + Dip(24), w, h);
@@ -259,9 +284,9 @@ internal sealed unsafe class OverlaySession : IDisposable
     {
         if (!PillRect().Contains(p))
             return null;
-        for (int i = 0; i <= PillButtons.Length; i++)
+        for (int i = 0; i < ButtonCount; i++)
             if (ButtonRect(i).Contains(p))
-                return i < PillButtons.Length ? (int)PillButtons[i].Mode : CloseButton;
+                return IdAt(i);
         return null;
     }
 
@@ -347,13 +372,12 @@ internal sealed unsafe class OverlaySession : IDisposable
         var local = new RECT { Left = pill.X - m.X, Top = pill.Y - m.Y, Right = pill.Right - m.X, Bottom = pill.Bottom - m.Y };
         FillRounded(dc, local, PillFill, PillBorder, Dip(8));
 
-        for (int i = 0; i <= PillButtons.Length; i++)
+        for (int i = 0; i < ButtonCount; i++)
         {
             var b = ButtonRect(i);
             var br = new RECT { Left = b.X - m.X, Top = b.Y - m.Y, Right = b.Right - m.X, Bottom = b.Bottom - m.Y };
-            bool isClose = i == PillButtons.Length;
-            int id = isClose ? CloseButton : (int)PillButtons[i].Mode;
-            bool selected = !isClose && PillButtons[i].Mode == _mode;
+            int id = IdAt(i);
+            bool selected = id == ExtractButton ? _extract : id != CloseButton && (CaptureMode)id == _mode;
             if (selected || _hoverButton == id)
                 FillRounded(dc, br, selected ? ButtonSelected : ButtonHover, selected ? ButtonSelected : ButtonHover, Dip(4));
             if (selected)
@@ -361,19 +385,18 @@ internal sealed unsafe class OverlaySession : IDisposable
                 var bar = new RECT { Left = br.Left + Dip(14), Top = br.Bottom - Dip(3), Right = br.Right - Dip(14), Bottom = br.Bottom - Dip(1) };
                 FillRounded(dc, bar, Accent, Accent, Dip(2));
             }
-            DrawCenteredText(dc, br, (isClose ? '\uE711' : PillButtons[i].Glyph).ToString(), "Segoe Fluent Icons", Dip(16), White);
+            DrawCenteredText(dc, br, Face(id).Glyph.ToString(), "Segoe Fluent Icons", Dip(16), White);
         }
 
-        // Separator before Close.
+        // Separator before Text extractor and Close.
         var sep = ButtonRect(PillButtons.Length);
         var line = new RECT { Left = sep.X - Dip(5) - m.X, Top = sep.Y + Dip(8) - m.Y, Right = sep.X - Dip(4) - m.X, Bottom = sep.Bottom - Dip(8) - m.Y };
         FillRounded(dc, line, PillBorder, PillBorder, 0);
 
         if (_hoverButton is { } hover)
         {
-            string name = hover == CloseButton ? "Close" : PillButtons.First(p => (int)p.Mode == hover).Name;
-            int index = hover == CloseButton ? PillButtons.Length : Array.FindIndex(PillButtons, p => (int)p.Mode == hover);
-            var b = ButtonRect(index);
+            string name = Face(hover).Name;
+            var b = ButtonRect(IndexOf(hover));
             int tw = Dip(8 + name.Length * 7.5), th = Dip(26);
             var tip = new RECT { Left = b.X + b.Width / 2 - tw / 2 - m.X, Top = pill.Bottom + Dip(6) - m.Y };
             tip.Right = tip.Left + tw;
@@ -439,6 +462,7 @@ internal sealed unsafe class OverlaySession : IDisposable
 /// <summary>Borderless topmost window covering one monitor; paints via a back buffer.</summary>
 internal sealed unsafe class OverlayWindow : Win32Window
 {
+    private const uint TestMove = 0x8001, TestDown = 0x8002, TestUp = 0x8003;
     private readonly OverlaySession _session;
     private nint _backDc, _backBitmap, _backOld;
 
@@ -507,6 +531,15 @@ internal sealed unsafe class OverlayWindow : Win32Window
             case WM_CLOSE:
                 _session.Cancel();
                 return 0;
+#if DEBUG
+            // Test scripts: WM_APP + 1 / 2 / 3 = move / left down / left up at the desktop point in lParam (x low, y high word).
+            case >= TestMove and <= TestUp:
+                var at = new PixelPoint((short)(lParam & 0xFFFF), (short)((lParam >> 16) & 0xFFFF));
+                if (msg == TestMove) _session.OnMouseMove(at);
+                else if (msg == TestDown) _session.OnLeftDown(this, at);
+                else _session.OnLeftUp(at);
+                return 0;
+#endif
         }
         return null;
     }

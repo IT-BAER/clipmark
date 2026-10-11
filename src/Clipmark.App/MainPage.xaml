@@ -29,6 +29,9 @@
                         <TextBlock Text="New" />
                     </StackPanel>
                 </Button>
+                <Button x:Name="OpenButton" Click="OnOpen" ToolTipService.ToolTip="Open an image or editable PNG (Ctrl+O)" AutomationProperties.Name="Open">
+                    <FontIcon FontSize="16" Glyph="&#xE8E5;" />
+                </Button>
                 <DropDownButton x:Name="ModeButton" ToolTipService.ToolTip="Capture mode" AutomationProperties.Name="Capture mode">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="ModeMenu" Placement="Bottom" />
@@ -107,6 +110,10 @@
                     <NumberBox x:Name="CropH" Tag="H" PlaceholderText="H" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
                                ToolTipService.ToolTip="Height (px)" AutomationProperties.Name="Crop height" />
                 </StackPanel>
+                <ToggleButton x:Name="TextActionsButton" Click="OnTextActions"
+                              ToolTipService.ToolTip="Text actions: copy text, redact emails and phone numbers, read QR codes" AutomationProperties.Name="Text actions">
+                    <FontIcon FontSize="16" Glyph="&#xE8C1;" />
+                </ToggleButton>
                 <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
                 <Button x:Name="UndoButton" Click="OnUndo" IsEnabled="False"
                         ToolTipService.ToolTip="Undo (Ctrl+Z)" AutomationProperties.Name="Undo">
@@ -119,9 +126,19 @@
             </StackPanel>
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4">
                 <StackPanel x:Name="OutputTools" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
-                    <Button Click="OnSave" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
+                    <SplitButton Click="OnSave" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
-                    </Button>
+                        <SplitButton.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Text="Save as editable PNG (Ctrl+Shift+S)" Click="OnSaveEditable"
+                                                ToolTipService.ToolTip="Keeps the objects editable. The file also holds the uncropped image and anything drawn over it.">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </SplitButton.Flyout>
+                    </SplitButton>
                     <Button Click="OnCopy" ToolTipService.ToolTip="Copy (Ctrl+C)" AutomationProperties.Name="Copy">
                         <FontIcon FontSize="16" Glyph="&#xE8C8;" />
                     </Button>
@@ -136,7 +153,19 @@
             </StackPanel>
         </Grid>
 
-        <InfoBar x:Name="Message" Grid.Row="1" Margin="8,0,8,8" IsOpen="False" Severity="Error" />
+        <StackPanel Grid.Row="1">
+            <StackPanel x:Name="TextActionsBar" Orientation="Horizontal" Spacing="8" Margin="8,0,8,8"
+                        HorizontalAlignment="Center" Visibility="Collapsed">
+                <TextBlock x:Name="TextActionsStatus" VerticalAlignment="Center" AutomationProperties.Name="Text actions status"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Button x:Name="CopyAllTextButton" Content="Copy all text" Click="OnCopyAllText" IsEnabled="False"
+                        AutomationProperties.Name="Copy all text" />
+                <Button x:Name="QuickRedactButton" Content="Quick redact" Click="OnQuickRedact" IsEnabled="False"
+                        ToolTipService.ToolTip="Blacks out email addresses and phone numbers in the image" AutomationProperties.Name="Quick redact" />
+                <StackPanel x:Name="QrResults" Orientation="Horizontal" Spacing="8" />
+            </StackPanel>
+            <InfoBar x:Name="Message" Margin="8,0,8,8" IsOpen="False" Severity="Error" />
+        </StackPanel>
 
         <TextBlock x:Name="Hint" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center"
                    TextAlignment="Center" TextWrapping="Wrap" Margin="24"

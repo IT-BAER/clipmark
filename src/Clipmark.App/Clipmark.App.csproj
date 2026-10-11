@@ -63,6 +63,8 @@
     <PackageReference Include="Microsoft.WindowsAppSDK.DWrite" Version="2.1.0" />
     <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.5.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.7.1" />
+    <!-- QR decode: Windows has no API for still images. Apache-2.0; Native AOT publish without warnings (measured). -->
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Clipmark.Core\Clipmark.Core.csproj" />

@@ -191,6 +191,13 @@ internal static class CaptureOutput
         catch (Exception) { }
     }
 
+    /// <summary>Text-only toast (text extractor); always shown, since the extractor has no other feedback.</summary>
+    public static void ShowTextToast(string title)
+    {
+        if (s_notificationsRegistered)
+            AppNotificationManager.Default.Show(new AppNotificationBuilder().AddText(title).BuildNotification());
+    }
+
     public static void ShowToast(string imagePath, bool copied, string? savedPath)
     {
         if (!s_notificationsRegistered)
