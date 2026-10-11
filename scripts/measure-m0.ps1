@@ -5,6 +5,7 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $m0 = Join-Path $root 'artifacts\m0'
 $runs = 5
+$only = $args   # optional variant folder names; default measures every variant
 
 function Get-FolderSize($path) {
     $files = Get-ChildItem $path -Recurse -File -Force
@@ -29,8 +30,11 @@ function Measure-Idle($process) {
     [pscustomobject]@{ WorkingSetMB = [math]::Round($process.WorkingSet64 / 1MB, 1); PrivateMB = [math]::Round($process.PrivateMemorySize64 / 1MB, 1) }
 }
 
+# Clipmark is single-instance: a running tray instance would swallow every launch below.
+Get-Process Clipmark.App -ErrorAction SilentlyContinue | Stop-Process -Force
 $results = @()
 foreach ($dir in Get-ChildItem $m0 -Directory | Where-Object Name -notlike 'B-*') {
+    if ($only -and $dir.Name -notin $only) { continue }
     $exe = Join-Path $dir.FullName 'Clipmark.App.exe'
     if (-not (Test-Path $exe)) { "skip $($dir.Name): no exe"; continue }
     $window = @(); $frame = @()
@@ -43,7 +47,7 @@ foreach ($dir in Get-ChildItem $m0 -Directory | Where-Object Name -notlike 'B-*'
 
         $marker = Join-Path $env:TEMP "clipmark-start-$i.txt"
         Remove-Item $marker -ErrorAction SilentlyContinue
-        $p = Start-Process $exe -ArgumentList '--spike-startup', $marker -PassThru
+        $p = Start-Process $exe -ArgumentList '--measure-startup', $marker -PassThru
         if (-not $p.WaitForExit(15000)) { $p.Kill(); throw "startup marker run hung: $($dir.Name)" }
         $frame += [int](([long](Get-Content $marker) - $p.StartTime.ToUniversalTime().Ticks) / 10000)
     }
@@ -52,16 +56,11 @@ foreach ($dir in Get-ChildItem $m0 -Directory | Where-Object Name -notlike 'B-*'
     $idle = Measure-Idle $p
     $p.Kill(); $p.WaitForExit()
 
-    $capDir = Join-Path $env:TEMP "clipmark-spike\$($dir.Name)"
-    Remove-Item $capDir -Recurse -Force -ErrorAction SilentlyContinue
-    $p = Start-Process $exe -ArgumentList '--spike-capture', $capDir -PassThru
-    $null = $p.WaitForExit(30000)
     $size = Get-FolderSize $dir.FullName
     $results += [pscustomobject]@{
         App = $dir.Name; SizeMB = $size.MB; Files = $size.Files
         WindowMsMedian = Median $window; FirstFrameMsMedian = Median $frame; FirstRunWindowMs = $window[0]
         IdleWorkingSetMB = $idle.WorkingSetMB; IdlePrivateMB = $idle.PrivateMB
-        Capture = (Get-Content (Join-Path $capDir 'report.txt') -ErrorAction SilentlyContinue)
     }
 }
 
@@ -86,7 +85,7 @@ $size = Get-FolderSize $pkg.InstallLocation
 $results += [pscustomobject]@{
     App = "SnippingTool $($pkg.Version)"; SizeMB = $size.MB; Files = $size.Files
     WindowMsMedian = Median $window; FirstFrameMsMedian = $null; FirstRunWindowMs = $window[0]
-    IdleWorkingSetMB = $idle.WorkingSetMB; IdlePrivateMB = $idle.PrivateMB; Capture = $null
+    IdleWorkingSetMB = $idle.WorkingSetMB; IdlePrivateMB = $idle.PrivateMB
 }
 
 $msix = Get-ChildItem (Join-Path $m0 'B-aot-msix') -Recurse -Filter 'Clipmark.App_*.msix' -ErrorAction SilentlyContinue | Select-Object -First 1

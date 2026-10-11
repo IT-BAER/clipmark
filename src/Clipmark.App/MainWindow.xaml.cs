@@ -1,45 +1,67 @@
+using Clipmark.App.Interop;
 using Microsoft.UI.Xaml;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Clipmark.App;
 
-/// <summary>
-/// The application window. This hosts a Frame that displays pages. Add your
-/// UI and logic to MainPage.xaml / MainPage.xaml.cs instead of here so you
-/// can use Page features such as navigation events and the Loaded lifecycle.
-/// </summary>
+/// <summary>Launcher and result window. Closing hides it; the app keeps running in the tray.</summary>
 public sealed partial class MainWindow : Window
 {
+    public nint Handle { get; }
+
     public MainWindow()
     {
         InitializeComponent();
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
-
         AppWindow.SetIcon("Assets/AppIcon.ico");
+        Handle = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
-        // Navigate the root frame to the main page on startup.
+        AppWindow.Closing += (_, e) =>
+        {
+            e.Cancel = true;
+            AppWindow.Hide();
+        };
         RootFrame.Navigate(typeof(MainPage));
-
-        var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-        bool registered = Spike.RegisterHotkey(hwnd, () => _ = CaptureFromHotkeyAsync());
-        AppTitleBar.Subtitle = registered ? "Ctrl+Shift+F8 captures all monitors" : "Hotkey Ctrl+Shift+F8 is taken";
     }
 
-    private async Task CaptureFromHotkeyAsync()
+    public bool IsShown => AppWindow.IsVisible && !_cloaked;
+
+    private bool _cloaked;
+
+    /// <summary>Cloaking hides the window at once, without the minimize animation that would end up in the capture.</summary>
+    public unsafe void SetCloaked(bool cloaked)
     {
-        var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures),
-            "Clipmark", "spike-" + DateTime.Now.ToString("yyyyMMdd-HHmmss"));
-        try
+        int value = cloaked ? 1 : 0;
+        Native.DwmSetWindowAttribute(Handle, 13 /* DWMWA_CLOAK */, &value, sizeof(int));
+        _cloaked = cloaked;
+    }
+
+    public void ShowAndActivate()
+    {
+        if (_cloaked)
+            SetCloaked(false);
+        AppWindow.Show();
+        Activate();
+    }
+
+    private MainPage? Page()
+    {
+        if (RootFrame.Content is not MainPage)
         {
-            AppTitleBar.Subtitle = await Spike.CaptureToFolderAsync(folder);
+            while (RootFrame.CanGoBack)
+                RootFrame.GoBack();
         }
-        catch (Exception e)
-        {
-            AppTitleBar.Subtitle = "Capture failed: " + e.Message;
-        }
+        return RootFrame.Content as MainPage;
+    }
+
+    public void ShowImage(string path) => Page()?.ShowImage(path);
+
+    public void ShowError(string text) => Page()?.ShowError(text);
+
+    public void ShowSettings()
+    {
+        if (RootFrame.Content is not SettingsPage)
+            RootFrame.Navigate(typeof(SettingsPage));
     }
 }

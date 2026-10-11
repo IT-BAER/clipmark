@@ -8,7 +8,23 @@ public readonly record struct PixelRect(int X, int Y, int Width, int Height)
 
     public bool Contains(PixelRect other) =>
         other.X >= X && other.Y >= Y && other.Right <= Right && other.Bottom <= Bottom;
+
+    public bool Contains(PixelPoint p) => p.X >= X && p.Y >= Y && p.X < Right && p.Y < Bottom;
+
+    /// <summary>Overlap of both rects, or null when they do not share a pixel.</summary>
+    public PixelRect? Intersect(PixelRect other)
+    {
+        int left = Math.Max(X, other.X), top = Math.Max(Y, other.Y);
+        int right = Math.Min(Right, other.Right), bottom = Math.Min(Bottom, other.Bottom);
+        return right > left && bottom > top ? new PixelRect(left, top, right - left, bottom - top) : null;
+    }
+
+    public static PixelRect FromCorners(int left, int top, int right, int bottom) =>
+        new(left, top, right - left, bottom - top);
 }
+
+/// <summary>Point in physical pixels, desktop coordinates.</summary>
+public readonly record struct PixelPoint(int X, int Y);
 
 /// <summary>Union of all monitors; one bitmap of this size holds the whole desktop.</summary>
 public sealed class VirtualScreen

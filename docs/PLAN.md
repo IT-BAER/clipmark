@@ -67,6 +67,7 @@ New repo only; nothing on the system changes until M6 (hotkey takeover). Shotosh
 - v1 scope: no Board, no Presentation mode, no Google Lens.
 - Release: Microsoft Store MSIX + GitHub zip.
 - Name: Clipmark. Known overlap: a small "ClipMark" screenshot/clip organizer exists (huntscreens.com listing); check Store name reservation before release.
+- M1: overlay = Win32 window per monitor painted with GDI (pill drawn with Segoe Fluent Icons). Default hotkey Ctrl+Print Screen (changeable). Auto-save off by default. Freeform result: bounding box, outside of the path transparent.
 
 ## Ledger
 ### M0 Spike
@@ -79,4 +80,17 @@ New repo only; nothing on the system changes until M6 (hotkey takeover). Shotosh
 - [x] Snipping Tool 11.2607.23.0: install folder 585.6 MB, window 484 ms median, idle WS 107.2 MB / private 83.3 MB. Variant D (AOT unpackaged, framework runtime, Store-equivalent): 6.53 MB shipped, window 490 ms, idle WS 93.6 MB / private 85.0 MB
 - [x] Go: Store package 2.80 MB vs 585.6 MB; start time and idle RAM at parity with Snipping Tool (empty-shell baseline, will grow with features)
 ### M1-M6
-- [x] Logo: concept 03 noir-red (assets/logo/*.svg), assets via scripts/build-icons.ps1, exe icon embedded, taskbar verified by screenshot - [ ] M1 Capture  - [ ] M2 Editor base  - [ ] M3 Shotoshot-class tools  - [ ] M4 Editable format + text actions  - [ ] M5 Recording  - [ ] M6 Release
+- [x] Logo: concept 03 noir-red (assets/logo/*.svg), assets via scripts/build-icons.ps1, exe icon embedded, taskbar verified by screenshot
+### M1 Capture
+- [x] M1.1 Core: selection normalize/clamp, monitor + window pickers, freeform mask, file namer, hotkey text, settings JSON (TDD, 41 tests green)
+- [x] M1.2 Tray host: icon + menu render, Ctrl+Print Screen delivered (overlay 35-72 ms), single-instance redirect works. Menu picks threw EntryPointNotFoundException (`PostMessage` has no unsuffixed export, fixed to `PostMessageW`); Open, Settings, Exit and a Mode submenu pick verified
+- [x] M1.3 Overlay: per-monitor GDI windows + pill; rectangle (primary, x=-2560 monitor, across both), window, full screen, all monitors, freeform pixel-compared against a reference grab; Esc cancels without touching the clipboard
+- [x] M1.4 Delay: 3 s setting -> overlay after 2996 ms
+- [ ] M1.5 Output: clipboard PNG + DIB verified, auto-save verified (name pattern, bytes = clipboard PNG). Toast reaches notification center only (no banner, unpackaged; fix in M6). Main window shows the capture after New (UIA "Captured image" 400x300 = drag size, screenshot checked). Toast-click open not tested (toast lives in notification center only; M6)
+- [x] M1.6 Settings page renders and persists; Spike.cs removed; `--measure-startup` in measure script. Hotkey change to Ctrl+Shift+F8 re-registers (new key opens overlay, old key released, restore works); folder picker saves and shows the folder, "Use default" clears it
+- [x] M1.7 Re-measure (scripts\measure-m0.ps1 D-aot-framework, 5 runs): D window 348 ms median (M0 490), first frame 371 ms, idle WS 103.4 MB / private 89.2 MB (M0 93.6 / 85.0), shipped 7.63 MB without pdb (M0 6.53); MSIX 3.2 MB (M0 2.80); Snipping Tool same run 389 ms, WS 107.4 MB / private 81.8 MB
+- [x] M1.8 Self-contained Windows App SDK builds (A zip candidate, C) never showed a window: `AppNotificationManager.Default.Register()` throws COMException 0x8007007E "Unable to load resource dll. Microsoft.WindowsAppRuntime.Insights.Resource.dll" (only in the installed framework package, in no NuGet package), and `async void OnLaunched` ended silently. Fixed: `CaptureOutput.RegisterNotifications()` catches the failure and toasts are skipped. Self-contained Debug: no window before, window "Clipmark" after; capture check green (400x300, toast on). Measure (5 runs): A window 360 ms, first frame 363 ms, WS 102.7 / private 87.9 MB, 66.47 MB without pdb; C 422 ms, 444 ms, WS 118.7 / private 91.8 MB, 87.82 MB; D same run 352 ms, Snipping Tool 369 ms
+- Deferred to M6: test shipping Microsoft.WindowsAppRuntime.Insights.Resource.dll in self-contained builds so toasts work there (M1.8)
+- Deferred to M6 (decided 11 October 2026): toast banner for the unpackaged build needs a Start menu shortcut with the AUMID; verify MSIX banner there
+### M2-M6
+- [ ] M2 Editor base  - [ ] M3 Shotoshot-class tools  - [ ] M4 Editable format + text actions  - [ ] M5 Recording  - [ ] M6 Release
