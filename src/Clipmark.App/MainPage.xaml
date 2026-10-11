@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    NavigationCacheMode="Required">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -14,7 +15,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Padding="8,4,8,8">
+        <Grid Padding="8,4,8,8" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="4">
                 <Button x:Name="NewButton" Click="OnNew" Style="{StaticResource AccentButtonStyle}"
                         ToolTipService.ToolTip="New capture" AutomationProperties.Name="New capture">
@@ -34,10 +40,70 @@
                     </DropDownButton.Flyout>
                 </DropDownButton>
             </StackPanel>
-            <Button HorizontalAlignment="Right" Click="OnSettings" Background="Transparent" BorderThickness="0"
-                    ToolTipService.ToolTip="Settings" AutomationProperties.Name="Settings">
-                <FontIcon FontSize="16" Glyph="&#xE713;" />
-            </Button>
+            <StackPanel x:Name="EditTools" Grid.Column="1" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
+                <ToggleButton x:Name="PenButton" Tag="Pen" Click="OnToolClick"
+                              ToolTipService.ToolTip="Pen (P)" AutomationProperties.Name="Pen">
+                    <FontIcon FontSize="16" Glyph="&#xEE56;" />
+                </ToggleButton>
+                <ToggleButton x:Name="HighlighterButton" Tag="Highlighter" Click="OnToolClick"
+                              ToolTipService.ToolTip="Highlighter (H)" AutomationProperties.Name="Highlighter">
+                    <FontIcon FontSize="16" Glyph="&#xE7E6;" />
+                </ToggleButton>
+                <ToggleButton x:Name="EraserButton" Tag="Eraser" Click="OnToolClick"
+                              ToolTipService.ToolTip="Eraser (E)" AutomationProperties.Name="Eraser">
+                    <FontIcon FontSize="16" Glyph="&#xE75C;" />
+                </ToggleButton>
+                <ToggleSplitButton x:Name="ShapeButton" IsCheckedChanged="OnShapeCheckedChanged"
+                                   ToolTipService.ToolTip="Shapes" AutomationProperties.Name="Shapes">
+                    <ToggleSplitButton.Flyout>
+                        <MenuFlyout x:Name="ShapeMenu" Placement="Bottom" />
+                    </ToggleSplitButton.Flyout>
+                </ToggleSplitButton>
+                <DropDownButton x:Name="StyleButton" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
+                    <DropDownButton.Flyout>
+                        <MenuFlyout x:Name="StyleMenu" Placement="Bottom" />
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+                <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                <ToggleButton x:Name="CropButton" Click="OnCropClick"
+                              ToolTipService.ToolTip="Crop" AutomationProperties.Name="Crop">
+                    <FontIcon FontSize="16" Glyph="&#xE7A8;" />
+                </ToggleButton>
+                <Button x:Name="ApplyCropButton" Click="OnApplyCrop" Visibility="Collapsed"
+                        ToolTipService.ToolTip="Apply crop (Enter)" AutomationProperties.Name="Apply crop">
+                    <FontIcon FontSize="16" Glyph="&#xE8FB;" />
+                </Button>
+                <Button x:Name="CancelCropButton" Click="OnCancelCrop" Visibility="Collapsed"
+                        ToolTipService.ToolTip="Cancel crop (Esc)" AutomationProperties.Name="Cancel crop">
+                    <FontIcon FontSize="16" Glyph="&#xE711;" />
+                </Button>
+                <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
+                <Button x:Name="UndoButton" Click="OnUndo" IsEnabled="False"
+                        ToolTipService.ToolTip="Undo (Ctrl+Z)" AutomationProperties.Name="Undo">
+                    <FontIcon FontSize="16" Glyph="&#xE7A7;" />
+                </Button>
+                <Button x:Name="RedoButton" Click="OnRedo" IsEnabled="False"
+                        ToolTipService.ToolTip="Redo (Ctrl+Y)" AutomationProperties.Name="Redo">
+                    <FontIcon FontSize="16" Glyph="&#xE7A6;" />
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4">
+                <StackPanel x:Name="OutputTools" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
+                    <Button Click="OnSave" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
+                        <FontIcon FontSize="16" Glyph="&#xE74E;" />
+                    </Button>
+                    <Button Click="OnCopy" ToolTipService.ToolTip="Copy (Ctrl+C)" AutomationProperties.Name="Copy">
+                        <FontIcon FontSize="16" Glyph="&#xE8C8;" />
+                    </Button>
+                    <Button Click="OnShare" ToolTipService.ToolTip="Share" AutomationProperties.Name="Share">
+                        <FontIcon FontSize="16" Glyph="&#xE72D;" />
+                    </Button>
+                </StackPanel>
+                <Button Click="OnSettings" Background="Transparent" BorderThickness="0"
+                        ToolTipService.ToolTip="Settings" AutomationProperties.Name="Settings">
+                    <FontIcon FontSize="16" Glyph="&#xE713;" />
+                </Button>
+            </StackPanel>
         </Grid>
 
         <InfoBar x:Name="Message" Grid.Row="1" Margin="8,0,8,8" IsOpen="False" Severity="Error" />
@@ -48,9 +114,6 @@
 
         <ScrollViewer x:Name="ImageScroller" Grid.Row="2" Visibility="Collapsed"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                      ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8">
-            <Image x:Name="CaptureImage" Stretch="Uniform" Margin="16"
-                   HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Captured image" />
-        </ScrollViewer>
+                      ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" />
     </Grid>
 </Page>

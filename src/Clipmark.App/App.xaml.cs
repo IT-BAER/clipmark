@@ -10,11 +10,18 @@ using Microsoft.Windows.AppNotifications;
 namespace Clipmark.App;
 
 /// <summary>
-/// Single-instance tray app. Startup flags: `--tray` starts hidden; `--measure-startup FILE` writes the
-/// first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1).
+/// Single-instance tray app. Startup flags: `--tray` starts hidden; `--open FILE` shows a PNG in the editor;
+/// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1).
 /// </summary>
 public partial class App : Application
 {
+#if DEBUG
+    /// <summary>Test mode (Debug only): the window stays cloaked and TestDriver takes commands from this folder.</summary>
+    internal static readonly string? TestDir = Environment.GetEnvironmentVariable("CLIPMARK_TEST_DIR");
+#else
+    internal const string? TestDir = null;
+#endif
+
     private MainWindow? _window;
     private TrayHost? _tray;
     private CaptureController? _controller;
@@ -61,7 +68,7 @@ public partial class App : Application
         _tray.CaptureRequested += () => _ = CaptureAsync();
         _tray.OpenRequested += () => _window.ShowAndActivate();
         _tray.SettingsRequested += () => { _window.ShowSettings(); _window.ShowAndActivate(); };
-        _tray.ExitRequested += ExitApp;
+        _tray.ExitRequested += () => _ = ExitAsync();
         _tray.ModeChosen += mode => AppSettings.Update(s => s with { Mode = mode });
         _tray.DelayChosen += delay => AppSettings.Update(s => s with { DelaySeconds = delay });
 
@@ -84,6 +91,8 @@ public partial class App : Application
 
         if (activation.Kind == ExtendedActivationKind.AppNotification)
             OpenCapture(OpenArgument((AppNotificationActivatedEventArgs)activation.Data));
+        else if (Arg("--open") is { } file)
+            OpenCapture(Path.GetFullPath(file));
         else if (!Environment.GetCommandLineArgs().Contains("--tray"))
             _window.ShowAndActivate();
     }
@@ -112,19 +121,19 @@ public partial class App : Application
     private static string? OpenArgument(AppNotificationActivatedEventArgs e) =>
         e.Arguments.TryGetValue("open", out var path) ? path : null;
 
-    private void OpenCapture(string? path)
+    private async void OpenCapture(string? path)
     {
         if (_window is null)
             return;
-        if (path is not null && File.Exists(path))
+        if (path is not null && File.Exists(path) && await _window.ConfirmDiscardAsync())
             _window.ShowImage(path);
         _window.ShowAndActivate();
     }
 
-    /// <summary>Starts a capture; the main window is cloaked while the frame is taken and shows the result if it was open.</summary>
+    /// <summary>Starts a capture; the main window is cloaked while the frame is taken and shows the result if it was open or no toast is shown.</summary>
     internal async Task CaptureAsync()
     {
-        if (_controller is null || _window is null)
+        if (_controller is null || _window is null || !await _window.ConfirmDiscardAsync())
             return;
         bool windowWasShown = _window.IsShown;
         _controller.BeforeFreeze = async () =>
@@ -145,13 +154,19 @@ public partial class App : Application
         finally
         {
             _controller.Captured -= OnCaptured;
-            if (windowWasShown)
-            {
-                if (captured is not null)
-                    _window.ShowImage(captured);
+            // Without a toast the editor is the only way to reach the capture.
+            bool showEditor = captured is not null && (windowWasShown || !AppSettings.Current.ShowToast);
+            if (showEditor)
+                _window.ShowImage(captured!);
+            if (showEditor || windowWasShown)
                 _window.ShowAndActivate();
-            }
         }
+    }
+
+    private async Task ExitAsync()
+    {
+        if (_window is null || await _window.ConfirmDiscardAsync())
+            ExitApp();
     }
 
     private void ExitApp()

@@ -5,16 +5,16 @@ namespace Clipmark.Core.Tests;
 public class SettingsStoreTests
 {
     [Fact]
-    public void Defaults_match_the_m1_decisions()
+    public void Defaults_match_the_m2_decisions()
     {
         var s = new ClipmarkSettings();
         Assert.Equal("Ctrl+PrintScreen", s.Hotkey.ToString());
         Assert.Equal(CaptureMode.Rectangle, s.Mode);
         Assert.Equal(0, s.DelaySeconds);
-        Assert.True(s.CopyToClipboard);
+        Assert.False(s.CopyToClipboard);
         Assert.False(s.AutoSave);
         Assert.Null(s.SaveFolder);
-        Assert.True(s.ShowToast);
+        Assert.False(s.ShowToast);
     }
 
     [Fact]
@@ -23,8 +23,8 @@ public class SettingsStoreTests
         var s = new ClipmarkSettings
         {
             Hotkey = new Hotkey(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x77),
-            Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = false,
-            AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = false,
+            Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = true,
+            AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
     }

@@ -32,10 +32,24 @@ internal static class CaptureOutput
         }
     }
 
-    public static async Task<byte[]> EncodePngAsync(CapturedImage image)
+    public static Task<byte[]> EncodePngAsync(CapturedImage image) => EncodeAsync(image, BitmapEncoder.PngEncoderId);
+
+    /// <summary>JPEG has no alpha: transparent pixels are put onto white.</summary>
+    public static Task<byte[]> EncodeJpegAsync(CapturedImage image)
+    {
+        if (image.HasTransparency)
+        {
+            var bgra = (byte[])image.Bgra.Clone();
+            Pixels.OverWhite(bgra);
+            image = image with { Bgra = bgra, HasTransparency = false };
+        }
+        return EncodeAsync(image, BitmapEncoder.JpegEncoderId);
+    }
+
+    private static async Task<byte[]> EncodeAsync(CapturedImage image, Guid encoderId)
     {
         using var stream = new InMemoryRandomAccessStream();
-        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+        var encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
         encoder.SetPixelData(BitmapPixelFormat.Bgra8, image.HasTransparency ? BitmapAlphaMode.Straight : BitmapAlphaMode.Ignore,
             (uint)image.Width, (uint)image.Height, 96, 96, image.Bgra);
         await encoder.FlushAsync();

@@ -11,13 +11,13 @@ public sealed record ClipmarkSettings
     public Hotkey Hotkey { get; init; } = new(HotkeyModifiers.Control, 0x2C);
     public CaptureMode Mode { get; init; } = CaptureMode.Rectangle;
     public int DelaySeconds { get; init; }
-    public bool CopyToClipboard { get; init; } = true;
+    public bool CopyToClipboard { get; init; }
     public bool AutoSave { get; init; }
 
     /// <summary>Null = the app default (Pictures\Screenshots).</summary>
     public string? SaveFolder { get; init; }
 
-    public bool ShowToast { get; init; } = true;
+    public bool ShowToast { get; init; }
 }
 
 /// <summary>JSON without reflection (Native AOT). Each invalid or missing field falls back to its default.</summary>

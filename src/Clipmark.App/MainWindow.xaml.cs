@@ -17,9 +17,12 @@ public sealed partial class MainWindow : Window
         AppWindow.SetIcon("Assets/AppIcon.ico");
         Handle = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
-        AppWindow.Closing += (_, e) =>
+        AppWindow.Closing += async (_, e) =>
         {
             e.Cancel = true;
+            if (!await ConfirmDiscardAsync())
+                return;
+            Page()?.CloseCapture(); // closing ends the editor session, as in Snipping Tool
             AppWindow.Hide();
         };
         RootFrame.Navigate(typeof(MainPage));
@@ -39,6 +42,12 @@ public sealed partial class MainWindow : Window
 
     public void ShowAndActivate()
     {
+        if (App.TestDir is not null)
+        {
+            SetCloaked(true); // test mode: TestDriver drives the app, nothing appears on screen
+            AppWindow.Show(false);
+            return;
+        }
         if (_cloaked)
             SetCloaked(false);
         AppWindow.Show();
@@ -56,6 +65,15 @@ public sealed partial class MainWindow : Window
     }
 
     public void ShowImage(string path) => Page()?.ShowImage(path);
+
+    /// <summary>Asks about unsaved edits (showing the window first); true when the editor content may be replaced or dropped.</summary>
+    public Task<bool> ConfirmDiscardAsync()
+    {
+        if (Page() is not { Editor.Document.IsDirty: true } page)
+            return Task.FromResult(true);
+        ShowAndActivate();
+        return page.ConfirmDiscardAsync();
+    }
 
     public void ShowError(string text) => Page()?.ShowError(text);
 

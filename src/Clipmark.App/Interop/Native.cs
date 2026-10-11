@@ -317,5 +317,13 @@ internal static unsafe partial class Native
 
     [LibraryImport("kernel32.dll")] public static partial nint GlobalFree(nint mem);
 
+    [LibraryImport("combase.dll", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial int WindowsCreateString(string text, uint length, out nint hstring);
+
+    [LibraryImport("combase.dll")] public static partial int WindowsDeleteString(nint hstring);
+
+    [LibraryImport("combase.dll")]
+    public static partial int RoGetActivationFactory(nint activatableClassId, in Guid iid, out nint factory);
+
     public static uint Rgb(byte r, byte g, byte b) => (uint)(r | g << 8 | b << 16);
 }
