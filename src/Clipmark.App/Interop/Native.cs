@@ -11,7 +11,8 @@ internal static unsafe partial class Native
     public const uint WM_DESTROY = 0x0002, WM_PAINT = 0x000F, WM_CLOSE = 0x0010, WM_ERASEBKGND = 0x0014,
         WM_SETCURSOR = 0x0020, WM_KEYDOWN = 0x0100, WM_COMMAND = 0x0111, WM_MOUSEMOVE = 0x0200,
         WM_LBUTTONDOWN = 0x0201, WM_LBUTTONUP = 0x0202, WM_RBUTTONUP = 0x0205, WM_HOTKEY = 0x0312,
-        WM_CONTEXTMENU = 0x007B, WM_NULL = 0x0000, WM_APP = 0x8000, WM_CAPTURECHANGED = 0x0215;
+        WM_CONTEXTMENU = 0x007B, WM_NULL = 0x0000, WM_APP = 0x8000, WM_CAPTURECHANGED = 0x0215, WM_MOUSEACTIVATE = 0x0021;
+    public const int MA_NOACTIVATE = 3;
     public const uint MOD_NOREPEAT = 0x4000;
     public const int VK_ESCAPE = 0x1B;
 
@@ -39,7 +40,7 @@ internal static unsafe partial class Native
     public const int TRANSPARENT = 1, PS_SOLID = 0, NULL_BRUSH = 5;
     public const uint DT_CENTER = 0x1, DT_VCENTER = 0x4, DT_SINGLELINE = 0x20, DT_NOPREFIX = 0x800;
 
-    public const uint CF_DIB = 8, CF_UNICODETEXT = 13, GMEM_MOVEABLE = 0x2;
+    public const uint CF_DIB = 8, CF_UNICODETEXT = 13, CF_HDROP = 15, GMEM_MOVEABLE = 0x2;
 
     [StructLayout(LayoutKind.Sequential)]
     public struct RECT { public int Left, Top, Right, Bottom; }
@@ -113,6 +114,7 @@ internal static unsafe partial class Native
     public static partial bool GetMonitorInfo(nint monitor, ref MONITORINFO info);
 
     [LibraryImport("user32.dll")] public static partial nint MonitorFromWindow(nint hwnd, uint flags);
+    [LibraryImport("user32.dll")] public static partial nint MonitorFromPoint(POINT point, uint flags);
     [LibraryImport("user32.dll")] public static partial nint GetDC(nint hwnd);
     [LibraryImport("user32.dll")] public static partial int ReleaseDC(nint hwnd, nint hdc);
     [LibraryImport("gdi32.dll")] public static partial nint CreateCompatibleDC(nint hdc);
@@ -154,6 +156,19 @@ internal static unsafe partial class Native
     [LibraryImport("gdi32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool Polyline(nint hdc, POINT* points, int count);
+
+    [LibraryImport("gdi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool Ellipse(nint hdc, int left, int top, int right, int bottom);
+
+    [LibraryImport("gdi32.dll")] public static partial nint CreateRoundRectRgn(int left, int top, int right, int bottom, int w, int h);
+    [LibraryImport("user32.dll")] public static partial int SetWindowRgn(nint hwnd, nint region, [MarshalAs(UnmanagedType.Bool)] bool redraw);
+
+    public const uint WS_EX_LAYERED = 0x80000, WS_EX_TRANSPARENT = 0x20, LWA_ALPHA = 0x2;
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetLayeredWindowAttributes(nint hwnd, uint key, byte alpha, uint flags);
 
     [LibraryImport("gdi32.dll", EntryPoint = "CreateFontW", StringMarshalling = StringMarshalling.Utf16)]
     public static partial nint CreateFont(int height, int width, int escapement, int orientation, int weight,
@@ -324,6 +339,20 @@ internal static unsafe partial class Native
 
     [LibraryImport("combase.dll")]
     public static partial int RoGetActivationFactory(nint activatableClassId, in Guid iid, out nint factory);
+
+    // Capture exclusion (recording bar and outline stay out of the video)
+    public const uint WDA_EXCLUDEFROMCAPTURE = 0x11;
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetWindowDisplayAffinity(nint hwnd, uint affinity);
+
+    // COM
+    public const uint COINIT_MULTITHREADED = 0x0, CLSCTX_ALL = 0x17;
+    [LibraryImport("ole32.dll")] public static partial int CoInitializeEx(nint reserved, uint coInit);
+    [LibraryImport("ole32.dll")] public static partial void CoUninitialize();
+    [LibraryImport("ole32.dll")] public static partial int CoCreateInstance(Guid* clsid, nint outer, uint context, Guid* iid, nint* result);
+    [LibraryImport("ole32.dll")] public static partial void CoTaskMemFree(nint p);
 
     public static uint Rgb(byte r, byte g, byte b) => (uint)(r | g << 8 | b << 16);
 }

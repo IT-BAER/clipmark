@@ -7,9 +7,9 @@ namespace Clipmark.App.Shell;
 /// <summary>Hidden window that owns the tray icon and the global hotkey.</summary>
 internal sealed unsafe class TrayHost : Win32Window
 {
-    private const int HotkeyId = 1;
+    public const int CaptureHotkeyId = 1, RecordHotkeyId = 2;
     private const uint TrayId = 1, TrayCallback = WM_APP + 1;
-    private const int CmdCapture = 1, CmdOpen = 2, CmdSettings = 3, CmdExit = 4, CmdModeBase = 100, CmdDelayBase = 200;
+    private const int CmdCapture = 1, CmdOpen = 2, CmdSettings = 3, CmdExit = 4, CmdRecord = 5, CmdModeBase = 100, CmdDelayBase = 200;
 
     private static readonly (CaptureMode Mode, string Text)[] Modes =
     [
@@ -21,6 +21,10 @@ internal sealed unsafe class TrayHost : Win32Window
     private nint _icon;
 
     public event Action? CaptureRequested;
+    public event Action? RecordRequested;
+
+    /// <summary>Left click on the icon; the app starts a capture or stops a running recording.</summary>
+    public event Action? IconClicked;
     public event Action? OpenRequested;
     public event Action? SettingsRequested;
     public event Action? ExitRequested;
@@ -32,10 +36,10 @@ internal sealed unsafe class TrayHost : Win32Window
 
     public TrayHost() : base(WS_POPUP, WS_EX_TOOLWINDOW, "Clipmark tray") => AddIcon();
 
-    public bool TryRegisterHotkey(Hotkey hotkey)
+    public bool TryRegisterHotkey(int id, Hotkey hotkey)
     {
-        UnregisterHotKey(Handle, HotkeyId);
-        return RegisterHotKey(Handle, HotkeyId, (uint)hotkey.Modifiers | MOD_NOREPEAT, (uint)hotkey.Key);
+        UnregisterHotKey(Handle, id);
+        return RegisterHotKey(Handle, id, (uint)hotkey.Modifiers | MOD_NOREPEAT, (uint)hotkey.Key);
     }
 
     private void AddIcon()
@@ -58,9 +62,9 @@ internal sealed unsafe class TrayHost : Win32Window
 
     protected override nint? OnMessage(uint msg, nint wParam, nint lParam)
     {
-        if (msg == WM_HOTKEY && wParam == HotkeyId)
+        if (msg == WM_HOTKEY && wParam is CaptureHotkeyId or RecordHotkeyId)
         {
-            CaptureRequested?.Invoke();
+            (wParam == CaptureHotkeyId ? CaptureRequested : RecordRequested)?.Invoke();
             return 0;
         }
         if (msg == _taskbarCreated)
@@ -75,7 +79,7 @@ internal sealed unsafe class TrayHost : Win32Window
         switch ((uint)(lParam & 0xFFFF))
         {
             case NIN_SELECT or NIN_KEYSELECT:
-                CaptureRequested?.Invoke();
+                IconClicked?.Invoke();
                 break;
             case WM_CONTEXTMENU:
                 ShowMenu((short)(wParam & 0xFFFF), (short)((wParam >> 16) & 0xFFFF));
@@ -96,6 +100,7 @@ internal sealed unsafe class TrayHost : Win32Window
                 AppendMenu(delays, s.DelaySeconds == d ? MF_CHECKED : MF_STRING, CmdDelayBase + d, d == 0 ? "No delay" : $"{d} seconds");
 
             AppendMenu(menu, MF_STRING, CmdCapture, $"New capture\t{s.Hotkey}");
+            AppendMenu(menu, MF_STRING, CmdRecord, $"New recording\t{s.RecordHotkey}");
             AppendMenu(menu, MF_POPUP, modes, "Mode");
             AppendMenu(menu, MF_POPUP, delays, "Delay");
             AppendMenu(menu, MF_SEPARATOR, 0, null);
@@ -121,6 +126,7 @@ internal sealed unsafe class TrayHost : Win32Window
         switch (cmd)
         {
             case CmdCapture: CaptureRequested?.Invoke(); break;
+            case CmdRecord: RecordRequested?.Invoke(); break;
             case CmdOpen: OpenRequested?.Invoke(); break;
             case CmdSettings: SettingsRequested?.Invoke(); break;
             case CmdExit: ExitRequested?.Invoke(); break;
@@ -133,7 +139,8 @@ internal sealed unsafe class TrayHost : Win32Window
     {
         var data = NewData();
         Shell_NotifyIcon(NIM_DELETE, &data);
-        UnregisterHotKey(Handle, HotkeyId);
+        UnregisterHotKey(Handle, CaptureHotkeyId);
+        UnregisterHotKey(Handle, RecordHotkeyId);
         if (_icon != 0)
             DestroyIcon(_icon);
         base.Dispose();

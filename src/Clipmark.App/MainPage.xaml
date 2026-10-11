@@ -29,6 +29,10 @@
                         <TextBlock Text="New" />
                     </StackPanel>
                 </Button>
+                <Button x:Name="RecordButton" Click="OnNewRecording"
+                        ToolTipService.ToolTip="New recording" AutomationProperties.Name="New recording">
+                    <FontIcon FontSize="16" Glyph="&#xE714;" />
+                </Button>
                 <Button x:Name="OpenButton" Click="OnOpen" ToolTipService.ToolTip="Open an image or editable PNG (Ctrl+O)" AutomationProperties.Name="Open">
                     <FontIcon FontSize="16" Glyph="&#xE8E5;" />
                 </Button>
@@ -130,7 +134,7 @@
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Text="Save as editable PNG (Ctrl+Shift+S)" Click="OnSaveEditable"
+                                <MenuFlyoutItem x:Name="SaveEditableItem" Text="Save as editable PNG (Ctrl+Shift+S)" Click="OnSaveEditable"
                                                 ToolTipService.ToolTip="Keeps the objects editable. The file also holds the uncropped image and anything drawn over it.">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE70F;" />
@@ -174,5 +178,8 @@
         <ScrollViewer x:Name="ImageScroller" Grid.Row="2" Visibility="Collapsed"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                       ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" />
+
+        <MediaPlayerElement x:Name="VideoPlayer" Grid.Row="2" Visibility="Collapsed" Margin="8,0,8,8"
+                            AreTransportControlsEnabled="True" AutomationProperties.Name="Recording" />
     </Grid>
 </Page>

@@ -66,6 +66,8 @@ public sealed partial class MainWindow : Window
 
     public void ShowImage(string path) => Page()?.ShowImage(path);
 
+    public void ShowVideo(string path) => Page()?.ShowVideo(path);
+
     /// <summary>Asks about unsaved edits (showing the window first); true when the editor content may be replaced or dropped.</summary>
     public Task<bool> ConfirmDiscardAsync()
     {

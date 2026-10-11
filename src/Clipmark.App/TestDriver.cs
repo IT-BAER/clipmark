@@ -27,7 +27,9 @@ namespace Clipmark.App;
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates)
 /// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
-/// | assert editable (opened with live objects) | assert message TEXT (open error bar contains).
+/// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
+/// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
+/// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -83,6 +85,10 @@ internal sealed class TestDriver
         {
             case "open":
                 _page.ShowImage(Path.GetFullPath(arg));
+                await Task.Delay(500);
+                break;
+            case "openvideo":
+                _page.ShowVideo(Path.GetFullPath(arg));
                 await Task.Delay(500);
                 break;
             case "click":
@@ -199,6 +205,15 @@ internal sealed class TestDriver
                 if (!bar.IsOpen || bar.Message?.Contains(arg[8..], StringComparison.Ordinal) != true)
                     throw new InvalidOperationException($"message is '{(bar.IsOpen ? bar.Message : "(closed)")}'");
                 break;
+            case "assert" when arg.StartsWith("video"):
+                // assert video [FILE]: a recording is shown (and it is FILE).
+                if (_page.VideoPath is not { } shown || (arg.Length > 6 && !string.Equals(shown, Path.GetFullPath(arg[6..]), StringComparison.OrdinalIgnoreCase)))
+                    throw new InvalidOperationException($"video shown is '{_page.VideoPath}'");
+                break;
+            case "savevideo":
+                if (!await _page.SaveVideoToAsync(Path.GetFullPath(arg)))
+                    throw new InvalidOperationException("not saved");
+                break;
             case "assert" when arg == "editable":
                 if (_page.Editor?.FromEditable != true)
                     throw new InvalidOperationException("not opened as editable");
@@ -261,6 +276,17 @@ internal sealed class TestDriver
                 string state = _page.Editor?.Document is not { } doc ? "empty" : doc.IsDirty ? "dirty" : "clean";
                 if (state != arg)
                     throw new InvalidOperationException($"state is {state}");
+                break;
+            case "record":
+                var recordWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var xywh = recordWords[0].Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                var area = Clipmark.Core.Recording.RecordingRegion.Fit(new Clipmark.Core.Capture.PixelRect(xywh[0], xywh[1], xywh[2], xywh[3]),
+                    Capture.ScreenCapture.EnumerateMonitors()) ?? throw new InvalidOperationException("region is on no monitor");
+                var recorder = await Recording.ScreenRecorder.StartAsync(area, Path.GetFullPath(recordWords[2]),
+                    recordWords.Contains("system"), recordWords.Contains("mic"));
+                await Task.Delay(int.Parse(recordWords[1], CultureInfo.InvariantCulture));
+                await recorder.StopAsync();
+                File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), recorder.Warnings);
                 break;
             case "wait":
                 await Task.Delay(int.Parse(arg, CultureInfo.InvariantCulture));

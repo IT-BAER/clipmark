@@ -15,6 +15,9 @@ public class SettingsStoreTests
         Assert.False(s.AutoSave);
         Assert.Null(s.SaveFolder);
         Assert.False(s.ShowToast);
+        Assert.Equal("Ctrl+Shift+PrintScreen", s.RecordHotkey.ToString());
+        Assert.True(s.RecordSystemAudio);
+        Assert.False(s.RecordMicrophone);
     }
 
     [Fact]
@@ -25,6 +28,7 @@ public class SettingsStoreTests
             Hotkey = new Hotkey(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x77),
             Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = true,
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
+            RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
     }
@@ -44,6 +48,15 @@ public class SettingsStoreTests
     public void Broken_file_gives_defaults(string json)
     {
         Assert.Equal(new ClipmarkSettings(), SettingsStore.Parse(json));
+    }
+
+    [Fact]
+    public void Settings_from_before_recording_get_recording_defaults()
+    {
+        var s = SettingsStore.Parse("""{ "hotkey": "Ctrl+F8", "mode": "Window" }""");
+        Assert.Equal(new ClipmarkSettings().RecordHotkey, s.RecordHotkey);
+        Assert.True(s.RecordSystemAudio);
+        Assert.False(s.RecordMicrophone);
     }
 
     [Fact]

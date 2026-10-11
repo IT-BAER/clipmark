@@ -17,7 +17,7 @@ internal sealed unsafe class OverlaySession : IDisposable
         (CaptureMode.FullScreen, '\uE7F4', "Full screen"), (CaptureMode.AllMonitors, '\uEBC6', "All monitors"),
         (CaptureMode.Freeform, '\uF408', "Freeform"),
     ];
-    private const int CloseButton = -1, ExtractButton = -2;
+    private const int CloseButton = -1, ExtractButton = -2, PhotoButton = -3, VideoButton = -4;
 
     private readonly DesktopFrame _frame;
     private readonly TaskCompletionSource<CapturedImage?> _done = new();
@@ -31,17 +31,26 @@ internal sealed unsafe class OverlaySession : IDisposable
     private List<PixelPoint>? _path;
     private PixelRect? _decorated; // desktop area that currently shows highlight, border or label
     private int? _hoverButton;
-    private bool _extract;
+    private bool _extract, _video;
+    private PixelRect? _picked;
 
     public CaptureMode Mode => _mode;
 
     /// <summary>Text extractor toggled on in the pill: the picked region goes to OCR and the clipboard, not to the editor.</summary>
     public bool ExtractText => _extract;
 
-    public OverlaySession(DesktopFrame frame, CaptureMode mode)
+    /// <summary>Video chosen in the pill: the session picks a region to record and completes without an image.</summary>
+    public bool Video => _video;
+
+    /// <summary>The region picked in Video mode (desktop pixels), or null when cancelled.</summary>
+    public PixelRect? PickedRegion => _picked;
+
+    public OverlaySession(DesktopFrame frame, CaptureMode mode, bool video = false)
     {
         _frame = frame;
         _mode = mode;
+        if (video)
+            SetVideo(true);
         var b = frame.Screen.Bounds;
 
         nint screenDc = GetDC(0);
@@ -103,8 +112,16 @@ internal sealed unsafe class OverlaySession : IDisposable
         _cursor = p;
         if (PillHit(p) is { } button)
         {
+            if (!Enabled(button))
+                return;
             if (button == CloseButton)
                 Finish(null);
+            else if (button is PhotoButton or VideoButton)
+            {
+                SetVideo(button == VideoButton);
+                InvalidatePill();
+                Redecorate();
+            }
             else if (button == ExtractButton)
             {
                 _extract = !_extract;
@@ -143,7 +160,7 @@ internal sealed unsafe class OverlaySession : IDisposable
                 _dragStart = null;
                 ReleaseCapture();
                 if (Selection.FromDrag(start, p, bounds) is { } rect)
-                    Finish(_frame.Cut(rect));
+                    Pick(rect);
                 else
                     Redecorate(); // click without drag: keep the overlay open
                 break;
@@ -157,7 +174,7 @@ internal sealed unsafe class OverlaySession : IDisposable
                 break;
             case CaptureMode.Window or CaptureMode.FullScreen:
                 if (Highlight() is { } picked)
-                    Finish(_frame.Cut(picked));
+                    Pick(picked);
                 break;
         }
     }
@@ -173,6 +190,31 @@ internal sealed unsafe class OverlaySession : IDisposable
     }
 
     internal void Cancel() => Finish(null);
+
+    /// <summary>Video: freeform, all monitors and the text extractor are photo-only.</summary>
+    private void SetVideo(bool video)
+    {
+        _video = video;
+        if (video)
+        {
+            _extract = false;
+            if (_mode is CaptureMode.Freeform or CaptureMode.AllMonitors)
+                _mode = CaptureMode.Rectangle;
+        }
+    }
+
+    private bool Enabled(int button) => !_video || button is not (ExtractButton or (int)CaptureMode.Freeform or (int)CaptureMode.AllMonitors);
+
+    private void Pick(PixelRect rect)
+    {
+        if (_video)
+        {
+            _picked = rect;
+            Finish(null);
+        }
+        else
+            Finish(_frame.Cut(rect));
+    }
 
     private void Finish(CapturedImage? result)
     {
@@ -248,27 +290,40 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     private int Dip(double v) => (int)Math.Round(v * PillScale);
 
-    // Pill order: the modes, a separator, Text extractor, Close.
-    private const int ButtonCount = 7;
+    // Pill order: Photo, Video, a separator, the modes, a separator, Text extractor, Close.
+    private const int ButtonCount = 9, FirstMode = 2, AfterModes = FirstMode + 5;
 
-    private static int IdAt(int index) => index < PillButtons.Length ? (int)PillButtons[index].Mode
-        : index == PillButtons.Length ? ExtractButton : CloseButton;
+    private static int IdAt(int index) => index switch
+    {
+        0 => PhotoButton,
+        1 => VideoButton,
+        < AfterModes => (int)PillButtons[index - FirstMode].Mode,
+        AfterModes => ExtractButton,
+        _ => CloseButton,
+    };
 
-    private static int IndexOf(int id) => id == ExtractButton ? PillButtons.Length
-        : id == CloseButton ? PillButtons.Length + 1 : Array.FindIndex(PillButtons, p => (int)p.Mode == id);
+    private static int IndexOf(int id) => id switch
+    {
+        PhotoButton => 0,
+        VideoButton => 1,
+        ExtractButton => AfterModes,
+        CloseButton => AfterModes + 1,
+        _ => FirstMode + Array.FindIndex(PillButtons, p => (int)p.Mode == id),
+    };
 
     private static (char Glyph, string Name) Face(int id) => id switch
     {
         CloseButton => ('', "Close"),
         ExtractButton => ('', "Text extractor"),
-        _ => (PillButtons[IndexOf(id)].Glyph, PillButtons[IndexOf(id)].Name),
+        PhotoButton => ('\uE722', "Photo"),
+        VideoButton => ('\uE714', "Video"),
+        _ => (PillButtons[IndexOf(id) - FirstMode].Glyph, PillButtons[IndexOf(id) - FirstMode].Name),
     };
 
     /// <summary>Pill rect in desktop pixels, top-center on its monitor.</summary>
     private PixelRect PillRect()
     {
-        int count = ButtonCount;
-        int w = Dip(8 + count * 44 + 9), h = Dip(52);
+        int w = Dip(8 + ButtonCount * 44 + 18), h = Dip(52);
         var m = _pillHost.Monitor;
         return new PixelRect(m.X + (m.Width - w) / 2, m.Y + Dip(24), w, h);
     }
@@ -276,7 +331,7 @@ internal sealed unsafe class OverlaySession : IDisposable
     private PixelRect ButtonRect(int index)
     {
         var pill = PillRect();
-        int x = pill.X + Dip(8 + index * 44) + (index >= PillButtons.Length ? Dip(9) : 0);
+        int x = pill.X + Dip(8 + index * 44) + (index >= FirstMode ? Dip(9) : 0) + (index >= AfterModes ? Dip(9) : 0);
         return new PixelRect(x, pill.Y + Dip(6), Dip(40), Dip(40));
     }
 
@@ -310,7 +365,7 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     private static readonly uint PillFill = Rgb(0x2B, 0x2B, 0x2B), PillBorder = Rgb(0x45, 0x45, 0x45),
         ButtonHover = Rgb(0x3A, 0x3A, 0x3A), ButtonSelected = Rgb(0x48, 0x48, 0x48), Accent = Rgb(0xFF, 0x3B, 0x30),
-        White = Rgb(0xFF, 0xFF, 0xFF), LabelFill = Rgb(0x20, 0x20, 0x20);
+        White = Rgb(0xFF, 0xFF, 0xFF), LabelFill = Rgb(0x20, 0x20, 0x20), Disabled = Rgb(0x6E, 0x6E, 0x6E);
 
     /// <summary>Composes one window's part of the overlay into <paramref name="dc"/> (window-local coordinates).</summary>
     internal void Paint(OverlayWindow w, nint dc, RECT dirty)
@@ -377,21 +432,32 @@ internal sealed unsafe class OverlaySession : IDisposable
             var b = ButtonRect(i);
             var br = new RECT { Left = b.X - m.X, Top = b.Y - m.Y, Right = b.Right - m.X, Bottom = b.Bottom - m.Y };
             int id = IdAt(i);
-            bool selected = id == ExtractButton ? _extract : id != CloseButton && (CaptureMode)id == _mode;
-            if (selected || _hoverButton == id)
+            bool selected = id switch
+            {
+                ExtractButton => _extract,
+                PhotoButton => !_video,
+                VideoButton => _video,
+                CloseButton => false,
+                _ => (CaptureMode)id == _mode,
+            };
+            bool enabled = Enabled(id);
+            if (selected || (enabled && _hoverButton == id))
                 FillRounded(dc, br, selected ? ButtonSelected : ButtonHover, selected ? ButtonSelected : ButtonHover, Dip(4));
             if (selected)
             {
                 var bar = new RECT { Left = br.Left + Dip(14), Top = br.Bottom - Dip(3), Right = br.Right - Dip(14), Bottom = br.Bottom - Dip(1) };
                 FillRounded(dc, bar, Accent, Accent, Dip(2));
             }
-            DrawCenteredText(dc, br, Face(id).Glyph.ToString(), "Segoe Fluent Icons", Dip(16), White);
+            DrawCenteredText(dc, br, Face(id).Glyph.ToString(), "Segoe Fluent Icons", Dip(16), enabled ? White : Disabled);
         }
 
-        // Separator before Text extractor and Close.
-        var sep = ButtonRect(PillButtons.Length);
-        var line = new RECT { Left = sep.X - Dip(5) - m.X, Top = sep.Y + Dip(8) - m.Y, Right = sep.X - Dip(4) - m.X, Bottom = sep.Bottom - Dip(8) - m.Y };
-        FillRounded(dc, line, PillBorder, PillBorder, 0);
+        // Separators after Photo / Video and before Text extractor and Close.
+        foreach (int index in new[] { FirstMode, AfterModes })
+        {
+            var sep = ButtonRect(index);
+            var line = new RECT { Left = sep.X - Dip(5) - m.X, Top = sep.Y + Dip(8) - m.Y, Right = sep.X - Dip(4) - m.X, Bottom = sep.Bottom - Dip(8) - m.Y };
+            FillRounded(dc, line, PillBorder, PillBorder, 0);
+        }
 
         if (_hoverButton is { } hover)
         {

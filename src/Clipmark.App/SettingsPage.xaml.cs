@@ -22,7 +22,10 @@ public sealed partial class SettingsPage : Page
     {
         InitializeComponent();
         foreach (int key in Keys)
+        {
             KeyBox.Items.Add(Hotkey.KeyName(key));
+            RecKeyBox.Items.Add(Hotkey.KeyName(key));
+        }
         foreach (var m in MainPage.Modes)
             ModeBox.Items.Add(m.Text);
         foreach (int d in ClipmarkSettings.DelayChoices)
@@ -41,7 +44,51 @@ public sealed partial class SettingsPage : Page
         AutoSaveSwitch.IsOn = s.AutoSave;
         ShowFolder(s);
         ShowHotkeyStatus();
+        RecCtrlBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
+        RecAltBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Alt);
+        RecShiftBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Shift);
+        RecWinBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Win);
+        RecKeyBox.SelectedIndex = Math.Max(0, Array.IndexOf(Keys, s.RecordHotkey.Key));
+        SystemAudioSwitch.IsOn = s.RecordSystemAudio;
+        MicrophoneSwitch.IsOn = s.RecordMicrophone;
+        RecordingsFolderText.Text = "Recordings are saved to " + CaptureOutput.RecordingsFolder;
+        ShowRecordHotkeyStatus();
         _loading = false;
+    }
+
+    private static HotkeyModifiers ModifiersOf(CheckBox ctrl, CheckBox alt, CheckBox shift, CheckBox win)
+    {
+        var mods = HotkeyModifiers.None;
+        if (ctrl.IsChecked == true) mods |= HotkeyModifiers.Control;
+        if (alt.IsChecked == true) mods |= HotkeyModifiers.Alt;
+        if (shift.IsChecked == true) mods |= HotkeyModifiers.Shift;
+        if (win.IsChecked == true) mods |= HotkeyModifiers.Win;
+        return mods;
+    }
+
+    private void ShowRecordHotkeyStatus()
+    {
+        var app = (App)Application.Current;
+        RecordHotkeyStatus.Text = app.RecordHotkeyRegistered
+            ? $"{AppSettings.Current.RecordHotkey} starts and stops a recording."
+            : $"{AppSettings.Current.RecordHotkey} is used by another app. Choose a different combination.";
+        RecordHotkeyStatus.Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources[
+            app.RecordHotkeyRegistered ? "TextFillColorSecondaryBrush" : "SystemFillColorCriticalBrush"];
+    }
+
+    private void OnRecordHotkeyChanged(object sender, RoutedEventArgs e)
+    {
+        if (_loading || RecKeyBox.SelectedIndex < 0)
+            return;
+        var hotkey = new Hotkey(ModifiersOf(RecCtrlBox, RecAltBox, RecShiftBox, RecWinBox), Keys[RecKeyBox.SelectedIndex]);
+        AppSettings.Update(s => s with { RecordHotkey = hotkey });
+        ShowRecordHotkeyStatus();
+    }
+
+    private void OnRecordTogglesChanged(object sender, RoutedEventArgs e)
+    {
+        if (!_loading)
+            AppSettings.Update(s => s with { RecordSystemAudio = SystemAudioSwitch.IsOn, RecordMicrophone = MicrophoneSwitch.IsOn });
     }
 
     private void ShowFolder(ClipmarkSettings s)
@@ -64,11 +111,7 @@ public sealed partial class SettingsPage : Page
     {
         if (_loading || KeyBox.SelectedIndex < 0)
             return;
-        var mods = HotkeyModifiers.None;
-        if (CtrlBox.IsChecked == true) mods |= HotkeyModifiers.Control;
-        if (AltBox.IsChecked == true) mods |= HotkeyModifiers.Alt;
-        if (ShiftBox.IsChecked == true) mods |= HotkeyModifiers.Shift;
-        if (WinBox.IsChecked == true) mods |= HotkeyModifiers.Win;
+        var mods = ModifiersOf(CtrlBox, AltBox, ShiftBox, WinBox);
         AppSettings.Update(s => s with { Hotkey = new Hotkey(mods, Keys[KeyBox.SelectedIndex]) });
         ShowHotkeyStatus();
     }

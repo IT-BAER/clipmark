@@ -55,6 +55,22 @@
                         <Button x:Name="ResetFolderButton" Content="Use default" Click="OnResetFolder" />
                     </StackPanel>
                 </StackPanel>
+
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Screen recording" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <CheckBox x:Name="RecCtrlBox" Content="Ctrl" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                        <CheckBox x:Name="RecAltBox" Content="Alt" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                        <CheckBox x:Name="RecShiftBox" Content="Shift" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                        <CheckBox x:Name="RecWinBox" Content="Win" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                        <ComboBox x:Name="RecKeyBox" MinWidth="140" SelectionChanged="OnRecordHotkeyChanged"
+                                  AutomationProperties.Name="Recording hotkey key" />
+                    </StackPanel>
+                    <TextBlock x:Name="RecordHotkeyStatus" TextWrapping="Wrap" />
+                    <ToggleSwitch x:Name="SystemAudioSwitch" Header="Record system audio" Toggled="OnRecordTogglesChanged" />
+                    <ToggleSwitch x:Name="MicrophoneSwitch" Header="Record the microphone" Toggled="OnRecordTogglesChanged" />
+                    <TextBlock x:Name="RecordingsFolderText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>

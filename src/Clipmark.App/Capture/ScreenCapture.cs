@@ -138,8 +138,6 @@ internal static unsafe class ScreenCapture
         return list;
     }
 
-    private const uint WS_EX_TRANSPARENT = 0x20;
-
     [UnmanagedCallersOnly]
     private static int OnWindow(nint hwnd, nint data)
     {

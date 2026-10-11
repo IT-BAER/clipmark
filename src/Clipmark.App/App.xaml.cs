@@ -1,6 +1,8 @@
 using Clipmark.App.Capture;
 using Clipmark.App.Output;
+using Clipmark.App.Recording;
 using Clipmark.App.Shell;
+using Clipmark.Core.Recording;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -43,6 +45,12 @@ public partial class App : Application
 
     protected override async void OnLaunched(LaunchActivatedEventArgs args)
     {
+        if (Arg("--record-test") is { } recordTest)
+        {
+            await RecordTestAsync(recordTest);
+            Exit();
+            return;
+        }
         string? marker = Arg("--measure-startup");
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         if (marker is null)
@@ -66,6 +74,14 @@ public partial class App : Application
         _window = new MainWindow();
         _tray = new TrayHost { Settings = () => AppSettings.Current };
         _tray.CaptureRequested += () => _ = CaptureAsync();
+        _tray.RecordRequested += OnRecordRequested;
+        _tray.IconClicked += () =>
+        {
+            if (RecordingSession.Current is { } recording)
+                recording.Toggle();
+            else
+                _ = CaptureAsync();
+        };
         _tray.OpenRequested += () => _window.ShowAndActivate();
         _tray.SettingsRequested += () => { _window.ShowSettings(); _window.ShowAndActivate(); };
         _tray.ExitRequested += () => _ = ExitAsync();
@@ -97,16 +113,61 @@ public partial class App : Application
             _window.ShowAndActivate();
     }
 
-    private Hotkey? _registeredHotkey;
+    /// <summary>
+    /// Diagnostic for published builds (scripts check the recorder there): records 640x360 at the primary monitor's
+    /// (100, 100) for 2 s with system audio to FILE and writes "ok" or the error to FILE.txt.
+    /// </summary>
+    private static async Task RecordTestAsync(string file)
+    {
+        string result = "ok";
+        try
+        {
+            var area = RecordingRegion.Fit(new Clipmark.Core.Capture.PixelRect(100, 100, 640, 360), ScreenCapture.EnumerateMonitors())
+                ?? throw new InvalidOperationException("no monitor at (100, 100)");
+            var recorder = await ScreenRecorder.StartAsync(area, Path.GetFullPath(file), systemAudio: true, microphone: false);
+            await Task.Delay(2000);
+            await recorder.StopAsync();
+            if (recorder.Warnings.Count > 0)
+                result = "ok, warnings: " + string.Join(" ", recorder.Warnings);
+        }
+        catch (Exception e)
+        {
+            result = "error: " + e;
+        }
+        File.WriteAllText(Path.GetFullPath(file) + ".txt", result);
+    }
+
+    private Hotkey? _registeredHotkey, _registeredRecordHotkey;
+
+    internal bool RecordHotkeyRegistered { get; private set; }
 
     private void RegisterHotkey(ClipmarkSettings s)
     {
-        if (_tray is null || s.Hotkey == _registeredHotkey)
+        if (_tray is null)
             return;
-        HotkeyRegistered = _tray.TryRegisterHotkey(s.Hotkey);
-        _registeredHotkey = s.Hotkey;
-        if (!HotkeyRegistered && _window is not null)
-            _window.ShowError($"{s.Hotkey} is used by another app. Choose a different hotkey in Settings.");
+        if (s.Hotkey != _registeredHotkey)
+        {
+            HotkeyRegistered = _tray.TryRegisterHotkey(TrayHost.CaptureHotkeyId, s.Hotkey);
+            _registeredHotkey = s.Hotkey;
+            if (!HotkeyRegistered && _window is not null)
+                _window.ShowError($"{s.Hotkey} is used by another app. Choose a different hotkey in Settings.");
+        }
+        if (s.RecordHotkey != _registeredRecordHotkey)
+        {
+            RecordHotkeyRegistered = _tray.TryRegisterHotkey(TrayHost.RecordHotkeyId, s.RecordHotkey);
+            _registeredRecordHotkey = s.RecordHotkey;
+            if (!RecordHotkeyRegistered && _window is not null)
+                _window.ShowError($"{s.RecordHotkey} is used by another app. Choose a different recording hotkey in Settings.");
+        }
+    }
+
+    /// <summary>Recording hotkey or tray item: stops a running recording, else opens the overlay in Video mode.</summary>
+    private void OnRecordRequested()
+    {
+        if (RecordingSession.Current is { } recording)
+            recording.Toggle();
+        else
+            _ = CaptureAsync(video: true);
     }
 
     /// <summary>Second launch (Start menu, toast click while running) lands here.</summary>
@@ -126,14 +187,22 @@ public partial class App : Application
         if (_window is null)
             return;
         if (path is not null && File.Exists(path) && await _window.ConfirmDiscardAsync())
-            _window.ShowImage(path);
+        {
+            if (Path.GetExtension(path).Equals(".mp4", StringComparison.OrdinalIgnoreCase))
+                _window.ShowVideo(path);
+            else
+                _window.ShowImage(path);
+        }
         _window.ShowAndActivate();
     }
 
-    /// <summary>Starts a capture; the main window is cloaked while the frame is taken and shows the result if it was open or no toast is shown.</summary>
-    internal async Task CaptureAsync()
+    /// <summary>
+    /// Starts a capture (video = overlay in Video mode); the main window is cloaked while the frame is taken and shows the
+    /// result if it was open or no toast is shown. A video pick records first and then always shows the recording.
+    /// </summary>
+    internal async Task CaptureAsync(bool video = false)
     {
-        if (_controller is null || _window is null || !await _window.ConfirmDiscardAsync())
+        if (RecordingSession.Current is not null || _controller is null || _window is null || !await _window.ConfirmDiscardAsync())
             return;
         bool windowWasShown = _window.IsShown;
         _controller.BeforeFreeze = async () =>
@@ -145,15 +214,24 @@ public partial class App : Application
             }
         };
         string? captured = null;
+        RecordingArea? record = null;
         void OnCaptured(string path) => captured = path;
+        void OnRecord(RecordingArea area) => record = area;
         _controller.Captured += OnCaptured;
+        _controller.RecordRequested += OnRecord;
         try
         {
-            await _controller.RunAsync();
+            await _controller.RunAsync(video: video);
+            if (record is { } area)
+            {
+                await RecordAsync(area);
+                return;
+            }
         }
         finally
         {
             _controller.Captured -= OnCaptured;
+            _controller.RecordRequested -= OnRecord;
             // Without a toast the editor is the only way to reach the capture.
             bool showEditor = captured is not null && (windowWasShown || !AppSettings.Current.ShowToast);
             if (showEditor)
@@ -163,8 +241,35 @@ public partial class App : Application
         }
     }
 
+    /// <summary>Runs the record bar for the area; the window stays cloaked meanwhile and then shows the recording or the error.</summary>
+    private async Task RecordAsync(RecordingArea area)
+    {
+        var result = await RecordingSession.RunAsync(area);
+        if (_window is null)
+            return;
+        var problems = result.Warnings.ToList();
+        if (result.Error is not null)
+            problems.Insert(0, result.Error);
+        if (result.Path is not null)
+        {
+            _window.ShowVideo(result.Path);
+            if (AppSettings.Current.ShowToast)
+                CaptureOutput.ShowRecordingToast(result.Path);
+        }
+        if (problems.Count > 0)
+            _window.ShowError(string.Join(" ", problems));
+        if (result.Path is not null || problems.Count > 0)
+            _window.ShowAndActivate();
+    }
+
     private async Task ExitAsync()
     {
+        if (RecordingSession.Current is not null)
+        {
+            _window?.ShowError("Stop the recording before you exit Clipmark.");
+            _window?.ShowAndActivate();
+            return;
+        }
         if (_window is null || await _window.ConfirmDiscardAsync())
             ExitApp();
     }

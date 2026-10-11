@@ -14,6 +14,7 @@ internal static class ShareSheet
 
     private static DataTransferManager? s_manager;
     private static StorageFile? s_file;
+    private static bool s_isImage;
 
     /// <summary>Raised when the sheet asked for the data (test evidence that the sheet opened).</summary>
     public static event Action? DataRequested;
@@ -22,6 +23,15 @@ internal static class ShareSheet
     public static async Task ShowAsync(nint hwnd, byte[] png)
     {
         s_file = await StorageFile.GetFileFromPathAsync(await CaptureOutput.SaveAsync(CaptureOutput.TempFolder, png));
+        s_isImage = true;
+        Show(hwnd);
+    }
+
+    /// <summary>Opens the share sheet for an existing file (recordings).</summary>
+    public static async Task ShowFileAsync(nint hwnd, string path)
+    {
+        s_file = await StorageFile.GetFileFromPathAsync(path);
+        s_isImage = false;
         Show(hwnd);
     }
 
@@ -71,7 +81,8 @@ internal static class ShareSheet
         var data = e.Request.Data;
         data.Properties.Title = s_file.Name;
         data.SetStorageItems([s_file]);
-        data.SetBitmap(RandomAccessStreamReference.CreateFromFile(s_file));
+        if (s_isImage)
+            data.SetBitmap(RandomAccessStreamReference.CreateFromFile(s_file));
         DataRequested?.Invoke();
     }
 }

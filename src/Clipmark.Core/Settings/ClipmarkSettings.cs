@@ -18,6 +18,10 @@ public sealed record ClipmarkSettings
     public string? SaveFolder { get; init; }
 
     public bool ShowToast { get; init; }
+
+    public Hotkey RecordHotkey { get; init; } = new(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x2C);
+    public bool RecordSystemAudio { get; init; } = true;
+    public bool RecordMicrophone { get; init; }
 }
 
 /// <summary>JSON without reflection (Native AOT). Each invalid or missing field falls back to its default.</summary>
@@ -40,6 +44,9 @@ public static class SettingsStore
             w.WriteBoolean("autoSave", s.AutoSave);
             w.WriteString("saveFolder", s.SaveFolder);
             w.WriteBoolean("showToast", s.ShowToast);
+            w.WriteString("recordHotkey", s.RecordHotkey.ToString());
+            w.WriteBoolean("recordSystemAudio", s.RecordSystemAudio);
+            w.WriteBoolean("recordMicrophone", s.RecordMicrophone);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -73,6 +80,9 @@ public static class SettingsStore
                 AutoSave = Bool("autoSave", d.AutoSave),
                 SaveFolder = string.IsNullOrWhiteSpace(Str("saveFolder")) ? null : Str("saveFolder"),
                 ShowToast = Bool("showToast", d.ShowToast),
+                RecordHotkey = Hotkey.TryParse(Str("recordHotkey"), out var rhk) ? rhk : d.RecordHotkey,
+                RecordSystemAudio = Bool("recordSystemAudio", d.RecordSystemAudio),
+                RecordMicrophone = Bool("recordMicrophone", d.RecordMicrophone),
             };
         }
     }

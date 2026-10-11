@@ -64,7 +64,7 @@ public class RedactionTests
     [Fact]
     public void An_email_covers_its_word()
     {
-        Assert.Equal([Words(1, 1)], OcrText.Sensitive([Line("Mail:", "bruno.m+test@it-baer.net,", "danke")], 2));
+        Assert.Equal([Words(1, 1)], OcrText.Sensitive([Line("Mail:", "test.user+tag@example.com,", "danke")], 2));
     }
 
     [Theory]

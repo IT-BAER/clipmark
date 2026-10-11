@@ -160,7 +160,7 @@ public sealed partial class MainPage : Page
         AutomationProperties.SetName(DelayButton, "Delay: " + DelayText(s.DelaySeconds));
         Mark(DelayMenu, 0, ClipmarkSettings.DelayChoices.Length, delayIndex);
 
-        Hint.Text = $"Select New or press {s.Hotkey} to capture.";
+        Hint.Text = $"Select New or press {s.Hotkey} to capture, {s.RecordHotkey} to record the screen.";
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -173,8 +173,37 @@ public sealed partial class MainPage : Page
 
     internal EditorCanvas? Editor => _editor;
 
+    private string? _video;
+
+    /// <summary>The recording shown in the player, or null.</summary>
+    internal string? VideoPath => _video;
+
+    /// <summary>Shows a recording in the player; Save as, Copy and Share then act on the file.</summary>
+    internal void ShowVideo(string path)
+    {
+        CloseCapture();
+        _video = path;
+        VideoPlayer.Source = Windows.Media.Core.MediaSource.CreateFromUri(new Uri(path));
+        VideoPlayer.Visibility = Visibility.Visible;
+        Hint.Visibility = Visibility.Collapsed;
+        OutputTools.Visibility = Visibility.Visible;
+        SaveEditableItem.Visibility = Visibility.Collapsed;
+    }
+
+    private void CloseVideo()
+    {
+        if (_video is null)
+            return;
+        _video = null;
+        VideoPlayer.MediaPlayer?.Pause();
+        VideoPlayer.Source = null;
+        VideoPlayer.Visibility = Visibility.Collapsed;
+        SaveEditableItem.Visibility = Visibility.Visible;
+    }
+
     internal void ShowImage(string path)
     {
+        CloseVideo();
         _editor?.Close();
         _editor = new EditorCanvas(path);
         _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); };
@@ -202,6 +231,12 @@ public sealed partial class MainPage : Page
     /// <summary>Ends the editor session and frees its Win2D resources; the page shows the start hint again.</summary>
     internal void CloseCapture()
     {
+        if (_video is not null)
+        {
+            CloseVideo();
+            OutputTools.Visibility = Visibility.Collapsed;
+            Hint.Visibility = Visibility.Visible;
+        }
         if (_editor is null)
             return;
         _editor.Close();
@@ -274,7 +309,7 @@ public sealed partial class MainPage : Page
         {
             if (Typing)
                 return false;
-            if (_editor is not null || !needsCapture)
+            if (_editor is not null || _video is not null || !needsCapture)
                 action();
             return true;
         }
@@ -680,6 +715,12 @@ public sealed partial class MainPage : Page
 
     private async Task CopyAsync()
     {
+        if (_video is { } video)
+        {
+            if (!CaptureOutput.CopyFileToClipboard(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), video))
+                ShowError("The clipboard is in use by another app; the recording was not copied.");
+            return;
+        }
         var editor = _editor;
         if (editor?.Export() is not { } image)
             return;
@@ -700,6 +741,8 @@ public sealed partial class MainPage : Page
     /// </summary>
     private async Task<bool> SaveAsync(bool editable = false)
     {
+        if (_video is not null)
+            return !editable && await SaveVideoAsync();
         if (_editor is null)
             return false;
         string folder = AppSettings.Current.SaveFolder ?? CaptureOutput.DefaultFolder;
@@ -753,13 +796,56 @@ public sealed partial class MainPage : Page
         return true;
     }
 
+    /// <summary>Save as for the recording: copies the MP4 (it is already saved in Videos\Screen Recordings).</summary>
+    private async Task<bool> SaveVideoAsync()
+    {
+        var video = _video!;
+        var picker = new FileSavePicker(XamlRoot.ContentIslandEnvironment.AppWindowId)
+        {
+            SuggestedFileName = Path.GetFileNameWithoutExtension(video),
+            DefaultFileExtension = ".mp4",
+        };
+        picker.FileTypeChoices.Add("MP4 video", [".mp4"]);
+        var result = await picker.PickSaveFileAsync();
+        return result is not null && await SaveVideoToAsync(result.Path);
+    }
+
+    internal async Task<bool> SaveVideoToAsync(string path)
+    {
+        if (_video is not { } video)
+            return false;
+        try
+        {
+            if (!string.Equals(Path.GetFullPath(path), Path.GetFullPath(video), StringComparison.OrdinalIgnoreCase))
+                await Task.Run(() => File.Copy(video, path, overwrite: true));
+            return true;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            ShowError($"The recording was not saved: {e.Message}");
+            return false;
+        }
+    }
+
     private void OnShare(object sender, RoutedEventArgs e) => _ = ShareAsync();
 
     private async Task ShareAsync()
     {
+        var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        if (_video is { } video)
+        {
+            try
+            {
+                await ShareSheet.ShowFileAsync(owner, video);
+            }
+            catch (Exception e)
+            {
+                ShowError($"The share sheet did not open: {e.Message}");
+            }
+            return;
+        }
         if (_editor?.Export() is not { } image)
             return;
-        var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
         try
         {
             await ShareSheet.ShowAsync(owner, await CaptureOutput.EncodePngAsync(image));
@@ -930,6 +1016,12 @@ public sealed partial class MainPage : Page
     }
 
     private void OnNew(object sender, RoutedEventArgs e) => NewCapture();
+
+    private void OnNewRecording(object sender, RoutedEventArgs e)
+    {
+        Message.IsOpen = false;
+        _ = ((App)Application.Current).CaptureAsync(video: true);
+    }
 
     private void NewCapture()
     {
