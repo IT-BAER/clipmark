@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Clipmark.Core.Recording;
 using Microsoft.Graphics.Canvas;
@@ -53,7 +54,7 @@ internal sealed class ScreenRecorder
     public IReadOnlyList<string> Warnings => _warnings;
 
     /// <summary>Capture or audio failed; the session stops and reports it.</summary>
-    public bool Faulted => _failure is not null;
+    public bool Faulted => _failure is not null || _transcode?.IsFaulted == true;
 
     public TimeSpan Elapsed => _start == 0 ? TimeSpan.Zero : Stopwatch.GetElapsedTime(_start);
 
@@ -234,7 +235,9 @@ internal sealed class ScreenRecorder
         opened.TrySetResult();
 
         var mixer = new AudioMixer(Math.Max(1, sources.Count));
-        long start100ns = _start * 10_000_000 / Stopwatch.Frequency;
+        // Int128: QPC ticks x 10^7 overflow a long after about a day of uptime.
+        long start100ns = (long)((Int128)_start * 10_000_000 / Stopwatch.Frequency);
+        var lost = new bool[sources.Count];
         try
         {
             while (true)
@@ -242,10 +245,22 @@ internal sealed class ScreenRecorder
                 bool last = _stopping;
                 for (int i = 0; i < sources.Count; i++)
                 {
+                    if (lost[i])
+                        continue;
                     var s = sources[i];
                     int index = i;
-                    s.Drain((samples, qpc100ns) =>
-                        mixer.Push(index, samples, s.Channels, s.SampleRate, (qpc100ns - start100ns) * AudioMixer.SampleRate / 10_000_000));
+                    try
+                    {
+                        s.Drain((samples, qpc100ns) =>
+                            mixer.Push(index, samples, s.Channels, s.SampleRate, (qpc100ns - start100ns) * AudioMixer.SampleRate / 10_000_000));
+                    }
+                    catch (Exception e) when (e is COMException or InvalidOperationException)
+                    {
+                        // Device unplugged or switched (AUDCLNT_E_DEVICE_INVALIDATED): keep recording without this source.
+                        lost[i] = true;
+                        s.Dispose();
+                        lock (_warnings) _warnings.Add("An audio device stopped during the recording; its audio ends there.");
+                    }
                 }
                 long until = last ? Math.Min(_stopAt, Stopwatch.GetTimestamp()) : Stopwatch.GetTimestamp() - AudioLagQpc;
                 long target = (until - _start) * AudioMixer.SampleRate / Stopwatch.Frequency;
@@ -336,6 +351,7 @@ internal sealed class ScreenRecorder
         _stream?.Dispose();
         _latest?.Dispose();
         _session = null;
+        _item = null;
         _pool = null;
         _stream = null;
         _latest = null;

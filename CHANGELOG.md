@@ -31,5 +31,6 @@ First public release.
 - No Microsoft Store package yet (the MSIX build exists but is unsigned).
 - Clicking a notification opens the capture only while Clipmark is running.
 - Text recognition uses the Windows OCR languages installed on the PC.
+- A recording that is still running when Windows signs out or shuts down is not finalized.
 
 [1.0.0]: https://github.com/IT-BAER/clipmark/releases/tag/v1.0.0

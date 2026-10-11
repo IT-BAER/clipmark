@@ -92,7 +92,11 @@ internal sealed unsafe class WasapiCapture : IDisposable
     // IAudioClient 10 Start, 11 Stop
     public void Start() => Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<nint, int>)Slot<nint>(_client, 10))(_client));
 
-    public void Stop() => ((delegate* unmanaged[Stdcall]<nint, int>)Slot<nint>(_client, 11))(_client);
+    public void Stop()
+    {
+        if (_client != 0)
+            ((delegate* unmanaged[Stdcall]<nint, int>)Slot<nint>(_client, 11))(_client);
+    }
 
     /// <summary>Reads every waiting packet; <paramref name="sink"/> gets interleaved floats and the QPC time of the first frame (100 ns units).</summary>
     public void Drain(Action<float[], long> sink)
