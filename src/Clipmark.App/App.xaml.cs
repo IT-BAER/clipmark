@@ -12,8 +12,9 @@ using Microsoft.Windows.AppNotifications;
 namespace Clipmark.App;
 
 /// <summary>
-/// Single-instance tray app. Startup flags: `--tray` starts hidden; `--open FILE` shows a PNG in the editor;
-/// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1).
+/// Single-instance tray app. Startup flags: `--tray` starts hidden; `--open FILE` shows an image or MP4;
+/// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1);
+/// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes.
 /// </summary>
 public partial class App : Application
 {
@@ -21,7 +22,7 @@ public partial class App : Application
     /// <summary>Test mode (Debug only): the window stays cloaked and TestDriver takes commands from this folder.</summary>
     internal static readonly string? TestDir = Environment.GetEnvironmentVariable("CLIPMARK_TEST_DIR");
 #else
-    internal const string? TestDir = null;
+    internal static readonly string? TestDir = null;
 #endif
 
     private MainWindow? _window;
@@ -30,6 +31,9 @@ public partial class App : Application
     private DispatcherQueue? _dispatcher;
 
     internal bool HotkeyRegistered { get; private set; }
+
+    /// <summary>Product version (Directory.Build.props), e.g. "1.0.0".</summary>
+    internal static string Version { get; } = typeof(App).Assembly.GetName().Version?.ToString(3) ?? "0.0.0";
 
     public App()
     {
@@ -51,6 +55,12 @@ public partial class App : Application
             Exit();
             return;
         }
+        if (Environment.GetCommandLineArgs().Contains("--restore-system"))
+        {
+            SystemIntegration.RestoreAll();
+            Exit();
+            return;
+        }
         string? marker = Arg("--measure-startup");
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         if (marker is null)
@@ -68,7 +78,8 @@ public partial class App : Application
 
         AppNotificationManager.Default.NotificationInvoked += (_, e) =>
             _dispatcher.TryEnqueue(() => OpenCapture(OpenArgument(e)));
-        CaptureOutput.RegisterNotifications();
+        CaptureOutput.ToastClicked += path => _dispatcher.TryEnqueue(() => OpenCapture(path));
+        CaptureOutput.RegisterNotifications(writeShortcut: TestDir is null && marker is null);
         CaptureOutput.CleanTempFolder();
 
         _window = new MainWindow();

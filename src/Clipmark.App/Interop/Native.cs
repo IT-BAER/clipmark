@@ -347,6 +347,11 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool SetWindowDisplayAffinity(nint hwnd, uint affinity);
 
+    [LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial int SetCurrentProcessExplicitAppUserModelID(string appId);
+
+    [LibraryImport("kernel32.dll")] public static partial int GetCurrentPackageFullName(ref uint length, char* name);
+
     // COM
     public const uint COINIT_MULTITHREADED = 0x0, CLSCTX_ALL = 0x17;
     [LibraryImport("ole32.dll")] public static partial int CoInitializeEx(nint reserved, uint coInit);

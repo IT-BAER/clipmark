@@ -29,7 +29,8 @@ namespace Clipmark.App;
 /// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
-/// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker).
+/// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
+/// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -48,9 +49,16 @@ internal sealed class TestDriver
         _timer.Start();
     }
 
-    public void Start() => _timer.Start();
+    private XamlRoot? _root;
 
-    public void Stop() => _timer.Stop();
+    /// <summary>The window's XamlRoot, kept while the page is navigated away (Settings).</summary>
+    private XamlRoot Root => _page.XamlRoot ?? _root ?? throw new InvalidOperationException("no XamlRoot");
+
+    public void Start()
+    {
+        _root = _page.XamlRoot;
+        _timer.Start();
+    }
 
     private async Task PollAsync()
     {
@@ -153,9 +161,9 @@ internal sealed class TestDriver
                 (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
                 break;
             case "shot":
-                await RenderAsync((UIElement)_page.XamlRoot.Content, arg);
+                await RenderAsync((UIElement)Root.Content, arg);
                 int n = 0;
-                foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(_page.XamlRoot))
+                foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
                 {
                     string popupPath = Path.ChangeExtension(arg, null) + $"-popup{n++}.png";
                     try
@@ -201,7 +209,7 @@ internal sealed class TestDriver
                     throw new InvalidOperationException($"{redactions} redactions");
                 break;
             case "assert" when arg.StartsWith("message "):
-                var bar = Descendants(_page.XamlRoot.Content).OfType<InfoBar>().First();
+                var bar = Descendants(Root.Content).OfType<InfoBar>().First();
                 if (!bar.IsOpen || bar.Message?.Contains(arg[8..], StringComparison.Ordinal) != true)
                     throw new InvalidOperationException($"message is '{(bar.IsOpen ? bar.Message : "(closed)")}'");
                 break;
@@ -209,6 +217,12 @@ internal sealed class TestDriver
                 // assert video [FILE]: a recording is shown (and it is FILE).
                 if (_page.VideoPath is not { } shown || (arg.Length > 6 && !string.Equals(shown, Path.GetFullPath(arg[6..]), StringComparison.OrdinalIgnoreCase)))
                     throw new InvalidOperationException($"video shown is '{_page.VideoPath}'");
+                break;
+            case "toast":
+                CaptureOutput.ShowTextToast(arg);
+                break;
+            case "toastimage":
+                CaptureOutput.ShowToast(Path.GetFullPath(arg), copied: true, savedPath: Path.GetFullPath(arg));
                 break;
             case "savevideo":
                 if (!await _page.SaveVideoToAsync(Path.GetFullPath(arg)))
@@ -219,7 +233,7 @@ internal sealed class TestDriver
                     throw new InvalidOperationException("not opened as editable");
                 break;
             case "close":
-                Interop.Native.PostMessage(Win32Interop.GetWindowFromWindowId(_page.XamlRoot.ContentIslandEnvironment.AppWindowId),
+                Interop.Native.PostMessage(Win32Interop.GetWindowFromWindowId(Root.ContentIslandEnvironment.AppWindowId),
                     Interop.Native.WM_CLOSE, 0, 0);
                 await Task.Delay(500);
                 break;
@@ -241,7 +255,7 @@ internal sealed class TestDriver
                 break;
             case "color":
                 // color #RRGGBB: sets the open style flyout's color ring.
-                var picker = Descendants(VisualTreeHelper.GetOpenPopupsForXamlRoot(_page.XamlRoot).First().Child).OfType<ColorPicker>().First();
+                var picker = Descendants(VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).First().Child).OfType<ColorPicker>().First();
                 var hex = Convert.FromHexString(arg.TrimStart('#'));
                 picker.Color = Windows.UI.Color.FromArgb(255, hex[0], hex[1], hex[2]);
                 await Task.Delay(100);
@@ -299,8 +313,8 @@ internal sealed class TestDriver
     /// <summary>First visible element in the window or an open popup whose automation name (or menu item text) matches.</summary>
     private FrameworkElement? Find(string name)
     {
-        var roots = new List<DependencyObject> { _page.XamlRoot.Content };
-        roots.AddRange(VisualTreeHelper.GetOpenPopupsForXamlRoot(_page.XamlRoot).Select(p => (DependencyObject)p.Child));
+        var roots = new List<DependencyObject> { Root.Content };
+        roots.AddRange(VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).Select(p => (DependencyObject)p.Child));
         var queue = new Queue<DependencyObject>(roots);
         while (queue.Count > 0)
         {

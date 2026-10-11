@@ -1,4 +1,5 @@
 using Clipmark.App.Output;
+using Clipmark.App.Shell;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -53,7 +54,57 @@ public sealed partial class SettingsPage : Page
         MicrophoneSwitch.IsOn = s.RecordMicrophone;
         RecordingsFolderText.Text = "Recordings are saved to " + CaptureOutput.RecordingsFolder;
         ShowRecordHotkeyStatus();
+        PrintScreenSwitch.IsOn = s.PrintScreenRestore is not null;
+        StartupSwitch.IsOn = SystemIntegration.StartsWithWindows;
+        VersionText.Text = "Clipmark " + App.Version;
         _loading = false;
+    }
+
+    private void ShowHotkey(Hotkey hotkey)
+    {
+        CtrlBox.IsChecked = hotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
+        AltBox.IsChecked = hotkey.Modifiers.HasFlag(HotkeyModifiers.Alt);
+        ShiftBox.IsChecked = hotkey.Modifiers.HasFlag(HotkeyModifiers.Shift);
+        WinBox.IsChecked = hotkey.Modifiers.HasFlag(HotkeyModifiers.Win);
+        KeyBox.SelectedIndex = Math.Max(0, Array.IndexOf(Keys, hotkey.Key));
+    }
+
+    private void OnPrintScreenToggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading)
+            return;
+        try
+        {
+            if (PrintScreenSwitch.IsOn)
+                SystemIntegration.TakeOverPrintScreen();
+            else
+                SystemIntegration.RestorePrintScreen();
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException)
+        {
+            HotkeyStatus.Text = "The Windows setting could not be changed: " + ex.Message;
+        }
+        _loading = true;
+        ShowHotkey(AppSettings.Current.Hotkey);
+        PrintScreenSwitch.IsOn = AppSettings.Current.PrintScreenRestore is not null;
+        _loading = false;
+        ShowHotkeyStatus();
+    }
+
+    private void OnStartupToggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading)
+            return;
+        try
+        {
+            SystemIntegration.StartsWithWindows = StartupSwitch.IsOn;
+        }
+        catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException)
+        {
+            _loading = true;
+            StartupSwitch.IsOn = SystemIntegration.StartsWithWindows;
+            _loading = false;
+        }
     }
 
     private static HotkeyModifiers ModifiersOf(CheckBox ctrl, CheckBox alt, CheckBox shift, CheckBox win)

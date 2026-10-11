@@ -133,8 +133,7 @@ public sealed partial class MainPage : Page
         if (App.TestDir is { } testDir)
         {
             var driver = new TestDriver(this, testDir);
-            Loaded += (_, _) => driver.Start();
-            Unloaded += (_, _) => driver.Stop();
+            Loaded += (_, _) => driver.Start(); // keeps running while Settings is shown
         }
 #endif
 

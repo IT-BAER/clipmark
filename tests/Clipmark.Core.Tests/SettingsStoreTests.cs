@@ -50,6 +50,30 @@ public class SettingsStoreTests
         Assert.Equal(new ClipmarkSettings(), SettingsStore.Parse(json));
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("absent")]
+    [InlineData("0")]
+    [InlineData("1")]
+    public void Print_screen_restore_value_round_trips(string? restore)
+    {
+        var s = new ClipmarkSettings { PrintScreenRestore = restore };
+        Assert.Equal(restore, SettingsStore.Parse(SettingsStore.Serialize(s)).PrintScreenRestore);
+    }
+
+    [Fact]
+    public void Print_screen_token_maps_to_the_registry_value()
+    {
+        Assert.Null(PrintScreenToken.ValueOf(PrintScreenToken.Absent));
+        Assert.Equal(1, PrintScreenToken.ValueOf("1"));
+    }
+
+    [Fact]
+    public void Unknown_print_screen_restore_value_is_ignored()
+    {
+        Assert.Null(SettingsStore.Parse("""{ "printScreenRestore": "maybe" }""").PrintScreenRestore);
+    }
+
     [Fact]
     public void Settings_from_before_recording_get_recording_defaults()
     {

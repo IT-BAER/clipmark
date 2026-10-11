@@ -34,6 +34,16 @@
                                   AutomationProperties.Name="Hotkey key" />
                     </StackPanel>
                     <TextBlock x:Name="HotkeyStatus" TextWrapping="Wrap" />
+                    <ToggleSwitch x:Name="PrintScreenSwitch" Header="Use the Print Screen key to open Clipmark" Toggled="OnPrintScreenToggled"
+                                  AutomationProperties.Name="Use the Print Screen key to open Clipmark" />
+                    <TextBlock Text="Turns off the Windows option that opens Snipping Tool with Print Screen. Turning this off puts it back."
+                               TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Startup" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ToggleSwitch x:Name="StartupSwitch" Header="Start Clipmark when Windows starts" Toggled="OnStartupToggled"
+                                  AutomationProperties.Name="Start Clipmark when Windows starts" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">
@@ -70,6 +80,12 @@
                     <ToggleSwitch x:Name="SystemAudioSwitch" Header="Record system audio" Toggled="OnRecordTogglesChanged" />
                     <ToggleSwitch x:Name="MicrophoneSwitch" Header="Record the microphone" Toggled="OnRecordTogglesChanged" />
                     <TextBlock x:Name="RecordingsFolderText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                <StackPanel Spacing="4">
+                    <TextBlock Text="About" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="VersionText" AutomationProperties.Name="Version" />
+                    <HyperlinkButton Content="Source code and releases" NavigateUri="https://github.com/IT-BAER/clipmark" Padding="0" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

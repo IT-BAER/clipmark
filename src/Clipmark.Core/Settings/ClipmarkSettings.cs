@@ -22,6 +22,20 @@ public sealed record ClipmarkSettings
     public Hotkey RecordHotkey { get; init; } = new(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x2C);
     public bool RecordSystemAudio { get; init; } = true;
     public bool RecordMicrophone { get; init; }
+
+    /// <summary>Set while Clipmark owns Print Screen: the Windows option's value before (see <see cref="PrintScreenToken"/>).</summary>
+    public string? PrintScreenRestore { get; init; }
+}
+
+/// <summary>The Windows "Print Screen opens screen capture" registry value as stored for restoring: "absent" or the number.</summary>
+public static class PrintScreenToken
+{
+    public const string Absent = "absent";
+
+    /// <summary>The DWORD to write back, or null to delete the value.</summary>
+    public static int? ValueOf(string token) => int.TryParse(token, System.Globalization.CultureInfo.InvariantCulture, out int v) ? v : null;
+
+    public static bool IsValid(string? token) => token == Absent || int.TryParse(token, System.Globalization.CultureInfo.InvariantCulture, out _);
 }
 
 /// <summary>JSON without reflection (Native AOT). Each invalid or missing field falls back to its default.</summary>
@@ -47,6 +61,7 @@ public static class SettingsStore
             w.WriteString("recordHotkey", s.RecordHotkey.ToString());
             w.WriteBoolean("recordSystemAudio", s.RecordSystemAudio);
             w.WriteBoolean("recordMicrophone", s.RecordMicrophone);
+            w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -83,6 +98,7 @@ public static class SettingsStore
                 RecordHotkey = Hotkey.TryParse(Str("recordHotkey"), out var rhk) ? rhk : d.RecordHotkey,
                 RecordSystemAudio = Bool("recordSystemAudio", d.RecordSystemAudio),
                 RecordMicrophone = Bool("recordMicrophone", d.RecordMicrophone),
+                PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
             };
         }
     }
