@@ -126,8 +126,15 @@ internal sealed class ScreenRecorder
         if (!prepared.CanTranscode)
             throw new InvalidOperationException($"The video encoder is not available ({prepared.FailureReason}).");
 
-        _start = Stopwatch.GetTimestamp();
         _session.StartCapture();
+        // The clock starts with the first captured frame; otherwise frame 0 is the black clear (black preview and thumbnail).
+        for (long deadline = Stopwatch.GetTimestamp() + Stopwatch.Frequency / 2; _latest is null && Stopwatch.GetTimestamp() < deadline;)
+        {
+            TakeNewestFrame();
+            if (_latest is null)
+                await Task.Delay(5);
+        }
+        _start = Stopwatch.GetTimestamp();
         _videoThread = new Thread(VideoLoop) { IsBackground = true, Name = "Clipmark video", Priority = ThreadPriority.AboveNormal };
         _videoThread.Start();
         if (_audio is not null)
