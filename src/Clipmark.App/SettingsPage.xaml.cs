@@ -1,10 +1,13 @@
+using Clipmark.App.Ai;
 using Clipmark.App.Output;
 using Clipmark.App.Shell;
+using Clipmark.Core.Ai;
 using Clipmark.Core.History;
 using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
 using Windows.ApplicationModel;
 
@@ -34,6 +37,8 @@ public sealed partial class SettingsPage : Page
             ModeBox.Items.Add(m.Text);
         foreach (int d in ClipmarkSettings.DelayChoices)
             DelayBox.Items.Add(d == 0 ? "No delay" : $"{d} seconds");
+        foreach (var model in AiModels.All)
+            AiModelBox.Items.Add(model.Name);
 
         var s = AppSettings.Current;
         CtrlBox.IsChecked = s.Hotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
@@ -69,8 +74,17 @@ public sealed partial class SettingsPage : Page
         }
         ShowStartup(SystemIntegration.StartupStateAsync);
         VersionText.Text = "Clipmark " + App.Version;
+        AiModelBox.SelectedIndex = AiModels.All.ToList().IndexOf(AiModels.Find(s.AiModel));
+        ShowAiKey();
         ShowLicense();
         _loading = false;
+    }
+
+    /// <summary>Parameter "ai" (from the Ask AI flyout) scrolls to the Ask AI section.</summary>
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+        if (e.Parameter is "ai")
+            AiSection.Loaded += (_, _) => AiSection.StartBringIntoView(new BringIntoViewOptions { VerticalAlignmentRatio = 0 });
     }
 
     private void ShowLicense()
@@ -85,6 +99,53 @@ public sealed partial class SettingsPage : Page
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
         ShowHistory();
+        AiHint.Text = (license.IsEnabled(PremiumFeature.AiChat) ? "" : "Premium feature. ")
+            + "Ask AI sends the capture as shown (annotations and redactions included) and your question to Anthropic "
+            + $"({ClaudeChat.Host}) under your own API key, only when you send a question. Anthropic bills the key. "
+            + "The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.";
+    }
+
+    private void ShowAiKey()
+    {
+        string? hint = AnthropicKeyStore.Hint();
+        AiKeyStatus.Text = hint is null ? "No API key saved." : hint.Length == 0 ? "API key saved." : $"API key saved, ends in {hint}.";
+        AiTestButton.IsEnabled = AiRemoveButton.IsEnabled = hint is not null;
+    }
+
+    private void OnAiSave(object sender, RoutedEventArgs e)
+    {
+        string key = AiKeyBox.Password.Trim();
+        if (key.Length == 0)
+        {
+            AiResultText.Text = "Paste the key first.";
+            return;
+        }
+        AiResultText.Text = AnthropicKeyStore.Save(key) ? "API key saved." : "The key could not be saved in Credential Manager.";
+        AiKeyBox.Password = "";
+        ShowAiKey();
+    }
+
+    private async void OnAiTest(object sender, RoutedEventArgs e)
+    {
+        if (AnthropicKeyStore.Read() is not { } key)
+            return;
+        AiTestButton.IsEnabled = false;
+        AiResultText.Text = "Testing…";
+        string? problem = await ClaudeChat.TestKeyAsync(key, CancellationToken.None);
+        AiResultText.Text = problem ?? "Key works.";
+        ShowAiKey();
+    }
+
+    private void OnAiRemove(object sender, RoutedEventArgs e)
+    {
+        AiResultText.Text = AnthropicKeyStore.Delete() ? "API key removed." : "The key could not be removed from Credential Manager.";
+        ShowAiKey();
+    }
+
+    private void OnAiModelChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loading && AiModelBox.SelectedIndex >= 0)
+            AppSettings.Update(s => s with { AiModel = AiModels.All[AiModelBox.SelectedIndex].Id });
     }
 
     /// <summary>Premium gates turning the history on; turning it off always works.</summary>

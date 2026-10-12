@@ -14,7 +14,7 @@ namespace Clipmark.App;
 /// <summary>
 /// Single-instance tray app. Startup flags: `--tray` (or the packaged StartupTask) starts hidden; `--open FILE` shows an image or MP4;
 /// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1);
-/// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes;
+/// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes and deletes the Ask AI key;
 /// `--trial-status FILE` (Debug) counts the trial, writes its state and exits.
 /// </summary>
 public partial class App : Application
@@ -39,6 +39,11 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+#if DEBUG
+        // Screenshot checks in the other theme without changing the Windows setting.
+        if (Enum.TryParse<ApplicationTheme>(Environment.GetEnvironmentVariable("CLIPMARK_TEST_THEME"), out var theme))
+            RequestedTheme = theme;
+#endif
     }
 
     private static string? Arg(string name)

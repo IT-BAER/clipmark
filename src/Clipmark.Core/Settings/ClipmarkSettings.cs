@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Clipmark.Core.Ai;
 
 namespace Clipmark.Core.Settings;
 
@@ -25,6 +26,12 @@ public sealed record ClipmarkSettings
 
     /// <summary>Keep an encrypted history of recent captures (Premium, opt-in).</summary>
     public bool HistoryEnabled { get; init; }
+
+    /// <summary>Model id for Ask AI; kept as read, resolve it with <see cref="AiModels.Find"/>.</summary>
+    public string AiModel { get; init; } = AiModels.Default.Id;
+
+    /// <summary>The user accepted sending captures to Anthropic.</summary>
+    public bool AiConsent { get; init; }
 
     /// <summary>Set while Clipmark owns Print Screen: the Windows option's value before (see <see cref="PrintScreenToken"/>).</summary>
     public string? PrintScreenRestore { get; init; }
@@ -65,6 +72,8 @@ public static class SettingsStore
             w.WriteBoolean("recordSystemAudio", s.RecordSystemAudio);
             w.WriteBoolean("recordMicrophone", s.RecordMicrophone);
             w.WriteBoolean("historyEnabled", s.HistoryEnabled);
+            w.WriteString("aiModel", s.AiModel);
+            w.WriteBoolean("aiConsent", s.AiConsent);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteEndObject();
         }
@@ -103,6 +112,8 @@ public static class SettingsStore
                 RecordSystemAudio = Bool("recordSystemAudio", d.RecordSystemAudio),
                 RecordMicrophone = Bool("recordMicrophone", d.RecordMicrophone),
                 HistoryEnabled = Bool("historyEnabled", d.HistoryEnabled),
+                AiModel = string.IsNullOrWhiteSpace(Str("aiModel")) ? d.AiModel : Str("aiModel")!,
+                AiConsent = Bool("aiConsent", d.AiConsent),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
             };
         }

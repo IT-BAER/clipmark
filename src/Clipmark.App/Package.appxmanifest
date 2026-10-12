@@ -69,6 +69,8 @@
   </Applications>
 
   <Capabilities>
+    <!-- Ask AI: api.anthropic.com. Full trust is not network-isolated; declared so the Store listing shows it. -->
+    <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <systemai:Capability Name="systemAIModels"/>
     <!-- Monitor capture without the picker (CaptureItems.ForMonitor) and without the yellow border (ScreenRecorder). -->

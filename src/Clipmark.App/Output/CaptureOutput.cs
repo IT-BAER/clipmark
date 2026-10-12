@@ -36,10 +36,12 @@ internal static class CaptureOutput
         }
     }
 
-    public static Task<byte[]> EncodePngAsync(CapturedImage image) => EncodeAsync(image, BitmapEncoder.PngEncoderId);
+    /// <summary><paramref name="scaleTo"/> resizes while encoding (Fant filter).</summary>
+    public static Task<byte[]> EncodePngAsync(CapturedImage image, (int Width, int Height)? scaleTo = null) =>
+        EncodeAsync(image, BitmapEncoder.PngEncoderId, scaleTo);
 
     /// <summary>JPEG has no alpha: transparent pixels are put onto white.</summary>
-    public static Task<byte[]> EncodeJpegAsync(CapturedImage image)
+    public static Task<byte[]> EncodeJpegAsync(CapturedImage image, (int Width, int Height)? scaleTo = null)
     {
         if (image.HasTransparency)
         {
@@ -47,15 +49,21 @@ internal static class CaptureOutput
             Pixels.OverWhite(bgra);
             image = image with { Bgra = bgra, HasTransparency = false };
         }
-        return EncodeAsync(image, BitmapEncoder.JpegEncoderId);
+        return EncodeAsync(image, BitmapEncoder.JpegEncoderId, scaleTo);
     }
 
-    private static async Task<byte[]> EncodeAsync(CapturedImage image, Guid encoderId)
+    private static async Task<byte[]> EncodeAsync(CapturedImage image, Guid encoderId, (int Width, int Height)? scaleTo)
     {
         using var stream = new InMemoryRandomAccessStream();
         var encoder = await BitmapEncoder.CreateAsync(encoderId, stream);
         encoder.SetPixelData(BitmapPixelFormat.Bgra8, image.HasTransparency ? BitmapAlphaMode.Straight : BitmapAlphaMode.Ignore,
             (uint)image.Width, (uint)image.Height, 96, 96, image.Bgra);
+        if (scaleTo is { } size && (size.Width != image.Width || size.Height != image.Height))
+        {
+            encoder.BitmapTransform.ScaledWidth = (uint)size.Width;
+            encoder.BitmapTransform.ScaledHeight = (uint)size.Height;
+            encoder.BitmapTransform.InterpolationMode = BitmapInterpolationMode.Fant;
+        }
         await encoder.FlushAsync();
         var bytes = new byte[stream.Size];
         stream.Seek(0);

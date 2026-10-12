@@ -543,6 +543,10 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool CredRead(string target, uint type, uint flags, out CREDENTIALW* credential);
 
+    [LibraryImport("advapi32.dll", EntryPoint = "CredDeleteW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CredDelete(string target, uint type, uint flags);
+
     [LibraryImport("advapi32.dll")] public static partial void CredFree(void* buffer);
 
     public static uint Rgb(byte r, byte g, byte b) => (uint)(r | g << 8 | b << 16);

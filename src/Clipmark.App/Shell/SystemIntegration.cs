@@ -97,11 +97,12 @@ internal static class SystemIntegration
         });
     }
 
-    /// <summary>`--restore-system`: undoes both changes and removes the Start menu shortcut, for removing a portable copy.</summary>
+    /// <summary>`--restore-system`: undoes both changes, deletes the Ask AI key and removes the Start menu shortcut, for removing a portable copy.</summary>
     public static void RestoreAll()
     {
         RestorePrintScreen();
         RunEntry = false;
+        Ai.AnthropicKeyStore.Delete();
 #if DEBUG
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_REGROOT") is { Length: > 0 })
             return; // test runs keep the developer's shortcut

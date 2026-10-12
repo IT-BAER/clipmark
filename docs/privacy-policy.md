@@ -2,7 +2,7 @@
 
 Last updated: 12 October 2026
 
-Clipmark is a screen capture, annotation and screen recording app for Windows, made by IT-BAER. This policy explains what Clipmark does with your data. Short version: Clipmark works offline, has no account, and sends nothing to IT-BAER.
+Clipmark is a screen capture, annotation and screen recording app for Windows, made by IT-BAER. This policy explains what Clipmark does with your data. Short version: Clipmark works offline, has no account, and sends nothing to IT-BAER. The one exception to "offline" is the optional Ask AI feature: when you ask a question, Clipmark sends the capture and your question to Anthropic under your own Anthropic API key.
 
 ## Who is responsible
 
@@ -12,7 +12,7 @@ Email: admin@it-baer.net
 
 ## What the app does on your PC
 
-Clipmark makes no network connections. There is no analytics, no tracking, no advertising and no crash reporting built into the app.
+Clipmark makes no network connections, except for Ask AI (described below) and only when you use it. There is no analytics, no tracking, no advertising and no crash reporting built into the app.
 
 Everything below stays on your PC:
 
@@ -25,7 +25,17 @@ Everything below stays on your PC:
 - **Capture history (optional, off by default).** If you turn it on, Clipmark keeps your last 25 captures, including your annotations, in the app's local storage on your PC. Each item is encrypted for your Windows account. The history never leaves your PC. Turning the history off deletes it.
 - **License and trial.** Clipmark stores your license key and the start of your 30-day trial on your PC. The license key contains only a license number, the issue date and the product; no name and no email address. To keep the trial fair, Clipmark also stores a small trial record (the trial start and the last time the app ran) in Windows Credential Manager. Each trial copy carries a check value computed from these dates and an ID that Windows provides per publisher for this device; the ID itself is not stored. This record contains no personal data, never leaves your PC, and stays on the PC after you uninstall Clipmark so that a reinstall does not restart the trial. You can delete it in Windows Credential Manager under "Windows Credentials", entry "Clipmark/Trial".
 
-When you uninstall Clipmark, Windows deletes the app's local storage (settings, capture history, license key and the trial copies stored there). Your screenshots and recordings stay where they were saved. The trial record in Credential Manager stays as described above.
+When you uninstall Clipmark, Windows deletes the app's local storage (settings, capture history, license key and the trial copies stored there). Your screenshots and recordings stay where they were saved. The trial record in Credential Manager stays as described above, and so does an Ask AI key you did not remove (see below).
+
+## Ask AI (optional)
+
+Ask AI lets you ask Claude, Anthropic's AI model, questions about a capture. It is off until you add your own Anthropic API key in Settings. Clipmark has no Anthropic account of its own and IT-BAER receives nothing.
+
+- **What is sent.** The capture as shown in the editor, including your annotations; redactions are burned in, so the hidden pixels are not sent. Large captures are scaled down to at most 2576 pixels on the long side. With the image go your question and the earlier questions and answers of the same conversation.
+- **When.** Only when you send a question. The first time, Clipmark asks you to agree. "Test key" in Settings sends only a request that lists the available models, without any image.
+- **Where.** Directly from your PC over HTTPS to Anthropic's API (api.anthropic.com), using your API key. Anthropic processes the data as your API provider under the terms of your Anthropic account (https://www.anthropic.com/legal/commercial-terms) and bills your account for each request. Anthropic's privacy policy: https://www.anthropic.com/legal/privacy.
+- **What Clipmark keeps.** The conversation exists only in memory and ends when you start a new chat, open or take another capture, or close the capture. It is not written to disk and is not part of the capture history.
+- **Your API key.** Stored in Windows Credential Manager for your Windows account on this PC (entry "Clipmark/AnthropicKey", not synced to other PCs), never in the settings file. Other apps running under your Windows account can read entries in Credential Manager. "Remove key" in Settings deletes it, and so does `Clipmark.App.exe --restore-system`; you can also delete the entry in Credential Manager under "Windows Credentials".
 
 ## Buying a license
 

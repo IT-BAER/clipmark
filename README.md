@@ -40,6 +40,14 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
   or Codex extension in VS Code
 - In Windows Terminal, Clipmark names the agent's tab and asks you to switch to it instead of typing into another tab
 
+**Ask AI (Premium, with your own Anthropic API key)**
+- Ask Claude questions about the capture in a flyout next to the toolbar; answers stream in with formatting, and you
+  can stop an answer, ask follow-up questions or start a new chat
+- Uses your own Anthropic API key, stored in Windows Credential Manager; pick Claude Sonnet 5.5, Opus 5.5 or Haiku 5.5
+  in Settings
+- Sends the capture as shown (redactions burned in) and your question to api.anthropic.com only when you send a
+  question, after a one-time consent; nothing goes to IT-BAER
+
 **Capture history (Premium, off by default)**
 - Keeps your last 25 captures with their annotations in `%LOCALAPPDATA%\Clipmark\History`, encrypted for your Windows
   account (DPAPI)
@@ -92,8 +100,8 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 The source code is MIT licensed. Clipmark 1.0.0 has no license check: every feature is free.
 
 From the next release on, a new install starts a 30-day Premium trial. After the trial, these features need a license
-key: select / move / resize / rotate, attached arrows, text labels, fill, eyedropper, saving editable PNGs, Send to AI
-and the capture history. Everything else, including capture, recording, OCR, crop and saving PNG or JPEG, stays free.
+key: select / move / resize / rotate, attached arrows, text labels, fill, eyedropper, saving editable PNGs, Send to AI,
+Ask AI and the capture history. Everything else, including capture, recording, OCR, crop and saving PNG or JPEG, stays free.
 You enter the key in Settings. The key works offline and contains no name and no email address.
 
 ## Install
@@ -109,7 +117,8 @@ The build is not code-signed yet, so SmartScreen may warn on first start ("More 
 **Remove**
 1. Run `Clipmark.App.exe --restore-system` once, or turn off "Use the Print Screen key" and "Start Clipmark when
    Windows starts" in Settings. This puts the Windows Print Screen option back and removes the autostart entry; the
-   command line option also removes the Start menu shortcut.
+   command line option also removes the Start menu shortcut and deletes the Ask AI key (Credential Manager entry
+   `Clipmark/AnthropicKey`, also removed by "Remove key" in Settings > Ask AI).
 2. Delete the program folder and `%LOCALAPPDATA%\Clipmark` (settings, license key, capture history).
 3. Optional: delete the trial record in `HKCU\Software\Clipmark` and in Windows Credential Manager ("Windows
    Credentials", entry `Clipmark/Trial`). Clipmark keeps it so that a reinstall does not restart the trial.
@@ -146,8 +155,9 @@ Windows.Graphics.Capture recorder, WASAPI).
 
 ## Privacy
 
-Clipmark makes no network connections and has no telemetry. Send to AI pastes into an app you already run, and that
-app decides what it uploads. See the [privacy policy](docs/privacy-policy.md).
+Clipmark has no telemetry. It connects to the network only for Ask AI: when you send a question, the capture and the
+question go to api.anthropic.com under your own API key. Send to AI pastes into an app you already run, and that app
+decides what it uploads. See the [privacy policy](docs/privacy-policy.md).
 
 ## Disclaimer
 
