@@ -315,6 +315,36 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool DestroyMenu(nint menu);
 
+    public const uint MIM_STYLE = 0x10, MNS_NOCHECK = 0x80000000;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MENUINFO
+    {
+        public int cbSize;
+        public uint fMask, dwStyle, cyMax;
+        public nint hbrBack;
+        public uint dwContextHelpID;
+        public nuint dwMenuData;
+    }
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetMenuInfo(nint menu, MENUINFO* info);
+
+    [LibraryImport("kernel32.dll")] public static partial nint GetProcAddress(nint module, nint ordinal);
+
+    /// <summary>Lets Win32 popup menus follow the Windows dark/light app mode.</summary>
+    public static void AllowDarkMenus()
+    {
+        // Undocumented uxtheme ordinals, stable since Windows 10 1903: 135 SetPreferredAppMode, 136 FlushMenuThemes.
+        nint uxtheme = NativeLibrary.Load("uxtheme.dll", typeof(Native).Assembly, DllImportSearchPath.System32);
+        nint setPreferredAppMode = GetProcAddress(uxtheme, 135), flushMenuThemes = GetProcAddress(uxtheme, 136);
+        if (setPreferredAppMode == 0 || flushMenuThemes == 0)
+            return;
+        ((delegate* unmanaged<int, int>)setPreferredAppMode)(1); // 1 = AllowDark
+        ((delegate* unmanaged<void>)flushMenuThemes)();
+    }
+
     // Clipboard
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]

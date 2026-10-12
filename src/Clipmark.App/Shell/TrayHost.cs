@@ -34,7 +34,11 @@ internal sealed unsafe class TrayHost : Win32Window
     /// <summary>Supplies the current mode and delay for the menu check marks.</summary>
     public Func<ClipmarkSettings>? Settings { get; set; }
 
-    public TrayHost() : base(WS_POPUP, WS_EX_TOOLWINDOW, "Clipmark tray") => AddIcon();
+    public TrayHost() : base(WS_POPUP, WS_EX_TOOLWINDOW, "Clipmark tray")
+    {
+        AllowDarkMenus();
+        AddIcon();
+    }
 
     public bool TryRegisterHotkey(int id, Hotkey hotkey)
     {
@@ -108,6 +112,9 @@ internal sealed unsafe class TrayHost : Win32Window
             AppendMenu(menu, MF_STRING, CmdSettings, "Settings");
             AppendMenu(menu, MF_SEPARATOR, 0, null);
             AppendMenu(menu, MF_STRING, CmdExit, "Exit");
+            // The top level never shows checks: drop the reserved check-mark column (submenus keep it).
+            var info = new MENUINFO { cbSize = sizeof(MENUINFO), fMask = MIM_STYLE, dwStyle = MNS_NOCHECK };
+            SetMenuInfo(menu, &info);
 
             // Without foreground the menu does not close on an outside click (documented TrackPopupMenu quirk).
             SetForegroundWindow(Handle);
