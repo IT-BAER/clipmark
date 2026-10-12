@@ -41,6 +41,22 @@
 - Lives in the tray, single instance, starts with Windows on request
 - Toast notifications with banners; clicking one opens the capture while Clipmark runs
 
+## Clipmark vs Snipping Tool
+
+| | Clipmark | Snipping Tool |
+|---|---|---|
+| Capture modes | Rectangle, window, full screen, all monitors, freeform | Rectangle, window, full screen, freeform |
+| Pen, highlighter, eraser, shapes | Yes | Yes |
+| Select, move, resize and rotate after drawing | Yes | No |
+| Arrows that attach to shapes and follow them | Yes | No |
+| Text labels | Yes, editable later | No (Edit with Paint) |
+| Fill for shapes and background | Yes | No |
+| Eyedropper / color picker | Yes, on every PC | Copilot+ PCs only |
+| Reopen a capture with editable objects | Yes (editable PNG) | No |
+| OCR copy and quick redact | Yes | Yes |
+| Screen recording with system audio and microphone | Yes, MP4 | Yes, MP4, with Clipchamp editing |
+| Perfect screenshot (automatic fit to content) | No | Copilot+ PCs only |
+
 **Footprint** (measured on the development PC, median of 5 starts)
 
 | | Clipmark 1.0.0 (self-contained zip) | Snipping Tool 11.2608 |
@@ -90,10 +106,10 @@ pwsh scripts/publish-release.ps1   # self-contained Native AOT zip in artifacts\
 `src/Clipmark.Core` holds the document model, geometry, editable file format, audio mixer and settings, fully unit
 tested. `src/Clipmark.App` is the WinUI 3 app (Win2D canvas, GDI overlay, Windows.Graphics.Capture recorder, WASAPI).
 
-## Clean-room note
+## Disclaimer
 
-Clipmark is an independent project and is not affiliated with Microsoft. It contains no code, assets or binaries from
-Snipping Tool or Shotoshot. See [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the libraries it uses.
+Clipmark is an independent project and is not affiliated with Microsoft. See
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for the libraries it uses.
 
 ## License
 
