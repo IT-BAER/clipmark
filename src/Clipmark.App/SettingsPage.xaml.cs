@@ -1,5 +1,6 @@
 using Clipmark.App.Output;
 using Clipmark.App.Shell;
+using Clipmark.Core.History;
 using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Xaml;
@@ -83,6 +84,52 @@ public sealed partial class SettingsPage : Page
         };
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
+        ShowHistory();
+    }
+
+    /// <summary>Premium gates turning the history on; turning it off always works.</summary>
+    private void ShowHistory()
+    {
+        bool licensed = AppLicense.Current.IsEnabled(PremiumFeature.History), on = AppSettings.Current.HistoryEnabled;
+        bool wasLoading = _loading;
+        _loading = true;
+        HistorySwitch.IsOn = on;
+        _loading = wasLoading;
+        HistorySwitch.IsEnabled = licensed || on;
+        HistoryHint.Text = (licensed ? "" : "Premium feature. ")
+            + $"Keeps the last {HistoryPolicy.MaxItems} captures with their objects (up to {HistoryPolicy.MaxBytes / (1024 * 1024)} MB), "
+            + "encrypted for your Windows account and stored only on this PC. Turning it off deletes the history.";
+    }
+
+    private async void OnHistoryToggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading)
+            return;
+        if (HistorySwitch.IsOn)
+        {
+            AppSettings.Update(s => s with { HistoryEnabled = true });
+            return;
+        }
+        int count = (await CaptureHistory.ListAsync()).Count;
+        if (count > 0)
+        {
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = count == 1 ? "Delete the capture in the history?" : $"Delete the {count} captures in the history?",
+                PrimaryButtonText = "Turn off and delete",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close,
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            {
+                ShowHistory();
+                return;
+            }
+        }
+        AppSettings.Update(s => s with { HistoryEnabled = false });
+        await CaptureHistory.ClearAsync();
+        ShowHistory();
     }
 
     private void OnActivate(object sender, RoutedEventArgs e)

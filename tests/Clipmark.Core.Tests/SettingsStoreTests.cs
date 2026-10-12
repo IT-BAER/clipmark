@@ -18,6 +18,7 @@ public class SettingsStoreTests
         Assert.Equal("Ctrl+Shift+PrintScreen", s.RecordHotkey.ToString());
         Assert.True(s.RecordSystemAudio);
         Assert.False(s.RecordMicrophone);
+        Assert.False(s.HistoryEnabled);
     }
 
     [Fact]
@@ -28,7 +29,7 @@ public class SettingsStoreTests
             Hotkey = new Hotkey(HotkeyModifiers.Control | HotkeyModifiers.Shift, 0x77),
             Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = true,
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
-            RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true,
+            RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
     }
@@ -81,6 +82,7 @@ public class SettingsStoreTests
         Assert.Equal(new ClipmarkSettings().RecordHotkey, s.RecordHotkey);
         Assert.True(s.RecordSystemAudio);
         Assert.False(s.RecordMicrophone);
+        Assert.False(s.HistoryEnabled);
     }
 
     [Fact]

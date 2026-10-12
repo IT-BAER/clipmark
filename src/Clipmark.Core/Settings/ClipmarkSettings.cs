@@ -23,6 +23,9 @@ public sealed record ClipmarkSettings
     public bool RecordSystemAudio { get; init; } = true;
     public bool RecordMicrophone { get; init; }
 
+    /// <summary>Keep an encrypted history of recent captures (Premium, opt-in).</summary>
+    public bool HistoryEnabled { get; init; }
+
     /// <summary>Set while Clipmark owns Print Screen: the Windows option's value before (see <see cref="PrintScreenToken"/>).</summary>
     public string? PrintScreenRestore { get; init; }
 }
@@ -61,6 +64,7 @@ public static class SettingsStore
             w.WriteString("recordHotkey", s.RecordHotkey.ToString());
             w.WriteBoolean("recordSystemAudio", s.RecordSystemAudio);
             w.WriteBoolean("recordMicrophone", s.RecordMicrophone);
+            w.WriteBoolean("historyEnabled", s.HistoryEnabled);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteEndObject();
         }
@@ -98,6 +102,7 @@ public static class SettingsStore
                 RecordHotkey = Hotkey.TryParse(Str("recordHotkey"), out var rhk) ? rhk : d.RecordHotkey,
                 RecordSystemAudio = Bool("recordSystemAudio", d.RecordSystemAudio),
                 RecordMicrophone = Bool("recordMicrophone", d.RecordMicrophone),
+                HistoryEnabled = Bool("historyEnabled", d.HistoryEnabled),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
             };
         }

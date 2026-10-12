@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 namespace Clipmark.Core.Licensing;
 
 /// <summary>Everything beyond Snipping Tool. Editable PNGs still open without a license (view and flatten).</summary>
-public enum PremiumFeature { Select, AttachedArrows, Text, Fill, Eyedropper, EditablePng, SendToAi }
+public enum PremiumFeature { Select, AttachedArrows, Text, Fill, Eyedropper, EditablePng, SendToAi, History }
 
 public enum LicenseStatus { Licensed, Trial, Free }
 

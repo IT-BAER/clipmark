@@ -277,6 +277,23 @@ public class EditorDocumentTests
     }
 
     [Fact]
+    public void Revision_identifies_the_content_state_across_undo_and_new_edits()
+    {
+        var doc = new EditorDocument(100, 80);
+        object original = doc.Revision;
+        doc.Add(Pen(doc.NewId(), new Vector2(1, 1)));
+        object first = doc.Revision;
+        Assert.NotEqual(original, first);
+
+        doc.Undo();
+        Assert.Equal(original, doc.Revision);
+
+        doc.Add(Pen(doc.NewId(), new Vector2(2, 2))); // same undo position as "first", different content
+        Assert.NotEqual(first, doc.Revision);
+        Assert.NotEqual(original, doc.Revision);
+    }
+
+    [Fact]
     public void IsDirty_tracks_the_undo_position_against_the_clean_point()
     {
         var doc = new EditorDocument(100, 80);

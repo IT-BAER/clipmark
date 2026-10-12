@@ -88,6 +88,9 @@
                         <Button Content="Change folder" Click="OnBrowse" />
                         <Button x:Name="ResetFolderButton" Content="Use default" Click="OnResetFolder" />
                     </StackPanel>
+                    <ToggleSwitch x:Name="HistorySwitch" Header="Keep a capture history" Toggled="OnHistoryToggled"
+                                  AutomationProperties.Name="Keep a capture history" />
+                    <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">

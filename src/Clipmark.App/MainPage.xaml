@@ -48,6 +48,9 @@
                 <Button x:Name="OpenButton" Click="OnOpen" ToolTipService.ToolTip="Open an image or editable PNG (Ctrl+O)" AutomationProperties.Name="Open">
                     <FontIcon FontSize="16" Glyph="&#xE8E5;" />
                 </Button>
+                <Button x:Name="HistoryButton" Click="OnHistoryClick" ToolTipService.ToolTip="Capture history" AutomationProperties.Name="Capture history">
+                    <FontIcon FontSize="16" Glyph="&#xE81C;" />
+                </Button>
                 <DropDownButton x:Name="ModeButton" ToolTipService.ToolTip="Capture mode" AutomationProperties.Name="Capture mode">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="ModeMenu" Placement="Bottom" />

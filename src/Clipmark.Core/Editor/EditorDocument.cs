@@ -42,6 +42,9 @@ public sealed class EditorDocument
     public bool CanUndo => _position > 0;
     public bool CanRedo => _position < _history.Count - 1;
     public bool IsDirty => _position != _cleanPosition;
+
+    /// <summary>Same reference while the content is the same state (undo returns to it); compare with ReferenceEquals.</summary>
+    public object Revision => Current;
     public event Action? Changed;
 
     private State Current => _history[_position];

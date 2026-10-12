@@ -2,11 +2,11 @@ using Clipmark.Core.Settings;
 
 namespace Clipmark.App;
 
-/// <summary>Current settings, persisted to %LOCALAPPDATA%\Clipmark\settings.json on every change.</summary>
+/// <summary>Current settings, persisted to %LOCALAPPDATA%\Clipmark\settings.json (test mode: CLIPMARK_TEST_DIR) on every change.</summary>
 internal static class AppSettings
 {
-    public static readonly string FilePath =
-        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Clipmark", "settings.json");
+    public static readonly string FilePath = Path.Combine(
+        App.TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Clipmark"), "settings.json");
 
     public static ClipmarkSettings Current { get; private set; } = SettingsStore.Load(FilePath);
 

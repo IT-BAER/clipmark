@@ -2,6 +2,7 @@ using Clipmark.App.Editor;
 using Clipmark.App.Output;
 using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
+using Clipmark.Core.History;
 using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Clipmark.Core.Sharing;
@@ -209,13 +210,24 @@ public sealed partial class MainPage : Page
         AgentButton.Visibility = Visibility.Visible;
     }
 
-    internal void ShowImage(string path)
+    internal void ShowImage(string path) => ShowEditor(new EditorCanvas(path), CaptureHistory.IdFor(path));
+
+    /// <summary>Opens a capture history item; edits are written back to it.</summary>
+    internal void ShowHistoryItem(string id, byte[] file) => ShowEditor(new EditorCanvas(file), id);
+
+    private void ShowEditor(EditorCanvas editor, string? historyId)
     {
         AppLicense.Refresh();
         CloseVideo();
-        _editor?.Close();
-        _editor = new EditorCanvas(path);
-        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); };
+        if (_editor is not null)
+        {
+            _ = WriteHistoryAsync();
+            _editor.Close();
+        }
+        _editor = editor;
+        _historyId = historyId;
+        _historyRevision = null;
+        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); ScheduleHistoryWrite(); };
         _editor.Problem += ShowError;
         _textKey = null;
         SyncTextActions();
@@ -248,8 +260,10 @@ public sealed partial class MainPage : Page
         }
         if (_editor is null)
             return;
+        _ = WriteHistoryAsync();
         _editor.Close();
         _editor = null;
+        _historyId = null;
         ImageScroller.Content = null;
         ImageScroller.Visibility = Visibility.Collapsed;
         EditTools.Visibility = Visibility.Collapsed;
@@ -445,6 +459,7 @@ public sealed partial class MainPage : Page
         PremiumFeature.Fill => "the fill tool",
         PremiumFeature.Eyedropper => "the eyedropper",
         PremiumFeature.SendToAi => "sending captures to AI assistants",
+        PremiumFeature.History => "the capture history",
         _ => "saving editable PNGs",
     };
 
@@ -467,6 +482,7 @@ public sealed partial class MainPage : Page
         SaveEditableItem.Text = license.IsEnabled(PremiumFeature.EditablePng)
             ? "Save as editable PNG (Ctrl+Shift+S)" : "Save as editable PNG (Premium)";
         ToolTipService.SetToolTip(AgentButton, license.IsEnabled(PremiumFeature.SendToAi) ? "Send to AI" : "Send to AI (Premium)");
+        ToolTipService.SetToolTip(HistoryButton, license.IsEnabled(PremiumFeature.History) ? "Capture history" : "Capture history (Premium)");
         if (PremiumFor(_tool) is { } current && !license.IsEnabled(current))
             _tool = EditorTool.Pen; // the editor commits text being edited on the tool change
         ApplyTool();
@@ -770,6 +786,65 @@ public sealed partial class MainPage : Page
         RedoButton.IsEnabled = _editor?.Document?.CanRedo == true;
     }
 
+    // Capture history: the item the editor shows, and the document state last written to it.
+    private string? _historyId;
+    private object? _historyRevision;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _historyTimer;
+
+    /// <summary>Writes edits back to the history item about a second after the last change.</summary>
+    private void ScheduleHistoryWrite()
+    {
+        if (_historyId is null || _editor?.Document is not { } doc)
+            return;
+        _historyRevision ??= doc.Revision; // the state as loaded is already stored
+        if (ReferenceEquals(doc.Revision, _historyRevision))
+            return;
+        if (_historyTimer is null)
+        {
+            _historyTimer = DispatcherQueue.CreateTimer();
+            _historyTimer.Interval = TimeSpan.FromSeconds(1);
+            _historyTimer.IsRepeating = false;
+            _historyTimer.Tick += (_, _) =>
+            {
+                if (_editor is { IsEditingText: true } or { IsCropping: true })
+                    _historyTimer.Start(); // Export would commit the text box or show the crop mid-edit
+                else
+                    _ = WriteHistoryAsync();
+            };
+        }
+        _historyTimer.Stop();
+        _historyTimer.Start();
+    }
+
+    /// <summary>Stores the current document as an editable PNG in its history item. Reads the editor before the first await.</summary>
+    private async Task WriteHistoryAsync()
+    {
+        _historyTimer?.Stop();
+        if (_historyId is not { } id || _editor is not { Document: { } doc } editor || ReferenceEquals(doc.Revision, _historyRevision ?? doc.Revision))
+            return;
+        if (editor.Export() is not { } image || editor.ExportBase() is not { } baseImage)
+            return;
+        _historyRevision = doc.Revision;
+        string json = DocumentJson.Serialize(doc);
+        var previous = _historyWrite;
+        _historyWrite = WriteAsync();
+        await _historyWrite;
+
+        // Writes land in the order they started, so a slow earlier encode never overwrites a later state.
+        async Task WriteAsync()
+        {
+            var png = EditablePng.Embed(await CaptureOutput.EncodePngAsync(image), json, await CaptureOutput.EncodePngAsync(baseImage));
+            try
+            {
+                await previous;
+            }
+            catch (Exception) { } // a failed earlier write must not block this one
+            await CaptureHistory.UpdateAsync(id, png);
+        }
+    }
+
+    private Task _historyWrite = Task.CompletedTask;
+
     private void OnCropClick(object sender, RoutedEventArgs e)
     {
         if (Cropping)
@@ -1031,6 +1106,162 @@ public sealed partial class MainPage : Page
             Message.IsOpen = false;
             ShowImage(result.Path);
         }
+    }
+
+    private async void OnHistoryClick(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            await ShowHistoryAsync();
+        }
+        catch (Exception ex)
+        {
+            ShowError("The capture history did not open: " + ex.Message);
+        }
+    }
+
+    /// <summary>Flyout with the stored captures, newest first: click opens one, right-click deletes it.</summary>
+    private async Task ShowHistoryAsync()
+    {
+        if (!AppLicense.Current.IsEnabled(PremiumFeature.History))
+        {
+            _ = ShowPremiumAsync(PremiumFeature.History);
+            return;
+        }
+        var panel = new StackPanel { Spacing = 8, Width = 352 };
+        var flyout = new Flyout { Content = panel, Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft };
+        if (!AppSettings.Current.HistoryEnabled)
+        {
+            panel.Children.Add(new TextBlock
+            {
+                Text = $"Capture history is off. Turn it on in Settings to keep your last {HistoryPolicy.MaxItems} captures, "
+                    + "encrypted for your Windows account.",
+                TextWrapping = TextWrapping.Wrap,
+            });
+            var settings = new Button { Content = "Open Settings" };
+            settings.Click += (_, _) => { flyout.Hide(); Frame.Navigate(typeof(SettingsPage)); };
+            panel.Children.Add(settings);
+            flyout.ShowAt(HistoryButton);
+            return;
+        }
+        await WriteHistoryAsync(); // the open item shows its latest edits
+        var entries = await CaptureHistory.ListAsync();
+
+        var header = new Grid();
+        header.Children.Add(new TextBlock { Text = "History", Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center });
+        if (entries.Count > 0)
+        {
+            var clear = new Button { Content = "Clear all", HorizontalAlignment = HorizontalAlignment.Right };
+            clear.Click += (_, _) => { flyout.Hide(); _ = ClearHistoryAsync(); };
+            header.Children.Add(clear);
+        }
+        panel.Children.Add(header);
+        if (entries.Count == 0)
+        {
+            panel.Children.Add(new TextBlock { Text = "No captures yet.", Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
+            flyout.ShowAt(HistoryButton);
+            return;
+        }
+        var grid = new VariableSizedWrapGrid { Orientation = Orientation.Horizontal, ItemWidth = 172, ItemHeight = 132, MaximumRowsOrColumns = 2 };
+        panel.Children.Add(new ScrollViewer { Content = grid, MaxHeight = 420 });
+        var images = new List<(string Id, Image Image)>();
+        foreach (var entry in entries)
+        {
+            string id = entry.Id, taken = entry.TakenUtc.ToLocalTime().ToString("g", System.Globalization.CultureInfo.CurrentCulture);
+            var image = new Image { Stretch = Stretch.Uniform };
+            var content = new Grid { RowSpacing = 4 };
+            content.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            content.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            var label = new TextBlock { Text = taken, Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"], HorizontalAlignment = HorizontalAlignment.Center };
+            Grid.SetRow(label, 1);
+            content.Children.Add(image);
+            content.Children.Add(label);
+            var item = new Button
+            {
+                Content = content, Width = 164, Height = 124, Padding = new Thickness(4),
+                HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch,
+            };
+            AutomationProperties.SetName(item, "Capture from " + taken);
+            ToolTipService.SetToolTip(item, "Open (right-click to delete)");
+            item.Click += (_, _) => { flyout.Hide(); _ = OpenHistoryItemAsync(id); };
+            var delete = new MenuFlyoutItem { Text = "Delete", Icon = new FontIcon { Glyph = "" } };
+            delete.Click += async (_, _) =>
+            {
+                grid.Children.Remove(item);
+                await DeleteHistoryItemAsync(id);
+            };
+            item.ContextFlyout = new MenuFlyout { Items = { delete } };
+            grid.Children.Add(item);
+            images.Add((id, image));
+        }
+        bool closed = false;
+        flyout.Closed += (_, _) => closed = true;
+        flyout.ShowAt(HistoryButton);
+        foreach (var (id, image) in images) // thumbnails one by one; an unreadable item keeps an empty tile
+        {
+            if (closed)
+                break;
+            if (await CaptureHistory.LoadAsync(id) is not { } file)
+                continue;
+            try
+            {
+                var bitmap = new Microsoft.UI.Xaml.Media.Imaging.BitmapImage
+                {
+                    DecodePixelType = Microsoft.UI.Xaml.Media.Imaging.DecodePixelType.Logical, DecodePixelWidth = 156,
+                };
+                using var stream = new MemoryStream(file).AsRandomAccessStream();
+                await bitmap.SetSourceAsync(stream);
+                image.Source = bitmap;
+            }
+            catch (Exception) { } // not a decodable image
+        }
+    }
+
+    internal async Task OpenHistoryItemAsync(string id)
+    {
+        if (!await ConfirmDiscardAsync())
+            return;
+        await WriteHistoryAsync();
+        if (await CaptureHistory.LoadAsync(id) is not { } file)
+        {
+            ShowError("This capture cannot be read. It is damaged or was encrypted for another Windows account.");
+            return;
+        }
+        Message.IsOpen = false;
+        ShowHistoryItem(id, file);
+    }
+
+    private async Task DeleteHistoryItemAsync(string id)
+    {
+        if (_historyId == id)
+            _historyId = null; // the editor keeps the image but no longer writes to the deleted item
+        await CaptureHistory.DeleteAsync(id);
+    }
+
+    private async Task ClearHistoryAsync()
+    {
+        if (_confirming)
+            return;
+        _confirming = true;
+        try
+        {
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = "Delete all captures in the history?",
+                PrimaryButtonText = "Delete",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Close,
+            };
+            if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+                return;
+        }
+        finally
+        {
+            _confirming = false;
+        }
+        _historyId = null;
+        await CaptureHistory.ClearAsync();
     }
 
     // Text actions: inputs of the last run (redactions, crop), a run counter that drops stale results, and the recognized lines.

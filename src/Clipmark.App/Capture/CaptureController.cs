@@ -118,6 +118,7 @@ internal sealed class CaptureController(nint clipboardOwner)
             }
         }
         string path = saved ?? await CaptureOutput.SaveAsync(CaptureOutput.TempFolder, png);
+        await CaptureHistory.AddAsync(path, png);
         if (settings.ShowToast)
             CaptureOutput.ShowToast(path, copied, saved);
         Captured?.Invoke(path);

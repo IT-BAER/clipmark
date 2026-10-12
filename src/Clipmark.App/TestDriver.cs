@@ -31,7 +31,8 @@ namespace Clipmark.App;
 /// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
-/// | settext NAME VALUE (TextBox, value = last word) | assert text NAME = TEXT (TextBlock contains) | assert none NAME | assert tool TOOL.
+/// | settext NAME VALUE (TextBox, value = last word) | assert text NAME = TEXT (TextBlock contains) | assert none NAME | assert tool TOOL
+/// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -167,15 +168,25 @@ internal sealed class TestDriver
                 foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
                 {
                     string popupPath = Path.ChangeExtension(arg, null) + $"-popup{n++}.png";
-                    try
+                    if (popup.Child is null)
+                        continue;
+                    // RenderTargetBitmap cannot capture some content (ColorPicker ring, a Flyout's popup root): try the descendants.
+                    string? failure = null;
+                    foreach (var candidate in new[] { popup.Child }.Concat(Descendants(popup.Child).OfType<FrameworkElement>().Where(f => f.ActualWidth > 0)))
                     {
-                        if (popup.Child is not null)
-                            await RenderAsync(popup.Child, popupPath);
+                        try
+                        {
+                            await RenderAsync((UIElement)candidate, popupPath);
+                            failure = null;
+                            break;
+                        }
+                        catch (ArgumentException e)
+                        {
+                            failure ??= e.Message;
+                        }
                     }
-                    catch (ArgumentException e) // RenderTargetBitmap cannot capture some content (ColorPicker ring)
-                    {
-                        File.WriteAllText(Path.ChangeExtension(popupPath, ".txt"), e.Message);
-                    }
+                    if (failure is not null)
+                        File.WriteAllText(Path.ChangeExtension(popupPath, ".txt"), failure);
                 }
                 break;
             case "save":
@@ -323,6 +334,19 @@ internal sealed class TestDriver
                 break;
             case "wait":
                 await Task.Delay(int.Parse(arg, CultureInfo.InvariantCulture));
+                break;
+            case "history":
+                AppSettings.Update(s => s with { HistoryEnabled = arg == "on" });
+                break;
+            case "historycount":
+                int stored = (await CaptureHistory.ListAsync()).Count;
+                if (stored != int.Parse(arg, CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException($"{stored} history items");
+                break;
+            case "openhistory":
+                var entries = await CaptureHistory.ListAsync();
+                await _page.OpenHistoryItemAsync(entries[int.Parse(arg, CultureInfo.InvariantCulture)].Id);
+                await Task.Delay(500);
                 break;
             default:
                 throw new FormatException("unknown command");

@@ -318,6 +318,26 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool GetIconInfo(nint icon, ICONINFO* info);
 
+    public struct DATA_BLOB
+    {
+        public uint cbData;
+        public byte* pbData;
+    }
+
+    public const uint CRYPTPROTECT_UI_FORBIDDEN = 0x1;
+
+    [LibraryImport("crypt32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CryptProtectData(DATA_BLOB* dataIn, char* description, DATA_BLOB* entropy, nint reserved,
+        nint prompt, uint flags, DATA_BLOB* dataOut);
+
+    [LibraryImport("crypt32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CryptUnprotectData(DATA_BLOB* dataIn, char** description, DATA_BLOB* entropy, nint reserved,
+        nint prompt, uint flags, DATA_BLOB* dataOut);
+
+    [LibraryImport("kernel32.dll")] public static partial nint LocalFree(nint mem);
+
     [LibraryImport("user32.dll")] public static partial nint CreatePopupMenu();
 
     [LibraryImport("user32.dll", EntryPoint = "AppendMenuW", StringMarshalling = StringMarshalling.Utf16)]

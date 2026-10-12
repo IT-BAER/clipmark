@@ -32,7 +32,8 @@ internal sealed class EditorCanvas
     private static readonly Windows.UI.ViewManagement.UISettings UiSettings = new();
     private static Windows.UI.Color Accent => UiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
 
-    private readonly string _path;
+    private readonly string? _path;
+    private readonly byte[]? _file; // set when opened from memory (history item) instead of a path
     private readonly CanvasStrokeStyle _round = new()
     {
         StartCap = CanvasCapStyle.Round, EndCap = CanvasCapStyle.Round, LineJoin = CanvasLineJoin.Round,
@@ -119,9 +120,15 @@ internal sealed class EditorCanvas
     /// <summary>Raised when the document is created or changes (add, remove, undo, redo, crop), crop mode starts or ends, or the selection changes.</summary>
     public event Action? Changed;
 
-    public EditorCanvas(string path)
+    public EditorCanvas(string path) : this(path, null) { }
+
+    /// <summary>Opens image or editable PNG bytes that have no file.</summary>
+    public EditorCanvas(byte[] file) : this(null, file) { }
+
+    private EditorCanvas(string? path, byte[]? file)
     {
         _path = path;
+        _file = file;
         Control = new CanvasControl
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -299,7 +306,7 @@ internal sealed class EditorCanvas
             _image = await LoadBitmapAsync(sender, _imageBytes);
             return;
         }
-        byte[] file = await File.ReadAllBytesAsync(_path);
+        byte[] file = _file ?? await File.ReadAllBytesAsync(_path!);
         EditorDocument? loaded = null;
         if (EditablePng.Read(file) is { } data)
         {
