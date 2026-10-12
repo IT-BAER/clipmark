@@ -216,14 +216,7 @@ internal sealed unsafe class RecordBar : Win32Window
                 break;
             case RecordBarButton.Record:
                 int rad = Dip(8);
-                int ex = (r.Left + r.Right) / 2, ey = (r.Top + r.Bottom) / 2;
-                nint brush = CreateSolidBrush(enabled ? Red : Dim), pen = CreatePen(PS_SOLID, 1, enabled ? Red : Dim);
-                nint ob = SelectObject(dc, brush), op = SelectObject(dc, pen);
-                Ellipse(dc, ex - rad, ey - rad, ex + rad, ey + rad);
-                SelectObject(dc, ob);
-                SelectObject(dc, op);
-                DeleteObject(brush);
-                DeleteObject(pen);
+                FillCircle(dc, (r.Left + r.Right) / 2, (r.Top + r.Bottom) / 2, rad, enabled ? Red : Dim);
                 break;
             case RecordBarButton.Microphone:
                 Text(dc, r, _microphone ? "" : "", "Segoe Fluent Icons", Dip(16), color);
@@ -246,6 +239,25 @@ internal sealed unsafe class RecordBar : Win32Window
         SelectObject(dc, op);
         DeleteObject(brush);
         DeleteObject(pen);
+    }
+
+    private static nint _gdiplus;
+
+    /// <summary>Anti-aliased filled circle (GDI+); color is a GDI COLORREF.</summary>
+    private static void FillCircle(nint dc, int cx, int cy, int radius, uint color)
+    {
+        if (_gdiplus == 0)
+        {
+            var input = new GdiplusStartupInput { Version = 1 };
+            GdiplusStartup(out _gdiplus, &input, 0);
+        }
+        uint argb = 0xFF000000 | (color & 0xFF) << 16 | (color & 0xFF00) | (color >> 16 & 0xFF);
+        GdipCreateFromHDC(dc, out nint graphics);
+        GdipSetSmoothingMode(graphics, SmoothingModeAntiAlias);
+        GdipCreateSolidFill(argb, out nint brush);
+        GdipFillEllipse(graphics, brush, cx - radius, cy - radius, 2 * radius, 2 * radius);
+        GdipDeleteBrush(brush);
+        GdipDeleteGraphics(graphics);
     }
 
     private static void Text(nint dc, RECT r, string text, string face, int pixelHeight, uint color)

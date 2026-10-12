@@ -157,9 +157,19 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool Polyline(nint hdc, POINT* points, int count);
 
-    [LibraryImport("gdi32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool Ellipse(nint hdc, int left, int top, int right, int bottom);
+    // GDI+ flat API: GDI itself draws curves without anti-aliasing.
+    [StructLayout(LayoutKind.Sequential)]
+    public struct GdiplusStartupInput { public uint Version; public nint DebugEventCallback; public int SuppressBackgroundThread, SuppressExternalCodecs; }
+
+    public const int SmoothingModeAntiAlias = 4;
+
+    [LibraryImport("gdiplus.dll")] public static partial int GdiplusStartup(out nint token, GdiplusStartupInput* input, nint output);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipCreateFromHDC(nint hdc, out nint graphics);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipSetSmoothingMode(nint graphics, int mode);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipCreateSolidFill(uint argb, out nint brush);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipFillEllipse(nint graphics, nint brush, float x, float y, float width, float height);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipDeleteBrush(nint brush);
+    [LibraryImport("gdiplus.dll")] public static partial int GdipDeleteGraphics(nint graphics);
 
     [LibraryImport("gdi32.dll")] public static partial nint CreateRoundRectRgn(int left, int top, int right, int bottom, int w, int h);
     [LibraryImport("user32.dll")] public static partial int SetWindowRgn(nint hwnd, nint region, [MarshalAs(UnmanagedType.Bool)] bool redraw);
