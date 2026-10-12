@@ -4,6 +4,7 @@ using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
 using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
+using Clipmark.Core.Sharing;
 using Clipmark.Core.TextActions;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
@@ -193,6 +194,7 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
         SaveEditableItem.Visibility = Visibility.Collapsed;
+        AgentButton.Visibility = Visibility.Collapsed; // the agents take images, not video
     }
 
     private void CloseVideo()
@@ -204,6 +206,7 @@ public sealed partial class MainPage : Page
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
         SaveEditableItem.Visibility = Visibility.Visible;
+        AgentButton.Visibility = Visibility.Visible;
     }
 
     internal void ShowImage(string path)
@@ -441,6 +444,7 @@ public sealed partial class MainPage : Page
         PremiumFeature.Text => "text labels",
         PremiumFeature.Fill => "the fill tool",
         PremiumFeature.Eyedropper => "the eyedropper",
+        PremiumFeature.SendToAi => "sending captures to AI assistants",
         _ => "saving editable PNGs",
     };
 
@@ -462,6 +466,7 @@ public sealed partial class MainPage : Page
         }
         SaveEditableItem.Text = license.IsEnabled(PremiumFeature.EditablePng)
             ? "Save as editable PNG (Ctrl+Shift+S)" : "Save as editable PNG (Premium)";
+        ToolTipService.SetToolTip(AgentButton, license.IsEnabled(PremiumFeature.SendToAi) ? "Send to AI" : "Send to AI (Premium)");
         if (PremiumFor(_tool) is { } current && !license.IsEnabled(current))
             _tool = EditorTool.Pen; // the editor commits text being edited on the tool change
         ApplyTool();
@@ -545,9 +550,21 @@ public sealed partial class MainPage : Page
             presets = WidthsFor(top);
         }
         StyleButton.IsEnabled = _tool != EditorTool.Eraser && (_tool != EditorTool.Select || top is not null);
-        StyleButton.Content = new FontIcon
+        // Palette over a bar in the color; the bar grows from Thin (2 px) to Thick (5 px). A plain red dot read as "record".
+        double barHeight = Math.Round(Math.Clamp(2 + 3 * (shownWidth - presets[0]) / (presets[^1] - presets[0]), 2, 5));
+        StyleButton.Content = new Grid
         {
-            Glyph = "\uEA3B", FontSize = 16, Foreground = new SolidColorBrush(EditorCanvas.ToColor(shown)),
+            Width = 16, Height = 16,
+            Children =
+            {
+                new FontIcon { Glyph = "\uE790", FontSize = 12, VerticalAlignment = VerticalAlignment.Top },
+                new Border
+                {
+                    Height = barHeight, VerticalAlignment = VerticalAlignment.Bottom, CornerRadius = new CornerRadius(1),
+                    Background = new SolidColorBrush(EditorCanvas.ToColor(shown)),
+                    BorderBrush = (Brush)Application.Current.Resources["ControlStrongStrokeColorDefaultBrush"], BorderThickness = new Thickness(0.5),
+                },
+            },
         };
         int colorIndex = Array.FindIndex(QuickColors, c => c.Color == shown);
         int widthIndex = Array.IndexOf(presets, shownWidth);
@@ -803,23 +820,70 @@ public sealed partial class MainPage : Page
 
     private void OnCopy(object sender, RoutedEventArgs e) => _ = CopyAsync();
 
-    private async Task CopyAsync()
+    /// <summary>Copies the capture (or the recording file); false when nothing was copied.</summary>
+    private async Task<bool> CopyAsync()
     {
         if (_video is { } video)
         {
-            if (!CaptureOutput.CopyFileToClipboard(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), video))
-                ShowError("The clipboard is in use by another app; the recording was not copied.");
-            return;
+            if (CaptureOutput.CopyFileToClipboard(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), video))
+                return true;
+            ShowError("The clipboard is in use by another app; the recording was not copied.");
+            return false;
         }
         var editor = _editor;
         if (editor?.Export() is not { } image)
-            return;
+            return false;
         var png = await CaptureOutput.EncodePngAsync(image);
         var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
         if (CaptureOutput.CopyToClipboard(owner, image, png))
+        {
             editor.Document?.MarkClean();
-        else
-            ShowError("The clipboard is in use by another app; the capture was not copied.");
+            return true;
+        }
+        ShowError("The clipboard is in use by another app; the capture was not copied.");
+        return false;
+    }
+
+    private void OnSendToAgent(SplitButton sender, SplitButtonClickEventArgs e) => _ = SendToAgentAsync(null);
+
+    /// <summary>Lists the running Claude, Codex and ChatGPT sessions, most recently active first.</summary>
+    private void OnAgentMenuOpening(object? sender, object e)
+    {
+        AgentMenu.Items.Clear();
+        var targets = AgentSend.FindTargets(out var processes);
+        if (targets.Count == 0)
+            AgentMenu.Items.Add(new MenuFlyoutItem { Text = "No running AI session found", IsEnabled = false });
+        int iconSize = (int)Math.Round(16 * (XamlRoot?.RasterizationScale ?? 1));
+        foreach (var target in targets)
+        {
+            var item = new MenuFlyoutItem
+            {
+                Text = target.Label,
+                Icon = AgentIcons.For(target, processes, iconSize) is { } image ? new ImageIcon { Source = image } : new FontIcon { Glyph = target.Host switch { AgentHost.DesktopApp => "", AgentHost.VsCode => "", _ => "" } },
+            };
+            item.Click += (_, _) => _ = SendToAgentAsync(target);
+            AgentMenu.Items.Add(item);
+        }
+    }
+
+    /// <summary>Copies the capture and pastes it into the prompt of <paramref name="target"/>, or of the most recently active AI session.</summary>
+    private async Task SendToAgentAsync(AgentTarget? target)
+    {
+        if (_video is not null || _editor is null)
+            return;
+        if (!AppLicense.Current.IsEnabled(PremiumFeature.SendToAi))
+        {
+            _ = ShowPremiumAsync(PremiumFeature.SendToAi);
+            return;
+        }
+        target ??= AgentSend.FindTargets().FirstOrDefault();
+        if (target is null)
+        {
+            ShowError("No running AI session found. Start Claude Code or Codex in a terminal or VS Code, or open the Claude or ChatGPT app.");
+            return;
+        }
+        if (await CopyAsync() && await AgentSend.PasteAsync(target) is { } problem)
+            ShowError(problem);
     }
 
     private void OnSave(SplitButton sender, SplitButtonClickEventArgs e) => _ = SaveAsync();

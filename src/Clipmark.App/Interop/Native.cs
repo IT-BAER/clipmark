@@ -303,6 +303,21 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool DestroyIcon(nint icon);
 
+    [StructLayout(LayoutKind.Sequential)]
+    public struct ICONINFO
+    {
+        public int fIcon, xHotspot, yHotspot;
+        public nint hbmMask, hbmColor;
+    }
+
+    /// <summary>Icons extracted, 0 when the file has no icon resource, uint.MaxValue when it cannot be read.</summary>
+    [LibraryImport("user32.dll", EntryPoint = "PrivateExtractIconsW", StringMarshalling = StringMarshalling.Utf16)]
+    public static partial uint PrivateExtractIcons(string file, int index, int cx, int cy, nint* icons, uint* ids, uint count, uint flags);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool GetIconInfo(nint icon, ICONINFO* info);
+
     [LibraryImport("user32.dll")] public static partial nint CreatePopupMenu();
 
     [LibraryImport("user32.dll", EntryPoint = "AppendMenuW", StringMarshalling = StringMarshalling.Utf16)]
@@ -314,6 +329,74 @@ internal static unsafe partial class Native
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool DestroyMenu(nint menu);
+
+    // Processes and keyboard input (Send to AI)
+    public const uint TH32CS_SNAPPROCESS = 0x2, PROCESS_QUERY_LIMITED_INFORMATION = 0x1000, TOKEN_QUERY = 0x8;
+    public const int TokenElevation = 20, GW_OWNER = 4, SW_RESTORE = 9;
+    public const uint INPUT_KEYBOARD = 1, KEYEVENTF_KEYUP = 0x2;
+    public const ushort VK_CONTROL = 0x11, VK_MENU = 0x12, VK_V = 0x56;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PROCESSENTRY32W
+    {
+        public int dwSize;
+        public uint cntUsage, th32ProcessID;
+        public nuint th32DefaultHeapID;
+        public uint th32ModuleID, cntThreads, th32ParentProcessID;
+        public int pcPriClassBase;
+        public uint dwFlags;
+        public fixed char szExeFile[260];
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MOUSEINPUT { public int dx, dy; public uint mouseData, dwFlags, time; public nuint dwExtraInfo; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct KEYBDINPUT { public ushort wVk, wScan; public uint dwFlags, time; public nuint dwExtraInfo; }
+
+    // MOUSEINPUT sizes the union as in winuser.h (40 bytes on 64-bit, 28 on x86).
+    [StructLayout(LayoutKind.Explicit)]
+    public struct INPUTUNION { [FieldOffset(0)] public MOUSEINPUT mi; [FieldOffset(0)] public KEYBDINPUT ki; }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct INPUT { public uint type; public INPUTUNION u; }
+
+    [LibraryImport("kernel32.dll")] public static partial nint CreateToolhelp32Snapshot(uint flags, uint processId);
+
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool Process32FirstW(nint snapshot, PROCESSENTRY32W* entry);
+
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool Process32NextW(nint snapshot, PROCESSENTRY32W* entry);
+
+    [LibraryImport("kernel32.dll")] public static partial nint OpenProcess(uint access, [MarshalAs(UnmanagedType.Bool)] bool inherit, uint processId);
+
+    [LibraryImport("kernel32.dll", EntryPoint = "QueryFullProcessImageNameW")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool QueryFullProcessImageName(nint process, uint flags, char* name, ref int size);
+
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CloseHandle(nint handle);
+
+    [LibraryImport("advapi32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool OpenProcessToken(nint process, uint access, out nint token);
+
+    [LibraryImport("advapi32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool GetTokenInformation(nint token, int infoClass, void* info, int length, out int returned);
+
+    [LibraryImport("user32.dll")] public static partial nint GetWindow(nint hwnd, uint cmd);
+
+    [LibraryImport("user32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool IsWindow(nint hwnd);
+
+    [LibraryImport("user32.dll", EntryPoint = "GetWindowTextW")] public static partial int GetWindowText(nint hwnd, char* text, int max);
+    [LibraryImport("user32.dll")] public static partial uint SendInput(uint count, INPUT* inputs, int size);
 
     public const uint MIM_STYLE = 0x10, MNS_NOCHECK = 0x80000000;
 

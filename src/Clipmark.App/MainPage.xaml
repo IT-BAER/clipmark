@@ -173,6 +173,13 @@
                     <Button Click="OnShare" ToolTipService.ToolTip="Share" AutomationProperties.Name="Share">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
+                    <SplitButton x:Name="AgentButton" Click="OnSendToAgent" ToolTipService.ToolTip="Send to AI"
+                                 AutomationProperties.Name="Send to AI">
+                        <FontIcon FontSize="16" Glyph="&#xE724;" />
+                        <SplitButton.Flyout>
+                            <MenuFlyout x:Name="AgentMenu" Placement="Bottom" Opening="OnAgentMenuOpening" />
+                        </SplitButton.Flyout>
+                    </SplitButton>
                 </StackPanel>
                 <Button Click="OnSettings" Background="Transparent" BorderThickness="0"
                         ToolTipService.ToolTip="Settings" AutomationProperties.Name="Settings">

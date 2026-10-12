@@ -28,6 +28,10 @@ internal sealed class EditorCanvas
     private const float RotateDips = 24;
     private const string TextFont = "Segoe UI";
 
+    // Native AOT cannot unbox the "SystemAccentColor" resource (InvalidCastException on the first draw); UISettings returns the struct.
+    private static readonly Windows.UI.ViewManagement.UISettings UiSettings = new();
+    private static Windows.UI.Color Accent => UiSettings.GetColorValue(Windows.UI.ViewManagement.UIColorType.Accent);
+
     private readonly string _path;
     private readonly CanvasStrokeStyle _round = new()
     {
@@ -785,7 +789,7 @@ internal sealed class EditorCanvas
     {
         float dip = Scale / _zoom;
         SyncHandleSizes(s);
-        var accent = (Windows.UI.Color)Application.Current.Resources["SystemAccentColor"];
+        var accent = Accent;
         if (s.Frame is { } frame)
         {
             var transform = ds.Transform;
@@ -823,7 +827,7 @@ internal sealed class EditorCanvas
     private void DrawSnapTargets(CanvasDrawingSession ds, IEnumerable<EditorObject?> dragged, Dictionary<int, EditorObject> live)
     {
         float dip = Scale / _zoom;
-        var accent = (Windows.UI.Color)Application.Current.Resources["SystemAccentColor"];
+        var accent = Accent;
         var targets = dragged.OfType<Shape>().SelectMany(s => new[] { s.StartAttach, s.EndAttach }).OfType<Attachment>().Select(a => a.Target);
         foreach (int id in targets.Distinct())
         {
@@ -892,7 +896,7 @@ internal sealed class EditorCanvas
     {
         if (_highlights.Count == 0)
             return;
-        var accent = (Windows.UI.Color)Application.Current.Resources["SystemAccentColor"];
+        var accent = Accent;
         var fill = Windows.UI.Color.FromArgb(56, accent.R, accent.G, accent.B);
         float dip = Scale / _zoom;
         foreach (var r in _highlights)
