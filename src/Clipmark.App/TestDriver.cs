@@ -30,7 +30,8 @@ namespace Clipmark.App;
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
-/// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE).
+/// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
+/// | settext NAME VALUE (TextBox, value = last word) | assert text NAME = TEXT (TextBlock contains) | assert none NAME | assert tool TOOL.
 /// </summary>
 internal sealed class TestDriver
 {
@@ -259,6 +260,24 @@ internal sealed class TestDriver
                 var hex = Convert.FromHexString(arg.TrimStart('#'));
                 picker.Color = Windows.UI.Color.FromArgb(255, hex[0], hex[1], hex[2]);
                 await Task.Delay(100);
+                break;
+            case "settext":
+                int textCut = arg.LastIndexOf(' ');
+                (Find(arg[..textCut]) as TextBox ?? throw new InvalidOperationException("text box not found")).Text = arg[(textCut + 1)..];
+                break;
+            case "assert" when arg.StartsWith("text "):
+                var (textName, expectedText) = (arg[5..].Split(" = ", 2)[0], arg[5..].Split(" = ", 2)[1]);
+                string shownText = (Find(textName) as TextBlock)?.Text ?? throw new InvalidOperationException("text block not found");
+                if (!shownText.Contains(expectedText, StringComparison.Ordinal))
+                    throw new InvalidOperationException($"text is '{shownText}'");
+                break;
+            case "assert" when arg.StartsWith("none "):
+                if (Find(arg[5..]) is not null)
+                    throw new InvalidOperationException("element found");
+                break;
+            case "assert" when arg.StartsWith("tool "):
+                if (_page.Tool.ToString() != arg[5..])
+                    throw new InvalidOperationException($"tool is {_page.Tool}");
                 break;
             case "assert" when arg.StartsWith("has "):
                 if (Find(arg[4..]) is null)

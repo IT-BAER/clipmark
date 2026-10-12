@@ -12,7 +12,7 @@ using Microsoft.Windows.AppNotifications;
 namespace Clipmark.App;
 
 /// <summary>
-/// Single-instance tray app. Startup flags: `--tray` starts hidden; `--open FILE` shows an image or MP4;
+/// Single-instance tray app. Startup flags: `--tray` (or the packaged StartupTask) starts hidden; `--open FILE` shows an image or MP4;
 /// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1);
 /// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes.
 /// </summary>
@@ -62,6 +62,13 @@ public partial class App : Application
             return;
         }
         string? marker = Arg("--measure-startup");
+        _dispatcher = DispatcherQueue.GetForCurrentThread();
+        // Packaged: Register must run before GetActivatedEventArgs, or a toast click that starts the app is lost.
+        AppNotificationManager.Default.NotificationInvoked += (_, e) =>
+            _dispatcher.TryEnqueue(() => OpenCapture(OpenArgument(e)));
+        CaptureOutput.ToastClicked += path => _dispatcher.TryEnqueue(() => OpenCapture(path));
+        CaptureOutput.RegisterNotifications(writeShortcut: TestDir is null && marker is null);
+
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         if (marker is null)
         {
@@ -74,14 +81,9 @@ public partial class App : Application
             }
             main.Activated += (_, e) => _dispatcher?.TryEnqueue(() => OnRedirected(e));
         }
-        _dispatcher = DispatcherQueue.GetForCurrentThread();
-
-        AppNotificationManager.Default.NotificationInvoked += (_, e) =>
-            _dispatcher.TryEnqueue(() => OpenCapture(OpenArgument(e)));
-        CaptureOutput.ToastClicked += path => _dispatcher.TryEnqueue(() => OpenCapture(path));
-        CaptureOutput.RegisterNotifications(writeShortcut: TestDir is null && marker is null);
         CaptureOutput.CleanTempFolder();
 
+        AppLicense.Refresh();
         _window = new MainWindow();
         _tray = new TrayHost { Settings = () => AppSettings.Current };
         _tray.CaptureRequested += () => _ = CaptureAsync();
@@ -120,7 +122,7 @@ public partial class App : Application
             OpenCapture(OpenArgument((AppNotificationActivatedEventArgs)activation.Data));
         else if (Arg("--open") is { } file)
             OpenCapture(Path.GetFullPath(file));
-        else if (!Environment.GetCommandLineArgs().Contains("--tray"))
+        else if (!Environment.GetCommandLineArgs().Contains("--tray") && activation.Kind != ExtendedActivationKind.StartupTask)
             _window.ShowAndActivate();
     }
 

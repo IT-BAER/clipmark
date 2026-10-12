@@ -2,6 +2,7 @@ using Clipmark.App.Editor;
 using Clipmark.App.Output;
 using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
+using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Clipmark.Core.TextActions;
 using Microsoft.UI;
@@ -104,7 +105,8 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.A, VirtualKeyModifiers.Control, () =>
         {
             SelectTool(EditorTool.Select);
-            _editor?.Select(s => s.SelectAll());
+            if (_tool == EditorTool.Select)
+                _editor?.Select(s => s.SelectAll());
         });
         Shortcut(VirtualKey.P, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Pen));
         Shortcut(VirtualKey.H, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Highlighter));
@@ -142,6 +144,8 @@ public sealed partial class MainPage : Page
         ImageScroller.ViewChanged += (_, e) => { if (!e.IsIntermediate) Relayout(); };
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
         Unloaded += (_, _) => AppSettings.Changed -= OnSettingsChanged;
+        Loaded += (_, _) => { AppLicense.Changed += OnLicenseChanged; ApplyLicense(); };
+        Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
         OnSettingsChanged(AppSettings.Current);
     }
 
@@ -171,6 +175,8 @@ public sealed partial class MainPage : Page
     private EditorCanvas? _editor;
 
     internal EditorCanvas? Editor => _editor;
+
+    internal EditorTool Tool => _tool;
 
     private string? _video;
 
@@ -202,6 +208,7 @@ public sealed partial class MainPage : Page
 
     internal void ShowImage(string path)
     {
+        AppLicense.Refresh();
         CloseVideo();
         _editor?.Close();
         _editor = new EditorCanvas(path);
@@ -249,7 +256,7 @@ public sealed partial class MainPage : Page
         SyncTextActions();
     }
 
-    private bool _confirming;
+    private bool _confirming; // one dialog at a time
 
     /// <summary>True when there are no unsaved edits or the user saved or discarded them; false on Cancel.</summary>
     internal async Task<bool> ConfirmDiscardAsync()
@@ -272,7 +279,8 @@ public sealed partial class MainPage : Page
             };
             return await dialog.ShowAsync() switch
             {
-                ContentDialogResult.Primary => await SaveAsync(editable: _editor?.FromEditable == true),
+                ContentDialogResult.Primary => await SaveAsync(
+                    editable: _editor?.FromEditable == true && AppLicense.Current.IsEnabled(PremiumFeature.EditablePng)),
                 ContentDialogResult.Secondary => true,
                 _ => false,
             };
@@ -402,6 +410,12 @@ public sealed partial class MainPage : Page
 
     private void SelectTool(EditorTool tool)
     {
+        if (PremiumFor(tool) is { } feature && !AppLicense.Current.IsEnabled(feature))
+        {
+            ApplyTool(); // a toolbar click already flipped the button
+            _ = ShowPremiumAsync(feature);
+            return;
+        }
         _editor?.CancelCrop();
         if (tool == EditorTool.Eyedropper && _tool != EditorTool.Eyedropper)
             _toolBeforePick = _tool;
@@ -409,6 +423,82 @@ public sealed partial class MainPage : Page
         if (tool >= EditorTool.Rectangle)
             _shape = tool;
         ApplyTool();
+    }
+
+    private static PremiumFeature? PremiumFor(EditorTool tool) => tool switch
+    {
+        EditorTool.Select => PremiumFeature.Select,
+        EditorTool.Text => PremiumFeature.Text,
+        EditorTool.Eyedropper => PremiumFeature.Eyedropper,
+        EditorTool.Bucket => PremiumFeature.Fill,
+        _ => null,
+    };
+
+    private static string FeatureName(PremiumFeature feature) => feature switch
+    {
+        PremiumFeature.Select => "selecting and moving objects",
+        PremiumFeature.AttachedArrows => "arrows attached to shapes",
+        PremiumFeature.Text => "text labels",
+        PremiumFeature.Fill => "the fill tool",
+        PremiumFeature.Eyedropper => "the eyedropper",
+        _ => "saving editable PNGs",
+    };
+
+    private void OnLicenseChanged(Entitlement _) => ApplyLicense();
+
+    /// <summary>Shows a lock on each locked premium tool and leaves a tool that just got locked.</summary>
+    private void ApplyLicense()
+    {
+        var license = AppLicense.Current;
+        foreach (var (button, badge, feature) in new (Microsoft.UI.Xaml.Controls.Primitives.ToggleButton, FontIcon, PremiumFeature)[]
+            {
+                (SelectButton, SelectLock, PremiumFeature.Select), (TextButton, TextLock, PremiumFeature.Text),
+                (EyedropperButton, EyedropperLock, PremiumFeature.Eyedropper), (BucketButton, BucketLock, PremiumFeature.Fill),
+            })
+        {
+            bool locked = !license.IsEnabled(feature);
+            badge.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
+            AutomationProperties.SetHelpText(button, locked ? "Premium feature, locked" : "");
+        }
+        SaveEditableItem.Text = license.IsEnabled(PremiumFeature.EditablePng)
+            ? "Save as editable PNG (Ctrl+Shift+S)" : "Save as editable PNG (Premium)";
+        if (PremiumFor(_tool) is { } current && !license.IsEnabled(current))
+            _tool = EditorTool.Pen; // the editor commits text being edited on the tool change
+        ApplyTool();
+    }
+
+    /// <summary>Explains a locked premium feature: Buy opens the product page, Enter license key opens Settings.</summary>
+    private async Task ShowPremiumAsync(PremiumFeature feature)
+    {
+        if (_confirming)
+            return;
+        _confirming = true;
+        try
+        {
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                Title = "Clipmark Premium",
+                Content = $"Clipmark Premium includes {FeatureName(feature)}. Your {TrialClock.TrialDays}-day trial has ended.",
+                PrimaryButtonText = "Buy Premium",
+                SecondaryButtonText = "Enter license key",
+                CloseButtonText = "Cancel",
+                DefaultButton = ContentDialogButton.Primary,
+            };
+            switch (await dialog.ShowAsync())
+            {
+                case ContentDialogResult.Primary:
+                    await Launcher.LaunchUriAsync(new Uri(AppLicense.BuyUrl));
+                    break;
+                case ContentDialogResult.Secondary:
+                    Frame.Navigate(typeof(SettingsPage));
+                    break;
+            }
+        }
+        finally
+        {
+            _confirming = false;
+        }
     }
 
     private void OnToolClick(object sender, RoutedEventArgs e) =>
@@ -480,6 +570,7 @@ public sealed partial class MainPage : Page
             _editor.Tool = _tool;
             _editor.Color = _color[group];
             _editor.StrokeWidth = _width[group];
+            _editor.AttachEnabled = AppLicense.Current.IsEnabled(PremiumFeature.AttachedArrows);
         }
     }
 
@@ -744,6 +835,11 @@ public sealed partial class MainPage : Page
             return !editable && await SaveVideoAsync();
         if (_editor is null)
             return false;
+        if (editable && !AppLicense.Current.IsEnabled(PremiumFeature.EditablePng))
+        {
+            _ = ShowPremiumAsync(PremiumFeature.EditablePng);
+            return false;
+        }
         string folder = AppSettings.Current.SaveFolder ?? CaptureOutput.DefaultFolder;
         var picker = new FileSavePicker(XamlRoot.ContentIslandEnvironment.AppWindowId)
         {

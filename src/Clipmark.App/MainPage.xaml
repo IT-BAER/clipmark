@@ -8,6 +8,18 @@
     mc:Ignorable="d"
     NavigationCacheMode="Required">
 
+    <Page.Resources>
+        <!-- Corner lock on a premium tool while it is locked (trial ended, no license). -->
+        <Style x:Key="LockBadge" TargetType="FontIcon">
+            <Setter Property="Glyph" Value="&#xE72E;" />
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="Margin" Value="0,0,-7,-6" />
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -50,7 +62,10 @@
             <StackPanel x:Name="EditTools" Grid.Column="1" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
                 <ToggleButton x:Name="SelectButton" Tag="Select" Click="OnToolClick"
                               ToolTipService.ToolTip="Select (V)" AutomationProperties.Name="Select">
-                    <FontIcon FontSize="16" Glyph="&#xE8B3;" />
+                    <Grid>
+                        <FontIcon FontSize="16" Glyph="&#xE8B3;" />
+                        <FontIcon x:Name="SelectLock" Style="{StaticResource LockBadge}" />
+                    </Grid>
                 </ToggleButton>
                 <ToggleButton x:Name="PenButton" Tag="Pen" Click="OnToolClick"
                               ToolTipService.ToolTip="Pen (P)" AutomationProperties.Name="Pen">
@@ -66,7 +81,10 @@
                 </ToggleButton>
                 <ToggleButton x:Name="TextButton" Tag="Text" Click="OnToolClick"
                               ToolTipService.ToolTip="Text (T)" AutomationProperties.Name="Text">
-                    <FontIcon FontSize="16" Glyph="&#xE8D2;" />
+                    <Grid>
+                        <FontIcon FontSize="16" Glyph="&#xE8D2;" />
+                        <FontIcon x:Name="TextLock" Style="{StaticResource LockBadge}" />
+                    </Grid>
                 </ToggleButton>
                 <ToggleSplitButton x:Name="ShapeButton" IsCheckedChanged="OnShapeCheckedChanged"
                                    ToolTipService.ToolTip="Shapes" AutomationProperties.Name="Shapes">
@@ -76,11 +94,17 @@
                 </ToggleSplitButton>
                 <ToggleButton x:Name="EyedropperButton" Tag="Eyedropper" Click="OnToolClick"
                               ToolTipService.ToolTip="Eyedropper (I): copies the color as #RRGGBB" AutomationProperties.Name="Eyedropper">
-                    <FontIcon FontSize="16" Glyph="&#xEF3C;" />
+                    <Grid>
+                        <FontIcon FontSize="16" Glyph="&#xEF3C;" />
+                        <FontIcon x:Name="EyedropperLock" Style="{StaticResource LockBadge}" />
+                    </Grid>
                 </ToggleButton>
                 <ToggleButton x:Name="BucketButton" Tag="Bucket" Click="OnToolClick"
                               ToolTipService.ToolTip="Fill (G): a rectangle or oval, else the canvas background" AutomationProperties.Name="Fill">
-                    <FontIcon FontSize="16" Glyph="&#xE771;" />
+                    <Grid>
+                        <FontIcon FontSize="16" Glyph="&#xE771;" />
+                        <FontIcon x:Name="BucketLock" Style="{StaticResource LockBadge}" />
+                    </Grid>
                 </ToggleButton>
                 <DropDownButton x:Name="StyleButton" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
                     <DropDownButton.Flyout>

@@ -27,6 +27,21 @@ public class AttachmentTests
         Assert.True(Vector2.Distance(expected, actual) < 0.01f, $"expected {expected}, got {actual}");
 
     [Fact]
+    public void Arrow_stays_free_when_attaching_is_off()
+    {
+        var doc = new EditorDocument(400, 300);
+        doc.Add(new Shape(doc.NewId(), ShapeKind.Rectangle, Red, 2, new(100, 100), new(200, 150)));
+        var tool = new ToolSession(doc) { Tool = EditorTool.Arrow, Color = Red, Width = 2, AttachEnabled = false };
+        tool.Begin(new(150, 125), false);
+        tool.Move(new(180, 125), false);
+        tool.End();
+
+        var a = (Shape)doc.Objects[^1];
+        Assert.Null(a.StartAttach);
+        Assert.Null(a.EndAttach);
+    }
+
+    [Fact]
     public void Drawing_an_arrow_end_onto_a_shape_attaches_it_at_the_dropped_spot()
     {
         var (doc, box, arrow) = New();

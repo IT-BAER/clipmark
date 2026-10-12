@@ -24,6 +24,18 @@
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="20" Padding="24,8,24,24" MaxWidth="640" HorizontalAlignment="Left">
                 <StackPanel Spacing="8">
+                    <TextBlock Text="License" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="LicenseStatusText" TextWrapping="Wrap" AutomationProperties.Name="License status" />
+                    <StackPanel x:Name="LicenseEntry" Orientation="Horizontal" Spacing="8">
+                        <TextBox x:Name="LicenseKeyBox" PlaceholderText="Paste your license key" Width="380"
+                                 AutomationProperties.Name="License key" />
+                        <Button Content="Activate" Click="OnActivate" />
+                    </StackPanel>
+                    <TextBlock x:Name="LicenseResultText" TextWrapping="Wrap" AutomationProperties.Name="License result" />
+                    <Button x:Name="BuyButton" Content="Buy Clipmark Premium" Click="OnBuy" />
+                </StackPanel>
+
+                <StackPanel Spacing="8">
                     <TextBlock Text="Capture hotkey" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <CheckBox x:Name="CtrlBox" Content="Ctrl" MinWidth="0" Click="OnHotkeyChanged" />
@@ -36,14 +48,18 @@
                     <TextBlock x:Name="HotkeyStatus" TextWrapping="Wrap" />
                     <ToggleSwitch x:Name="PrintScreenSwitch" Header="Use the Print Screen key to open Clipmark" Toggled="OnPrintScreenToggled"
                                   AutomationProperties.Name="Use the Print Screen key to open Clipmark" />
-                    <TextBlock Text="Turns off the Windows option that opens Snipping Tool with Print Screen. Turning this off puts it back."
+                    <TextBlock x:Name="PrintScreenHint" Text="Turns off the Windows option that opens Snipping Tool with Print Screen. Turning this off puts it back."
                                TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <HyperlinkButton x:Name="PrintScreenSettingsLink" Content="Open Windows keyboard settings" Click="OnOpenKeyboardSettings"
+                                     Visibility="Collapsed" Padding="0" />
                 </StackPanel>
 
                 <StackPanel Spacing="4">
                     <TextBlock Text="Startup" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ToggleSwitch x:Name="StartupSwitch" Header="Start Clipmark when Windows starts" Toggled="OnStartupToggled"
                                   AutomationProperties.Name="Start Clipmark when Windows starts" />
+                    <TextBlock x:Name="StartupStatus" TextWrapping="Wrap" Visibility="Collapsed"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">

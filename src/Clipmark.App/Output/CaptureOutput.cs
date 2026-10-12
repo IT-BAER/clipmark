@@ -249,7 +249,7 @@ internal static class CaptureOutput
         catch (Exception) { }
     }
 
-    private static unsafe bool IsPackaged()
+    internal static unsafe bool IsPackaged()
     {
         uint length = 0;
         return GetCurrentPackageFullName(ref length, null) != 15700; // APPMODEL_ERROR_NO_PACKAGE

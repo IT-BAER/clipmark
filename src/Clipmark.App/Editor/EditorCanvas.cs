@@ -92,6 +92,8 @@ internal sealed class EditorCanvas
     public SelectionSession? Selection => _selection;
     public Rgba Color { get; set; }
     public float StrokeWidth { get; set; }
+    /// <summary>False = new line / arrow ends do not attach to objects (premium feature locked).</summary>
+    public bool AttachEnabled { get; set; } = true;
     public bool IsCropping => _cropFrame is not null;
 
     /// <summary>Frame being edited in crop mode, else null.</summary>
@@ -535,6 +537,7 @@ internal sealed class EditorCanvas
         _session.Color = Color;
         _session.Width = StrokeWidth;
         _session.SnapTolerance = HitDips * Scale / _zoom;
+        _session.AttachEnabled = AttachEnabled;
         _session.Begin(point, shift);
         Control.Invalidate();
     }

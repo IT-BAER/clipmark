@@ -19,6 +19,8 @@ public sealed class ToolSession(EditorDocument document)
     public float Width { get; set; }
     /// <summary>Distance in image px within which a line / arrow end attaches to an object; the app scales it with the zoom.</summary>
     public float SnapTolerance { get; set; } = 6;
+    /// <summary>False = line / arrow ends never attach (premium feature locked).</summary>
+    public bool AttachEnabled { get; set; } = true;
     public bool IsActive { get; private set; }
 
     /// <summary>In-progress stroke or shape (Id 0), drawn on top until the drag ends.</summary>
@@ -96,7 +98,7 @@ public sealed class ToolSession(EditorDocument document)
                 };
                 if (shift && shape is ShapeKind.Line or ShapeKind.Arrow)
                     end = EditorGeometry.SnapAngle(start, end);
-                Live = shape is ShapeKind.Line or ShapeKind.Arrow
+                Live = shape is ShapeKind.Line or ShapeKind.Arrow && AttachEnabled
                     ? new Shape(0, shape, Color, Width, start, end)
                     {
                         StartAttach = document.Attach(start, SnapTolerance), EndAttach = document.Attach(end, SnapTolerance),

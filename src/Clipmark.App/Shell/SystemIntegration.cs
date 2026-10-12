@@ -1,5 +1,6 @@
 using Clipmark.Core.Settings;
 using Microsoft.Win32;
+using Windows.ApplicationModel;
 
 namespace Clipmark.App.Shell;
 
@@ -23,7 +24,30 @@ internal static class SystemIntegration
         return key;
     }
 
-    public static bool StartsWithWindows
+    /// <summary>Package.appxmanifest StartupTask; packaged builds start with Windows through it, unpackaged ones through the Run entry.</summary>
+    private const string StartupTaskId = "ClipmarkStartup";
+
+    public static async Task<StartupTaskState> StartupStateAsync() =>
+        Output.CaptureOutput.IsPackaged()
+            ? (await StartupTask.GetAsync(StartupTaskId)).State
+            : RunEntry ? StartupTaskState.Enabled : StartupTaskState.Disabled;
+
+    /// <summary>Returns the new state: DisabledByUser (Task Manager) or DisabledByPolicy keep a packaged build from turning it on.</summary>
+    public static async Task<StartupTaskState> SetStartupAsync(bool enabled)
+    {
+        if (!Output.CaptureOutput.IsPackaged())
+        {
+            RunEntry = enabled;
+            return await StartupStateAsync();
+        }
+        var task = await StartupTask.GetAsync(StartupTaskId);
+        if (enabled)
+            return await task.RequestEnableAsync();
+        task.Disable();
+        return task.State;
+    }
+
+    private static bool RunEntry
     {
         get
         {
@@ -77,7 +101,7 @@ internal static class SystemIntegration
     public static void RestoreAll()
     {
         RestorePrintScreen();
-        StartsWithWindows = false;
+        RunEntry = false;
 #if DEBUG
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_REGROOT") is { Length: > 0 })
             return; // test runs keep the developer's shortcut

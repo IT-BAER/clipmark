@@ -1,9 +1,11 @@
 using Clipmark.App.Output;
 using Clipmark.App.Shell;
+using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Storage.Pickers;
+using Windows.ApplicationModel;
 
 namespace Clipmark.App;
 
@@ -55,10 +57,48 @@ public sealed partial class SettingsPage : Page
         RecordingsFolderText.Text = "Recordings are saved to " + CaptureOutput.RecordingsFolder;
         ShowRecordHotkeyStatus();
         PrintScreenSwitch.IsOn = s.PrintScreenRestore is not null;
-        StartupSwitch.IsOn = SystemIntegration.StartsWithWindows;
+        if (CaptureOutput.IsPackaged())
+        {
+            // Packaged: Windows keeps HKCU writes in the package's private hive, so the switch cannot reach the Windows option.
+            PrintScreenSwitch.Visibility = Visibility.Collapsed;
+            PrintScreenSettingsLink.Visibility = Visibility.Visible;
+            PrintScreenHint.Text = "To use Print Screen for Clipmark, turn off the Windows option that opens screen capture with "
+                + "Print Screen (Bluetooth & devices > Keyboard; on older Windows 11: Accessibility > Keyboard), then choose "
+                + "PrintScreen as the hotkey above.";
+        }
+        ShowStartup(SystemIntegration.StartupStateAsync);
         VersionText.Text = "Clipmark " + App.Version;
+        ShowLicense();
         _loading = false;
     }
+
+    private void ShowLicense()
+    {
+        var license = AppLicense.Current;
+        LicenseStatusText.Text = license.Status switch
+        {
+            LicenseStatus.Licensed => "Clipmark Premium is active.",
+            LicenseStatus.Trial => $"Premium trial: {license.TrialDaysLeft} {(license.TrialDaysLeft == 1 ? "day" : "days")} left.",
+            _ => "The Premium trial has ended. Premium tools are locked; everything else keeps working.",
+        };
+        var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
+        LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
+    }
+
+    private void OnActivate(object sender, RoutedEventArgs e)
+    {
+        if (AppLicense.Activate(LicenseKeyBox.Text))
+        {
+            LicenseKeyBox.Text = "";
+            LicenseResultText.Text = "License activated.";
+        }
+        else
+            LicenseResultText.Text = "This license key is not valid. Check that you pasted all of it.";
+        ShowLicense();
+    }
+
+    private async void OnBuy(object sender, RoutedEventArgs e) =>
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(AppLicense.BuyUrl));
 
     private void ShowHotkey(Hotkey hotkey)
     {
@@ -91,20 +131,42 @@ public sealed partial class SettingsPage : Page
         ShowHotkeyStatus();
     }
 
+    private async void OnOpenKeyboardSettings(object sender, RoutedEventArgs e) =>
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:devices-keyboard")); // has the option on build 26200
+
     private void OnStartupToggled(object sender, RoutedEventArgs e)
     {
         if (_loading)
             return;
+        bool enabled = StartupSwitch.IsOn;
+        ShowStartup(() => SystemIntegration.SetStartupAsync(enabled));
+    }
+
+    /// <summary>Runs the read or change and shows the resulting state; a failed change shows the state as it is.</summary>
+    private async void ShowStartup(Func<Task<StartupTaskState>> run)
+    {
+        StartupTaskState state;
         try
         {
-            SystemIntegration.StartsWithWindows = StartupSwitch.IsOn;
+            state = await run();
         }
-        catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException)
+        catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException
+                                       or System.Runtime.InteropServices.COMException)
         {
-            _loading = true;
-            StartupSwitch.IsOn = SystemIntegration.StartsWithWindows;
-            _loading = false;
+            try { state = await SystemIntegration.StartupStateAsync(); }
+            catch (Exception) { state = StartupTaskState.Disabled; }
         }
+        bool wasLoading = _loading; // the unpackaged read completes synchronously inside the page load
+        _loading = true;
+        StartupSwitch.IsOn = state is StartupTaskState.Enabled or StartupTaskState.EnabledByPolicy;
+        _loading = wasLoading;
+        StartupStatus.Text = state switch
+        {
+            StartupTaskState.DisabledByUser => "Clipmark is turned off in Task Manager > Startup apps. Turn it on there.",
+            StartupTaskState.DisabledByPolicy => "Your organization does not allow Clipmark to start with Windows.",
+            _ => "",
+        };
+        StartupStatus.Visibility = StartupStatus.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private static HotkeyModifiers ModifiersOf(CheckBox ctrl, CheckBox alt, CheckBox shift, CheckBox win)

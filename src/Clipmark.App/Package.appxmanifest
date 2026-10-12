@@ -6,7 +6,11 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
-  IgnorableNamespaces="uap rescap systemai">
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:uap11="http://schemas.microsoft.com/appx/manifest/uap/windows10/11"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  IgnorableNamespaces="uap rescap systemai uap5 uap11 com desktop">
 
   <Identity
     Name="B1A4BD56-7F62-4DFB-B1B7-558FD8903F06"
@@ -43,11 +47,33 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <!-- TaskId is used by Shell\SystemIntegration. -->
+        <uap5:Extension Category="windows.startupTask">
+          <uap5:StartupTask TaskId="ClipmarkStartup" Enabled="false" DisplayName="Clipmark" />
+        </uap5:Extension>
+        <!-- Toast clicks: Windows App SDK app notifications activate this COM class. The build does not expand
+             $targetnametoken$ in ExeServer, so the exe name is literal. -->
+        <desktop:Extension Category="windows.toastNotificationActivation">
+          <desktop:ToastNotificationActivation ToastActivatorCLSID="58EF67BC-3689-4348-AD84-9996BF81ACFA" />
+        </desktop:Extension>
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:ExeServer Executable="Clipmark.App.exe" DisplayName="Clipmark" Arguments="----AppNotificationActivated:">
+              <com:Class Id="58EF67BC-3689-4348-AD84-9996BF81ACFA" />
+            </com:ExeServer>
+          </com:ComServer>
+        </com:Extension>
+      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
     <systemai:Capability Name="systemAIModels"/>
+    <!-- Monitor capture without the picker (CaptureItems.ForMonitor) and without the yellow border (ScreenRecorder). -->
+    <uap11:Capability Name="graphicsCaptureProgrammatic" />
+    <uap11:Capability Name="graphicsCaptureWithoutBorder" />
+    <DeviceCapability Name="microphone" />
   </Capabilities>
 </Package>
