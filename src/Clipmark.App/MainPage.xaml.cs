@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
+using System.Numerics;
 using Windows.System;
 
 namespace Clipmark.App;
@@ -1335,7 +1336,10 @@ public sealed partial class MainPage : Page
             return;
         TextActionsBusy = false;
         _lines = lines ?? [];
-        editor.Highlights = [.. _lines.SelectMany(l => l.Words.Select(w => w.Box)), .. codes.Select(c => c.Box)];
+        // One box per line, padded to Snipping Tool's look (image pixels); detector line boxes already carry ~9 x 7 px margin.
+        editor.Highlights = [
+            .. _lines.Where(l => l.Words.Count > 0).Select(l => Pad(l.Words.Select(w => w.Box).Aggregate((a, b) => a.Union(b)), new Vector2(3, 4))),
+            .. codes.Select(c => Pad(c.Box, new Vector2(12)))];
         string text = lines is null
             ? "No text recognition language is installed (Settings > Time & language > Language & region)."
             : _lines.Count == 0 ? "No text found." : _lines.Count == 1 ? "1 line of text." : $"{_lines.Count} lines of text.";
@@ -1345,6 +1349,8 @@ public sealed partial class MainPage : Page
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
         for (int i = 0; i < codes.Count; i++)
             QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? "" : $" {i + 1}"));
+
+        static FloatRect Pad(FloatRect r, Vector2 by) => new(r.Min - by, r.Max + by);
     }
 
     /// <summary>Payload (shortened), Copy, and Open link for http / https.</summary>

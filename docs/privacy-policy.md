@@ -18,7 +18,7 @@ Everything below stays on your PC:
 
 - **Screenshots and recordings.** Clipmark captures the screen area you choose, only when you start a capture or a recording. Screenshots go to the clipboard and, if you turn on automatic saving, to your Pictures\Screenshots folder (or the folder you pick). Recordings are saved to Videos\Screen Recordings. You decide where files go and whom you share them with.
 - **Microphone and system audio.** Clipmark records audio only while a screen recording runs and only if you turned on "Record the microphone" or "Record system audio" in Settings. Windows asks for your permission before Clipmark can use the microphone.
-- **Text recognition and QR codes.** Copying text from a capture uses the text recognition built into Windows, and QR codes are read by a library inside Clipmark. Both run on your PC. No image is uploaded.
+- **Text recognition and QR codes.** Copying text from a capture uses an OCR engine inside Clipmark (with the text recognition built into Windows as a fallback), and QR codes are read by a library inside Clipmark. All of them run on your PC. No image is uploaded.
 - **Links.** Clipmark opens a web page only when you click a link: Buy Clipmark Premium, Source code and releases (GitHub), or Open link next to a QR code that contains a web address. Your browser then loads that page, and the website's own privacy policy applies.
 - **Sharing.** When you click Share, Windows opens its own share window and you choose the target app. Clipmark does not send the file anywhere by itself.
 - **Settings.** Your settings are stored in the app's local storage on your PC.

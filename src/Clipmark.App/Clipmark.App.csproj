@@ -28,6 +28,7 @@
     <!-- Unpackaged builds have no PRI lookup: SetIcon reads the file next to the exe. -->
     <Content Include="Assets\AppIcon.ico" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Assets\Ocr\*.onnx" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>

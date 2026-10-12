@@ -247,3 +247,24 @@ Additive feature: remove the button and the Settings section; `--restore-system`
 ### Deferred
 - Relay (owner decided BYOK only); becomes relevant if buyers without a key ask for Ask AI.
 - Tiling of wide captures; token / cost display per answer; chat persistence; OCR text as extra context; recordings.
+
+## M11 Own OCR engine (12-13 October 2026)
+Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Microsoft's private code. Benchmark and prototype in
+`.claude\ocr-bench` (not committed): 54 generated images (48 GDI / GDI+ ClearType and grayscale text images in 10 fonts, 11-32 px,
+10 themes; 6 full screens 1920x1080 to 3840x2160), ground truth per line, CER with optimal line assignment.
+- [x] M11.1 References: Snipping Tool 11.2608.41.0 through its own UI (UIA: open file, Text scannen, copy all text) 2.40% CER /
+  81.4% exact lines; Windows.Media.Ocr de-DE 8.52% / 59.4%.
+- [x] M11.2 Variants (Python, ONNX Runtime): PP-OCRv6 small det + rec best; worse: v6 medium det / rec, v5 mobile det, v5 latin rec
+  (0.65%), box padding, cubic / area resize, INT8 rec (3.08%). Gains: crop lines from the full-resolution image, one line per rec
+  call with 2 line heights of right padding, det long side up to 3200, same-row merge, drop <= 2-char lines below 0.9 confidence
+  (toolbar icons). Recognizer head pruned to 1652 Latin / Greek / symbol characters: 21.2 MB -> 12.9 MB, same output.
+- [x] M11.3 C# engine `Clipmark.Core.TextActions.Ocr` (ONNX Runtime 1.30.0, models in `Assets\Ocr`), 24 tests; word boxes tile the
+  line box at space centers (Quick redact covers whole words). Bench: C# = Python = 0.22% CER / 95.0% exact lines (78 edits /
+  35433 chars); small images 0.18% (Snipping Tool 0.97%), screens 0.25% (3.43%). Median 374 ms per image, 2560x1440 screen 2.1 s.
+- [x] M11.4 App: `TextRecognizer` uses the engine unless the Windows OCR language is not Latin script (then Windows OCR, also the
+  fallback on any engine failure); engine cached, disposed after 2 min idle with a compacting GC. Detector without memory arena
+  (it kept ~640 MB). AOT: private 118 MB -> 233 MB while cached, 147 MB after idle (Windows OCR path: 130 MB). Release zip
+  57,345,321 bytes (was 30,174,872). Text actions highlight: one rounded cutout per line, dim black alpha 110, matches Snipping
+  Tool within 4 px on the fixture. Core 503 / 503, regression 19 / 19, aot-uia-smoke GREEN (reads "+43 660").
+- Open: real-world screenshots without ground truth only checked by eye; light theme and other text sizes of the highlight not
+  measured; CJK / Cyrillic users keep Windows OCR.

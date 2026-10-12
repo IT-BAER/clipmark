@@ -7,6 +7,8 @@ Clipmark ships with or builds on these components. Each keeps its own license.
 | [Windows App SDK](https://github.com/microsoft/WindowsAppSDK) (WinUI 3) | UI framework, app lifecycle, notifications | MIT |
 | [Win2D](https://github.com/microsoft/Win2D) | Editor canvas, recording crop | MIT |
 | [ZXing.Net](https://github.com/micjahn/ZXing.Net) 0.16.11 | QR code decoding | Apache-2.0 |
+| [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) PP-OCRv6 small text detection and recognition models | OCR (`Assets\Ocr`); the recognition model's output layer is reduced to Latin, Greek and symbol characters | Apache-2.0 |
+| [ONNX Runtime](https://github.com/microsoft/onnxruntime) 1.30.0 | Runs the OCR models on the CPU | MIT |
 | [Markdig](https://github.com/xoofx/markdig) 1.4.0 | Ask AI answer formatting (Markdown) | BSD-2-Clause |
 | [.NET](https://github.com/dotnet/runtime) | Runtime (Native AOT) | MIT |
 | Segoe Fluent Icons | Toolbar and overlay glyphs (ships with Windows, not redistributed) | Microsoft font license |

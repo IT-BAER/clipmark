@@ -19,6 +19,12 @@ and the project uses [Semantic Versioning](https://semver.org/).
   is kept.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
 
+### Changed
+- Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
+  benchmark of 54 screenshot-style images it made 0.22% character errors, Snipping Tool 2.40% and the Windows text
+  recognition used before 8.52%. Windows text recognition stays as the fallback.
+- Text actions dim the image and show each recognized line as a rounded cutout, like Snipping Tool.
+
 ### Fixed
 - Exiting from the tray right after an edit no longer loses that edit in the capture history.
 - Send to AI into Windows Terminal: the menu names the agent's own tab, and Clipmark asks to switch tabs instead of
