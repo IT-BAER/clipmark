@@ -14,12 +14,23 @@ public sealed record WindowEntry(nint Handle, int ProcessId, string ClassName, s
 
 /// <summary>
 /// A window that holds an agent prompt box; <see cref="ProcessId"/> owns the window, <see cref="ExePath"/> is the agent's
-/// own executable (the desktop app, or the CLI inside a terminal or VS Code) or "".
+/// own executable (the desktop app, or the CLI inside a terminal or VS Code) or "". <see cref="AgentProcessId"/> is the
+/// CLI process (0 for desktop apps); <see cref="ConsoleTitle"/> is its own console (tab) title when the caller read it.
 /// </summary>
-public sealed record AgentTarget(nint Window, int ProcessId, Agent Agent, AgentHost Host, string Title, string ExePath = "")
+public sealed record AgentTarget(nint Window, int ProcessId, Agent Agent, AgentHost Host, string Title, string ExePath = "",
+    int AgentProcessId = 0, string ConsoleTitle = "")
 {
+    public const string WindowsTerminalClass = "CASCADIA_HOSTING_WINDOW_CLASS";
+
     /// <summary>The Claude Code and Codex CLIs bind image paste to Alt+V on Windows; the apps and VS Code panels use Ctrl+V.</summary>
     public bool PasteWithAlt => Host == AgentHost.Terminal;
+
+    /// <summary>
+    /// Windows Terminal titles its window after the active tab, and keys go to that tab: a different title means the
+    /// agent's tab is in the background. A profile with suppressApplicationTitle also reads as "other tab".
+    /// </summary>
+    public bool ShowsOtherTab(string windowClass, string windowTitle) =>
+        Host == AgentHost.Terminal && windowClass == WindowsTerminalClass && ConsoleTitle.Length > 0 && windowTitle != ConsoleTitle;
 
     public string Label
     {
@@ -32,7 +43,8 @@ public sealed record AgentTarget(nint Window, int ProcessId, Agent Agent, AgentH
                 AgentHost.VsCode => $"VS Code ({name})",
                 _ => $"Terminal ({name})",
             };
-            return string.IsNullOrWhiteSpace(Title) ? kind : $"{kind}: {Title}";
+            string title = Host == AgentHost.Terminal && ConsoleTitle.Length > 0 ? ConsoleTitle : Title;
+            return string.IsNullOrWhiteSpace(title) ? kind : $"{kind}: {title}";
         }
     }
 }
@@ -94,7 +106,7 @@ public static class AgentTargets
                 continue;
             var host = p.Path.Contains(cli.ExtensionFolder, StringComparison.OrdinalIgnoreCase) ? AgentHost.VsCode : AgentHost.Terminal;
             var w = windows[z];
-            found.Add((z, new(w.Handle, w.ProcessId, cli.Agent, host, w.Title, p.Path)));
+            found.Add((z, new(w.Handle, w.ProcessId, cli.Agent, host, w.Title, p.Path, p.Id)));
         }
         return found.OrderBy(f => f.Z).Select(f => f.Target).DistinctBy(t => (t.Window, t.Agent, t.Host)).ToList();
     }

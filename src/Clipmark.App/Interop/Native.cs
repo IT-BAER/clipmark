@@ -401,6 +401,21 @@ internal static unsafe partial class Native
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool CloseHandle(nint handle);
 
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool AttachConsole(uint processId);
+
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool FreeConsole();
+
+    [LibraryImport("kernel32.dll", EntryPoint = "GetConsoleTitleW")] public static partial uint GetConsoleTitle(char* title, uint size);
+    [LibraryImport("kernel32.dll")] public static partial nint GetStdHandle(int stdHandle);
+
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetStdHandle(int stdHandle, nint handle);
+
     [LibraryImport("advapi32.dll", SetLastError = true)]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool OpenProcessToken(nint process, uint access, out nint token);

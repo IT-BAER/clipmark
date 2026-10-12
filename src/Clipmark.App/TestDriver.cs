@@ -32,7 +32,8 @@ namespace Clipmark.App;
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox, value = last word) | assert text NAME = TEXT (TextBlock contains) | assert none NAME | assert tool TOOL
-/// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0).
+/// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0)
+/// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
 {
@@ -331,6 +332,9 @@ internal sealed class TestDriver
                 await Task.Delay(int.Parse(recordWords[1], CultureInfo.InvariantCulture));
                 await recorder.StopAsync();
                 File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), recorder.Warnings);
+                break;
+            case "exit":
+                _ = ((App)Application.Current).ExitAsync();
                 break;
             case "wait":
                 await Task.Delay(int.Parse(arg, CultureInfo.InvariantCulture));

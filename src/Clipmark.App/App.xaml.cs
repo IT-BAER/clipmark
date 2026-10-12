@@ -96,6 +96,8 @@ public partial class App : Application
         AppLicense.Refresh();
         _window = new MainWindow();
         _tray = new TrayHost { Settings = () => AppSettings.Current };
+        if (TestDir is null && marker is null)
+            TrayPromotion.Start();
         _tray.CaptureRequested += () => _ = CaptureAsync();
         _tray.RecordRequested += OnRecordRequested;
         _tray.IconClicked += () =>
@@ -285,7 +287,7 @@ public partial class App : Application
             _window.ShowAndActivate();
     }
 
-    private async Task ExitAsync()
+    internal async Task ExitAsync()
     {
         if (RecordingSession.Current is not null)
         {
@@ -293,8 +295,15 @@ public partial class App : Application
             _window?.ShowAndActivate();
             return;
         }
-        if (_window is null || await _window.ConfirmDiscardAsync())
-            ExitApp();
+        if (_window is not null && !await _window.ConfirmDiscardAsync())
+            return;
+        try
+        {
+            if (_window is not null)
+                await _window.FlushHistoryAsync().WaitAsync(TimeSpan.FromSeconds(5));
+        }
+        catch (Exception) { } // a failed history write must not keep the app from exiting
+        ExitApp();
     }
 
     private void ExitApp()

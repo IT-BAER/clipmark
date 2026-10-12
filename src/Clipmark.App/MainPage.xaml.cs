@@ -845,6 +845,13 @@ public sealed partial class MainPage : Page
 
     private Task _historyWrite = Task.CompletedTask;
 
+    /// <summary>Writes pending edits to the history item and waits for every started write (before the app exits).</summary>
+    internal async Task FlushHistoryAsync()
+    {
+        await WriteHistoryAsync();
+        await _historyWrite;
+    }
+
     private void OnCropClick(object sender, RoutedEventArgs e)
     {
         if (Cropping)

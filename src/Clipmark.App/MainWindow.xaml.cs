@@ -79,6 +79,8 @@ public sealed partial class MainWindow : Window
 
     public void ShowError(string text) => Page()?.ShowError(text);
 
+    public Task FlushHistoryAsync() => Page()?.FlushHistoryAsync() ?? Task.CompletedTask;
+
     public void ShowSettings()
     {
         if (RootFrame.Content is not SettingsPage)

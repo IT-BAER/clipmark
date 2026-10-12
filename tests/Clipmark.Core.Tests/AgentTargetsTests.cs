@@ -53,7 +53,7 @@ public class AgentTargetsTests
     {
         var targets = AgentTargets.Find(TerminalCli, [TerminalWindow]);
 
-        Assert.Equal([new AgentTarget(199454, 44708, Agent.Claude, AgentHost.Terminal, "cm-probe", Cli)], targets);
+        Assert.Equal([new AgentTarget(199454, 44708, Agent.Claude, AgentHost.Terminal, "cm-probe", Cli, AgentProcessId: 71000)], targets);
     }
 
     [Fact]
@@ -64,7 +64,7 @@ public class AgentTargetsTests
         Assert.Equal(
         [
             new AgentTarget(788898, 73824, Agent.Codex, AgentHost.DesktopApp, "ChatGPT", ChatGptExe),
-            new AgentTarget(199454, 44708, Agent.Codex, AgentHost.Terminal, "cm-probe", CodexCli),
+            new AgentTarget(199454, 44708, Agent.Codex, AgentHost.Terminal, "cm-probe", CodexCli, AgentProcessId: 75224),
         ], targets);
     }
 
@@ -110,7 +110,28 @@ public class AgentTargetsTests
         ProcessEntry[] processes = [P(10, 1, "explorer.exe"), P(11, 10, "cmd.exe"), P(12, 11, "claude.exe", Cli)];
         WindowEntry[] windows = [new(600, 11, "ConsoleWindowClass", "Command Prompt - claude"), new(601, 10, "CabinetWClass", "Downloads")];
 
-        Assert.Equal([new AgentTarget(600, 11, Agent.Claude, AgentHost.Terminal, "Command Prompt - claude", Cli)], AgentTargets.Find(processes, windows));
+        Assert.Equal([new AgentTarget(600, 11, Agent.Claude, AgentHost.Terminal, "Command Prompt - claude", Cli, AgentProcessId: 12)], AgentTargets.Find(processes, windows));
+    }
+
+    // Windows Terminal titles its window after the active tab; the agent's console title is its own tab (measured).
+    private static readonly AgentTarget TerminalTarget =
+        new(199454, 44708, Agent.Claude, AgentHost.Terminal, "V8-Other", Cli, AgentProcessId: 71000, ConsoleTitle: "✳ Claude Code");
+
+    [Fact]
+    public void Terminal_label_names_the_agents_own_tab()
+    {
+        Assert.Equal("Terminal (Claude): ✳ Claude Code", TerminalTarget.Label);
+        Assert.Equal("Terminal (Claude): V8-Other", (TerminalTarget with { ConsoleTitle = "" }).Label);
+    }
+
+    [Fact]
+    public void Another_active_windows_terminal_tab_is_detected()
+    {
+        Assert.True(TerminalTarget.ShowsOtherTab("CASCADIA_HOSTING_WINDOW_CLASS", "V8-Other"));
+        Assert.False(TerminalTarget.ShowsOtherTab("CASCADIA_HOSTING_WINDOW_CLASS", "✳ Claude Code"));
+        Assert.False(TerminalTarget.ShowsOtherTab("ConsoleWindowClass", "V8-Other")); // one console per window
+        Assert.False((TerminalTarget with { ConsoleTitle = "" }).ShowsOtherTab("CASCADIA_HOSTING_WINDOW_CLASS", "V8-Other"));
+        Assert.False((TerminalTarget with { Host = AgentHost.VsCode }).ShowsOtherTab("CASCADIA_HOSTING_WINDOW_CLASS", "V8-Other"));
     }
 
     [Fact]

@@ -16,13 +16,54 @@ internal static class AgentSend
     public static List<AgentTarget> FindTargets(out List<ProcessEntry> processes)
     {
         processes = Processes();
-        return AgentTargets.Find(processes, Windows());
+        return AgentTargets.Find(processes, Windows()).Select(WithConsoleTitle).ToList();
+    }
+
+    /// <summary>Windows Terminal hosts many tabs in one window: the CLI's own console title names its tab.</summary>
+    private static AgentTarget WithConsoleTitle(AgentTarget target) =>
+        target.AgentProcessId > 0 && ClassName(target.Window) == AgentTarget.WindowsTerminalClass
+            ? target with { ConsoleTitle = ConsoleTitle((uint)target.AgentProcessId) } : target;
+
+    /// <summary>
+    /// Attaches to the CLI's console for a moment; "" when that fails (process ended, elevated, other session).
+    /// AttachConsole fills in the std handles of this GUI process and FreeConsole leaves them stale, so they are restored.
+    /// </summary>
+    private static unsafe string ConsoleTitle(uint processId)
+    {
+        const int StdIn = -10, StdOut = -11, StdErr = -12;
+        nint stdIn = GetStdHandle(StdIn), stdOut = GetStdHandle(StdOut), stdErr = GetStdHandle(StdErr);
+        if (!AttachConsole(processId))
+            return "";
+        try
+        {
+            char* title = stackalloc char[512];
+            return new string(title, 0, (int)Math.Min(GetConsoleTitle(title, 512), 511u));
+        }
+        finally
+        {
+            FreeConsole();
+            SetStdHandle(StdIn, stdIn);
+            SetStdHandle(StdOut, stdOut);
+            SetStdHandle(StdErr, stdErr);
+        }
+    }
+
+    private static unsafe string ClassName(nint hwnd)
+    {
+        char* name = stackalloc char[64];
+        return new string(name, 0, GetClassName(hwnd, name, 64));
+    }
+
+    private static unsafe string WindowTitle(nint hwnd)
+    {
+        char* title = stackalloc char[512];
+        return new string(title, 0, GetWindowText(hwnd, title, 512));
     }
 
     public static string PasteKeyText(AgentTarget target) => target.PasteWithAlt ? "Alt+V" : "Ctrl+V";
 
     /// <summary>Null when the paste key was sent, else why not. The capture must already be on the clipboard.</summary>
-    /// <remarks>The paste lands wherever the target has keyboard focus; Windows Terminal pastes into its active tab.</remarks>
+    /// <remarks>The paste lands wherever the target has keyboard focus, so a Windows Terminal agent tab must be the active tab.</remarks>
     public static async Task<string?> PasteAsync(AgentTarget target)
     {
         nint hwnd = target.Window;
@@ -31,6 +72,10 @@ internal static class AgentSend
             return $"{target.Label} is closed. {fallback}";
         if (IsElevated((uint)target.ProcessId) && !IsElevated((uint)Environment.ProcessId))
             return $"{target.Label} runs as administrator, so Clipmark cannot type into it. {fallback}";
+        // Read again at paste time: the agent may retitle its tab after the menu opened (the label keeps the old title).
+        var live = target.ConsoleTitle.Length > 0 ? target with { ConsoleTitle = ConsoleTitle((uint)target.AgentProcessId) } : target;
+        if (live.ShowsOtherTab(ClassName(hwnd), WindowTitle(hwnd)))
+            return $"Windows Terminal shows another tab (or the tab was renamed). Switch to the tab \"{live.ConsoleTitle}\" first. {fallback}";
         if (IsIconic(hwnd))
             ShowWindow(hwnd, SW_RESTORE);
         SetForegroundWindow(hwnd);
