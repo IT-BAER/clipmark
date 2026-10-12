@@ -3,8 +3,8 @@ using System.Text.Json;
 
 namespace Clipmark.Core.Licensing;
 
-/// <summary>Contents of license.json: the entered key and the trial timestamps.</summary>
-public sealed record LicenseFile(string? Key, TrialState? Trial);
+/// <summary>Contents of license.json (and of each trial copy): the entered key, the trial timestamps and their <see cref="TrialSeal"/> tag.</summary>
+public sealed record LicenseFile(string? Key, TrialState? Trial, string? TrialTag = null);
 
 /// <summary>JSON without reflection (Native AOT). A broken key or trial field reads as missing.</summary>
 public static class LicenseStore
@@ -18,6 +18,7 @@ public static class LicenseStore
             w.WriteString("key", file.Key);
             w.WriteString("trialStarted", file.Trial?.StartedUtc.ToString("O", CultureInfo.InvariantCulture));
             w.WriteString("trialLastSeen", file.Trial?.LastSeenUtc.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("trialTag", file.TrialTag);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -43,7 +44,7 @@ public static class LicenseStore
             string? key = string.IsNullOrWhiteSpace(Str("key")) ? null : Str("key");
             var trial = Utc("trialStarted") is { } started && Utc("trialLastSeen") is { } lastSeen
                 ? new TrialState(started, lastSeen) : null;
-            return new LicenseFile(key, trial);
+            return new LicenseFile(key, trial, Str("trialTag"));
         }
     }
 

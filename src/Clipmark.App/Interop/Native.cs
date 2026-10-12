@@ -369,5 +369,33 @@ internal static unsafe partial class Native
     [LibraryImport("ole32.dll")] public static partial int CoCreateInstance(Guid* clsid, nint outer, uint context, Guid* iid, nint* result);
     [LibraryImport("ole32.dll")] public static partial void CoTaskMemFree(nint p);
 
+    // Credential Manager
+    public const uint CRED_TYPE_GENERIC = 1, CRED_PERSIST_LOCAL_MACHINE = 2;
+    public const int ERROR_NOT_FOUND = 1168;
+
+    /// <summary>LastWritten (FILETIME) is two DWORDs so the layout matches on x86 too.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct CREDENTIALW
+    {
+        public uint Flags, Type;
+        public char* TargetName, Comment;
+        public uint LastWrittenLow, LastWrittenHigh;
+        public uint CredentialBlobSize;
+        public byte* CredentialBlob;
+        public uint Persist, AttributeCount;
+        public nint Attributes;
+        public char* TargetAlias, UserName;
+    }
+
+    [LibraryImport("advapi32.dll", EntryPoint = "CredWriteW", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CredWrite(CREDENTIALW* credential, uint flags);
+
+    [LibraryImport("advapi32.dll", EntryPoint = "CredReadW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool CredRead(string target, uint type, uint flags, out CREDENTIALW* credential);
+
+    [LibraryImport("advapi32.dll")] public static partial void CredFree(void* buffer);
+
     public static uint Rgb(byte r, byte g, byte b) => (uint)(r | g << 8 | b << 16);
 }

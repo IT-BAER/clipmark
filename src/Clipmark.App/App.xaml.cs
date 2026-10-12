@@ -14,7 +14,8 @@ namespace Clipmark.App;
 /// <summary>
 /// Single-instance tray app. Startup flags: `--tray` (or the packaged StartupTask) starts hidden; `--open FILE` shows an image or MP4;
 /// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1);
-/// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes.
+/// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes;
+/// `--trial-status FILE` (Debug) counts the trial, writes its state and exits.
 /// </summary>
 public partial class App : Application
 {
@@ -61,6 +62,15 @@ public partial class App : Application
             Exit();
             return;
         }
+#if DEBUG
+        if (Arg("--trial-status") is { } trialStatus)
+        {
+            AppLicense.Refresh();
+            File.WriteAllText(Path.GetFullPath(trialStatus), AppLicense.Describe());
+            Exit();
+            return;
+        }
+#endif
         string? marker = Arg("--measure-startup");
         _dispatcher = DispatcherQueue.GetForCurrentThread();
         // Packaged: Register must run before GetActivatedEventArgs, or a toast click that starts the app is lost.
