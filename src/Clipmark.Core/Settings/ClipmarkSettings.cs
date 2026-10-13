@@ -35,6 +35,23 @@ public sealed record ClipmarkSettings
 
     /// <summary>Set while Clipmark owns Print Screen: the Windows option's value before (see <see cref="PrintScreenToken"/>).</summary>
     public string? PrintScreenRestore { get; init; }
+
+    /// <summary>UI language tag from <see cref="UiLanguages"/>; null = the Windows display language.</summary>
+    public string? Language { get; init; }
+}
+
+/// <summary>The languages the UI offers: BCP-47 tag and the language's own name.</summary>
+public static class UiLanguages
+{
+    public static readonly IReadOnlyList<(string Tag, string NativeName)> All =
+    [
+        ("en-US", "English"), ("de-DE", "Deutsch"), ("fr-FR", "Français"), ("ja-JP", "日本語"), ("zh-Hans", "简体中文"),
+        ("es-ES", "Español"), ("it-IT", "Italiano"), ("pt-BR", "Português (Brasil)"), ("ru-RU", "Русский"), ("pl-PL", "Polski"),
+        ("nl-NL", "Nederlands"), ("ko-KR", "한국어"), ("zh-Hant", "繁體中文"), ("tr-TR", "Türkçe"), ("sv-SE", "Svenska"),
+        ("uk-UA", "Українська"),
+    ];
+
+    public static bool IsValid(string? tag) => All.Any(l => l.Tag == tag);
 }
 
 /// <summary>The Windows "Print Screen opens screen capture" registry value as stored for restoring: "absent" or the number.</summary>
@@ -75,6 +92,7 @@ public static class SettingsStore
             w.WriteString("aiModel", s.AiModel);
             w.WriteBoolean("aiConsent", s.AiConsent);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
+            w.WriteString("language", s.Language);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -115,6 +133,7 @@ public static class SettingsStore
                 AiModel = string.IsNullOrWhiteSpace(Str("aiModel")) ? d.AiModel : Str("aiModel")!,
                 AiConsent = Bool("aiConsent", d.AiConsent),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
+                Language = UiLanguages.IsValid(Str("language")) ? Str("language") : null,
             };
         }
     }

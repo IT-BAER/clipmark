@@ -13,9 +13,9 @@ internal sealed unsafe class OverlaySession : IDisposable
 {
     private static readonly (CaptureMode Mode, char Glyph, string Name)[] PillButtons =
     [
-        (CaptureMode.Rectangle, '\uF407', "Rectangle"), (CaptureMode.Window, '\uE737', "Window"),
-        (CaptureMode.FullScreen, '\uE7F4', "Full screen"), (CaptureMode.AllMonitors, '\uEBC6', "All monitors"),
-        (CaptureMode.Freeform, '\uF408', "Freeform"),
+        (CaptureMode.Rectangle, '\uF407', Loc.Get("ModeRectangle")), (CaptureMode.Window, '\uE737', Loc.Get("ModeWindow")),
+        (CaptureMode.FullScreen, '\uE7F4', Loc.Get("ModeFullScreen")), (CaptureMode.AllMonitors, '\uEBC6', Loc.Get("ModeAllMonitors")),
+        (CaptureMode.Freeform, '\uF408', Loc.Get("ModeFreeform")),
     ];
     private const int CloseButton = -1, ExtractButton = -2, PhotoButton = -3, VideoButton = -4;
 
@@ -241,7 +241,7 @@ internal sealed unsafe class OverlaySession : IDisposable
         };
     }
 
-    private string? SizeLabel(PixelRect r) => _mode == CaptureMode.Rectangle ? $"{r.Width} \u00D7 {r.Height}" : null;
+    private string? SizeLabel(PixelRect r) => _mode == CaptureMode.Rectangle ? Loc.Format("SelectionSize", r.Width, r.Height) : null;
 
     /// <summary>Desktop area touched by highlight, border, size label and freeform path.</summary>
     private PixelRect? DecorationBounds()
@@ -313,10 +313,10 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     private static (char Glyph, string Name) Face(int id) => id switch
     {
-        CloseButton => ('', "Close"),
-        ExtractButton => ('', "Text extractor"),
-        PhotoButton => ('\uE722', "Photo"),
-        VideoButton => ('\uE714', "Video"),
+        CloseButton => ('', Loc.Get("PillClose")),
+        ExtractButton => ('', Loc.Get("PillTextExtractor")),
+        PhotoButton => ('\uE722', Loc.Get("PillPhoto")),
+        VideoButton => ('\uE714', Loc.Get("PillVideo")),
         _ => (PillButtons[IndexOf(id) - FirstMode].Glyph, PillButtons[IndexOf(id) - FirstMode].Name),
     };
 
@@ -358,7 +358,7 @@ internal sealed unsafe class OverlaySession : IDisposable
     private void InvalidatePill()
     {
         var pill = PillRect();
-        Invalidate(new PixelRect(pill.X - Dip(40), pill.Y, pill.Width + Dip(80), pill.Height + Dip(40))); // includes tooltip
+        Invalidate(new PixelRect(pill.X - Dip(160), pill.Y, pill.Width + Dip(320), pill.Height + Dip(40))); // includes a long translated tooltip
     }
 
     // ---- painting -------------------------------------------------------------------------
@@ -463,7 +463,7 @@ internal sealed unsafe class OverlaySession : IDisposable
         {
             string name = Face(hover).Name;
             var b = ButtonRect(IndexOf(hover));
-            int tw = Dip(8 + name.Length * 7.5), th = Dip(26);
+            int tw = TextWidth(dc, name, "Segoe UI", Dip(12)) + Dip(16), th = Dip(26);
             var tip = new RECT { Left = b.X + b.Width / 2 - tw / 2 - m.X, Top = pill.Bottom + Dip(6) - m.Y };
             tip.Right = tip.Left + tw;
             tip.Bottom = tip.Top + th;
@@ -496,6 +496,17 @@ internal sealed unsafe class OverlaySession : IDisposable
         SelectObject(dc, oldPen);
         SelectObject(dc, oldBrush);
         DeleteObject(pen);
+    }
+
+    private static int TextWidth(nint dc, string text, string face, int pixelHeight)
+    {
+        nint font = CreateFont(-pixelHeight, 0, 0, 0, 400, 0, 0, 0, 1, 0, 0, 5 /* CLEARTYPE_QUALITY */, 0, face);
+        nint old = SelectObject(dc, font);
+        var r = new RECT();
+        DrawText(dc, text, text.Length, &r, DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX);
+        SelectObject(dc, old);
+        DeleteObject(font);
+        return r.Right - r.Left;
     }
 
     private static void DrawCenteredText(nint dc, RECT r, string text, string face, int pixelHeight, uint color)

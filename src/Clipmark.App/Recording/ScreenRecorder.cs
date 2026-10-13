@@ -74,7 +74,7 @@ internal sealed class ScreenRecorder
     public static async Task<ScreenRecorder> StartAsync(RecordingArea area, string path, bool systemAudio, bool microphone)
     {
         if (!GraphicsCaptureSession.IsSupported())
-            throw new InvalidOperationException("Screen recording needs Windows 10 version 1903 or later.");
+            throw new InvalidOperationException(Loc.Get("RecordingUnsupported"));
         var recorder = new ScreenRecorder(area, path, systemAudio, microphone);
         try
         {
@@ -124,7 +124,7 @@ internal sealed class ScreenRecorder
         var transcoder = new MediaTranscoder { HardwareAccelerationEnabled = true };
         var prepared = await transcoder.PrepareMediaStreamSourceTranscodeAsync(source, _stream, profile);
         if (!prepared.CanTranscode)
-            throw new InvalidOperationException($"The video encoder is not available ({prepared.FailureReason}).");
+            throw new InvalidOperationException(Loc.Format("RecordingNoEncoder", prepared.FailureReason));
 
         _session.StartCapture();
         // The clock starts with the first captured frame; otherwise frame 0 is the black clear (black preview and thumbnail).
@@ -237,7 +237,7 @@ internal sealed class ScreenRecorder
         }
         catch (Exception e)
         {
-            lock (_warnings) _warnings.Add("Audio cannot be recorded: " + e.Message);
+            lock (_warnings) _warnings.Add(Loc.Format("AudioFailed", e.Message));
         }
         opened.TrySetResult();
 
@@ -266,7 +266,7 @@ internal sealed class ScreenRecorder
                         // Device unplugged or switched (AUDCLNT_E_DEVICE_INVALIDATED): keep recording without this source.
                         lost[i] = true;
                         s.Dispose();
-                        lock (_warnings) _warnings.Add("An audio device stopped during the recording; its audio ends there.");
+                        lock (_warnings) _warnings.Add(Loc.Get("AudioDeviceLost"));
                     }
                 }
                 long until = last ? Math.Min(_stopAt, Stopwatch.GetTimestamp()) : Stopwatch.GetTimestamp() - AudioLagQpc;
@@ -333,7 +333,7 @@ internal sealed class ScreenRecorder
             Release();
         }
         if (_failure is not null)
-            throw new InvalidOperationException("The recording failed: " + _failure.Message, _failure);
+            throw new InvalidOperationException(Loc.Format("RecordingFailed", _failure.Message), _failure);
     }
 
     /// <summary>Stops without keeping the file.</summary>

@@ -102,7 +102,7 @@ internal sealed class RecordingSession
         {
             int left = CountdownSeconds - (int)Stopwatch.GetElapsedTime(_countdownStart).TotalSeconds;
             if (left > 0)
-                _bar.Timer = left.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                _bar.Timer = left.ToString(System.Globalization.CultureInfo.CurrentCulture);
             else
                 _ = StartAsync();
         }
@@ -129,7 +129,7 @@ internal sealed class RecordingSession
         }
         catch (Exception e)
         {
-            _done.TrySetResult(new RecordingResult(null, "The recording did not start: " + e.Message, []));
+            _done.TrySetResult(new RecordingResult(null, Loc.Format("RecordingNotStarted", e.Message), []));
         }
     }
 

@@ -68,10 +68,10 @@ public sealed partial class MainPage
     {
         if (_aiFlyout is not null)
             return;
-        var title = new TextBlock { Text = "Ask AI", Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center };
+        var title = new TextBlock { Text = Loc.Get("AskAiTitle"), Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center };
         _aiModelText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = SecondaryBrush, Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"] };
-        _aiNewChat = new Button { Content = "New chat", IsEnabled = false, HorizontalAlignment = HorizontalAlignment.Right };
-        ToolTipService.SetToolTip(_aiNewChat, "Start over with the capture as it is now");
+        _aiNewChat = new Button { Content = Loc.Get("AskAiNewChat"), IsEnabled = false, HorizontalAlignment = HorizontalAlignment.Right };
+        ToolTipService.SetToolTip(_aiNewChat, Loc.Get("AskAiNewChatTip"));
         _aiNewChat.Click += (_, _) => ResetAiChat();
         var header = new Grid { ColumnSpacing = 8 };
         header.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
@@ -83,29 +83,29 @@ public sealed partial class MainPage
         header.Children.Add(_aiModelText);
         header.Children.Add(_aiNewChat);
 
-        var openSettings = new Button { Content = "Open Settings" };
+        var openSettings = new Button { Content = Loc.Get("OpenSettings") };
         openSettings.Click += (_, _) => { HideAiFlyout(); Frame.Navigate(typeof(SettingsPage), "ai"); };
         _aiNoKeyPanel = new StackPanel
         {
             Spacing = 8,
             Children =
             {
-                new TextBlock { Text = "Add your Anthropic API key in Settings to ask questions about your captures.", TextWrapping = TextWrapping.Wrap },
+                new TextBlock { Text = Loc.Get("AskAiNoKey"), TextWrapping = TextWrapping.Wrap },
                 openSettings,
             },
         };
 
         _aiTurns = new StackPanel { Spacing = 12 };
         _aiScroll = new ScrollViewer { Content = _aiTurns, MaxHeight = 420, Padding = new Thickness(0, 0, 12, 0) };
-        AutomationProperties.SetName(_aiScroll, "Ask AI conversation");
+        AutomationProperties.SetName(_aiScroll, Loc.Get("AskAiConversationName"));
         _aiStatus = new TextBlock { TextWrapping = TextWrapping.Wrap, Foreground = SecondaryBrush, Visibility = Visibility.Collapsed };
-        AutomationProperties.SetName(_aiStatus, "Ask AI status");
+        AutomationProperties.SetName(_aiStatus, Loc.Get("AskAiStatusName"));
         _aiInput = new TextBox
         {
-            PlaceholderText = "Ask about this capture", AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MaxHeight = 120,
+            PlaceholderText = Loc.Get("AskAiPlaceholder"), AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MaxHeight = 120,
         };
-        AutomationProperties.SetName(_aiInput, "Question");
-        ToolTipService.SetToolTip(_aiInput, "Enter sends, Shift+Enter starts a new line");
+        AutomationProperties.SetName(_aiInput, Loc.Get("AskAiQuestionName"));
+        ToolTipService.SetToolTip(_aiInput, Loc.Get("AskAiInputTip"));
         _aiInput.PreviewKeyDown += (_, e) =>
         {
             if (e.Key == VirtualKey.Enter && (Modifiers() & VirtualKeyModifiers.Shift) == 0)
@@ -171,8 +171,8 @@ public sealed partial class MainPage
     {
         bool busy = _chat.IsBusy;
         _aiSend.Content = new FontIcon { Glyph = busy ? "" : "", FontSize = 16 };
-        AutomationProperties.SetName(_aiSend, busy ? "Stop" : "Send question");
-        ToolTipService.SetToolTip(_aiSend, busy ? "Stop the answer" : "Send (Enter)");
+        AutomationProperties.SetName(_aiSend, Loc.Get(busy ? "AskAiStopName" : "AskAiSendName"));
+        ToolTipService.SetToolTip(_aiSend, Loc.Get(busy ? "AskAiStopTip" : "AskAiSendTip"));
         _aiNewChat.IsEnabled = _chat.Turns.Count > 0 || busy;
     }
 
@@ -196,16 +196,14 @@ public sealed partial class MainPage
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = "Send this capture to Anthropic?",
+                Title = Loc.Get("AiConsentTitle"),
                 Content = new TextBlock
                 {
                     TextWrapping = TextWrapping.Wrap,
-                    Text = "Ask AI sends the capture as shown (annotations and redactions included) and your questions to Anthropic "
-                        + $"({ClaudeChat.Host}) under your own API key. Anthropic's terms apply and Anthropic bills the key. "
-                        + "Nothing is sent until you send a question, and Clipmark does not store the conversation.",
+                    Text = Loc.Format("AiConsentBody", ClaudeChat.Host),
                 },
-                PrimaryButtonText = "Send",
-                CloseButtonText = "Cancel",
+                PrimaryButtonText = Loc.Get("AiConsentSend"),
+                CloseButtonText = Loc.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Primary,
             };
             if (await dialog.ShowAsync() != ContentDialogResult.Primary)
@@ -253,7 +251,7 @@ public sealed partial class MainPage
         var cts = _aiCts = new CancellationTokenSource();
         SyncAiTurns();
         ShowAiBusy();
-        ShowAiStatus($"{model.Name} is answering… {_aiSentAt}");
+        ShowAiStatus(Loc.Format("AskAiAnswering", model.Name, _aiSentAt));
         StartAiTimer();
 
         string? stop = null, error = null;
@@ -295,7 +293,7 @@ public sealed partial class MainPage
             _aiInput.Text = unanswered; // no text came back: the question returns to the box
         SyncAiTurns();
         ShowAiBusy();
-        ShowAiStatus(error ?? (cancelled ? "Stopped." : ApiError.StopMessage(stop) ?? _aiSentAt), error is not null);
+        ShowAiStatus(error ?? (cancelled ? Loc.Get("AskAiStopped") : ApiError.StopMessage(stop) ?? _aiSentAt), error is not null);
     }
 
     /// <summary>Consent (once), then the image for a new conversation; false when nothing should be sent.</summary>
@@ -320,11 +318,11 @@ public sealed partial class MainPage
             return false; // New chat or another capture meanwhile
         if (bytes is null)
         {
-            ShowAiStatus("The capture is too large to send.", error: true);
+            ShowAiStatus(Loc.Get("AiCaptureTooLarge"), error: true);
             return false;
         }
         _chat.Start(Convert.ToBase64String(bytes), mediaType);
-        _aiSentAt = $"Image sent at {size.Width} × {size.Height} px.";
+        _aiSentAt = Loc.Format("AskAiImageSent", size.Width, size.Height);
         return true;
     }
 
@@ -434,23 +432,23 @@ public sealed partial class MainPage
                 HorizontalAlignment = HorizontalAlignment.Right, MaxWidth = 380,
                 Child = new TextBlock { Text = turn.Text, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true },
             };
-            AutomationProperties.SetName(bubble, "Question: " + turn.Text);
+            AutomationProperties.SetName(bubble, Loc.Format("AskAiQuestionBubbleName", turn.Text));
             return (ChatRole.User, turn.Text, bubble, null);
         }
         var answer = new RichTextBlock { TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true };
-        AutomationProperties.SetName(answer, "Answer");
+        AutomationProperties.SetName(answer, Loc.Get("AskAiAnswerName"));
         var copy = new Button
         {
             Content = new FontIcon { Glyph = "", FontSize = 12 }, Padding = new Thickness(6, 4, 6, 4),
             Background = new SolidColorBrush(Colors.Transparent), BorderThickness = new Thickness(0),
         };
-        AutomationProperties.SetName(copy, "Copy answer");
-        ToolTipService.SetToolTip(copy, "Copy answer");
+        AutomationProperties.SetName(copy, Loc.Get("AskAiCopyAnswer"));
+        ToolTipService.SetToolTip(copy, Loc.Get("AskAiCopyAnswer"));
         copy.Click += (_, _) =>
         {
             if (index < _chat.Turns.Count && !CaptureOutput.CopyTextToClipboard(
                     Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), _chat.Turns[index].Text))
-                ShowAiStatus("The clipboard is in use by another app; the answer was not copied.", error: true);
+                ShowAiStatus(Loc.Get("ClipboardBusyAnswer"), error: true);
         };
         return (ChatRole.Assistant, "", new StackPanel { Spacing = 2, Children = { answer, copy } }, answer);
     }

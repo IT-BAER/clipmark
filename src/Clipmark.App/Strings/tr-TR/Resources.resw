@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} başka bir uygulama tarafından kullanılıyor. Ayarlar'dan farklı bir kısayol tuşu seçin.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} başka bir uygulama tarafından kullanılıyor. Ayarlar'dan farklı bir kayıt kısayol tuşu seçin.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Clipmark'tan çıkmadan önce kaydı durdurun.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic aşırı yüklü veya kullanılamıyor. Kısa süre sonra yeniden deneyin.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>İstek sınırına ulaşıldı. Kısa süre sonra yeniden deneyin.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>API anahtarı geçerli değil. Ayarlar &gt; AI bölümünden denetleyin.</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>Bu API anahtarı bu modeli veya özelliği kullanamaz.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>Bu model kullanılamıyor. Ayarlar &gt; AI bölümünden başka bir model seçin.</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>Alıntı gönderilemeyecek kadar büyük.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>İstek sınırına ulaşıldı. {0} sn sonra yeniden deneyin.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>İstek başarısız oldu (HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>Yanıt durdu: {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude bu isteği yanıtlamayı reddetti.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>Yanıt uzunluk sınırında kesildi.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>İstek reddedildi.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>İstek reddedildi: {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>Anthropic'ten {0:0} sn boyunca veri gelmedi. Yeniden deneyin.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>Yanıt tamamlanmadan bağlantı kapandı. Yeniden deneyin.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>Düzenlenebilir veriler geçerli bir JSON değil.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>Düzenlenebilir veriler geçersiz: {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Claude uygulaması</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>ChatGPT uygulaması</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Terminal ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>Dikdörtgen</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>Pencere</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>Tam ekran</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>Tüm monitörler</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>Serbest biçimli</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>Dikdörtgen</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>Oval</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>Çizgi</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>Ok</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>Siyah</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>Beyaz</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>Kırmızı</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>Sarı</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>Yeşil</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>Mavi</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>İnce</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>Orta</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>Kalın</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>Gecikme yok</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} saniye</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} sn</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>Alıntı modu: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>Gecikme: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>Şekiller: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>Renk ve kalınlık: {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>Alıntı almak için Yeni'yi seçin veya {0} tuşuna, ekranı kaydetmek için {1} tuşuna basın.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Bu alıntıdaki değişiklikler kaydedilsin mi?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>Kaydet</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>Kaydetme</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>nesneleri seçme ve taşıma</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>şekillere bağlı oklar</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>metin etiketleri</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>dolgu aracı</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>damlalık</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>alıntıları AI yardımcılarına gönderme</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>alıntı geçmişi</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>alıntılarınız hakkında AI'ya soru sorma</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>düzenlenebilir PNG kaydetme</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Premium özelliği, kilitli</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium şunları içerir: {0}. {1} günlük deneme süreniz sona erdi.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Premium satın al</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>Lisans anahtarı gir</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>Düzenlenebilir PNG olarak kaydet (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>Düzenlenebilir PNG olarak kaydet (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>AI'ya gönder</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>AI'ya gönder (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>Alıntı geçmişi</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>Alıntı geçmişi (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>Bu alıntı hakkında AI'ya sor</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>AI'ya sor (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>Seçili</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>Kalınlık (fare tekerleği)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>Kalınlık</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>Diğer renkler</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>Özel renk</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>Pano başka bir uygulama tarafından kullanılıyor; renk kopyalanmadı.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>Pano başka bir uygulama tarafından kullanılıyor; kayıt kopyalanmadı.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>Pano başka bir uygulama tarafından kullanılıyor; alıntı kopyalanmadı.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>Pano başka bir uygulama tarafından kullanılıyor; metin kopyalanmadı.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>Çalışan AI oturumu bulunamadı</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>Çalışan AI oturumu bulunamadı. Bir terminalde veya VS Code'da Claude Code ya da Codex'i başlatın veya Claude ya da ChatGPT uygulamasını açın.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>Düzenlenebilir PNG görüntüsü</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>PNG görüntüsü</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>JPEG görüntüsü</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>MP4 videosu</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>Alıntı kaydedilmedi: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>Kayıt kaydedilmedi: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>Paylaşım penceresi açılmadı: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>Alıntı geçmişi açılmadı: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>Alıntı geçmişi kapalı. Son {0} alıntıyı Windows hesabınız için şifrelenmiş olarak tutmak için Ayarlar'dan açın.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Ayarlar'ı aç</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>Geçmiş</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>Tümünü temizle</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Henüz alıntı yok.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>{0} tarihli alıntı</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>Aç (silmek için sağ tıklayın)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>Bu alıntı okunamıyor. Hasarlı veya başka bir Windows hesabı için şifrelenmiş.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>Geçmişteki tüm alıntılar silinsin mi?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>Metin okunuyor…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Metin tanıma başarısız oldu: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>Yüklü bir metin tanıma dili yok (Ayarlar &gt; Zaman ve dil &gt; Dil ve bölge).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>Metin bulunamadı.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>1 metin satırı.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>{0} metin satırı.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 QR kodu:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>{0} QR kodu:</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR kodu: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>Kopyala</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>QR kodunu kopyala</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>{0} numaralı QR kodunu kopyala</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR kodu kopyalandı.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>Bağlantıyı aç</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>{0} numaralı bağlantıyı aç</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Metin kopyalandı.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>E-posta adresi veya telefon numarası bulunamadı.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>AI'ya sor</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>Yeni sohbet</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>Alıntının şu anki haliyle baştan başla</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>Alıntılarınız hakkında soru sormak için Ayarlar'a Anthropic API anahtarınızı ekleyin.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>AI'ya sor görüşmesi</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>AI'ya sor durumu</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>Bu alıntı hakkında sorun</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>Soru</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Enter gönderir, Shift+Enter yeni satır başlatır</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>Durdur</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>Soruyu gönder</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>Yanıtı durdur</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>Gönder (Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>Bu alıntı Anthropic'e gönderilsin mi?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorularınızı kendi API anahtarınızla Anthropic'e ({0}) gönderir. Anthropic'in koşulları geçerlidir ve anahtarın ücretini Anthropic faturalandırır. Bir soru göndermeden hiçbir şey gönderilmez ve Clipmark görüşmeyi saklamaz.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>Gönder</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} yanıtlıyor… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>Durduruldu.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>Görüntü {0} × {1} px olarak gönderildi.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>Soru: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>Yanıt</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>Yanıtı kopyala</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>Pano başka bir uygulama tarafından kullanılıyor; yanıt kopyalanmadı.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>Yeni alıntı</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>Yeni kayıt</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>Mod</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>Gecikme</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Clipmark'ı aç</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>Alıntı alınamadı: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>Seçimde metin bulunamadı</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>Metin panoya kopyalandı</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>Otomatik kaydetme başarısız oldu: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>Kapat</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>Metin ayıklayıcı</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>Fotoğraf</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>Video</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>Kaydediliyor</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>Kayıt başlamadı: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>Ekran kaydı için Windows 10 sürüm 1903 veya üzeri gerekir.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>Video kodlayıcı kullanılamıyor ({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>Kayıt başarısız oldu: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>Ses kaydedilemiyor: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>Kayıt sırasında bir ses cihazı durdu; sesi orada biter.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>Etkin hoparlör veya kulaklık yok, bu nedenle sistem sesi kaydedilmiyor.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>Bağlı mikrofon yok, bu nedenle mikrofon kaydedilmiyor.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>Ses cihazı, Clipmark'ın kaydedemediği {0} bit ses kullanıyor.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>Sistem sesi kaydedilemiyor: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>Mikrofon kaydedilemiyor: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>Alıntı panoda: istemde {0} tuşlarına basın.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} kapalı. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} yönetici olarak çalışıyor, bu nedenle Clipmark ona yazamaz. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows Terminal başka bir sekmeyi gösteriyor (veya sekmenin adı değiştirildi). Önce "{0}" sekmesine geçin. {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows, {0} uygulamasını öne getirmedi. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows yapıştırma tuşunu engelledi. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>Kayıt kaydedildi</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>Alıntı panoya kopyalandı</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>Alıntı alındı</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>{0} konumuna kaydedildi</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>Alınan görüntü</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>Metin kutusu</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>Düzenlenebilir veriler temel görüntüyle eşleşmiyor.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} Görüntü, nesneleri olmadan açılıyor.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} zamanında yanıt vermedi. Yeniden deneyin.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>{0} ile güvenli bağlantı kurulamadı. Bir ara sunucu veya güvenlik yazılımı HTTPS'yi inceliyor olabilir.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Ara sunucu kimlik doğrulaması gerektiriyor.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>{0} adresine ulaşılamıyor: {1} Ağı veya ara sunucuyu denetleyin.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>{0} bağlantısı kesildi: {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>Açık</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>Kapalı</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Windows varsayılanı</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>Kayıtlar {0} konumuna kaydedilir</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Clipmark için Print Screen tuşunu kullanmak üzere, ekran görüntüsü almayı Print Screen ile açan Windows seçeneğini kapatın (Bluetooth ve cihazlar &gt; Klavye; eski Windows 11 sürümlerinde: Erişilebilirlik &gt; Klavye), ardından yukarıdaki kısayol tuşu olarak PrintScreen'i seçin.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium etkin.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Premium denemesi: 1 gün kaldı.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Premium denemesi: {0} gün kaldı.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Premium denemesi sona erdi. Premium araçlar kilitli; diğer her şey çalışmaya devam eder.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde kendi API anahtarınızla Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Premium özelliği. AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde kendi API anahtarınızla Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>Kayıtlı API anahtarı yok.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>API anahtarı kaydedildi.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>API anahtarı kaydedildi, sonu: {0}.</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>Önce anahtarı yapıştırın.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>Anahtar Kimlik Bilgileri Yöneticisi'ne kaydedilemedi.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>Sınanıyor…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>Anahtar çalışıyor.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>API anahtarı kaldırıldı.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>Anahtar Kimlik Bilgileri Yöneticisi'nden kaldırılamadı.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>Son {0} alıntıyı nesneleriyle birlikte (en fazla {1} MB), Windows hesabınız için şifrelenmiş olarak ve yalnızca bu bilgisayarda saklar. Kapatmak geçmişi siler.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Premium özelliği. Son {0} alıntıyı nesneleriyle birlikte (en fazla {1} MB), Windows hesabınız için şifrelenmiş olarak ve yalnızca bu bilgisayarda saklar. Kapatmak geçmişi siler.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>Geçmişteki alıntı silinsin mi?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>Geçmişteki {0} alıntı silinsin mi?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>Kapat ve sil</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>Lisans etkinleştirildi.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>Bu lisans anahtarı geçerli değil. Tamamını yapıştırdığınızdan emin olun.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Windows ayarı değiştirilemedi: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark, Görev Yöneticisi &gt; Başlangıç uygulamaları bölümünde kapatılmış. Oradan açın.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>Kuruluşunuz Clipmark'ın Windows ile başlamasına izin vermiyor.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} alıntı başlatır.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} kaydı başlatır ve durdurur.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} başka bir uygulama tarafından kullanılıyor. Farklı bir bileşim seçin.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>Lisans</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lisans durumu</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>Lisans anahtarınızı yapıştırın</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lisans anahtarı</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>Etkinleştir</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lisans sonucu</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Clipmark Premium satın al</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>Alıntı kısayol tuşu</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kısayol tuşu</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Clipmark'ı açmak için Print Screen tuşunu kullan</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Clipmark'ı açmak için Print Screen tuşunu kullan</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Print Screen ile Ekran Alıntısı Aracı'nı açan Windows seçeneğini kapatır. Bunu kapatmak seçeneği geri açar.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Windows klavye ayarlarını aç</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>Başlangıç</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Windows başladığında Clipmark'ı başlat</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows başladığında Clipmark'ı başlat</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>Varsayılan alıntı</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>Mod</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>Gecikme</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>Alıntıdan sonra</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>Panoya kopyala</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>Bildirim göster</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>Otomatik kaydet</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>Klasörü değiştir</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>Varsayılanı kullan</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>Alıntı geçmişi tut</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Alıntı geçmişi tut</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>Ekran kaydı</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kayıt kısayol tuşu</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>Sistem sesini kaydet</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>Mikrofonu kaydet</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>AI'ya sor</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API anahtarı durumu</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Anthropic API anahtarınızı yapıştırın</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Anthropic API anahtarı</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API anahtarını kaydet</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>Anahtarı sına</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API anahtarını sına</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>Anahtarı kaldır</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API anahtarını kaldır</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API anahtarı sonucu</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI modeli</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>Yeni dili kullanmak için Clipmark'ı yeniden başlatın.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>Hakkında</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Sürüm</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>Kaynak kodu ve sürümler</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yeni alıntı</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Yeni alıntı</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>Yeni</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yeni kayıt</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Yeni kayıt</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bir görüntüyü veya düzenlenebilir PNG'yi aç (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alıntı geçmişi</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Alıntı geçmişi</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alıntı modu</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Alıntı modu</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gecikme</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gecikme</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seç (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Seç</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kalem (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kalem</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vurgulayıcı (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Vurgulayıcı</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Silgi (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Silgi</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Metin (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Metin</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Şekiller</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Şekiller</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Damlalık (I): rengi #RRGGBB olarak kopyalar</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Damlalık</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Doldur (G): dikdörtgen veya oval, yoksa tuval arka planı</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Doldur</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Renk ve kalınlık</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Renk ve kalınlık</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kırp</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırp</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kırpmayı uygula (Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpmayı uygula</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kırpmayı iptal et (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpmayı iptal et</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sol kenar (px); 100+20 gibi işlemler çalışır</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpma X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Üst kenar (px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpma Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Genişlik (px); 800+20 gibi işlemler çalışır</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpma genişliği</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yükseklik (px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kırpma yüksekliği</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Metin eylemleri: metni kopyala, e-postaları ve telefon numaralarını karart, QR kodlarını oku</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Metin eylemleri</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Geri al (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Geri al</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Yinele (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Yinele</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Farklı kaydet (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Farklı kaydet</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>Düzenlenebilir PNG olarak kaydet (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nesneleri düzenlenebilir tutar. Dosya ayrıca kırpılmamış görüntüyü ve üzerine çizilen her şeyi içerir.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopyala (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kopyala</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Paylaş</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Paylaş</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>AI'ya gönder</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI'ya gönder</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bu alıntı hakkında AI'ya sor</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI'ya sor</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Metin eylemleri durumu</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>Tüm metni kopyala</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tüm metni kopyala</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>Hızlı karartma</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Görüntüdeki e-posta adreslerini ve telefon numaralarını karartır</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Hızlı karartma</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kayıt</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Ekran görüntüsü alma, ek açıklama ve ekran kaydı</value>
+  </data>
+</root>

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 namespace Clipmark.Core.Ai;
@@ -29,10 +30,12 @@ public static class ChatStream
             }
             catch (OperationCanceledException) when (!ct.IsCancellationRequested)
             {
-                throw new AiException($"No data from Anthropic for {idle.TotalSeconds:0} s. Try again.");
+                throw new AiException(string.Format(CultureInfo.CurrentCulture,
+                    CoreText.T("AiNoData", "No data from Anthropic for {0:0} s. Try again."), idle.TotalSeconds));
             }
             if (read == 0)
-                return stopReason ?? throw new AiException("The connection closed before the answer was complete. Try again.");
+                return stopReason ?? throw new AiException(
+                    CoreText.T("AiConnectionClosed", "The connection closed before the answer was complete. Try again."));
             int count = decoder.GetChars(bytes, 0, read, chars, 0);
             foreach (var sse in parser.Feed(new string(chars, 0, count)))
             {

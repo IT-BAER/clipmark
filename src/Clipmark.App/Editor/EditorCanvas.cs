@@ -134,7 +134,7 @@ internal sealed class EditorCanvas
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        AutomationProperties.SetName(Control, "Captured image");
+        AutomationProperties.SetName(Control, Loc.Get("CanvasName"));
         Control.CreateResources += (s, e) => e.TrackAsyncAction(LoadAsync(s).AsAsyncAction());
         Control.Draw += OnDraw;
         Control.PointerPressed += OnPointerPressed;
@@ -211,7 +211,7 @@ internal sealed class EditorCanvas
         // Lightweight styling: no theme background behind the text while hovered or focused.
         foreach (var key in new[] { "TextControlBackgroundPointerOver", "TextControlBackgroundFocused" })
             box.Resources[key] = clear;
-        AutomationProperties.SetName(box, "Text box");
+        AutomationProperties.SetName(box, Loc.Get("CanvasTextBoxName"));
         _overlay.Children.Add(box);
         PlaceTextBox();
         Control.Invalidate();
@@ -315,7 +315,7 @@ internal sealed class EditorCanvas
                 loaded = DocumentJson.Parse(data.Json);
                 _image = await LoadBitmapAsync(sender, data.BasePng);
                 if (_image.SizeInPixels.Width != loaded.Width || _image.SizeInPixels.Height != loaded.Height)
-                    throw new InvalidDataException("The editable data does not match its base image.");
+                    throw new InvalidDataException(Loc.Get("EditableDataMismatch"));
                 _imageBytes = data.BasePng;
             }
             catch (Exception e) when (e is InvalidDataException or ArgumentException or System.Runtime.InteropServices.COMException)
@@ -323,7 +323,7 @@ internal sealed class EditorCanvas
                 loaded = null;
                 _image?.Dispose();
                 _image = null;
-                Problem?.Invoke($"{e.Message} The image opens without its objects.");
+                Problem?.Invoke(Loc.Format("EditableDataDropped", e.Message));
             }
         }
         if (_image is null)
@@ -779,8 +779,9 @@ internal sealed class EditorCanvas
             ds.DrawCircle(hint.Point, hint.Width / 2, Microsoft.UI.Colors.Black, dip, _dash);
             using var format = new Microsoft.Graphics.Canvas.Text.CanvasTextFormat { FontSize = 12 * dip };
             var at = hint.Point + new Vector2(hint.Width / 2 + 6 * dip, -8 * dip);
-            ds.DrawText($"{hint.Width:0} px", at + new Vector2(dip), Microsoft.UI.Colors.Black, format);
-            ds.DrawText($"{hint.Width:0} px", at, Microsoft.UI.Colors.White, format);
+            string size = Loc.Format("WidthPixels", hint.Width);
+            ds.DrawText(size, at + new Vector2(dip), Microsoft.UI.Colors.Black, format);
+            ds.DrawText(size, at, Microsoft.UI.Colors.White, format);
         }
         if (_cropFrame is { } frame)
             DrawCropFrame(ds, frame, view);

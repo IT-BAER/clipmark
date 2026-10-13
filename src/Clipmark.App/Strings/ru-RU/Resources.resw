@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} уже используется другим приложением. Выберите другое сочетание клавиш в разделе «Параметры».</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} уже используется другим приложением. Выберите другое сочетание клавиш для записи в разделе «Параметры».</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Остановите запись, прежде чем выйти из Clipmark.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Сервис Anthropic перегружен или недоступен. Повторите попытку чуть позже.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>Достигнут лимит запросов. Повторите попытку чуть позже.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>Ключ API недействителен. Проверьте его в разделе «Параметры» &gt; «ИИ».</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>Этот ключ API не может использовать эту модель или функцию.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>Эта модель недоступна. Выберите другую модель в разделе «Параметры» &gt; «ИИ».</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>Снимок слишком большой для отправки.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>Достигнут лимит запросов. Повторите попытку через {0} с.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>Запрос не выполнен (HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>Ответ прерван: {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude отказался отвечать на этот запрос.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>Ответ обрезан из-за ограничения длины.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>Запрос отклонён.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>Запрос отклонён: {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>От Anthropic нет данных уже {0:0} с. Повторите попытку.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>Соединение закрылось до завершения ответа. Повторите попытку.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>Редактируемые данные не являются допустимым JSON.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>Редактируемые данные недопустимы: {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Приложение Claude</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>Приложение ChatGPT</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Терминал ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>Прямоугольник</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>Окно</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>Во весь экран</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>Все мониторы</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>Произвольная форма</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>Прямоугольник</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>Овал</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>Линия</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>Стрелка</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>Чёрный</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>Белый</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>Красный</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>Жёлтый</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>Зелёный</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>Синий</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>Тонкая</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>Средняя</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>Толстая</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} пикс.</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>Без задержки</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} с</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} с</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>Режим съёмки: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>Задержка: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>Фигуры: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>Цвет и толщина: {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>Нажмите «Создать» или клавиши {0}, чтобы сделать снимок, или {1}, чтобы записать экран.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Сохранить изменения в этом снимке?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>Сохранить</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>Не сохранять</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>выделение и перемещение объектов</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>стрелки, привязанные к фигурам</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>текстовые подписи</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>инструмент «Заливка»</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>пипетку</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>отправку снимков ИИ-помощникам</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>журнал снимков</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>вопросы к ИИ о ваших снимках</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>сохранение редактируемых PNG</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Функция Premium, недоступна</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium включает: {0}. Ваша {1}-дневная пробная версия закончилась.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Купить Premium</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>Ввести лицензионный ключ</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>Сохранить как редактируемый PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>Сохранить как редактируемый PNG (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>Отправить ИИ</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>Отправить ИИ (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>Журнал снимков</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>Журнал снимков (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>Спросить ИИ об этом снимке</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>Спросить ИИ (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>Выбрано</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>Толщина (колесо мыши)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>Толщина</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>Другие цвета</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>Пользовательский цвет</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>Буфер обмена занят другим приложением; цвет не скопирован.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>Буфер обмена занят другим приложением; запись не скопирована.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>Буфер обмена занят другим приложением; снимок не скопирован.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>Буфер обмена занят другим приложением; текст не скопирован.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>Запущенный сеанс ИИ не найден</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>Запущенный сеанс ИИ не найден. Запустите Claude Code или Codex в терминале или VS Code либо откройте приложение Claude или ChatGPT.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>Редактируемое изображение PNG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>Изображение PNG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>Изображение JPEG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>Видео MP4</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>Снимок не сохранён: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>Запись не сохранена: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>Не удалось открыть окно «Поделиться»: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>Не удалось открыть журнал снимков: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>Журнал снимков отключён. Включите его в параметрах, чтобы сохранять последние снимки (не более {0}) в зашифрованном виде для вашей учётной записи Windows.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Открыть параметры</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>Журнал</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>Очистить всё</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Снимков пока нет.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>Снимок от {0}</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>Открыть (щёлкните правой кнопкой мыши, чтобы удалить)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>Не удаётся прочитать этот снимок. Он повреждён или зашифрован для другой учётной записи Windows.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>Удалить все снимки из журнала?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>Распознавание текста…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Не удалось распознать текст: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>Не установлен язык для распознавания текста (Параметры &gt; Время и язык &gt; Язык и регион).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>Текст не найден.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>Одна строка текста.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>Строк текста: {0}.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 QR-код:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>QR-коды ({0}):</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR-код: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>Копировать</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>Копировать QR-код</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>Копировать QR-код {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR-код скопирован.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>Открыть ссылку</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>Открыть ссылку {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Текст скопирован.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>Адреса электронной почты и номера телефонов не найдены.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>Новый чат</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>Начать заново с текущим видом снимка</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>Добавьте свой ключ API Anthropic в параметрах, чтобы задавать вопросы о ваших снимках.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>Беседа с ИИ</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>Состояние «Спросить ИИ»</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>Задайте вопрос об этом снимке</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>Вопрос</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Enter отправляет, Shift+Enter — новая строка</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>Остановить</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>Отправить вопрос</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>Остановить ответ</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>Отправить (Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>Отправить этот снимок в Anthropic?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>Функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваши вопросы в Anthropic ({0}) с использованием вашего собственного ключа API. Действуют условия Anthropic, а плата за использование ключа взимается Anthropic. Ничего не отправляется, пока вы не отправите вопрос, а Clipmark не сохраняет беседу.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>Отправить</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} отвечает… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>Остановлено.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>Изображение отправлено в размере {0} × {1} пикс.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>Вопрос: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>Ответ</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>Копировать ответ</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>Буфер обмена занят другим приложением; ответ не скопирован.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>Новый снимок</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>Новая запись</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>Режим</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>Задержка</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Открыть Clipmark</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>Не удалось сделать снимок: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>В выделенной области нет текста</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>Текст скопирован в буфер обмена</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>Не удалось выполнить автосохранение: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>Закрыть</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>Извлечение текста</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>Фото</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>Видео</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>Сохранение</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>Не удалось начать запись: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>Для записи экрана нужна Windows 10 версии 1903 или более поздней.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>Видеокодировщик недоступен ({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>Ошибка записи: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>Не удаётся записать звук: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>Звуковое устройство остановилось во время записи; звук с него заканчивается на этом месте.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>Нет активных динамиков или наушников, поэтому системный звук не записывается.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>Микрофон не подключён, поэтому звук с микрофона не записывается.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>Звуковое устройство использует {0}-разрядный звук, который Clipmark не может записать.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>Не удаётся записать системный звук: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>Не удаётся записать звук с микрофона: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>Снимок находится в буфере обмена: нажмите {0} в поле ввода.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} закрыт. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} запущен от имени администратора, поэтому Clipmark не может вводить в него данные. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>В Windows Terminal открыта другая вкладка (или вкладку переименовали). Сначала перейдите на вкладку «{0}». {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows не вывела {0} на передний план. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows заблокировала клавишу вставки. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>Запись сохранена</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>Снимок скопирован в буфер обмена</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>Снимок сделан</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>Сохранено в {0}</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>Снимок экрана</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>Текстовое поле</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>Редактируемые данные не соответствуют базовому изображению.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} Изображение откроется без объектов.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} не ответил вовремя. Повторите попытку.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>Не удалось установить защищённое соединение с {0}. Возможно, прокси-сервер или программа безопасности проверяет трафик HTTPS.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Прокси-серверу требуется проверка подлинности.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>Не удаётся подключиться к {0}: {1} Проверьте сеть или прокси-сервер.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>Соединение с {0} прервано: {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>Вкл.</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>Откл.</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Как в Windows</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>Записи сохраняются в {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Чтобы использовать PrtScn для Clipmark, отключите параметр Windows, который открывает захват экрана клавишей PrtScn (Bluetooth и устройства &gt; Клавиатура; в более ранних версиях Windows 11: Специальные возможности &gt; Клавиатура), а затем выберите PrintScreen в качестве сочетания клавиш выше.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium активирован.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Пробная версия Premium: остался 1 день.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Пробная версия Premium: осталось дней: {0}.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Пробная версия Premium закончилась. Инструменты Premium заблокированы; всё остальное продолжает работать.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>Функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваш вопрос в Anthropic ({0}) с использованием вашего собственного ключа API, только когда вы отправляете вопрос. Плата за использование ключа взимается Anthropic. Ключ хранится в диспетчере учётных данных Windows на этом компьютере; приложения, запущенные под вашей учётной записью Windows, могут его прочитать.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Функция Premium. Функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваш вопрос в Anthropic ({0}) с использованием вашего собственного ключа API, только когда вы отправляете вопрос. Плата за использование ключа взимается Anthropic. Ключ хранится в диспетчере учётных данных Windows на этом компьютере; приложения, запущенные под вашей учётной записью Windows, могут его прочитать.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>Ключ API не сохранён.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>Ключ API сохранён.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>Ключ API сохранён, заканчивается на {0}.</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>Сначала вставьте ключ.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>Не удалось сохранить ключ в диспетчере учётных данных.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>Проверка…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>Ключ работает.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>Ключ API удалён.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>Не удалось удалить ключ из диспетчера учётных данных.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>Хранит последние снимки (не более {0}) вместе с их объектами (до {1} МБ) в зашифрованном виде для вашей учётной записи Windows, только на этом компьютере. При отключении журнал удаляется.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Функция Premium. Хранит последние снимки (не более {0}) вместе с их объектами (до {1} МБ) в зашифрованном виде для вашей учётной записи Windows, только на этом компьютере. При отключении журнал удаляется.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>Удалить снимок из журнала?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>Удалить снимки из журнала (всего: {0})?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>Отключить и удалить</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>Лицензия активирована.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>Этот лицензионный ключ недействителен. Убедитесь, что вы вставили его целиком.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Не удалось изменить параметр Windows: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark отключён в диспетчере задач &gt; «Автозагрузка». Включите его там.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>Ваша организация не разрешает автоматический запуск Clipmark вместе с Windows.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} запускает съёмку.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} начинает и останавливает запись.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} уже используется другим приложением. Выберите другое сочетание.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>Лицензия</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Состояние лицензии</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>Вставьте лицензионный ключ</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Лицензионный ключ</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>Активировать</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Результат активации лицензии</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Купить Clipmark Premium</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>Сочетание клавиш для съёмки</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Клавиша сочетания</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Открывать Clipmark клавишей PrtScn</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Открывать Clipmark клавишей PrtScn</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Отключает параметр Windows, который открывает Ножницы клавишей PrtScn. При выключении этого параметра он возвращается.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Открыть параметры клавиатуры Windows</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>Автозагрузка</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Запускать Clipmark при запуске Windows</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Запускать Clipmark при запуске Windows</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>Съёмка по умолчанию</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>Режим</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>Задержка</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>После съёмки</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>Копировать в буфер обмена</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>Показывать уведомление</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>Сохранять автоматически</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>Изменить папку</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>По умолчанию</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>Вести журнал снимков</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Вести журнал снимков</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>Запись экрана</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Клавиша сочетания для записи</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>Записывать системный звук</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>Записывать микрофон</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Состояние ключа API</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Вставьте ключ API Anthropic</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ключ API Anthropic</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Сохранить ключ API</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>Проверить ключ</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Проверить ключ API</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>Удалить ключ</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Удалить ключ API</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Результат проверки ключа API</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>Модель</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Модель ИИ</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>Перезапустите Clipmark, чтобы применить новый язык.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>О программе</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Версия</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>Исходный код и выпуски</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Новый снимок</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Новый снимок</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>Создать</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Новая запись</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Новая запись</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Открыть изображение или редактируемый PNG (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Открыть</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Журнал снимков</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Журнал снимков</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Режим съёмки</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Режим съёмки</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Задержка</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Задержка</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Выделение (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Выделение</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Перо (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Перо</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Маркер (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Маркер</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ластик (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ластик</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Текст (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Фигуры</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Фигуры</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Пипетка (I): копирует цвет в формате #RRGGBB</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Пипетка</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Заливка (G): прямоугольник или овал, иначе фон холста</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Заливка</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Цвет и толщина</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Цвет и толщина</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Обрезка</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Обрезка</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Применить обрезку (Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Применить обрезку</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Отменить обрезку (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Отменить обрезку</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Левая граница (пикс.); можно вводить выражения, например 100+20</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>X обрезки</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Верхняя граница (пикс.)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Y обрезки</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>Ш</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>Ш</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ширина (пикс.); можно вводить выражения, например 800+20</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ширина обрезки</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>В</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>В</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Высота (пикс.)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Высота обрезки</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Действия с текстом: копирование текста, скрытие адресов электронной почты и номеров телефонов, чтение QR-кодов</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Действия с текстом</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Отменить (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Вернуть (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Вернуть</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Сохранить как (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Сохранить как</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>Сохранить как редактируемый PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Объекты остаются редактируемыми. В файле также хранится необрезанное изображение и всё, что нарисовано поверх него.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Копировать (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Копировать</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Поделиться</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Поделиться</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Отправить ИИ</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Отправить ИИ</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Спросить ИИ об этом снимке</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Спросить ИИ</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Параметры</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Состояние действий с текстом</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>Копировать весь текст</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Копировать весь текст</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>Быстрое скрытие</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Закрашивает чёрным адреса электронной почты и номера телефонов на изображении</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Быстрое скрытие</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Запись</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Снимки экрана, пометки и запись экрана</value>
+  </data>
+</root>

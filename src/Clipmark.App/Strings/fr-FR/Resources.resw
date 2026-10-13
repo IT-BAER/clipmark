@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} est utilisé par une autre application. Choisissez un autre raccourci clavier dans les paramètres.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} est utilisé par une autre application. Choisissez un autre raccourci clavier d'enregistrement dans les paramètres.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Arrêtez l'enregistrement avant de quitter Clipmark.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic est surchargé ou indisponible. Réessayez dans un instant.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>Limite de débit atteinte. Réessayez dans un instant.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>La clé API n'est pas valide. Vérifiez-la dans Paramètres &gt; IA.</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>Cette clé API ne peut pas utiliser ce modèle ou cette fonctionnalité.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>Ce modèle n'est pas disponible. Choisissez un autre modèle dans Paramètres &gt; IA.</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>La capture est trop volumineuse pour être envoyée.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>Limite de débit atteinte. Réessayez dans {0} s.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>Échec de la requête (HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>La réponse s'est arrêtée : {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude a refusé de répondre à cette demande.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>La réponse a été coupée à la limite de longueur.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>Requête rejetée.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>Requête rejetée : {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>Aucune donnée d'Anthropic depuis {0:0} s. Réessayez.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>La connexion s'est fermée avant la fin de la réponse. Réessayez.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>Les données modifiables ne sont pas un JSON valide.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>Les données modifiables sont non valides : {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Application Claude</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>Application ChatGPT</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Terminal ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0} : {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Annuler</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>Rectangle</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>Fenêtre</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>Plein écran</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>Tous les moniteurs</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>Forme libre</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>Rectangle</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>Ovale</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>Ligne</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>Flèche</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>Noir</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>Blanc</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>Rouge</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>Jaune</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>Vert</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>Bleu</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>Fin</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>Moyen</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>Épais</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>Aucun délai</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} secondes</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>Mode de capture : {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>Délai : {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>Formes : {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>Couleur et largeur : {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>Sélectionnez Nouveau ou appuyez sur {0} pour capturer, sur {1} pour enregistrer l'écran.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Enregistrer les modifications de cette capture ?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>Enregistrer</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>Ne pas enregistrer</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>la sélection et le déplacement d'objets</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>les flèches rattachées aux formes</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>les zones de texte</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>l'outil de remplissage</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>la pipette</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>l'envoi des captures à des assistants IA</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>l'historique des captures</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>les questions à l'IA sur vos captures</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>l'enregistrement de PNG modifiables</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Fonctionnalité Premium, verrouillée</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium comprend {0}. Votre essai de {1} jours est terminé.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Acheter Premium</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>Saisir la clé de licence</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>Enregistrer en PNG modifiable (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>Enregistrer en PNG modifiable (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>Envoyer à l'IA</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>Envoyer à l'IA (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>Historique des captures</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>Historique des captures (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>Interroger l'IA sur cette capture</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>Interroger l'IA (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>Sélectionné</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>Largeur (molette de la souris)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>Largeur</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>Autres couleurs</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>Couleur personnalisée</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>Le Presse-papiers est utilisé par une autre application ; la couleur n'a pas été copiée.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>Le Presse-papiers est utilisé par une autre application ; l'enregistrement n'a pas été copié.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>Le Presse-papiers est utilisé par une autre application ; la capture n'a pas été copiée.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>Le Presse-papiers est utilisé par une autre application ; le texte n'a pas été copié.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>Aucune session IA en cours trouvée</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>Aucune session IA en cours trouvée. Démarrez Claude Code ou Codex dans un terminal ou VS Code, ou ouvrez l'application Claude ou ChatGPT.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>Image PNG modifiable</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>Image PNG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>Image JPEG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>Vidéo MP4</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>La capture n'a pas été enregistrée : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>L'enregistrement n'a pas été enregistré : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>La fenêtre de partage ne s'est pas ouverte : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>L'historique des captures ne s'est pas ouvert : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>L'historique des captures est désactivé. Activez-le dans les paramètres pour conserver vos {0} dernières captures, chiffrées pour votre compte Windows.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Ouvrir les paramètres</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>Historique</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>Tout effacer</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Aucune capture pour l'instant.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>Capture du {0}</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>Ouvrir (clic droit pour supprimer)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>Supprimer</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>Cette capture est illisible. Elle est endommagée ou a été chiffrée pour un autre compte Windows.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>Supprimer toutes les captures de l'historique ?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>Lecture du texte…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Échec de la reconnaissance de texte : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>Aucune langue de reconnaissance de texte n'est installée (Paramètres &gt; Heure et langue &gt; Langue et région).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>Aucun texte trouvé.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>1 ligne de texte.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>{0} lignes de texte.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 code QR :</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>{0} codes QR :</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>Code QR : {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>Copier</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>Copier le code QR</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>Copier le code QR {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>Code QR copié.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>Ouvrir le lien</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>Ouvrir le lien {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Texte copié.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>Aucune adresse e-mail ni aucun numéro de téléphone trouvé.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>Interroger l'IA</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>Nouvelle conversation</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>Recommencer avec la capture dans son état actuel</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>Ajoutez votre clé API Anthropic dans les paramètres pour poser des questions sur vos captures.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>Conversation avec l'IA</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>État de l'IA</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>Poser une question sur cette capture</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>Question</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Entrée envoie, Shift+Entrée insère un retour à la ligne</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>Envoyer la question</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>Arrêter la réponse</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>Envoyer (Entrée)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>Envoyer cette capture à Anthropic ?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>Interroger l'IA envoie la capture telle qu'elle est affichée (annotations et masquages compris) et vos questions à Anthropic ({0}) avec votre propre clé API. Les conditions d'Anthropic s'appliquent et Anthropic facture la clé. Rien n'est envoyé tant que vous n'envoyez pas de question, et Clipmark ne conserve pas la conversation.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>Envoyer</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} répond… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>Arrêté.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>Image envoyée en {0} × {1} px.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>Question : {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>Réponse</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>Copier la réponse</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>Le Presse-papiers est utilisé par une autre application ; la réponse n'a pas été copiée.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>Nouvelle capture</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>Nouvel enregistrement</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>Mode</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>Délai</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Ouvrir Clipmark</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Quitter</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>Échec de la capture : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>Aucun texte trouvé dans la sélection</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>Texte copié dans le Presse-papiers</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>Échec de l'enregistrement automatique : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>Fermer</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>Extracteur de texte</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>Photo</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>Vidéo</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>Enreg.</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>L'enregistrement n'a pas démarré : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>L'enregistrement d'écran nécessite Windows 10 version 1903 ou ultérieure.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>L'encodeur vidéo n'est pas disponible ({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>L'enregistrement a échoué : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer l'audio : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>Un périphérique audio s'est arrêté pendant l'enregistrement ; son audio s'arrête à ce moment.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>Aucun haut-parleur ni casque n'est actif ; l'audio système n'est donc pas enregistré.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>Aucun microphone n'est connecté ; le microphone n'est donc pas enregistré.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>Le périphérique audio utilise l'audio {0} bits, que Clipmark ne peut pas enregistrer.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer l'audio système : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>Impossible d'enregistrer le microphone : {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>La capture est dans le Presse-papiers : appuyez sur {0} dans son invite.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} est fermé. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} s'exécute en tant qu'administrateur ; Clipmark ne peut donc pas y saisir de texte. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows Terminal affiche un autre onglet (ou l'onglet a été renommé). Passez d'abord à l'onglet « {0} ». {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows n'a pas mis {0} au premier plan. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows a bloqué la touche de collage. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>Enregistrement sauvegardé</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>Capture copiée dans le Presse-papiers</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>Capture effectuée</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>Enregistré dans {0}</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>Image capturée</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>Zone de texte</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>Les données modifiables ne correspondent pas à leur image de base.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} L'image s'ouvre sans ses objets.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} n'a pas répondu à temps. Réessayez.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>La connexion sécurisée à {0} a échoué. Un proxy ou un logiciel de sécurité inspecte peut-être le trafic HTTPS.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Le proxy exige une authentification.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>Impossible de joindre {0} : {1} Vérifiez le réseau ou le proxy.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>La connexion à {0} a été interrompue : {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>Activé</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>Désactivé</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Par défaut de Windows</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>Les enregistrements sont sauvegardés dans {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Pour utiliser la touche Impr. écran avec Clipmark, désactivez l'option Windows qui ouvre la capture d'écran avec Impr. écran (Bluetooth et appareils &gt; Clavier ; sur les versions antérieures de Windows 11 : Accessibilité &gt; Clavier), puis choisissez PrintScreen comme raccourci clavier ci-dessus.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium est actif.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Essai Premium : 1 jour restant.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Essai Premium : {0} jours restants.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>L'essai Premium est terminé. Les outils Premium sont verrouillés ; tout le reste continue de fonctionner.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>Interroger l'IA envoie la capture telle qu'elle est affichée (annotations et masquages compris) et votre question à Anthropic ({0}) avec votre propre clé API, uniquement quand vous envoyez une question. Anthropic facture la clé. La clé est conservée dans le Gestionnaire d'informations d'identification de Windows sur ce PC ; les applications exécutées sous votre compte Windows peuvent la lire.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Fonctionnalité Premium. Interroger l'IA envoie la capture telle qu'elle est affichée (annotations et masquages compris) et votre question à Anthropic ({0}) avec votre propre clé API, uniquement quand vous envoyez une question. Anthropic facture la clé. La clé est conservée dans le Gestionnaire d'informations d'identification de Windows sur ce PC ; les applications exécutées sous votre compte Windows peuvent la lire.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>Aucune clé API enregistrée.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>Clé API enregistrée.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>Clé API enregistrée, se termine par {0}.</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>Collez d'abord la clé.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>La clé n'a pas pu être enregistrée dans le Gestionnaire d'informations d'identification.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>Test en cours…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>La clé fonctionne.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>Clé API supprimée.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>La clé n'a pas pu être supprimée du Gestionnaire d'informations d'identification.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>Conserve les {0} dernières captures avec leurs objets (jusqu'à {1} Mo), chiffrées pour votre compte Windows et stockées uniquement sur ce PC. La désactivation supprime l'historique.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Fonctionnalité Premium. Conserve les {0} dernières captures avec leurs objets (jusqu'à {1} Mo), chiffrées pour votre compte Windows et stockées uniquement sur ce PC. La désactivation supprime l'historique.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>Supprimer la capture de l'historique ?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>Supprimer les {0} captures de l'historique ?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>Désactiver et supprimer</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>Licence activée.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>Cette clé de licence n'est pas valide. Vérifiez que vous l'avez collée en entier.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Le paramètre Windows n'a pas pu être modifié : {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark est désactivé dans Gestionnaire des tâches &gt; Applications de démarrage. Activez-le à cet endroit.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>Votre organisation n'autorise pas Clipmark à démarrer avec Windows.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} lance une capture.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} démarre et arrête un enregistrement.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} est utilisé par une autre application. Choisissez une autre combinaison.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Retour</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>Licence</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>État de la licence</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>Collez votre clé de licence</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Clé de licence</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>Activer</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Résultat de la licence</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Acheter Clipmark Premium</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>Raccourci clavier de capture</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Touche du raccourci clavier</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Utiliser la touche Impr. écran pour ouvrir Clipmark</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Utiliser la touche Impr. écran pour ouvrir Clipmark</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Désactive l'option Windows qui ouvre l'Outil Capture d'écran avec Impr. écran. La désactiver ici la rétablit.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Ouvrir les paramètres du clavier Windows</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>Démarrage</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Lancer Clipmark au démarrage de Windows</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Lancer Clipmark au démarrage de Windows</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>Capture par défaut</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>Délai</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>Après une capture</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>Copier dans le Presse-papiers</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>Afficher une notification</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>Enregistrer automatiquement</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>Changer de dossier</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>Utiliser le dossier par défaut</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>Conserver un historique des captures</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Conserver un historique des captures</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>Enregistrement d'écran</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Touche du raccourci clavier d'enregistrement</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>Enregistrer l'audio système</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>Enregistrer le microphone</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>Interroger l'IA</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>État de la clé API</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Collez votre clé API Anthropic</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Clé API Anthropic</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>Enregistrer</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Enregistrer la clé API</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>Tester la clé</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tester la clé API</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>Supprimer la clé</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Supprimer la clé API</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Résultat de la clé API</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>Modèle</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Modèle d'IA</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Langue</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>Redémarrez Clipmark pour utiliser la nouvelle langue.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>À propos</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>Code source et versions</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nouvelle capture</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nouvelle capture</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>Nouveau</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nouvel enregistrement</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nouvel enregistrement</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvrir une image ou un PNG modifiable (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ouvrir</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Historique des captures</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Historique des captures</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mode de capture</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mode de capture</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Délai</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Délai</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionner (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Sélectionner</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Stylo (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Stylo</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Surligneur (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Surligneur</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gomme (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gomme</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Texte (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Texte</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Formes</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Formes</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pipette (I) : copie la couleur au format #RRGGBB</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Pipette</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remplir (G) : un rectangle ou un ovale, sinon l'arrière-plan du canevas</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Remplir</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Couleur et largeur</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Couleur et largeur</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rogner</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rogner</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Appliquer le rognage (Entrée)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Appliquer le rognage</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Annuler le rognage (Échap)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Annuler le rognage</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bord gauche (px) ; les calculs tels que 100+20 fonctionnent</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rognage X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bord supérieur (px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rognage Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Largeur (px) ; les calculs tels que 800+20 fonctionnent</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Largeur du rognage</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hauteur (px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Hauteur du rognage</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Actions sur le texte : copier le texte, masquer les e-mails et numéros de téléphone, lire les codes QR</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Actions sur le texte</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Annuler (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rétablir (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rétablir</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enregistrer sous (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Enregistrer sous</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>Enregistrer en PNG modifiable (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Garde les objets modifiables. Le fichier contient aussi l'image non rognée et tout ce qui est dessiné dessus.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copier (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copier</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Partager</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Partager</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Envoyer à l'IA</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Envoyer à l'IA</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Interroger l'IA sur cette capture</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Interroger l'IA</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>État des actions sur le texte</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>Copier tout le texte</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copier tout le texte</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>Masquage rapide</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Noircit les adresses e-mail et les numéros de téléphone dans l'image</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Masquage rapide</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Enregistrement</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Capture d'écran, annotation et enregistrement d'écran</value>
+  </data>
+</root>

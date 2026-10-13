@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} 已由其他應用程式使用。請在「設定」中選擇其他快速鍵。</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} 已由其他應用程式使用。請在「設定」中選擇其他錄製快速鍵。</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>結束 Clipmark 之前，請先停止錄製。</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic 負載過高或無法使用。請稍後再試。</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>已達到速率限制。請稍後再試。</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>API 金鑰無效。請在「設定」&gt;「AI」中檢查。</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>此 API 金鑰無法使用此模型或功能。</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>此模型無法使用。請在「設定」&gt;「AI」中選擇其他模型。</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>擷取畫面太大，無法傳送。</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>已達到速率限制。請在 {0} 秒後再試。</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>要求失敗 (HTTP {0})。</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>回答已停止：{0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude 拒絕回答此要求。</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>回答因達到長度上限而被截斷。</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>要求遭到拒絕。</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>要求遭到拒絕：{0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>{0:0} 秒內未收到 Anthropic 的資料。請再試一次。</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>回答完成之前連線已關閉。請再試一次。</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>可編輯資料不是有效的 JSON。</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>可編輯資料無效：{0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Claude 應用程式</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>ChatGPT 應用程式</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>終端機 ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}：{1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>取消</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>矩形</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>視窗</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>全螢幕</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>所有螢幕</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>任意形式</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>矩形</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>橢圓形</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>直線</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>箭頭</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>黑色</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>白色</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>紅色</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>黃色</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>綠色</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>藍色</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>細</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>中</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>粗</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>無延遲</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>擷取模式：{0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>延遲：{0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>圖案：{0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>色彩與粗細：{0}，{1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>選取「新增」或按 {0} 擷取畫面，按 {1} 錄製螢幕。</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>要儲存對此擷取畫面的變更嗎？</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>儲存</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>不儲存</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>選取及移動物件</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>附加在圖案上的箭頭</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>文字標籤</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>填滿工具</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>檢色器</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>將擷取畫面傳送給 AI 助理</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>擷取畫面歷程記錄</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>就擷取畫面向 AI 提問</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>儲存可編輯的 PNG</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Premium 功能，已鎖定</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium 包含{0}。您的 {1} 天試用已結束。</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>購買 Premium</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>輸入授權金鑰</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>另存為可編輯的 PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>另存為可編輯的 PNG (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>傳送給 AI</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>傳送給 AI (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>擷取畫面歷程記錄</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>擷取畫面歷程記錄 (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>就此擷取畫面詢問 AI</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>詢問 AI (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>已選取</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>粗細 (滑鼠滾輪)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>粗細</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>更多色彩</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>自訂色彩</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>剪貼簿正由其他應用程式使用，未能複製色彩。</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>剪貼簿正由其他應用程式使用，未能複製錄製內容。</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>剪貼簿正由其他應用程式使用，未能複製擷取畫面。</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>剪貼簿正由其他應用程式使用，未能複製文字。</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>找不到正在執行的 AI 工作階段</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>找不到正在執行的 AI 工作階段。請在終端機或 VS Code 中啟動 Claude Code 或 Codex，或開啟 Claude 或 ChatGPT 應用程式。</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>可編輯的 PNG 影像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>PNG 影像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>JPEG 影像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>MP4 影片</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>未能儲存擷取畫面：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>未能儲存錄製內容：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>無法開啟共用視窗：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>無法開啟擷取畫面歷程記錄：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>擷取畫面歷程記錄已關閉。請在「設定」中開啟，以保留最近 {0} 張擷取畫面，並為您的 Windows 帳戶加密。</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>開啟設定</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>歷程記錄</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>尚無擷取畫面。</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>{0} 的擷取畫面</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>開啟 (按一下滑鼠右鍵可刪除)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>無法讀取此擷取畫面。它已損毀，或是為其他 Windows 帳戶加密的。</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>要刪除歷程記錄中的所有擷取畫面嗎？</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>正在讀取文字…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>文字辨識失敗：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>未安裝文字辨識語言 (「設定」&gt;「時間與語言」&gt;「語言與區域」)。</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>找不到文字。</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>1 行文字。</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>{0} 行文字。</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 個 QR 碼：</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>{0} 個 QR 碼：</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR 碼：{0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>複製</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>複製 QR 碼</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>複製 QR 碼 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>已複製 QR 碼。</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>開啟連結</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>開啟連結 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>已複製文字。</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>找不到電子郵件地址或電話號碼。</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>詢問 AI</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>新增聊天</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>以擷取畫面的目前狀態重新開始</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>若要就擷取畫面提問，請在「設定」中新增您的 Anthropic API 金鑰。</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>詢問 AI 對話</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>詢問 AI 狀態</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>就此擷取畫面提問</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>問題</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>按 Enter 傳送，按 Shift+Enter 換行</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>傳送問題</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>停止回答</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>傳送 (Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>要將此擷取畫面傳送給 Anthropic 嗎？</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>「詢問 AI」會使用您自己的 API 金鑰，將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題傳送給 Anthropic ({0})。Anthropic 的條款適用，且由 Anthropic 對該金鑰計費。在您傳送問題之前不會傳送任何內容，Clipmark 也不會儲存對話。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>傳送</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} 正在回答… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>已停止。</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>已以 {0} × {1} px 傳送影像。</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>問題：{0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>回答</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>複製回答</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>剪貼簿正由其他應用程式使用，未能複製回答。</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>新增擷取畫面</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>新增錄製</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>模式</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>延遲</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>開啟 Clipmark</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>結束</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>擷取失敗：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>在選取範圍中找不到文字</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>文字已複製到剪貼簿</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>自動儲存失敗：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>關閉</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>文字擷取器</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>相片</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>影片</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>儲存中</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>錄製未能開始：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>螢幕錄製需要 Windows 10 版本 1903 或更新版本。</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>視訊編碼器無法使用 ({0})。</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>錄製失敗：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>無法錄製音訊：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>錄製期間有音訊裝置已停止，其音訊到此為止。</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>沒有使用中的喇叭或耳機，因此不會錄製系統音訊。</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>未連接麥克風，因此不會錄製麥克風。</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>音訊裝置使用 {0} 位元音訊，Clipmark 無法錄製。</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>無法錄製系統音訊：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>無法錄製麥克風：{0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>擷取畫面已在剪貼簿中：請在其提示字元中按 {0}。</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} 已關閉。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} 以系統管理員身分執行，因此 Clipmark 無法向其輸入內容。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows 終端機顯示的是另一個索引標籤 (或索引標籤已重新命名)。請先切換到索引標籤「{0}」。{1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows 未將 {0} 帶到前景。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows 封鎖了貼上按鍵。{0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>錄製內容已儲存</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>擷取畫面已複製到剪貼簿</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>已擷取畫面</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>已儲存到 {0}</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>擷取的影像</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>文字方塊</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>可編輯資料與其基底影像不相符。</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} 影像將在不含其物件的情況下開啟。</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} 未在時限內回答。請再試一次。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>與 {0} 的安全連線失敗。可能是 Proxy 或安全性軟體正在檢查 HTTPS。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Proxy 需要驗證。</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>無法連線到 {0}：{1} 請檢查網路或 Proxy。</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>與 {0} 的連線已中斷：{1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>開</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>關</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Windows 預設值</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>錄製內容將儲存到 {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>若要將 Print Screen 鍵用於 Clipmark，請關閉 Windows 中「按 Print Screen 鍵開啟螢幕擷取畫面」的選項 (「藍牙與裝置」&gt;「鍵盤」；在較舊的 Windows 11 中為「協助工具」&gt;「鍵盤」)，然後在上方選擇 PrintScreen 作為快速鍵。</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium 已啟用。</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Premium 試用：剩餘 1 天。</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Premium 試用：剩餘 {0} 天。</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Premium 試用已結束。Premium 工具已鎖定，其他功能仍可正常使用。</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>「詢問 AI」會使用您自己的 API 金鑰，將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題傳送給 Anthropic ({0})，且僅在您傳送問題時才會傳送。Anthropic 對該金鑰計費。金鑰儲存在這部電腦的 Windows 認證管理員中；在您的 Windows 帳戶下執行的應用程式可以讀取它。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Premium 功能。「詢問 AI」會使用您自己的 API 金鑰，將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題傳送給 Anthropic ({0})，且僅在您傳送問題時才會傳送。Anthropic 對該金鑰計費。金鑰儲存在這部電腦的 Windows 認證管理員中；在您的 Windows 帳戶下執行的應用程式可以讀取它。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>未儲存 API 金鑰。</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>已儲存 API 金鑰。</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>已儲存 API 金鑰，結尾為 {0}。</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>請先貼上金鑰。</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>無法將金鑰儲存到認證管理員。</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>正在測試…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>金鑰可用。</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>已移除 API 金鑰。</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>無法從認證管理員中移除金鑰。</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>保留最近 {0} 張擷取畫面及其物件 (最大 {1} MB)，為您的 Windows 帳戶加密，且僅儲存在這部電腦上。關閉後會刪除歷程記錄。</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Premium 功能。保留最近 {0} 張擷取畫面及其物件 (最大 {1} MB)，為您的 Windows 帳戶加密，且僅儲存在這部電腦上。關閉後會刪除歷程記錄。</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>要刪除歷程記錄中的擷取畫面嗎？</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>要刪除歷程記錄中的 {0} 張擷取畫面嗎？</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>關閉並刪除</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>授權已啟用。</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>此授權金鑰無效。請檢查是否已貼上完整內容。</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>無法變更 Windows 設定：{0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark 已在「工作管理員」&gt;「啟動應用程式」中關閉。請在該處開啟。</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>您的組織不允許 Clipmark 隨 Windows 啟動。</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} 開始擷取畫面。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} 開始和停止錄製。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} 已由其他應用程式使用。請選擇其他組合。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>授權</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>授權狀態</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>貼上您的授權金鑰</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>授權金鑰</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>啟用</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>授權結果</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>購買 Clipmark Premium</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>擷取畫面快速鍵</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>快速鍵按鍵</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>使用 Print Screen 鍵開啟 Clipmark</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>使用 Print Screen 鍵開啟 Clipmark</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>關閉用 Print Screen 鍵開啟 Snipping Tool 的 Windows 選項。關閉此設定會將其還原。</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>開啟 Windows 鍵盤設定</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>啟動</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Windows 啟動時啟動 Clipmark</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows 啟動時啟動 Clipmark</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>預設擷取畫面</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>模式</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>延遲</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>擷取畫面後</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>複製到剪貼簿</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>顯示通知</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>自動儲存</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>變更資料夾</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>使用預設值</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>保留擷取畫面歷程記錄</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>保留擷取畫面歷程記錄</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>螢幕錄製</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>錄製快速鍵按鍵</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>錄製系統音訊</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>錄製麥克風</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>詢問 AI</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 金鑰狀態</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>貼上您的 Anthropic API 金鑰</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Anthropic API 金鑰</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>儲存 API 金鑰</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>測試金鑰</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>測試 API 金鑰</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>移除金鑰</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>移除 API 金鑰</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 金鑰結果</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>模型</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI 模型</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>語言</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>重新啟動 Clipmark 以使用新語言。</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>關於</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>版本</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>原始程式碼與發行版本</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>新增擷取畫面</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>新增擷取畫面</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>新增錄製</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>新增錄製</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>開啟影像或可編輯的 PNG (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>開啟</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>擷取畫面歷程記錄</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>擷取畫面歷程記錄</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>擷取模式</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>擷取模式</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>延遲</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>延遲</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>選取 (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>選取</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>筆 (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>筆</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>螢光筆 (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>螢光筆</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>橡皮擦 (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>橡皮擦</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>文字 (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>文字</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>圖案</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>圖案</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>檢色器 (I)：將色彩複製為 #RRGGBB</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>檢色器</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>填滿 (G)：矩形或橢圓形，否則為畫布背景</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>填滿</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>色彩與粗細</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>色彩與粗細</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>裁剪</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>裁剪</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>套用裁剪 (Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>套用裁剪</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>取消裁剪 (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>取消裁剪</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>左邊緣 (px)；可使用 100+20 之類的算式</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>裁剪 X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>上邊緣 (px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>裁剪 Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>寬度 (px)；可使用 800+20 之類的算式</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>裁剪寬度</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>高度 (px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>裁剪高度</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>文字動作：複製文字、遮蔽電子郵件地址和電話號碼、讀取 QR 碼</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>文字動作</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>復原 (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>復原</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>重做 (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>重做</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>另存新檔 (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>另存新檔</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>另存為可編輯的 PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>讓物件保持可編輯。此檔案也包含未裁剪的影像以及繪製在其上的所有內容。</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>複製 (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>複製</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>共用</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>共用</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>傳送給 AI</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>傳送給 AI</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>就此擷取畫面詢問 AI</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>詢問 AI</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>文字動作狀態</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>複製所有文字</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>複製所有文字</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>快速遮蔽</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>將影像中的電子郵件地址和電話號碼塗黑</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>快速遮蔽</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>錄製</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>螢幕擷取、註解和螢幕錄製</value>
+  </data>
+</root>

@@ -187,7 +187,7 @@ internal sealed unsafe class RecordBar : Win32Window
             foreach (var button in Enum.GetValues<RecordBarButton>())
                 PaintButton(back, button);
             var timer = new RECT { Left = Dip(8 + 40 + 4), Top = Dip(6), Right = Dip(8 + 40 + 4 + 64), Bottom = Dip(46) };
-            string text = _state switch { RecordBarState.Starting => "…", RecordBarState.Saving => "Saving", _ => _timer };
+            string text = _state switch { RecordBarState.Starting => "…", RecordBarState.Saving => Loc.Get("RecordBarSaving"), _ => _timer };
             Text(back, timer, text, "Segoe UI", Dip(_state == RecordBarState.Countdown ? 20 : 14), _state == RecordBarState.Recording ? Red : White);
             BitBlt(dc, 0, 0, Width, Height, back, 0, 0, SRCCOPY);
         }
@@ -264,6 +264,17 @@ internal sealed unsafe class RecordBar : Win32Window
     {
         nint font = CreateFont(-pixelHeight, 0, 0, 0, 400, 0, 0, 0, 1, 0, 0, 5, 0, face);
         nint old = SelectObject(dc, font);
+        var need = new RECT();
+        DrawText(dc, text, text.Length, &need, DT_CALCRECT | DT_SINGLELINE | DT_NOPREFIX);
+        if (need.Right > r.Right - r.Left)
+        {
+            // A long translation shrinks to fit the fixed slot (down to 60%) instead of being clipped.
+            int fit = Math.Max(pixelHeight * 3 / 5, pixelHeight * (r.Right - r.Left) / need.Right);
+            SelectObject(dc, old);
+            DeleteObject(font);
+            font = CreateFont(-fit, 0, 0, 0, 400, 0, 0, 0, 1, 0, 0, 5, 0, face);
+            old = SelectObject(dc, font);
+        }
         SetBkMode(dc, TRANSPARENT);
         SetTextColor(dc, color);
         DrawText(dc, text, text.Length, &r, DT_CENTER | DT_VCENTER | DT_SINGLELINE | DT_NOPREFIX);

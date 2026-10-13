@@ -84,6 +84,11 @@ public partial class App : Application
             return;
         }
 #endif
+        // Before any window or Loc use; test mode pins a language so TestDriver's English names work on any Windows.
+        string? language = TestDir is null ? AppSettings.Current.Language
+            : Environment.GetEnvironmentVariable("CLIPMARK_TEST_LANG") is { Length: > 0 } testLang ? testLang : "en-US";
+        Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language ?? "";
+        Clipmark.Core.CoreText.Resolve = Loc.TryGet;
         string? marker = Arg("--measure-startup");
         _dispatcher = DispatcherQueue.GetForCurrentThread();
         // Packaged: Register must run before GetActivatedEventArgs, or a toast click that starts the app is lost.
@@ -189,14 +194,14 @@ public partial class App : Application
             HotkeyRegistered = _tray.TryRegisterHotkey(TrayHost.CaptureHotkeyId, s.Hotkey);
             _registeredHotkey = s.Hotkey;
             if (!HotkeyRegistered && _window is not null)
-                _window.ShowError($"{s.Hotkey} is used by another app. Choose a different hotkey in Settings.");
+                _window.ShowError(Loc.Format("HotkeyTakenError", s.Hotkey));
         }
         if (s.RecordHotkey != _registeredRecordHotkey)
         {
             RecordHotkeyRegistered = _tray.TryRegisterHotkey(TrayHost.RecordHotkeyId, s.RecordHotkey);
             _registeredRecordHotkey = s.RecordHotkey;
             if (!RecordHotkeyRegistered && _window is not null)
-                _window.ShowError($"{s.RecordHotkey} is used by another app. Choose a different recording hotkey in Settings.");
+                _window.ShowError(Loc.Format("RecordHotkeyTakenError", s.RecordHotkey));
         }
     }
 
@@ -305,7 +310,7 @@ public partial class App : Application
     {
         if (RecordingSession.Current is not null)
         {
-            _window?.ShowError("Stop the recording before you exit Clipmark.");
+            _window?.ShowError(Loc.Get("StopRecordingBeforeExit"));
             _window?.ShowAndActivate();
             return;
         }

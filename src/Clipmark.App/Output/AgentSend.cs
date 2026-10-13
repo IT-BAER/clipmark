@@ -67,24 +67,24 @@ internal static class AgentSend
     public static async Task<string?> PasteAsync(AgentTarget target)
     {
         nint hwnd = target.Window;
-        string fallback = $"The capture is on the clipboard: press {PasteKeyText(target)} in its prompt.";
+        string fallback = Loc.Format("AgentFallback", PasteKeyText(target));
         if (!IsWindow(hwnd))
-            return $"{target.Label} is closed. {fallback}";
+            return Loc.Format("AgentClosed", target.Label, fallback);
         if (IsElevated((uint)target.ProcessId) && !IsElevated((uint)Environment.ProcessId))
-            return $"{target.Label} runs as administrator, so Clipmark cannot type into it. {fallback}";
+            return Loc.Format("AgentElevated", target.Label, fallback);
         // Read again at paste time: the agent may retitle its tab after the menu opened (the label keeps the old title).
         var live = target.ConsoleTitle.Length > 0 ? target with { ConsoleTitle = ConsoleTitle((uint)target.AgentProcessId) } : target;
         if (live.ShowsOtherTab(ClassName(hwnd), WindowTitle(hwnd)))
-            return $"Windows Terminal shows another tab (or the tab was renamed). Switch to the tab \"{live.ConsoleTitle}\" first. {fallback}";
+            return Loc.Format("AgentOtherTab", live.ConsoleTitle, fallback);
         if (IsIconic(hwnd))
             ShowWindow(hwnd, SW_RESTORE);
         SetForegroundWindow(hwnd);
         for (int i = 0; i < 50 && GetForegroundWindow() != hwnd; i++)
             await Task.Delay(20);
         if (GetForegroundWindow() != hwnd)
-            return $"Windows did not bring {target.Label} to the front. {fallback}";
+            return Loc.Format("AgentNotForeground", target.Label, fallback);
         await Task.Delay(150); // the activated window moves keyboard focus back to its prompt
-        return SendPaste(target.PasteWithAlt) ? null : $"Windows blocked the paste key. {fallback}";
+        return SendPaste(target.PasteWithAlt) ? null : Loc.Format("AgentPasteBlocked", fallback);
     }
 
     private static unsafe bool SendPaste(bool alt)

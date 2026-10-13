@@ -71,7 +71,7 @@ internal sealed class CaptureController(nint clipboardOwner)
         }
         catch (Exception e)
         {
-            Failed?.Invoke("Capture failed: " + e.Message);
+            Failed?.Invoke(Loc.Format("CaptureFailed", e.Message));
         }
         finally
         {
@@ -84,18 +84,18 @@ internal sealed class CaptureController(nint clipboardOwner)
     {
         if (await TextRecognizer.RecognizeAsync(image, System.Numerics.Vector2.Zero) is not { } lines)
         {
-            Failed?.Invoke("No text recognition language is installed (Settings > Time & language > Language & region).");
+            Failed?.Invoke(Loc.Get("OcrLanguageMissing"));
             return;
         }
         if (lines.Count == 0)
         {
-            CaptureOutput.ShowTextToast("No text found in the selection");
+            CaptureOutput.ShowTextToast(Loc.Get("ToastNoText"));
             return;
         }
         if (CaptureOutput.CopyTextToClipboard(clipboardOwner, OcrText.Join(lines)))
-            CaptureOutput.ShowTextToast("Text copied to clipboard");
+            CaptureOutput.ShowTextToast(Loc.Get("ToastTextCopied"));
         else
-            Failed?.Invoke("The clipboard is in use by another app; the text was not copied.");
+            Failed?.Invoke(Loc.Get("ClipboardBusyText"));
     }
 
     private async Task DeliverAsync(CapturedImage image, ClipmarkSettings settings)
@@ -103,7 +103,7 @@ internal sealed class CaptureController(nint clipboardOwner)
         var png = await CaptureOutput.EncodePngAsync(image);
         bool copied = settings.CopyToClipboard && CaptureOutput.CopyToClipboard(clipboardOwner, image, png);
         if (settings.CopyToClipboard && !copied)
-            Failed?.Invoke("The clipboard is in use by another app; the capture was not copied.");
+            Failed?.Invoke(Loc.Get("ClipboardBusyCapture"));
 
         string? saved = null;
         if (settings.AutoSave)
@@ -114,7 +114,7 @@ internal sealed class CaptureController(nint clipboardOwner)
             }
             catch (Exception e) when (e is IOException or UnauthorizedAccessException)
             {
-                Failed?.Invoke("Auto-save failed: " + e.Message);
+                Failed?.Invoke(Loc.Format("AutoSaveFailed", e.Message));
             }
         }
         string path = saved ?? await CaptureOutput.SaveAsync(CaptureOutput.TempFolder, png);

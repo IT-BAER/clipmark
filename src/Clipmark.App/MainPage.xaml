@@ -44,135 +44,114 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal" Spacing="4">
-                <Button x:Name="NewButton" Click="OnNew" Style="{StaticResource AccentButtonStyle}"
-                        ToolTipService.ToolTip="New capture" AutomationProperties.Name="New capture">
+                <Button x:Name="NewButton" x:Uid="NewButton" Click="OnNew" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon FontSize="16" Glyph="&#xF406;" />
-                        <TextBlock Text="New" />
+                        <TextBlock x:Uid="NewButtonText" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="RecordButton" Click="OnNewRecording"
-                        ToolTipService.ToolTip="New recording" AutomationProperties.Name="New recording">
+                <Button x:Name="RecordButton" x:Uid="RecordButton" Click="OnNewRecording">
                     <FontIcon FontSize="16" Glyph="&#xE714;" />
                 </Button>
-                <Button x:Name="OpenButton" Click="OnOpen" ToolTipService.ToolTip="Open an image or editable PNG (Ctrl+O)" AutomationProperties.Name="Open">
+                <Button x:Name="OpenButton" x:Uid="OpenButton" Click="OnOpen">
                     <FontIcon FontSize="16" Glyph="&#xE8E5;" />
                 </Button>
-                <Button x:Name="HistoryButton" Click="OnHistoryClick" ToolTipService.ToolTip="Capture history" AutomationProperties.Name="Capture history">
+                <Button x:Name="HistoryButton" x:Uid="HistoryButton" Click="OnHistoryClick">
                     <FontIcon FontSize="16" Glyph="&#xE81C;" />
                 </Button>
-                <DropDownButton x:Name="ModeButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Capture mode" AutomationProperties.Name="Capture mode">
+                <DropDownButton x:Name="ModeButton" x:Uid="ModeButton" Padding="11,5.5,11,5.5">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="ModeMenu" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
-                <DropDownButton x:Name="DelayButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Delay" AutomationProperties.Name="Delay">
+                <DropDownButton x:Name="DelayButton" x:Uid="DelayButton" Padding="11,5.5,11,5.5">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="DelayMenu" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
             </StackPanel>
             <StackPanel x:Name="EditTools" Grid.Column="1" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
-                <ToggleButton x:Name="SelectButton" Tag="Select" Click="OnToolClick"
-                              ToolTipService.ToolTip="Select (V)" AutomationProperties.Name="Select">
+                <ToggleButton x:Name="SelectButton" x:Uid="SelectButton" Tag="Select" Click="OnToolClick">
                     <Grid>
                         <FontIcon FontSize="16" Glyph="&#xE8B3;" />
                         <FontIcon x:Name="SelectLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <ToggleButton x:Name="PenButton" Tag="Pen" Click="OnToolClick"
-                              ToolTipService.ToolTip="Pen (P)" AutomationProperties.Name="Pen">
+                <ToggleButton x:Name="PenButton" x:Uid="PenButton" Tag="Pen" Click="OnToolClick">
                     <FontIcon FontSize="16" Glyph="&#xEE56;" />
                 </ToggleButton>
-                <ToggleButton x:Name="HighlighterButton" Tag="Highlighter" Click="OnToolClick"
-                              ToolTipService.ToolTip="Highlighter (H)" AutomationProperties.Name="Highlighter">
+                <ToggleButton x:Name="HighlighterButton" x:Uid="HighlighterButton" Tag="Highlighter" Click="OnToolClick">
                     <FontIcon FontSize="16" Glyph="&#xE7E6;" />
                 </ToggleButton>
-                <ToggleButton x:Name="EraserButton" Tag="Eraser" Click="OnToolClick"
-                              ToolTipService.ToolTip="Eraser (E)" AutomationProperties.Name="Eraser">
+                <ToggleButton x:Name="EraserButton" x:Uid="EraserButton" Tag="Eraser" Click="OnToolClick">
                     <FontIcon FontSize="16" Glyph="&#xE75C;" />
                 </ToggleButton>
-                <ToggleButton x:Name="TextButton" Tag="Text" Click="OnToolClick"
-                              ToolTipService.ToolTip="Text (T)" AutomationProperties.Name="Text">
+                <ToggleButton x:Name="TextButton" x:Uid="TextButton" Tag="Text" Click="OnToolClick">
                     <Grid>
                         <FontIcon FontSize="16" Glyph="&#xE8D2;" />
                         <FontIcon x:Name="TextLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <ToggleSplitButton x:Name="ShapeButton" Padding="11,6.5,11,6.5" IsCheckedChanged="OnShapeCheckedChanged"
-                                   ToolTipService.ToolTip="Shapes" AutomationProperties.Name="Shapes">
+                <ToggleSplitButton x:Name="ShapeButton" x:Uid="ShapeButton" Padding="11,6.5,11,6.5" IsCheckedChanged="OnShapeCheckedChanged">
                     <ToggleSplitButton.Flyout>
                         <MenuFlyout x:Name="ShapeMenu" Placement="Bottom" />
                     </ToggleSplitButton.Flyout>
                 </ToggleSplitButton>
-                <ToggleButton x:Name="EyedropperButton" Tag="Eyedropper" Click="OnToolClick"
-                              ToolTipService.ToolTip="Eyedropper (I): copies the color as #RRGGBB" AutomationProperties.Name="Eyedropper">
+                <ToggleButton x:Name="EyedropperButton" x:Uid="EyedropperButton" Tag="Eyedropper" Click="OnToolClick">
                     <Grid>
                         <FontIcon FontSize="16" Glyph="&#xEF3C;" />
                         <FontIcon x:Name="EyedropperLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <ToggleButton x:Name="BucketButton" Tag="Bucket" Click="OnToolClick"
-                              ToolTipService.ToolTip="Fill (G): a rectangle or oval, else the canvas background" AutomationProperties.Name="Fill">
+                <ToggleButton x:Name="BucketButton" x:Uid="BucketButton" Tag="Bucket" Click="OnToolClick">
                     <Grid>
                         <FontIcon FontSize="16" Glyph="&#xE771;" />
                         <FontIcon x:Name="BucketLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <DropDownButton x:Name="StyleButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
+                <DropDownButton x:Name="StyleButton" x:Uid="StyleButton" Padding="11,5.5,11,5.5">
                     <DropDownButton.Flyout>
                         <Flyout x:Name="StyleFlyout" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
                 <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
-                <ToggleButton x:Name="CropButton" Click="OnCropClick"
-                              ToolTipService.ToolTip="Crop" AutomationProperties.Name="Crop">
+                <ToggleButton x:Name="CropButton" x:Uid="CropButton" Click="OnCropClick">
                     <FontIcon FontSize="16" Glyph="&#xE7A8;" />
                 </ToggleButton>
-                <Button x:Name="ApplyCropButton" Click="OnApplyCrop" Visibility="Collapsed"
-                        ToolTipService.ToolTip="Apply crop (Enter)" AutomationProperties.Name="Apply crop">
+                <Button x:Name="ApplyCropButton" x:Uid="ApplyCropButton" Click="OnApplyCrop" Visibility="Collapsed">
                     <FontIcon FontSize="16" Glyph="&#xE8FB;" />
                 </Button>
-                <Button x:Name="CancelCropButton" Click="OnCancelCrop" Visibility="Collapsed"
-                        ToolTipService.ToolTip="Cancel crop (Esc)" AutomationProperties.Name="Cancel crop">
+                <Button x:Name="CancelCropButton" x:Uid="CancelCropButton" Click="OnCancelCrop" Visibility="Collapsed">
                     <FontIcon FontSize="16" Glyph="&#xE711;" />
                 </Button>
                 <StackPanel x:Name="CropFields" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
-                    <TextBlock Text="X" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <NumberBox x:Name="CropX" Tag="X" PlaceholderText="X" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
-                               ToolTipService.ToolTip="Left edge (px); arithmetic such as 100+20 works" AutomationProperties.Name="Crop X" />
-                    <TextBlock Text="Y" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <NumberBox x:Name="CropY" Tag="Y" PlaceholderText="Y" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
-                               ToolTipService.ToolTip="Top edge (px)" AutomationProperties.Name="Crop Y" />
-                    <TextBlock Text="W" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <NumberBox x:Name="CropW" Tag="W" PlaceholderText="W" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
-                               ToolTipService.ToolTip="Width (px); arithmetic such as 800+20 works" AutomationProperties.Name="Crop width" />
-                    <TextBlock Text="H" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <NumberBox x:Name="CropH" Tag="H" PlaceholderText="H" Width="76" AcceptsExpression="True" ValueChanged="OnCropField"
-                               ToolTipService.ToolTip="Height (px)" AutomationProperties.Name="Crop height" />
+                    <TextBlock x:Uid="CropXLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropX" x:Uid="CropX" Tag="X" Width="76" AcceptsExpression="True" ValueChanged="OnCropField" />
+                    <TextBlock x:Uid="CropYLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropY" x:Uid="CropY" Tag="Y" Width="76" AcceptsExpression="True" ValueChanged="OnCropField" />
+                    <TextBlock x:Uid="CropWLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropW" x:Uid="CropW" Tag="W" Width="76" AcceptsExpression="True" ValueChanged="OnCropField" />
+                    <TextBlock x:Uid="CropHLabel" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <NumberBox x:Name="CropH" x:Uid="CropH" Tag="H" Width="76" AcceptsExpression="True" ValueChanged="OnCropField" />
                 </StackPanel>
-                <ToggleButton x:Name="TextActionsButton" Click="OnTextActions"
-                              ToolTipService.ToolTip="Text actions: copy text, redact emails and phone numbers, read QR codes" AutomationProperties.Name="Text actions">
+                <ToggleButton x:Name="TextActionsButton" x:Uid="TextActionsButton" Click="OnTextActions">
                     <FontIcon FontSize="16" Glyph="&#xE8C1;" />
                 </ToggleButton>
                 <Border Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
-                <Button x:Name="UndoButton" Click="OnUndo" IsEnabled="False"
-                        ToolTipService.ToolTip="Undo (Ctrl+Z)" AutomationProperties.Name="Undo">
+                <Button x:Name="UndoButton" x:Uid="UndoButton" Click="OnUndo" IsEnabled="False">
                     <FontIcon FontSize="16" Glyph="&#xE7A7;" />
                 </Button>
-                <Button x:Name="RedoButton" Click="OnRedo" IsEnabled="False"
-                        ToolTipService.ToolTip="Redo (Ctrl+Y)" AutomationProperties.Name="Redo">
+                <Button x:Name="RedoButton" x:Uid="RedoButton" Click="OnRedo" IsEnabled="False">
                     <FontIcon FontSize="16" Glyph="&#xE7A6;" />
                 </Button>
             </StackPanel>
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4">
                 <StackPanel x:Name="OutputTools" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
-                    <SplitButton Click="OnSave" Padding="11,6.5,11,6.5" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
+                    <SplitButton x:Uid="SaveButton" Click="OnSave" Padding="11,6.5,11,6.5">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem x:Name="SaveEditableItem" Text="Save as editable PNG (Ctrl+Shift+S)" Click="OnSaveEditable"
-                                                ToolTipService.ToolTip="Keeps the objects editable. The file also holds the uncropped image and anything drawn over it.">
+                                <MenuFlyoutItem x:Name="SaveEditableItem" x:Uid="SaveEditableItem" Click="OnSaveEditable">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE70F;" />
                                     </MenuFlyoutItem.Icon>
@@ -180,26 +159,23 @@
                             </MenuFlyout>
                         </SplitButton.Flyout>
                     </SplitButton>
-                    <Button Click="OnCopy" ToolTipService.ToolTip="Copy (Ctrl+C)" AutomationProperties.Name="Copy">
+                    <Button x:Uid="CopyButton" Click="OnCopy">
                         <FontIcon FontSize="16" Glyph="&#xE8C8;" />
                     </Button>
-                    <Button Click="OnShare" ToolTipService.ToolTip="Share" AutomationProperties.Name="Share">
+                    <Button x:Uid="ShareButton" Click="OnShare">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
-                    <SplitButton x:Name="AgentButton" Padding="11,6.5,11,6.5" Click="OnSendToAgent" ToolTipService.ToolTip="Send to AI"
-                                 AutomationProperties.Name="Send to AI">
+                    <SplitButton x:Name="AgentButton" x:Uid="AgentButton" Padding="11,6.5,11,6.5" Click="OnSendToAgent">
                         <FontIcon FontSize="16" Glyph="&#xE724;" />
                         <SplitButton.Flyout>
                             <MenuFlyout x:Name="AgentMenu" Placement="Bottom" Opening="OnAgentMenuOpening" />
                         </SplitButton.Flyout>
                     </SplitButton>
-                    <Button x:Name="AskAiButton" Click="OnAskAi" ToolTipService.ToolTip="Ask AI about this capture"
-                            AutomationProperties.Name="Ask AI">
+                    <Button x:Name="AskAiButton" x:Uid="AskAiButton" Click="OnAskAi">
                         <FontIcon FontSize="16" Glyph="&#xE8BD;" />
                     </Button>
                 </StackPanel>
-                <Button Click="OnSettings" Background="Transparent" BorderThickness="0"
-                        ToolTipService.ToolTip="Settings" AutomationProperties.Name="Settings">
+                <Button x:Uid="SettingsButton" Click="OnSettings" Background="Transparent" BorderThickness="0">
                     <FontIcon FontSize="16" Glyph="&#xE713;" />
                 </Button>
             </StackPanel>
@@ -208,12 +184,10 @@
         <StackPanel Grid.Row="1">
             <StackPanel x:Name="TextActionsBar" Orientation="Horizontal" Spacing="8" Margin="8,0,8,8"
                         HorizontalAlignment="Center" Visibility="Collapsed">
-                <TextBlock x:Name="TextActionsStatus" VerticalAlignment="Center" AutomationProperties.Name="Text actions status"
+                <TextBlock x:Name="TextActionsStatus" x:Uid="TextActionsStatus" VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                <Button x:Name="CopyAllTextButton" Content="Copy all text" Click="OnCopyAllText" IsEnabled="False"
-                        AutomationProperties.Name="Copy all text" />
-                <Button x:Name="QuickRedactButton" Content="Quick redact" Click="OnQuickRedact" IsEnabled="False"
-                        ToolTipService.ToolTip="Blacks out email addresses and phone numbers in the image" AutomationProperties.Name="Quick redact" />
+                <Button x:Name="CopyAllTextButton" x:Uid="CopyAllTextButton" Click="OnCopyAllText" IsEnabled="False" />
+                <Button x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False" />
                 <StackPanel x:Name="QrResults" Orientation="Horizontal" Spacing="8" />
             </StackPanel>
             <InfoBar x:Name="Message" Margin="8,0,8,8" IsOpen="False" Severity="Error" />
@@ -227,7 +201,7 @@
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
                       ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" />
 
-        <MediaPlayerElement x:Name="VideoPlayer" Grid.Row="2" Visibility="Collapsed" Margin="8,0,8,8"
-                            AreTransportControlsEnabled="True" AutomationProperties.Name="Recording" />
+        <MediaPlayerElement x:Name="VideoPlayer" x:Uid="VideoPlayer" Grid.Row="2" Visibility="Collapsed" Margin="8,0,8,8"
+                            AreTransportControlsEnabled="True" />
     </Grid>
 </Page>

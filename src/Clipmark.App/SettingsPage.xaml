@@ -7,14 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
-        <!-- The default On/Off text follows the Windows display language, not the app's English UI. -->
-        <Style TargetType="ToggleSwitch" BasedOn="{StaticResource DefaultToggleSwitchStyle}">
-            <Setter Property="OnContent" Value="On" />
-            <Setter Property="OffContent" Value="Off" />
-        </Style>
-    </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -22,115 +14,119 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Spacing="8" Padding="8,4,8,8">
-            <Button Click="OnBack" Background="Transparent" BorderThickness="0"
-                    ToolTipService.ToolTip="Back" AutomationProperties.Name="Back">
+            <Button x:Uid="SettingsBack" Click="OnBack" Background="Transparent" BorderThickness="0">
                 <FontIcon FontSize="16" Glyph="&#xE72B;" />
             </Button>
-            <TextBlock Text="Settings" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center" />
+            <TextBlock x:Uid="SettingsTitle" Style="{StaticResource SubtitleTextBlockStyle}" VerticalAlignment="Center" />
         </StackPanel>
 
         <ScrollViewer Grid.Row="1">
             <StackPanel Spacing="20" Padding="24,8,24,24" MaxWidth="640" HorizontalAlignment="Left">
                 <StackPanel Spacing="8">
-                    <TextBlock Text="License" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="LicenseStatusText" TextWrapping="Wrap" AutomationProperties.Name="License status" />
+                    <TextBlock x:Uid="SettingsLicenseHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="LicenseStatusText" x:Uid="SettingsLicenseStatus" TextWrapping="Wrap" />
                     <StackPanel x:Name="LicenseEntry" Orientation="Horizontal" Spacing="8">
-                        <TextBox x:Name="LicenseKeyBox" PlaceholderText="Paste your license key" Width="380"
-                                 AutomationProperties.Name="License key" />
-                        <Button Content="Activate" Click="OnActivate" />
+                        <TextBox x:Name="LicenseKeyBox" x:Uid="SettingsLicenseKey" Width="380" />
+                        <Button x:Uid="SettingsLicenseActivate" Click="OnActivate" />
                     </StackPanel>
-                    <TextBlock x:Name="LicenseResultText" TextWrapping="Wrap" AutomationProperties.Name="License result" />
-                    <Button x:Name="BuyButton" Content="Buy Clipmark Premium" Click="OnBuy" />
+                    <TextBlock x:Name="LicenseResultText" x:Uid="SettingsLicenseResult" TextWrapping="Wrap" />
+                    <Button x:Name="BuyButton" x:Uid="SettingsLicenseBuy" Click="OnBuy" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Capture hotkey" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Uid="SettingsHotkeyHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <CheckBox x:Name="CtrlBox" Content="Ctrl" MinWidth="0" Click="OnHotkeyChanged" />
                         <CheckBox x:Name="AltBox" Content="Alt" MinWidth="0" Click="OnHotkeyChanged" />
                         <CheckBox x:Name="ShiftBox" Content="Shift" MinWidth="0" Click="OnHotkeyChanged" />
                         <CheckBox x:Name="WinBox" Content="Win" MinWidth="0" Click="OnHotkeyChanged" />
-                        <ComboBox x:Name="KeyBox" MinWidth="140" SelectionChanged="OnHotkeyChanged"
-                                  AutomationProperties.Name="Hotkey key" />
+                        <ComboBox x:Name="KeyBox" x:Uid="SettingsHotkeyKey" MinWidth="140" SelectionChanged="OnHotkeyChanged" />
                     </StackPanel>
                     <TextBlock x:Name="HotkeyStatus" TextWrapping="Wrap" />
-                    <ToggleSwitch x:Name="PrintScreenSwitch" Header="Use the Print Screen key to open Clipmark" Toggled="OnPrintScreenToggled"
-                                  AutomationProperties.Name="Use the Print Screen key to open Clipmark" />
-                    <TextBlock x:Name="PrintScreenHint" Text="Turns off the Windows option that opens Snipping Tool with Print Screen. Turning this off puts it back."
+                    <ToggleSwitch x:Name="PrintScreenSwitch" x:Uid="SettingsPrintScreen" Toggled="OnPrintScreenToggled" />
+                    <TextBlock x:Name="PrintScreenHint" x:Uid="SettingsPrintScreenHint"
                                TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <HyperlinkButton x:Name="PrintScreenSettingsLink" Content="Open Windows keyboard settings" Click="OnOpenKeyboardSettings"
+                    <HyperlinkButton x:Name="PrintScreenSettingsLink" x:Uid="SettingsPrintScreenLink" Click="OnOpenKeyboardSettings"
                                      Visibility="Collapsed" Padding="0" />
                 </StackPanel>
 
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Startup" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ToggleSwitch x:Name="StartupSwitch" Header="Start Clipmark when Windows starts" Toggled="OnStartupToggled"
-                                  AutomationProperties.Name="Start Clipmark when Windows starts" />
+                    <TextBlock x:Uid="SettingsStartupHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ToggleSwitch x:Name="StartupSwitch" x:Uid="SettingsStartup" Toggled="OnStartupToggled" />
                     <TextBlock x:Name="StartupStatus" TextWrapping="Wrap" Visibility="Collapsed"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Default capture" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Uid="SettingsDefaultCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <ComboBox x:Name="ModeBox" Header="Mode" MinWidth="180" SelectionChanged="OnModeChanged" />
-                        <ComboBox x:Name="DelayBox" Header="Delay" MinWidth="140" SelectionChanged="OnDelayChanged" />
+                        <ComboBox x:Name="ModeBox" x:Uid="SettingsMode" MinWidth="180" SelectionChanged="OnModeChanged" />
+                        <ComboBox x:Name="DelayBox" x:Uid="SettingsDelay" MinWidth="140" SelectionChanged="OnDelayChanged" />
                     </StackPanel>
                 </StackPanel>
 
                 <StackPanel Spacing="4">
-                    <TextBlock Text="After a capture" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ToggleSwitch x:Name="ClipboardSwitch" Header="Copy to clipboard" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="ToastSwitch" Header="Show a notification" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="AutoSaveSwitch" Header="Save automatically" Toggled="OnTogglesChanged" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <TextBlock x:Name="FolderText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" MaxWidth="380" />
-                        <Button Content="Change folder" Click="OnBrowse" />
-                        <Button x:Name="ResetFolderButton" Content="Use default" Click="OnResetFolder" />
-                    </StackPanel>
-                    <ToggleSwitch x:Name="HistorySwitch" Header="Keep a capture history" Toggled="OnHistoryToggled"
-                                  AutomationProperties.Name="Keep a capture history" />
+                    <TextBlock x:Uid="SettingsAfterCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ToggleSwitch x:Name="ClipboardSwitch" x:Uid="SettingsClipboard" Toggled="OnTogglesChanged" />
+                    <ToggleSwitch x:Name="ToastSwitch" x:Uid="SettingsToast" Toggled="OnTogglesChanged" />
+                    <ToggleSwitch x:Name="AutoSaveSwitch" x:Uid="SettingsAutoSave" Toggled="OnTogglesChanged" />
+                    <!-- The path takes what the buttons leave, so long button texts never push a button out of view. -->
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="FolderText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                        <Button Grid.Column="1" x:Uid="SettingsChangeFolder" Click="OnBrowse" />
+                        <Button Grid.Column="2" x:Name="ResetFolderButton" x:Uid="SettingsResetFolder" Click="OnResetFolder" />
+                    </Grid>
+                    <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
                     <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock Text="Screen recording" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Uid="SettingsRecordingHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <CheckBox x:Name="RecCtrlBox" Content="Ctrl" MinWidth="0" Click="OnRecordHotkeyChanged" />
                         <CheckBox x:Name="RecAltBox" Content="Alt" MinWidth="0" Click="OnRecordHotkeyChanged" />
                         <CheckBox x:Name="RecShiftBox" Content="Shift" MinWidth="0" Click="OnRecordHotkeyChanged" />
                         <CheckBox x:Name="RecWinBox" Content="Win" MinWidth="0" Click="OnRecordHotkeyChanged" />
-                        <ComboBox x:Name="RecKeyBox" MinWidth="140" SelectionChanged="OnRecordHotkeyChanged"
-                                  AutomationProperties.Name="Recording hotkey key" />
+                        <ComboBox x:Name="RecKeyBox" x:Uid="SettingsRecordHotkeyKey" MinWidth="140" SelectionChanged="OnRecordHotkeyChanged" />
                     </StackPanel>
                     <TextBlock x:Name="RecordHotkeyStatus" TextWrapping="Wrap" />
-                    <ToggleSwitch x:Name="SystemAudioSwitch" Header="Record system audio" Toggled="OnRecordTogglesChanged" />
-                    <ToggleSwitch x:Name="MicrophoneSwitch" Header="Record the microphone" Toggled="OnRecordTogglesChanged" />
+                    <ToggleSwitch x:Name="SystemAudioSwitch" x:Uid="SettingsSystemAudio" Toggled="OnRecordTogglesChanged" />
+                    <ToggleSwitch x:Name="MicrophoneSwitch" x:Uid="SettingsMicrophone" Toggled="OnRecordTogglesChanged" />
                     <TextBlock x:Name="RecordingsFolderText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
                 <StackPanel x:Name="AiSection" Spacing="8">
-                    <TextBlock Text="Ask AI" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="AiKeyStatus" TextWrapping="Wrap" AutomationProperties.Name="API key status" />
+                    <TextBlock x:Uid="SettingsAiHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="AiKeyStatus" x:Uid="SettingsAiKeyStatus" TextWrapping="Wrap" />
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <PasswordBox x:Name="AiKeyBox" PlaceholderText="Paste your Anthropic API key" Width="380"
-                                     AutomationProperties.Name="Anthropic API key" />
-                        <Button Content="Save" Click="OnAiSave" AutomationProperties.Name="Save API key" />
+                        <PasswordBox x:Name="AiKeyBox" x:Uid="SettingsAiKey" Width="380" />
+                        <Button x:Uid="SettingsAiSave" Click="OnAiSave" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="AiTestButton" Content="Test key" Click="OnAiTest" AutomationProperties.Name="Test API key" />
-                        <Button x:Name="AiRemoveButton" Content="Remove key" Click="OnAiRemove" AutomationProperties.Name="Remove API key" />
+                        <Button x:Name="AiTestButton" x:Uid="SettingsAiTest" Click="OnAiTest" />
+                        <Button x:Name="AiRemoveButton" x:Uid="SettingsAiRemove" Click="OnAiRemove" />
                     </StackPanel>
-                    <TextBlock x:Name="AiResultText" TextWrapping="Wrap" AutomationProperties.Name="API key result" />
-                    <ComboBox x:Name="AiModelBox" Header="Model" MinWidth="220" SelectionChanged="OnAiModelChanged"
-                              AutomationProperties.Name="AI model" />
+                    <TextBlock x:Name="AiResultText" x:Uid="SettingsAiResult" TextWrapping="Wrap" />
+                    <ComboBox x:Name="AiModelBox" x:Uid="SettingsAiModel" MinWidth="220" SelectionChanged="OnAiModelChanged" />
                     <TextBlock x:Name="AiHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
+                <StackPanel Spacing="8">
+                    <TextBlock x:Uid="SettingsLanguageHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ComboBox x:Name="LanguageBox" x:Uid="SettingsLanguage" MinWidth="220" SelectionChanged="OnLanguageChanged" />
+                    <TextBlock x:Name="LanguageNote" x:Uid="SettingsLanguageNote" TextWrapping="Wrap" Visibility="Collapsed"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
                 <StackPanel Spacing="4">
-                    <TextBlock Text="About" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="VersionText" AutomationProperties.Name="Version" />
-                    <HyperlinkButton Content="Source code and releases" NavigateUri="https://github.com/IT-BAER/clipmark" Padding="0" />
+                    <TextBlock x:Uid="SettingsAboutHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="VersionText" x:Uid="SettingsVersion" />
+                    <HyperlinkButton x:Uid="SettingsSourceLink" NavigateUri="https://github.com/IT-BAER/clipmark" Padding="0" />
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

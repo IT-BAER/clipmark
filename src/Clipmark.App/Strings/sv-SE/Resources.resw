@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} används av en annan app. Välj ett annat kortkommando i Inställningar.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} används av en annan app. Välj ett annat kortkommando för inspelning i Inställningar.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Stoppa inspelningen innan du avslutar Clipmark.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic är överbelastat eller inte tillgängligt. Försök igen om en stund.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>Gränsen för antal förfrågningar har nåtts. Försök igen om en stund.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>API-nyckeln är inte giltig. Kontrollera den i Inställningar &gt; AI.</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>Den här API-nyckeln kan inte användas med den här modellen eller funktionen.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>Den här modellen är inte tillgänglig. Välj en annan modell i Inställningar &gt; AI.</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>Skärmklippet är för stort för att skickas.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>Gränsen för antal förfrågningar har nåtts. Försök igen om {0} s.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>Förfrågan misslyckades (HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>Svaret avbröts: {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude avböjde att svara på den här förfrågan.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>Svaret avbröts vid längdgränsen.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>Förfrågan avvisades.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>Förfrågan avvisades: {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>Inga data från Anthropic på {0:0} s. Försök igen.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>Anslutningen stängdes innan svaret var klart. Försök igen.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>Redigerbara data är inte giltig JSON.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>Redigerbara data är ogiltiga: {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Claude-appen</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>ChatGPT-appen</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Terminal ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Avbryt</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>Rektangel</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>Fönster</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>Helskärm</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>Alla bildskärmar</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>Frihand</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>Rektangel</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>Oval</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>Linje</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>Pil</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>Svart</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>Vit</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>Röd</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>Gul</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>Grön</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>Blå</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>Tunn</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>Medel</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>Tjock</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>Ingen fördröjning</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} sekunder</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>Skärmklippsläge: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>Fördröjning: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>Former: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>Färg och bredd: {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>Välj Nytt eller tryck på {0} för att ta ett skärmklipp och på {1} för att spela in skärmen.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Vill du spara ändringarna i det här skärmklippet?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>Spara</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>Spara inte</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>markering och flytt av objekt</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>pilar som är fästa vid former</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>textetiketter</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>fyllningsverktyget</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>pipetten</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>att skicka skärmklipp till AI-assistenter</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>skärmklippshistoriken</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>att fråga AI om dina skärmklipp</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>att spara redigerbara PNG-filer</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Premium-funktion, låst</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium omfattar {0}. Din utvärderingsperiod på {1} dagar har gått ut.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Köp Premium</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>Ange licensnyckel</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>Spara som redigerbar PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>Spara som redigerbar PNG (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>Skicka till AI</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>Skicka till AI (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>Skärmklippshistorik</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>Skärmklippshistorik (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>Fråga AI om det här skärmklippet</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>Fråga AI (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>Markerad</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>Bredd (mushjul)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>Bredd</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>Fler färger</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>Anpassad färg</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>Urklipp används av en annan app. Färgen kopierades inte.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>Urklipp används av en annan app. Inspelningen kopierades inte.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>Urklipp används av en annan app. Skärmklippet kopierades inte.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>Urklipp används av en annan app. Texten kopierades inte.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>Ingen pågående AI-session hittades</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>Ingen pågående AI-session hittades. Starta Claude Code eller Codex i en terminal eller i VS Code, eller öppna appen Claude eller ChatGPT.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>Redigerbar PNG-bild</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>PNG-bild</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>JPEG-bild</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>MP4-video</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>Skärmklippet sparades inte: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>Inspelningen sparades inte: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>Delningsfönstret öppnades inte: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>Skärmklippshistoriken öppnades inte: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>Skärmklippshistoriken är avstängd. Slå på den i Inställningar för att behålla dina senaste {0} skärmklipp, krypterade för ditt Windows-konto.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Öppna Inställningar</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>Historik</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>Rensa alla</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Inga skärmklipp än.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>Skärmklipp från {0}</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>Öppna (högerklicka för att ta bort)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>Det här skärmklippet kan inte läsas. Det är skadat eller krypterat för ett annat Windows-konto.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>Vill du ta bort alla skärmklipp i historiken?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>Läser text…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Textigenkänningen misslyckades: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>Inget språk för textigenkänning är installerat (Inställningar &gt; Tid och språk &gt; Språk och region).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>Ingen text hittades.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>1 rad text.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>{0} rader text.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 QR-kod:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>{0} QR-koder:</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR-kod: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>Kopiera</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>Kopiera QR-kod</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>Kopiera QR-kod {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR-koden kopierades.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>Öppna länk</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>Öppna länk {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Texten kopierades.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>Inga e-postadresser eller telefonnummer hittades.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>Fråga AI</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>Ny chatt</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>Börja om med skärmklippet som det ser ut nu</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>Lägg till din Anthropic API-nyckel i Inställningar för att ställa frågor om dina skärmklipp.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>Fråga AI-konversation</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>Fråga AI-status</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>Fråga om det här skärmklippet</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>Fråga</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Retur skickar, Skift+Retur ger en ny rad</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>Stoppa</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>Skicka fråga</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>Stoppa svaret</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>Skicka (Retur)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>Vill du skicka det här skärmklippet till Anthropic?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och dina frågor till Anthropic ({0}) med din egen API-nyckel. Anthropics villkor gäller och Anthropic fakturerar nyckeln. Inget skickas förrän du skickar en fråga, och Clipmark sparar inte konversationen.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>Skicka</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} svarar… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>Stoppad.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>Bilden skickades i {0} × {1} px.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>Fråga: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>Svar</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>Kopiera svar</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>Urklipp används av en annan app. Svaret kopierades inte.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>Nytt skärmklipp</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>Ny inspelning</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>Läge</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>Fördröjning</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Öppna Clipmark</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Avsluta</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>Skärmklippet misslyckades: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>Ingen text hittades i markeringen</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>Texten kopierades till Urklipp</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>Automatisk sparning misslyckades: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>Stäng</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>Textextraktor</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>Foto</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>Video</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>Sparar</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>Inspelningen startade inte: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>Skärminspelning kräver Windows 10 version 1903 eller senare.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>Videokodaren är inte tillgänglig ({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>Inspelningen misslyckades: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>Ljud kan inte spelas in: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>En ljudenhet stoppades under inspelningen. Dess ljud slutar där.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>Inga högtalare eller hörlurar är aktiva, så systemljudet spelas inte in.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>Ingen mikrofon är ansluten, så mikrofonen spelas inte in.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>Ljudenheten använder {0}-bitars ljud, som Clipmark inte kan spela in.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>Systemljudet kan inte spelas in: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>Mikrofonen kan inte spelas in: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>Skärmklippet finns i Urklipp: tryck på {0} i prompten.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} är stängd. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} körs som administratör, så Clipmark kan inte skriva i den. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows Terminal visar en annan flik (eller så har fliken bytt namn). Växla först till fliken "{0}". {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows flyttade inte fram {0}. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows blockerade tangenten för att klistra in. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>Inspelningen sparades</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>Skärmklippet kopierades till Urklipp</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>Skärmklipp taget</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>Sparades i {0}</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>Skärmklippsbild</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>Textruta</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>Redigerbara data matchar inte sin bottenbild.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} Bilden öppnas utan sina objekt.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} svarade inte i tid. Försök igen.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>Den säkra anslutningen till {0} misslyckades. En proxy eller säkerhetsprogramvara kan granska HTTPS.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Proxyn kräver autentisering.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>Det går inte att nå {0}: {1} Kontrollera nätverket eller proxyn.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>Anslutningen till {0} bröts: {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>På</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>Av</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Windows standard</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>Inspelningar sparas i {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Om du vill använda Print Screen för Clipmark stänger du av Windows-alternativet som öppnar skärmklipp med Print Screen (Bluetooth och enheter &gt; Tangentbord, i äldre Windows 11: Hjälpmedel &gt; Tangentbord) och väljer sedan PrintScreen som kortkommando ovan.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium är aktivt.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Premium-utvärdering: 1 dag kvar.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Premium-utvärdering: {0} dagar kvar.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Premium-utvärderingen har gått ut. Premium-verktygen är låsta, allt annat fungerar som vanligt.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga till Anthropic ({0}) med din egen API-nyckel, bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Premium-funktion. Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga till Anthropic ({0}) med din egen API-nyckel, bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>Ingen API-nyckel sparad.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>API-nyckeln sparades.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>API-nyckeln sparades och slutar på {0}.</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>Klistra in nyckeln först.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>Nyckeln kunde inte sparas i Autentiseringshanteraren.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>Testar…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>Nyckeln fungerar.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>API-nyckeln togs bort.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>Nyckeln kunde inte tas bort från Autentiseringshanteraren.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>Behåller de senaste {0} skärmklippen med sina objekt (upp till {1} MB), krypterade för ditt Windows-konto och lagrade bara på den här datorn. Om du stänger av det tas historiken bort.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Premium-funktion. Behåller de senaste {0} skärmklippen med sina objekt (upp till {1} MB), krypterade för ditt Windows-konto och lagrade bara på den här datorn. Om du stänger av det tas historiken bort.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>Vill du ta bort skärmklippet i historiken?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>Vill du ta bort de {0} skärmklippen i historiken?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>Stäng av och ta bort</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>Licensen aktiverades.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>Den här licensnyckeln är inte giltig. Kontrollera att du klistrade in hela.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Windows-inställningen kunde inte ändras: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark är avstängt i Aktivitetshanteraren &gt; Startappar. Slå på det där.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>Din organisation tillåter inte att Clipmark startar med Windows.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} startar ett skärmklipp.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} startar och stoppar en inspelning.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} används av en annan app. Välj en annan kombination.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tillbaka</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tillbaka</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>Licens</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Licensstatus</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>Klistra in din licensnyckel</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Licensnyckel</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>Aktivera</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Licensresultat</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Köp Clipmark Premium</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>Kortkommando för skärmklipp</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tangent för kortkommando</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Öppna Clipmark med Print Screen</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Öppna Clipmark med Print Screen</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Stänger av Windows-alternativet som öppnar Snipping Tool med Print Screen. När du slår av det här återställs alternativet.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Öppna Windows tangentbordsinställningar</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Starta Clipmark när Windows startar</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Starta Clipmark när Windows startar</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>Standardskärmklipp</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>Läge</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>Fördröjning</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>Efter ett skärmklipp</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>Kopiera till Urklipp</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>Visa en avisering</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>Spara automatiskt</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>Ändra mapp</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>Använd standard</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>Behåll en skärmklippshistorik</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Behåll en skärmklippshistorik</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>Skärminspelning</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tangent för inspelningens kortkommando</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>Spela in systemljud</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>Spela in mikrofonen</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>Fråga AI</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Status för API-nyckel</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Klistra in din Anthropic API-nyckel</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Anthropic API-nyckel</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Spara API-nyckel</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>Testa nyckel</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Testa API-nyckel</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>Ta bort nyckel</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ta bort API-nyckel</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Resultat för API-nyckel</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>Modell</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI-modell</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>Språk</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Språk</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>Starta om Clipmark för att använda det nya språket.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>Om</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>Källkod och versioner</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Nytt skärmklipp</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Nytt skärmklipp</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>Nytt</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ny inspelning</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ny inspelning</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Öppna en bild eller redigerbar PNG (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Öppna</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skärmklippshistorik</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Skärmklippshistorik</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skärmklippsläge</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Skärmklippsläge</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fördröjning</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Fördröjning</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Markera (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Markera</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Penna (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Penna</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Överstrykningspenna (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Överstrykningspenna</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Radergummi (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Radergummi</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Text (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Former</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Former</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pipett (I): kopierar färgen som #RRGGBB</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Pipett</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fyll (G): en rektangel eller oval, annars ritytans bakgrund</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Fyll</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Färg och bredd</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Färg och bredd</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Beskär</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Beskär</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tillämpa beskärning (Retur)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tillämpa beskärning</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Avbryt beskärning (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Avbryt beskärning</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vänster kant (px). Uträkningar som 100+20 fungerar</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Beskärning X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Övre kant (px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Beskärning Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Bredd (px). Uträkningar som 800+20 fungerar</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Beskärningens bredd</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Höjd (px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Beskärningens höjd</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Textåtgärder: kopiera text, maskera e-postadresser och telefonnummer, läs QR-koder</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Textåtgärder</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ångra (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ångra</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gör om (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Gör om</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Spara som (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Spara som</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>Spara som redigerbar PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Behåller objekten redigerbara. Filen innehåller också den obeskurna bilden och allt som ritats över den.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kopiera (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kopiera</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dela</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Dela</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Skicka till AI</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Skicka till AI</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fråga AI om det här skärmklippet</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Fråga AI</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Status för textåtgärder</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>Kopiera all text</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kopiera all text</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>Snabbmaskering</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Svärtar över e-postadresser och telefonnummer i bilden</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Snabbmaskering</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Inspelning</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Skärmbilder, anteckningar och skärminspelning</value>
+  </data>
+</root>

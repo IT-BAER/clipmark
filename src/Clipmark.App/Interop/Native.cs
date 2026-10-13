@@ -38,7 +38,7 @@ internal static unsafe partial class Native
     public const uint MONITOR_DEFAULTTONEAREST = 2;
 
     public const int TRANSPARENT = 1, PS_SOLID = 0, NULL_BRUSH = 5;
-    public const uint DT_CENTER = 0x1, DT_VCENTER = 0x4, DT_SINGLELINE = 0x20, DT_NOPREFIX = 0x800;
+    public const uint DT_CENTER = 0x1, DT_VCENTER = 0x4, DT_SINGLELINE = 0x20, DT_NOPREFIX = 0x800, DT_CALCRECT = 0x400;
 
     public const uint CF_DIB = 8, CF_UNICODETEXT = 13, CF_HDROP = 15, GMEM_MOVEABLE = 0x2;
 

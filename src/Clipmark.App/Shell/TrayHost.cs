@@ -11,12 +11,6 @@ internal sealed unsafe class TrayHost : Win32Window
     private const uint TrayId = 1, TrayCallback = WM_APP + 1;
     private const int CmdCapture = 1, CmdOpen = 2, CmdSettings = 3, CmdExit = 4, CmdRecord = 5, CmdModeBase = 100, CmdDelayBase = 200;
 
-    private static readonly (CaptureMode Mode, string Text)[] Modes =
-    [
-        (CaptureMode.Rectangle, "Rectangle"), (CaptureMode.Window, "Window"), (CaptureMode.FullScreen, "Full screen"),
-        (CaptureMode.AllMonitors, "All monitors"), (CaptureMode.Freeform, "Freeform"),
-    ];
-
     private readonly uint _taskbarCreated = RegisterWindowMessage("TaskbarCreated");
     private nint _icon;
 
@@ -98,20 +92,20 @@ internal sealed unsafe class TrayHost : Win32Window
         nint menu = CreatePopupMenu(), modes = CreatePopupMenu(), delays = CreatePopupMenu();
         try
         {
-            foreach (var (mode, text) in Modes)
+            foreach (var (mode, text, _) in MainPage.Modes)
                 AppendMenu(modes, s.Mode == mode ? MF_CHECKED : MF_STRING, CmdModeBase + (int)mode, text);
             foreach (int d in ClipmarkSettings.DelayChoices)
-                AppendMenu(delays, s.DelaySeconds == d ? MF_CHECKED : MF_STRING, CmdDelayBase + d, d == 0 ? "No delay" : $"{d} seconds");
+                AppendMenu(delays, s.DelaySeconds == d ? MF_CHECKED : MF_STRING, CmdDelayBase + d, MainPage.DelayText(d));
 
-            AppendMenu(menu, MF_STRING, CmdCapture, $"New capture\t{s.Hotkey}");
-            AppendMenu(menu, MF_STRING, CmdRecord, $"New recording\t{s.RecordHotkey}");
-            AppendMenu(menu, MF_POPUP, modes, "Mode");
-            AppendMenu(menu, MF_POPUP, delays, "Delay");
+            AppendMenu(menu, MF_STRING, CmdCapture, $"{Loc.Get("TrayNewCapture")}\t{s.Hotkey}");
+            AppendMenu(menu, MF_STRING, CmdRecord, $"{Loc.Get("TrayNewRecording")}\t{s.RecordHotkey}");
+            AppendMenu(menu, MF_POPUP, modes, Loc.Get("TrayMode"));
+            AppendMenu(menu, MF_POPUP, delays, Loc.Get("TrayDelay"));
             AppendMenu(menu, MF_SEPARATOR, 0, null);
-            AppendMenu(menu, MF_STRING, CmdOpen, "Open Clipmark");
-            AppendMenu(menu, MF_STRING, CmdSettings, "Settings");
+            AppendMenu(menu, MF_STRING, CmdOpen, Loc.Get("TrayOpen"));
+            AppendMenu(menu, MF_STRING, CmdSettings, Loc.Get("TraySettings"));
             AppendMenu(menu, MF_SEPARATOR, 0, null);
-            AppendMenu(menu, MF_STRING, CmdExit, "Exit");
+            AppendMenu(menu, MF_STRING, CmdExit, Loc.Get("TrayExit"));
             // The top level never shows checks: drop the reserved check-mark column (submenus keep it).
             var info = new MENUINFO { cbSize = sizeof(MENUINFO), fMask = MIM_STYLE, dwStyle = MNS_NOCHECK };
             SetMenuInfo(menu, &info);

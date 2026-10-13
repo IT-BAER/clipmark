@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} は別のアプリで使用されています。[設定] で別のホットキーを選んでください。</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} は別のアプリで使用されています。[設定] で別の録画ホットキーを選んでください。</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Clipmark を終了する前に録画を停止してください。</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic が過負荷になっているか、利用できません。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>レート制限に達しました。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>API キーが無効です。[設定] &gt; [AI] で確認してください。</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>この API キーでは、このモデルまたは機能を使用できません。</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>このモデルは利用できません。[設定] &gt; [AI] で別のモデルを選んでください。</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>キャプチャが大きすぎて送信できません。</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>レート制限に達しました。{0} 秒後にもう一度お試しください。</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>要求に失敗しました (HTTP {0})。</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>回答が中断されました: {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude はこの要求への回答を辞退しました。</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>回答が長さの上限で途切れました。</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>要求が拒否されました。</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>要求が拒否されました: {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>{0:0} 秒間 Anthropic からデータがありません。もう一度お試しください。</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>回答が完了する前に接続が閉じられました。もう一度お試しください。</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>編集可能なデータは有効な JSON ではありません。</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>編集可能なデータが無効です: {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Claude アプリ</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>ChatGPT アプリ</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>ターミナル ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>キャンセル</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>四角形</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>ウィンドウ</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>全画面表示</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>すべてのモニター</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>フリーフォーム</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>四角形</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>楕円</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>線</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>矢印</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>黒</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>白</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>赤</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>黄</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>緑</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>青</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>細</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>中</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>太</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>遅延なし</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>キャプチャ モード: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>遅延: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>図形: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>色と太さ: {0}、{1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>[新規作成] を選ぶか {0} キーを押すとキャプチャ、{1} キーを押すと画面を録画します。</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>このキャプチャへの変更を保存しますか?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>保存</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>保存しない</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>オブジェクトの選択と移動</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>図形に接続された矢印</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>テキスト ラベル</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>塗りつぶしツール</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>スポイト</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>AI アシスタントへのキャプチャの送信</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>キャプチャ履歴</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>キャプチャについての AI への質問</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>編集可能な PNG の保存</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Premium 機能 (ロック中)</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium には{0}が含まれます。{1} 日間の試用期間は終了しました。</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Premium を購入</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>ライセンス キーを入力</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>編集可能な PNG として保存 (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>編集可能な PNG として保存 (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>AI に送信</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>AI に送信 (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>キャプチャ履歴</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>キャプチャ履歴 (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>このキャプチャについて AI に質問</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>AI に質問 (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>選択済み</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>太さ (マウス ホイール)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>太さ</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>その他の色</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>ユーザー設定の色</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、色をコピーできませんでした。</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、録画をコピーできませんでした。</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、キャプチャをコピーできませんでした。</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、テキストをコピーできませんでした。</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>実行中の AI セッションが見つかりません</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>実行中の AI セッションが見つかりません。ターミナルまたは VS Code で Claude Code か Codex を起動するか、Claude アプリまたは ChatGPT アプリを開いてください。</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>編集可能な PNG 画像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>PNG 画像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>JPEG 画像</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>MP4 ビデオ</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>キャプチャを保存できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>録画を保存できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>共有ウィンドウを開けませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>キャプチャ履歴を開けませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>キャプチャ履歴はオフです。[設定] でオンにすると、最新の {0} 件のキャプチャが Windows アカウント用に暗号化されて保持されます。</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>設定を開く</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>履歴</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>すべてクリア</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>キャプチャはまだありません。</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>{0} のキャプチャ</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>開く (右クリックで削除)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>このキャプチャを読み取れません。破損しているか、別の Windows アカウント用に暗号化されています。</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>履歴内のすべてのキャプチャを削除しますか?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>テキストを読み取り中…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>テキスト認識に失敗しました: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>テキスト認識用の言語がインストールされていません ([設定] &gt; [時刻と言語] &gt; [言語と地域])。</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>テキストが見つかりません。</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>1 行のテキスト。</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>{0} 行のテキスト。</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>QR コード 1 個:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>QR コード {0} 個:</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR コード: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>コピー</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>QR コードをコピー</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>QR コード {0} をコピー</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR コードをコピーしました。</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>リンクを開く</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>リンク {0} を開く</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>テキストをコピーしました。</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>メール アドレスも電話番号も見つかりません。</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>AI に質問</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>新しいチャット</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>キャプチャの現在の状態で最初からやり直す</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>キャプチャについて質問するには、[設定] で Anthropic API キーを追加してください。</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>AI に質問の会話</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>AI に質問の状態</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>このキャプチャについて質問</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>質問</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Enter で送信、Shift+Enter で改行</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>質問を送信</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>回答を停止</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>送信 (Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>このキャプチャを Anthropic に送信しますか?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を、お客様自身の API キーを使用して Anthropic ({0}) に送信します。Anthropic の利用規約が適用され、キーの料金は Anthropic から請求されます。質問を送信するまで何も送信されず、Clipmark は会話を保存しません。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>送信</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} が回答中… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>停止しました。</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>画像を {0} × {1} px で送信しました。</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>質問: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>回答</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>回答をコピー</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、回答をコピーできませんでした。</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>新しいキャプチャ</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>新しい録画</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>モード</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>遅延</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Clipmark を開く</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>終了</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>キャプチャに失敗しました: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>選択範囲にテキストが見つかりません</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>テキストをクリップボードにコピーしました</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>自動保存に失敗しました: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>閉じる</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>テキスト抽出ツール</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>写真</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>ビデオ</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>保存中</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>録画を開始できませんでした: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>画面の録画には Windows 10 バージョン 1903 以降が必要です。</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>ビデオ エンコーダーを利用できません ({0})。</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>録画に失敗しました: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>オーディオを録音できません: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>録画中にオーディオ デバイスが停止しました。そのデバイスの音声はそこで終了します。</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>アクティブなスピーカーまたはヘッドフォンがないため、システム オーディオは録音されません。</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>マイクが接続されていないため、マイクは録音されません。</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>オーディオ デバイスは {0} ビット オーディオを使用しており、Clipmark では録音できません。</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>システム オーディオを録音できません: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>マイクを録音できません: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>キャプチャはクリップボードにあります。プロンプトで {0} キーを押してください。</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} は閉じられています。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} は管理者として実行されているため、Clipmark から入力できません。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows ターミナルに別のタブが表示されています (またはタブの名前が変更されました)。先にタブ "{0}" に切り替えてください。{1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows が {0} を前面に表示しませんでした。{1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows が貼り付けキーをブロックしました。{0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>録画を保存しました</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>キャプチャをクリップボードにコピーしました</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>キャプチャしました</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>{0} に保存しました</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>キャプチャした画像</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>テキスト ボックス</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>編集可能なデータが、そのベース画像と一致しません。</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} 画像はオブジェクトなしで開かれます。</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} から時間内に回答がありませんでした。もう一度お試しください。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>{0} へのセキュリティで保護された接続に失敗しました。プロキシまたはセキュリティ ソフトウェアが HTTPS を検査している可能性があります。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>プロキシで認証が必要です。</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>{0} に接続できません: {1} ネットワークまたはプロキシを確認してください。</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>{0} への接続が切断されました: {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>オン</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>オフ</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Windows の既定値</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>録画は {0} に保存されます</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Clipmark で Print Screen キーを使うには、Print Screen キーで画面キャプチャを開く Windows のオプションをオフにして ([Bluetooth とデバイス] &gt; [キーボード]。以前の Windows 11 では [アクセシビリティ] &gt; [キーボード])、上のホットキーとして PrintScreen を選んでください。</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium は有効です。</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Premium 試用版: 残り 1 日。</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Premium 試用版: 残り {0} 日。</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Premium の試用期間は終了しました。Premium ツールはロックされていますが、それ以外は引き続き使用できます。</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を、お客様自身の API キーを使用して Anthropic ({0}) に送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Premium 機能です。[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を、お客様自身の API キーを使用して Anthropic ({0}) に送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>API キーは保存されていません。</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>API キーを保存しました。</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>API キーを保存しました (末尾: {0})。</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>先にキーを貼り付けてください。</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>キーを資格情報マネージャーに保存できませんでした。</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>テスト中…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>キーは有効です。</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>API キーを削除しました。</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>キーを資格情報マネージャーから削除できませんでした。</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>最新の {0} 件のキャプチャをオブジェクトとともに (最大 {1} MB) 保持します。Windows アカウント用に暗号化され、この PC にのみ保存されます。オフにすると履歴が削除されます。</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Premium 機能です。最新の {0} 件のキャプチャをオブジェクトとともに (最大 {1} MB) 保持します。Windows アカウント用に暗号化され、この PC にのみ保存されます。オフにすると履歴が削除されます。</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>履歴内のキャプチャを削除しますか?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>履歴内の {0} 件のキャプチャを削除しますか?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>オフにして削除</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>ライセンス認証が完了しました。</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>このライセンス キーは無効です。すべてを貼り付けたか確認してください。</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Windows の設定を変更できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark はタスク マネージャー &gt; [スタートアップ アプリ] でオフになっています。そこでオンにしてください。</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>組織の設定により、Clipmark を Windows と同時に開始することはできません。</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} でキャプチャを開始します。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} で録画を開始および停止します。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} は別のアプリで使用されています。別の組み合わせを選んでください。</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>戻る</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>ライセンス</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>ライセンスの状態</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>ライセンス キーを貼り付け</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>ライセンス キー</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>ライセンス認証</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>ライセンスの結果</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Clipmark Premium を購入</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>キャプチャ ホットキー</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>ホットキーのキー</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Print Screen キーで Clipmark を開く</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Print Screen キーで Clipmark を開く</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Print Screen キーで Snipping Tool を開く Windows のオプションをオフにします。この設定をオフにすると元に戻ります。</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Windows のキーボード設定を開く</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>スタートアップ</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Windows の開始時に Clipmark を開始する</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows の開始時に Clipmark を開始する</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>既定のキャプチャ</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>モード</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>遅延</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>キャプチャ後</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>クリップボードにコピー</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>通知を表示する</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>自動的に保存する</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>フォルダーを変更</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>既定値を使用</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>キャプチャ履歴を保持する</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>キャプチャ履歴を保持する</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>画面の録画</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>録画ホットキーのキー</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>システム オーディオを録音する</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>マイクを録音する</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>AI に質問</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API キーの状態</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Anthropic API キーを貼り付け</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Anthropic API キー</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API キーを保存</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>キーをテスト</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API キーをテスト</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>キーを削除</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API キーを削除</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API キーの結果</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>モデル</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI モデル</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>言語</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>新しい言語を使用するには、Clipmark を再起動してください。</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>バージョン情報</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>バージョン</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>ソース コードとリリース</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>新しいキャプチャ</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>新しいキャプチャ</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>新規</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>新しい録画</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>新しい録画</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>画像または編集可能な PNG を開く (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>キャプチャ履歴</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>キャプチャ履歴</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>キャプチャ モード</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>キャプチャ モード</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>遅延</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>遅延</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>選択 (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>選択</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>ペン (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>ペン</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>蛍光ペン (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>蛍光ペン</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>消しゴム (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>消しゴム</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>テキスト (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>テキスト</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>図形</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>図形</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>スポイト (I): 色を #RRGGBB としてコピー</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>スポイト</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>塗りつぶし (G): 四角形または楕円、それ以外はキャンバスの背景</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>塗りつぶし</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>色と太さ</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>色と太さ</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>トリミング</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミング</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>トリミングを適用 (Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミングを適用</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>トリミングをキャンセル (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミングをキャンセル</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>左端 (px)。100+20 のような計算式も使えます</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミング X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>上端 (px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミング Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>幅 (px)。800+20 のような計算式も使えます</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミングの幅</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>高さ (px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>トリミングの高さ</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>テキスト アクション: テキストのコピー、メール アドレスと電話番号の黒塗り、QR コードの読み取り</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>テキスト アクション</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>元に戻す (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>元に戻す</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>やり直し (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>やり直し</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>名前を付けて保存 (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>名前を付けて保存</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>編集可能な PNG として保存 (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>オブジェクトを編集可能なまま保持します。ファイルには、トリミング前の画像とその上に描いた内容も含まれます。</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>コピー (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>コピー</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>共有</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>共有</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>AI に送信</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI に送信</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>このキャプチャについて AI に質問</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI に質問</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>テキスト アクションの状態</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>すべてのテキストをコピー</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>すべてのテキストをコピー</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>簡易黒塗り</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>画像内のメール アドレスと電話番号を黒く塗りつぶします</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>簡易黒塗り</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>録画</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>画面キャプチャ、注釈、画面の録画</value>
+  </data>
+</root>

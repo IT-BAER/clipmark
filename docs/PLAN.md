@@ -290,3 +290,63 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
 - [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.4 Remaining gaps from M12.1.
+
+## M13 Localization (planned 13 October 2026, owner)
+Goal (owner): the app speaks the top Windows user languages.
+
+Data (measured 13 October 2026). Microsoft publishes no share of Windows display languages. Proxy: Wikimedia unique desktop
+devices per Wikipedia edition, September 2026 (REST `metrics/unique-devices/<lang>.wikipedia.org/desktop-site/monthly`):
+en 292.6 M, de 46.4 M, fr 43.9 M, ja 40.9 M, zh 37.1 M (Wikipedia is blocked in mainland China: undercounted), ru 30.7 M,
+es 30.3 M, it 17.0 M, pt 15.4 M, pl 11.8 M, nl 10.6 M, ko 8.0 M. Desktop is not only Windows, a device reading two editions
+counts twice. Cross-check, gamers only: Steam hardware survey September 2026 (95.03% Windows): en 34.2%, zh-Hans 31.4%,
+ru 9.1%, es 4.1% (+0.8% Latin America), pt-BR 3.7%, de 2.5%, ja 2.4%, fr 2.1%, pl 1.5%, ko 1.4%.
+
+Decisions (13 October 2026, owner)
+- Wave 1: de, fr, ja, zh-Hans, es, it, pt-BR. Wave 2: ru (UI only, no Premium sales path promised), pl, nl, ko, zh-Hant,
+  tr, sv, uk.
+- Translation: Claude translates the resources against a fixed per-language glossary; the owner reviews German; the README
+  marks the other languages as machine-translated; fixes come in by pull request.
+
+State: no localization. 0 `x:Uid`, 0 `.resw`; the 4 XAML files carry 140 literal text attributes; App C# has 144 unique
+capitalized string literals (upper bound: includes log and exception text). Manifest: `<Resource Language="x-generate"/>`.
+
+Technical notes
+- Unpackaged builds must use `Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride` (MRT Core,
+  Windows App SDK 1.6+); the `Windows.Globalization` one throws when unpackaged. Open upstream bug
+  microsoft/WindowsAppSDK#6801: an explicit `ResourceContext` language is ignored while the override is set.
+- OCR is not part of this: the own engine reads Latin / Greek, other Windows OCR languages already fall back to
+  Windows OCR (M11.4). zh-Hans / ja users need the Windows OCR language installed; check the message when it is missing.
+
+Tasks
+- [x] M13.1 Extract strings (13 October 2026, uncommitted; 363 keys in `Strings\en-US\Resources.resw`, `Loc`, Core `CoreText`; qps-ploc run: every editor / settings text pseudo-localized): XAML to `x:Uid` + `Strings\en-US\Resources.resw`; user-facing C# strings (toasts, tray menu,
+  record bar, dialogs, error bars, Win32 / GDI windows) through one resource helper. Log and exception text stays English.
+  Check: a pseudo-locale (qps-ploc) run shows no unlocalized text on any page (TestDriver UIA walk + shots).
+- [x] M13.2 Language setting (`ClipmarkSettings.Language`, `UiLanguages`; test mode pins en-US or `CLIPMARK_TEST_LANG`; MSIX not verified): Settings > Language ("Windows default" + list), applied with the MRT Core override before the
+  first window, restart prompt. Verify unpackaged AOT and MSIX.
+- [x] M13.3 Formatting: shown dates, numbers and sizes culture-aware; file names ("Clipmark yyyy-MM-dd HHmmss.png") and
+  settings.json stay invariant.
+- [x] M13.4 Glossary per wave-1 language (source: Microsoft Terminology Collection TBX, all 15 languages; German Windows uses "Sie"): Windows' and Snipping Tool's own terms (capture, snip, rectangle, free-form,
+  window, full screen, text actions, redact, recording); source of the terms decided here.
+- [x] M13.5 Translate wave 1 (Claude + glossary); owner reviews de. Translated (all 15 languages, checker 0 errors); de reviewed by the owner
+  (13 October 2026, kept "Aufnahme", "schwärzen", "Snipping Tool"). Independent review: no Critical / Important findings.
+- [x] M13.6 Layout: TestDriver shots of every page and popup per language; fix clipped text (de / fr run about a third
+  longer) and CJK font fallback. Done 13 October 2026: all 16 languages, 18 states each (editor, 6 menus, history, Ask AI,
+  text actions, crop, 5 settings scroll positions, language note, discard dialog) plus the Debug `clipcheck` command
+  (trimmed text, single-line text wider than its box, text sticking out of an ancestor). Found and fixed: the settings
+  folder row pushed "Use default" out of the 640 DIP column in non-English languages (now a Grid; red run flagged it in
+  de, not in en). Remaining hits: the folder path (trimmed on purpose) and three 1 DIP rounding hits checked by eye.
+  GDI texts measured with the app's CreateFont + DrawText calls: pill tooltips, size label (73 of 96 DIP) and record bar
+  "Saving" (shrinks to 11-12 px in es, ru, tr) fit in all languages; CJK renders through GDI font linking. it-IT
+  "Saving" fixed ("Salvo" means "saved"). Not shot: video view, Premium dialog, tray menu (native menu sizes to text).
+- [x] M13.7 Manifest DisplayName / Description per language (MSIX / Store), README and CHANGELOG note, how to send a
+  translation fix. Done 13 October 2026: Description = `ms-resource:AppDescription` (DisplayName stays "Clipmark");
+  the MSIX build split every language into resource packs that the bundle left out (installed MSIX = English only),
+  so the csproj builds all languages into the main package for packaged builds (`AppxBundleAutoResourcePackageQualifiers`
+  without Language, `AppxDefaultResourceQualifiers` = all 16; MS Learn "Build resources into your app package").
+  Measured in the MSIX: manifest lists 16 languages, resources.pri 364 strings x 16, en-US default score 1.0. MSIX not
+  installed (unsigned). README "Languages" section, CHANGELOG [Unreleased] entry.
+- [x] M13.8 Wave 2 languages translated with wave 1 (layout and review as M13.6).
+
+Risks: machine-translated UI terms that differ from Windows' own words (glossary, community fixes); longer text breaking
+fixed-width toolbars; upstream #6801 if the app ever passes an explicit `ResourceContext`.
+Rollback: en-US stays the neutral fallback; removing a language folder removes that language.

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Clipmark.Core.Sharing;
 
 /// <summary>The assistant behind a target: Claude (Anthropic) or Codex (OpenAI, also inside the ChatGPT app).</summary>
@@ -39,12 +41,14 @@ public sealed record AgentTarget(nint Window, int ProcessId, Agent Agent, AgentH
             string name = Agent == Agent.Claude ? "Claude" : "Codex";
             string kind = Host switch
             {
-                AgentHost.DesktopApp => Agent == Agent.Claude ? "Claude app" : "ChatGPT app",
-                AgentHost.VsCode => $"VS Code ({name})",
-                _ => $"Terminal ({name})",
+                AgentHost.DesktopApp => Agent == Agent.Claude
+                    ? CoreText.T("AgentClaudeApp", "Claude app") : CoreText.T("AgentChatGptApp", "ChatGPT app"),
+                AgentHost.VsCode => string.Format(CultureInfo.CurrentCulture, CoreText.T("AgentVsCode", "VS Code ({0})"), name),
+                _ => string.Format(CultureInfo.CurrentCulture, CoreText.T("AgentTerminal", "Terminal ({0})"), name),
             };
             string title = Host == AgentHost.Terminal && ConsoleTitle.Length > 0 ? ConsoleTitle : Title;
-            return string.IsNullOrWhiteSpace(title) ? kind : $"{kind}: {title}";
+            return string.IsNullOrWhiteSpace(title) ? kind
+                : string.Format(CultureInfo.CurrentCulture, CoreText.T("AgentWithTitle", "{0}: {1}"), kind, title);
         }
     }
 }

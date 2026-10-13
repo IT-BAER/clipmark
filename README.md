@@ -64,6 +64,7 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 **System**
 - Lives in the tray (shown on the taskbar the first time it runs), single instance, starts with Windows on request
 - Toast notifications with banners; clicking one opens the capture while Clipmark runs
+- 16 interface languages, see [Languages](#languages)
 
 ## Clipmark vs Snipping Tool
 
@@ -142,6 +143,17 @@ Your screenshots and recordings stay where you saved them.
 
 Recordings are saved to `Videos\Screen Recordings`. Screenshots go to `Pictures\Screenshots` (configurable) when
 automatic save is on.
+
+## Languages
+
+Clipmark speaks English, German, French, Italian, Spanish, Portuguese (Brazil), Japanese, Korean, Chinese (Simplified
+and Traditional), Dutch, Polish, Russian, Swedish, Turkish and Ukrainian. It follows the Windows display language;
+Settings > Language picks another one after a restart. Dates and numbers follow your Windows regional format.
+
+The German text is reviewed by a native speaker. The other languages are machine-translated against Microsoft's
+Windows terminology and may contain mistakes. To fix one, edit the `<value>` in
+`src/Clipmark.App/Strings/<language>/Resources.resw` and open a pull request; keep the key names and placeholders
+such as `{0}` unchanged.
 
 ## Build from source
 

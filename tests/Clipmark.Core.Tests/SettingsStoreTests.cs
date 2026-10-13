@@ -105,4 +105,37 @@ public class SettingsStoreTests
         var s = SettingsStore.Parse("""{ "hotkey": "Ctrl+Banana", "mode": "Lasso", "delaySeconds": 7, "autoSave": true, "saveFolder": "" }""");
         Assert.Equal(new ClipmarkSettings { AutoSave = true }, s);
     }
+
+    [Fact]
+    public void Language_round_trips()
+    {
+        var s = new ClipmarkSettings { Language = "de-DE" };
+        Assert.Equal("de-DE", SettingsStore.Parse(SettingsStore.Serialize(s)).Language);
+    }
+
+    [Fact]
+    public void Missing_language_means_the_windows_default()
+    {
+        Assert.Null(new ClipmarkSettings().Language);
+        Assert.Null(SettingsStore.Parse("""{ "hotkey": "Ctrl+F8" }""").Language);
+    }
+
+    [Theory]
+    [InlineData("xx-INVALID")]
+    [InlineData("de")]
+    [InlineData("")]
+    public void Unknown_language_reads_as_the_windows_default(string language)
+    {
+        Assert.Null(SettingsStore.Parse($$"""{ "language": "{{language}}" }""").Language);
+    }
+
+    [Fact]
+    public void Ui_languages_are_unique_tags_with_native_names()
+    {
+        Assert.Equal(16, UiLanguages.All.Count);
+        Assert.Equal("en-US", UiLanguages.All[0].Tag);
+        Assert.Equal(UiLanguages.All.Count, UiLanguages.All.Select(l => l.Tag).Distinct().Count());
+        Assert.All(UiLanguages.All, l => Assert.True(UiLanguages.IsValid(l.Tag)));
+        Assert.False(UiLanguages.IsValid(null));
+    }
 }

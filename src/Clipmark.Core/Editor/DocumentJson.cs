@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Numerics;
 using System.Text;
 using System.Text.Json;
@@ -51,12 +52,12 @@ public static class DocumentJson
         try { doc = JsonDocument.Parse(json); }
         catch (Exception e) when (e is JsonException or ArgumentException)
         {
-            throw new InvalidDataException("The editable data is not valid JSON.", e);
+            throw new InvalidDataException(CoreText.T("EditableDataNotJson", "The editable data is not valid JSON."), e);
         }
         try { return Read(doc); }
         catch (Exception e) when (e is ArgumentException or InvalidOperationException) // e.g. a lone surrogate in a string
         {
-            throw new InvalidDataException("The editable data is invalid: " + e.Message, e);
+            throw new InvalidDataException(Invalid(e.Message), e);
         }
         finally { doc.Dispose(); }
     }
@@ -259,5 +260,9 @@ public static class DocumentJson
         e.ValueKind == JsonValueKind.Number && e.TryGetSingle(out float f) && float.IsFinite(f) && MathF.Abs(f) <= Limit
             ? f : throw Bad("expected a number within ±1048576");
 
-    private static InvalidDataException Bad(string what) => new($"The editable data is invalid: {what}.");
+    private static InvalidDataException Bad(string what) => new(Invalid(what + "."));
+
+    /// <summary>The detail stays English: it names JSON fields.</summary>
+    private static string Invalid(string detail) =>
+        string.Format(CultureInfo.CurrentCulture, CoreText.T("EditableDataInvalid", "The editable data is invalid: {0}"), detail);
 }

@@ -266,10 +266,11 @@ internal static class CaptureOutput
     /// <summary>Text-only toast (text extractor); always shown, since the extractor has no other feedback.</summary>
     public static void ShowTextToast(string title) => Show(title, [], null, null);
 
-    public static void ShowRecordingToast(string videoPath) => Show("Recording saved", [videoPath], videoPath, null);
+    public static void ShowRecordingToast(string videoPath) => Show(Loc.Get("ToastRecordingSaved"), [videoPath], videoPath, null);
 
     public static void ShowToast(string imagePath, bool copied, string? savedPath) =>
-        Show(copied ? "Capture copied to clipboard" : "Capture taken", savedPath is null ? [] : ["Saved to " + savedPath], imagePath, imagePath);
+        Show(Loc.Get(copied ? "ToastCaptureCopied" : "ToastCaptureTaken"), savedPath is null ? [] : [Loc.Format("ToastSavedTo", savedPath)],
+            imagePath, imagePath);
 
     private static void Show(string title, string[] lines, string? open, string? image)
     {

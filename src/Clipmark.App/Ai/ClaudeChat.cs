@@ -90,13 +90,11 @@ internal static class ClaudeChat
     private static string? Network(Exception e, CancellationToken ct) => e switch
     {
         OperationCanceledException when ct.IsCancellationRequested => null,
-        OperationCanceledException => $"{BaseUri.Host} did not answer in time. Try again.",
-        HttpRequestException { InnerException: AuthenticationException } =>
-            $"The secure connection to {BaseUri.Host} failed. A proxy or security software may be inspecting HTTPS.",
-        HttpRequestException { StatusCode: HttpStatusCode.ProxyAuthenticationRequired } =>
-            "The proxy requires authentication.",
-        HttpRequestException h => $"Cannot reach {BaseUri.Host}: {h.Message} Check the network or proxy.",
-        IOException io => $"The connection to {BaseUri.Host} broke: {io.Message}",
+        OperationCanceledException => Loc.Format("AiTimeout", BaseUri.Host),
+        HttpRequestException { InnerException: AuthenticationException } => Loc.Format("AiTlsFailed", BaseUri.Host),
+        HttpRequestException { StatusCode: HttpStatusCode.ProxyAuthenticationRequired } => Loc.Get("AiProxyAuth"),
+        HttpRequestException h => Loc.Format("AiUnreachable", BaseUri.Host, h.Message),
+        IOException io => Loc.Format("AiConnectionBroke", BaseUri.Host, io.Message),
         _ => null,
     };
 }

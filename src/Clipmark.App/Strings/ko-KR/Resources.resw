@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0}은(는) 다른 앱에서 사용 중입니다. 설정에서 다른 바로 가기 키를 선택하세요.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0}은(는) 다른 앱에서 사용 중입니다. 설정에서 다른 녹화 바로 가기 키를 선택하세요.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Clipmark를 종료하기 전에 녹화를 중지하세요.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Anthropic이 과부하 상태이거나 사용할 수 없습니다. 잠시 후 다시 시도하세요.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>요청 한도에 도달했습니다. 잠시 후 다시 시도하세요.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>API 키가 올바르지 않습니다. 설정 &gt; AI에서 확인하세요.</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>이 API 키로는 이 모델 또는 기능을 사용할 수 없습니다.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>이 모델을 사용할 수 없습니다. 설정 &gt; AI에서 다른 모델을 선택하세요.</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>캡처가 너무 커서 보낼 수 없습니다.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>요청 한도에 도달했습니다. {0}초 후에 다시 시도하세요.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>요청에 실패했습니다(HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>답변이 중단되었습니다. {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude가 이 요청에 대한 답변을 거부했습니다.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>길이 제한으로 답변이 잘렸습니다.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>요청이 거부되었습니다.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>요청이 거부되었습니다. {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>{0:0}초 동안 Anthropic에서 데이터를 받지 못했습니다. 다시 시도하세요.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>답변이 완료되기 전에 연결이 끊어졌습니다. 다시 시도하세요.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>편집 가능한 데이터가 올바른 JSON이 아닙니다.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>편집 가능한 데이터가 올바르지 않습니다. {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Claude 앱</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>ChatGPT 앱</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Terminal ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>취소</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>사각형</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>창</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>전체 화면</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>모든 모니터</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>자유형</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>사각형</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>타원</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>선</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>화살표</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>검정</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>흰색</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>빨강</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>노랑</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>초록</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>파랑</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>얇게</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>보통</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>굵게</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} px</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>지연 없음</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0}초</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0}초</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>캡처 모드: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>지연: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>도형: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>색과 두께: {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>새로 만들기를 선택하거나 {0}을(를) 눌러 캡처하고, {1}을(를) 눌러 화면을 녹화하세요.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>이 캡처의 변경 내용을 저장하시겠습니까?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>저장</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>저장 안 함</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>개체 선택 및 이동</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>도형에 연결되는 화살표</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>텍스트 레이블</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>채우기 도구</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>스포이트</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>AI 도우미로 캡처 보내기</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>캡처 기록</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>캡처에 대해 AI에게 묻기</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>편집 가능한 PNG 저장</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Premium 기능, 잠김</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium에는 {0} 기능이 포함되어 있습니다. {1}일 평가판이 종료되었습니다.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Premium 구매</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>라이선스 키 입력</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>편집 가능한 PNG로 저장(Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>편집 가능한 PNG로 저장(Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>AI로 보내기</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>AI로 보내기(Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>캡처 기록</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>캡처 기록(Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>이 캡처에 대해 AI에게 묻기</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>AI에게 묻기(Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>선택됨</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>두께(마우스 휠)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>두께</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>색 더 보기</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>사용자 지정 색</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>클립보드를 다른 앱에서 사용 중이어서 색을 복사하지 못했습니다.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>클립보드를 다른 앱에서 사용 중이어서 녹화를 복사하지 못했습니다.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>클립보드를 다른 앱에서 사용 중이어서 캡처를 복사하지 못했습니다.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>클립보드를 다른 앱에서 사용 중이어서 텍스트를 복사하지 못했습니다.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>실행 중인 AI 세션을 찾을 수 없음</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>실행 중인 AI 세션을 찾을 수 없습니다. 터미널 또는 VS Code에서 Claude Code나 Codex를 시작하거나 Claude 또는 ChatGPT 앱을 여세요.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>편집 가능한 PNG 이미지</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>PNG 이미지</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>JPEG 이미지</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>MP4 비디오</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>캡처를 저장하지 못했습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>녹화를 저장하지 못했습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>공유 창을 열지 못했습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>캡처 기록을 열지 못했습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>캡처 기록이 꺼져 있습니다. 설정에서 켜면 최근 캡처 {0}개가 Windows 계정용으로 암호화되어 보관됩니다.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>설정 열기</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>기록</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>모두 지우기</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>아직 캡처가 없습니다.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>{0}에 만든 캡처</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>열기(마우스 오른쪽 단추로 삭제)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>이 캡처를 읽을 수 없습니다. 손상되었거나 다른 Windows 계정용으로 암호화되었습니다.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>기록의 모든 캡처를 삭제하시겠습니까?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>텍스트 읽는 중…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>텍스트 인식에 실패했습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>설치된 텍스트 인식 언어가 없습니다(설정 &gt; 시간 및 언어 &gt; 언어 및 지역).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>텍스트를 찾을 수 없습니다.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>텍스트 1줄.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>텍스트 {0}줄.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>QR 코드 1개:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>QR 코드 {0}개:</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR 코드: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>복사</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>QR 코드 복사</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>QR 코드 {0} 복사</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR 코드를 복사했습니다.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>링크 열기</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>링크 {0} 열기</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>텍스트를 복사했습니다.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>이메일 주소나 전화번호를 찾을 수 없습니다.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>새 채팅</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>현재 상태의 캡처로 다시 시작</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>캡처에 대해 질문하려면 설정에서 Anthropic API 키를 추가하세요.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>AI에게 묻기 대화</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>AI에게 묻기 상태</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>이 캡처에 대해 질문하세요</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>질문</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Enter를 누르면 보내고, Shift+Enter를 누르면 줄이 바뀝니다</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>중지</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>질문 보내기</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>답변 중지</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>보내기(Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>이 캡처를 Anthropic에 보내시겠습니까?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>AI에게 묻기는 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 사용자의 API 키로 Anthropic({0})에 보냅니다. Anthropic의 약관이 적용되며 요금은 Anthropic이 해당 키로 청구합니다. 질문을 보내기 전에는 아무것도 전송되지 않으며 Clipmark는 대화를 저장하지 않습니다.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>보내기</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0}이(가) 답변하는 중… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>중지되었습니다.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>이미지를 {0} × {1}px로 보냈습니다.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>질문: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>답변</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>답변 복사</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>클립보드를 다른 앱에서 사용 중이어서 답변을 복사하지 못했습니다.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>새 캡처</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>새 녹화</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>모드</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>지연</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Clipmark 열기</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>끝내기</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>캡처하지 못했습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>선택 영역에서 텍스트를 찾을 수 없음</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>텍스트를 클립보드에 복사함</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>자동 저장하지 못했습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>닫기</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>텍스트 추출기</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>사진</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>비디오</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>저장 중</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>녹화를 시작하지 못했습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>화면 녹화에는 Windows 10 버전 1903 이상이 필요합니다.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>비디오 인코더를 사용할 수 없습니다({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>녹화하지 못했습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>오디오를 녹음할 수 없습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>녹화 중 오디오 장치가 중지되어 해당 오디오가 거기서 끝납니다.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>활성 스피커나 헤드폰이 없어 시스템 오디오를 녹음하지 않습니다.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>연결된 마이크가 없어 마이크를 녹음하지 않습니다.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>오디오 장치가 Clipmark에서 녹음할 수 없는 {0}비트 오디오를 사용합니다.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>시스템 오디오를 녹음할 수 없습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>마이크를 녹음할 수 없습니다. {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>캡처가 클립보드에 있습니다. 프롬프트에서 {0}을(를) 누르세요.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0}이(가) 닫혀 있습니다. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0}이(가) 관리자 권한으로 실행 중이어서 Clipmark가 입력할 수 없습니다. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>Windows 터미널에 다른 탭이 표시되어 있습니다(또는 탭 이름이 변경되었습니다). 먼저 "{0}" 탭으로 전환하세요. {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows에서 {0}을(를) 앞으로 가져오지 못했습니다. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows에서 붙여넣기 키를 차단했습니다. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>녹화를 저장함</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>캡처를 클립보드에 복사함</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>캡처함</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>{0}에 저장함</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>캡처한 이미지</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>텍스트 상자</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>편집 가능한 데이터가 기본 이미지와 일치하지 않습니다.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} 이미지가 개체 없이 열립니다.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0}이(가) 제때 응답하지 않았습니다. 다시 시도하세요.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>{0}에 대한 보안 연결에 실패했습니다. 프록시나 보안 소프트웨어가 HTTPS를 검사하고 있을 수 있습니다.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>프록시에 인증이 필요합니다.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>{0}에 연결할 수 없습니다. {1} 네트워크 또는 프록시를 확인하세요.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>{0}에 대한 연결이 끊어졌습니다. {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>켬</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>끔</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Windows 기본값</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>녹화 파일은 {0}에 저장됩니다</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Clipmark에서 Print Screen을 사용하려면 Print Screen으로 화면 캡처를 여는 Windows 옵션을 끄고(Bluetooth 및 장치 &gt; 키보드, 이전 Windows 11에서는 접근성 &gt; 키보드) 위의 바로 가기 키로 PrintScreen을 선택하세요.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium이 활성화되어 있습니다.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Premium 평가판: 1일 남음.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Premium 평가판: {0}일 남음.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Premium 평가판이 종료되었습니다. Premium 도구는 잠겨 있으며 나머지 기능은 계속 사용할 수 있습니다.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>AI에게 묻기는 질문을 보낼 때에만 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 사용자의 API 키로 Anthropic({0})에 보냅니다. 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관되며 사용자의 Windows 계정에서 실행되는 앱이 읽을 수 있습니다.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Premium 기능입니다. AI에게 묻기는 질문을 보낼 때에만 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 사용자의 API 키로 Anthropic({0})에 보냅니다. 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관되며 사용자의 Windows 계정에서 실행되는 앱이 읽을 수 있습니다.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>저장된 API 키가 없습니다.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>API 키를 저장했습니다.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>API 키를 저장했습니다. 끝자리: {0}</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>먼저 키를 붙여넣으세요.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>자격 증명 관리자에 키를 저장하지 못했습니다.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>테스트 중…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>키가 작동합니다.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>API 키를 제거했습니다.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>자격 증명 관리자에서 키를 제거하지 못했습니다.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>최근 캡처 {0}개를 개체와 함께(최대 {1}MB) Windows 계정용으로 암호화하여 이 PC에만 보관합니다. 끄면 기록이 삭제됩니다.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Premium 기능입니다. 최근 캡처 {0}개를 개체와 함께(최대 {1}MB) Windows 계정용으로 암호화하여 이 PC에만 보관합니다. 끄면 기록이 삭제됩니다.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>기록의 캡처를 삭제하시겠습니까?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>기록의 캡처 {0}개를 삭제하시겠습니까?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>끄고 삭제</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>라이선스를 활성화했습니다.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>이 라이선스 키가 올바르지 않습니다. 전체를 붙여넣었는지 확인하세요.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Windows 설정을 변경할 수 없습니다. {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark가 작업 관리자 &gt; 시작 앱에서 꺼져 있습니다. 그곳에서 켜세요.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>조직에서 Clipmark를 Windows와 함께 시작하도록 허용하지 않습니다.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0}(으)로 캡처를 시작합니다.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0}(으)로 녹화를 시작하고 중지합니다.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0}은(는) 다른 앱에서 사용 중입니다. 다른 조합을 선택하세요.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>뒤로</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>라이선스</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>라이선스 상태</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>라이선스 키를 붙여넣으세요</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>라이선스 키</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>활성화</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>라이선스 결과</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Clipmark Premium 구매</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>캡처 바로 가기 키</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>바로 가기 키의 키</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Print Screen 키로 Clipmark 열기</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Print Screen 키로 Clipmark 열기</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Print Screen으로 캡처 도구를 여는 Windows 옵션을 끕니다. 이 설정을 끄면 다시 원래대로 돌아갑니다.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Windows 키보드 설정 열기</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>시작</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Windows가 시작될 때 Clipmark 시작</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Windows가 시작될 때 Clipmark 시작</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>기본 캡처</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>모드</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>지연</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>캡처 후</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>클립보드에 복사</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>알림 표시</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>자동으로 저장</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>폴더 변경</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>기본값 사용</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>캡처 기록 유지</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>캡처 기록 유지</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>화면 녹화</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>녹화 바로 가기 키의 키</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>시스템 오디오 녹음</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>마이크 녹음</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 키 상태</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Anthropic API 키를 붙여넣으세요</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Anthropic API 키</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>저장</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 키 저장</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>키 테스트</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 키 테스트</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>키 제거</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 키 제거</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>API 키 결과</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>모델</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI 모델</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>새 언어를 사용하려면 Clipmark를 다시 시작하세요.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>정보</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>버전</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>소스 코드 및 릴리스</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>새 캡처</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>새 캡처</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>새로 만들기</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>새 녹화</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>새 녹화</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>이미지 또는 편집 가능한 PNG 열기(Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>열기</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>캡처 기록</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>캡처 기록</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>캡처 모드</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>캡처 모드</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>지연</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>지연</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>선택(V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>선택</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>펜(P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>펜</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>형광펜(H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>형광펜</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>지우개(E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>지우개</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>텍스트(T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>텍스트</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>도형</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>도형</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>스포이트(I): 색을 #RRGGBB로 복사</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>스포이트</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>채우기(G): 사각형 또는 타원, 없으면 캔버스 배경</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>채우기</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>색과 두께</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>색과 두께</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>자르기</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>자르기 적용(Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 적용</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>자르기 취소(Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 취소</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>왼쪽 가장자리(px). 100+20 같은 계산식을 사용할 수 있습니다</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 X</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>위쪽 가장자리(px)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 Y</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>W</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>너비(px). 800+20 같은 계산식을 사용할 수 있습니다</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 너비</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>H</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>높이(px)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>자르기 높이</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>텍스트 작업: 텍스트 복사, 이메일과 전화번호 가리기, QR 코드 읽기</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>텍스트 작업</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>실행 취소(Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>실행 취소</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>다시 실행(Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>다시 실행</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>다른 이름으로 저장(Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>다른 이름으로 저장</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>편집 가능한 PNG로 저장(Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>개체를 편집 가능한 상태로 유지합니다. 파일에는 자르기 전 이미지와 그 위에 그린 모든 내용도 들어 있습니다.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>복사(Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>복사</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>공유</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>공유</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>AI로 보내기</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI로 보내기</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>이 캡처에 대해 AI에게 묻기</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI에게 묻기</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>텍스트 작업 상태</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>모든 텍스트 복사</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>모든 텍스트 복사</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>빠른 가리기</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>이미지의 이메일 주소와 전화번호를 검은색으로 가립니다</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>빠른 가리기</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>녹화</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>화면 캡처, 주석 및 화면 녹화</value>
+  </data>
+</root>

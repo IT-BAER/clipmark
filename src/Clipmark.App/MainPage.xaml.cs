@@ -25,24 +25,24 @@ public sealed partial class MainPage : Page
 {
     internal static readonly (CaptureMode Mode, string Text, string Glyph)[] Modes =
     [
-        (CaptureMode.Rectangle, "Rectangle", "\uF407"), (CaptureMode.Window, "Window", "\uE737"),
-        (CaptureMode.FullScreen, "Full screen", "\uE7F4"), (CaptureMode.AllMonitors, "All monitors", "\uEBC6"),
-        (CaptureMode.Freeform, "Freeform", "\uF408"),
+        (CaptureMode.Rectangle, Loc.Get("ModeRectangle"), "\uF407"), (CaptureMode.Window, Loc.Get("ModeWindow"), "\uE737"),
+        (CaptureMode.FullScreen, Loc.Get("ModeFullScreen"), "\uE7F4"), (CaptureMode.AllMonitors, Loc.Get("ModeAllMonitors"), "\uEBC6"),
+        (CaptureMode.Freeform, Loc.Get("ModeFreeform"), "\uF408"),
     ];
 
     private static readonly (EditorTool Tool, string Text, string Glyph, VirtualKey Key)[] Shapes =
     [
-        (EditorTool.Rectangle, "Rectangle", "\uE739", VirtualKey.R), (EditorTool.Ellipse, "Oval", "\uEA3A", VirtualKey.C),
-        (EditorTool.Line, "Line", "\uE738", VirtualKey.L), (EditorTool.Arrow, "Arrow", "\uE72A", VirtualKey.A),
+        (EditorTool.Rectangle, Loc.Get("ShapeRectangle"), "\uE739", VirtualKey.R), (EditorTool.Ellipse, Loc.Get("ShapeOval"), "\uEA3A", VirtualKey.C),
+        (EditorTool.Line, Loc.Get("ShapeLine"), "\uE738", VirtualKey.L), (EditorTool.Arrow, Loc.Get("ShapeArrow"), "\uE72A", VirtualKey.A),
     ];
 
     private static readonly (string Name, Rgba Color)[] QuickColors =
     [
-        ("Black", new(0, 0, 0, 255)), ("White", new(255, 255, 255, 255)), ("Red", new(232, 17, 35, 255)),
-        ("Yellow", new(255, 230, 0, 255)), ("Green", new(16, 124, 16, 255)), ("Blue", new(0, 120, 212, 255)),
+        (Loc.Get("ColorBlack"), new(0, 0, 0, 255)), (Loc.Get("ColorWhite"), new(255, 255, 255, 255)), (Loc.Get("ColorRed"), new(232, 17, 35, 255)),
+        (Loc.Get("ColorYellow"), new(255, 230, 0, 255)), (Loc.Get("ColorGreen"), new(16, 124, 16, 255)), (Loc.Get("ColorBlue"), new(0, 120, 212, 255)),
     ];
 
-    private static readonly string[] WidthNames = ["Thin", "Medium", "Thick"];
+    private static readonly string[] WidthNames = [Loc.Get("WidthThin"), Loc.Get("WidthMedium"), Loc.Get("WidthThick")];
     private static readonly float[] PenWidths = [2, 4, 8], HighlighterWidths = [12, 20, 32], TextSizes = [16, 24, 40];
 
     private const float MaxStrokeWidth = 96;
@@ -91,7 +91,7 @@ public sealed partial class MainPage : Page
         }
         foreach (var (tool, text, glyph, key) in Shapes)
         {
-            var item = new MenuFlyoutItem { Text = $"{text} ({key})", Icon = new FontIcon { Glyph = glyph } };
+            var item = new MenuFlyoutItem { Text = Loc.Format("ToolWithShortcut", text, key), Icon = new FontIcon { Glyph = glyph } };
             item.Click += (_, _) => SelectTool(tool);
             ShapeMenu.Items.Add(item);
             Shortcut(key, VirtualKeyModifiers.None, () => SelectTool(tool));
@@ -152,21 +152,21 @@ public sealed partial class MainPage : Page
         OnSettingsChanged(AppSettings.Current);
     }
 
-    private static string DelayText(int seconds) => seconds == 0 ? "No delay" : $"{seconds} seconds";
+    internal static string DelayText(int seconds) => seconds == 0 ? Loc.Get("DelayNone") : Loc.Format("DelaySeconds", seconds);
 
     private void OnSettingsChanged(ClipmarkSettings s)
     {
         int modeIndex = Array.FindIndex(Modes, m => m.Mode == s.Mode);
         ModeButton.Content = new FontIcon { Glyph = Modes[modeIndex].Glyph, FontSize = 16 };
-        AutomationProperties.SetName(ModeButton, "Capture mode: " + Modes[modeIndex].Text);
+        AutomationProperties.SetName(ModeButton, Loc.Format("ModeButtonName", Modes[modeIndex].Text));
         Mark(ModeMenu, 0, Modes.Length, modeIndex);
 
         int delayIndex = Array.IndexOf(ClipmarkSettings.DelayChoices, s.DelaySeconds);
-        DelayButton.Content = s.DelaySeconds == 0 ? new FontIcon { Glyph = "\uE916", FontSize = 16 } : $"{s.DelaySeconds} s";
-        AutomationProperties.SetName(DelayButton, "Delay: " + DelayText(s.DelaySeconds));
+        DelayButton.Content = s.DelaySeconds == 0 ? new FontIcon { Glyph = "\uE916", FontSize = 16 } : Loc.Format("DelayShort", s.DelaySeconds);
+        AutomationProperties.SetName(DelayButton, Loc.Format("DelayButtonName", DelayText(s.DelaySeconds)));
         Mark(DelayMenu, 0, ClipmarkSettings.DelayChoices.Length, delayIndex);
 
-        Hint.Text = $"Select New or press {s.Hotkey} to capture, {s.RecordHotkey} to record the screen.";
+        Hint.Text = Loc.Format("StartHint", s.Hotkey, s.RecordHotkey);
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -292,10 +292,10 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = "Save changes to this capture?",
-                PrimaryButtonText = "Save",
-                SecondaryButtonText = "Don't save",
-                CloseButtonText = "Cancel",
+                Title = Loc.Get("SaveChangesTitle"),
+                PrimaryButtonText = Loc.Get("SaveChangesSave"),
+                SecondaryButtonText = Loc.Get("SaveChangesDontSave"),
+                CloseButtonText = Loc.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Primary,
             };
             return await dialog.ShowAsync() switch
@@ -459,15 +459,15 @@ public sealed partial class MainPage : Page
 
     private static string FeatureName(PremiumFeature feature) => feature switch
     {
-        PremiumFeature.Select => "selecting and moving objects",
-        PremiumFeature.AttachedArrows => "arrows attached to shapes",
-        PremiumFeature.Text => "text labels",
-        PremiumFeature.Fill => "the fill tool",
-        PremiumFeature.Eyedropper => "the eyedropper",
-        PremiumFeature.SendToAi => "sending captures to AI assistants",
-        PremiumFeature.History => "the capture history",
-        PremiumFeature.AiChat => "asking AI about your captures",
-        _ => "saving editable PNGs",
+        PremiumFeature.Select => Loc.Get("PremiumSelect"),
+        PremiumFeature.AttachedArrows => Loc.Get("PremiumAttachedArrows"),
+        PremiumFeature.Text => Loc.Get("PremiumText"),
+        PremiumFeature.Fill => Loc.Get("PremiumFill"),
+        PremiumFeature.Eyedropper => Loc.Get("PremiumEyedropper"),
+        PremiumFeature.SendToAi => Loc.Get("PremiumSendToAi"),
+        PremiumFeature.History => Loc.Get("PremiumHistory"),
+        PremiumFeature.AiChat => Loc.Get("PremiumAiChat"),
+        _ => Loc.Get("PremiumEditablePng"),
     };
 
     private void OnLicenseChanged(Entitlement _) => ApplyLicense();
@@ -484,13 +484,12 @@ public sealed partial class MainPage : Page
         {
             bool locked = !license.IsEnabled(feature);
             badge.Visibility = locked ? Visibility.Visible : Visibility.Collapsed;
-            AutomationProperties.SetHelpText(button, locked ? "Premium feature, locked" : "");
+            AutomationProperties.SetHelpText(button, locked ? Loc.Get("PremiumLockedHelp") : "");
         }
-        SaveEditableItem.Text = license.IsEnabled(PremiumFeature.EditablePng)
-            ? "Save as editable PNG (Ctrl+Shift+S)" : "Save as editable PNG (Premium)";
-        ToolTipService.SetToolTip(AgentButton, license.IsEnabled(PremiumFeature.SendToAi) ? "Send to AI" : "Send to AI (Premium)");
-        ToolTipService.SetToolTip(HistoryButton, license.IsEnabled(PremiumFeature.History) ? "Capture history" : "Capture history (Premium)");
-        ToolTipService.SetToolTip(AskAiButton, license.IsEnabled(PremiumFeature.AiChat) ? "Ask AI about this capture" : "Ask AI (Premium)");
+        SaveEditableItem.Text = Loc.Get(license.IsEnabled(PremiumFeature.EditablePng) ? "SaveEditable" : "SaveEditablePremium");
+        ToolTipService.SetToolTip(AgentButton, Loc.Get(license.IsEnabled(PremiumFeature.SendToAi) ? "SendToAiTip" : "SendToAiPremium"));
+        ToolTipService.SetToolTip(HistoryButton, Loc.Get(license.IsEnabled(PremiumFeature.History) ? "HistoryTip" : "HistoryPremium"));
+        ToolTipService.SetToolTip(AskAiButton, Loc.Get(license.IsEnabled(PremiumFeature.AiChat) ? "AskAiTip" : "AskAiPremium"));
         if (PremiumFor(_tool) is { } current && !license.IsEnabled(current))
             _tool = EditorTool.Pen; // the editor commits text being edited on the tool change
         ApplyTool();
@@ -507,11 +506,11 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = "Clipmark Premium",
-                Content = $"Clipmark Premium includes {FeatureName(feature)}. Your {TrialClock.TrialDays}-day trial has ended.",
-                PrimaryButtonText = "Buy Premium",
-                SecondaryButtonText = "Enter license key",
-                CloseButtonText = "Cancel",
+                Title = Loc.Get("PremiumTitle"),
+                Content = Loc.Format("PremiumBody", FeatureName(feature), TrialClock.TrialDays),
+                PrimaryButtonText = Loc.Get("PremiumBuy"),
+                SecondaryButtonText = Loc.Get("PremiumEnterKey"),
+                CloseButtonText = Loc.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Primary,
             };
             switch (await dialog.ShowAsync())
@@ -557,7 +556,7 @@ public sealed partial class MainPage : Page
         SyncCropFields();
         int shapeIndex = Array.FindIndex(Shapes, s => s.Tool == _shape);
         ShapeButton.Content = new FontIcon { Glyph = Shapes[shapeIndex].Glyph, FontSize = 16 };
-        AutomationProperties.SetName(ShapeButton, "Shapes: " + Shapes[shapeIndex].Text);
+        AutomationProperties.SetName(ShapeButton, Loc.Format("ShapesButtonName", Shapes[shapeIndex].Text));
         Mark(ShapeMenu, 0, Shapes.Length, shapeIndex);
 
         int group = Group;
@@ -593,8 +592,8 @@ public sealed partial class MainPage : Page
         int colorIndex = Array.FindIndex(QuickColors, c => c.Color == shown);
         int widthIndex = Array.IndexOf(presets, shownWidth);
         string colorName = colorIndex >= 0 ? QuickColors[colorIndex].Name : $"#{shown.R:X2}{shown.G:X2}{shown.B:X2}";
-        string widthName = widthIndex >= 0 ? WidthNames[widthIndex] : $"{shownWidth:0} px";
-        AutomationProperties.SetName(StyleButton, $"Color and width: {colorName}, {widthName}");
+        string widthName = widthIndex >= 0 ? WidthNames[widthIndex] : Loc.Format("WidthPixels", shownWidth);
+        AutomationProperties.SetName(StyleButton, Loc.Format("StyleButtonName", colorName, widthName));
         _syncingStyle = true;
         for (int i = 0; i < _swatches.Count; i++)
             MarkButton(_swatches[i], i == colorIndex);
@@ -625,7 +624,7 @@ public sealed partial class MainPage : Page
             if (i == current)
             {
                 item.Foreground = accent;
-                AutomationProperties.SetItemStatus(item, "Selected");
+                AutomationProperties.SetItemStatus(item, Loc.Get("ItemSelected"));
             }
             else
             {
@@ -640,7 +639,7 @@ public sealed partial class MainPage : Page
         if (current)
         {
             button.BorderBrush = (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"];
-            AutomationProperties.SetItemStatus(button, "Selected");
+            AutomationProperties.SetItemStatus(button, Loc.Get("ItemSelected"));
         }
         else
         {
@@ -667,12 +666,12 @@ public sealed partial class MainPage : Page
             swatches.Children.Add(button);
         }
         var picker = _picker = NewPicker();
-        var slider = _widthSlider = new Slider { Minimum = 1, Maximum = MaxStrokeWidth, StepFrequency = 1, Header = "Width (mouse wheel)" };
-        var more = new Microsoft.UI.Xaml.Controls.Primitives.ToggleButton { Content = "More colors" };
-        AutomationProperties.SetName(more, "More colors");
+        var slider = _widthSlider = new Slider { Minimum = 1, Maximum = MaxStrokeWidth, StepFrequency = 1, Header = Loc.Get("WidthSliderHeader") };
+        var more = new Microsoft.UI.Xaml.Controls.Primitives.ToggleButton { Content = Loc.Get("MoreColors") };
+        AutomationProperties.SetName(more, Loc.Get("MoreColors"));
         more.Checked += (_, _) => picker.Visibility = Visibility.Visible; // Checked also fires for a UIA Toggle (Click does not)
         more.Unchecked += (_, _) => picker.Visibility = Visibility.Collapsed;
-        AutomationProperties.SetName(picker, "Custom color");
+        AutomationProperties.SetName(picker, Loc.Get("CustomColor"));
         picker.ColorChanged += (_, e) =>
         {
             if (!_syncingStyle)
@@ -691,7 +690,7 @@ public sealed partial class MainPage : Page
             _presets.Add(button);
             presets.Children.Add(button);
         }
-        AutomationProperties.SetName(slider, "Width");
+        AutomationProperties.SetName(slider, Loc.Get("WidthSliderName"));
         slider.ValueChanged += (_, e) =>
         {
             if (!_syncingStyle)
@@ -783,7 +782,7 @@ public sealed partial class MainPage : Page
     {
         var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
         if (!CaptureOutput.CopyTextToClipboard(owner, ColorSample.Hex(color)))
-            ShowError("The clipboard is in use by another app; the color was not copied.");
+            ShowError(Loc.Get("ClipboardBusyColor"));
         SelectTool(_toolBeforePick);
         SetColor(color);
     }
@@ -917,7 +916,7 @@ public sealed partial class MainPage : Page
         {
             if (CaptureOutput.CopyFileToClipboard(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), video))
                 return true;
-            ShowError("The clipboard is in use by another app; the recording was not copied.");
+            ShowError(Loc.Get("ClipboardBusyRecording"));
             return false;
         }
         var editor = _editor;
@@ -930,7 +929,7 @@ public sealed partial class MainPage : Page
             editor.Document?.MarkClean();
             return true;
         }
-        ShowError("The clipboard is in use by another app; the capture was not copied.");
+        ShowError(Loc.Get("ClipboardBusyCapture"));
         return false;
     }
 
@@ -942,7 +941,7 @@ public sealed partial class MainPage : Page
         AgentMenu.Items.Clear();
         var targets = AgentSend.FindTargets(out var processes);
         if (targets.Count == 0)
-            AgentMenu.Items.Add(new MenuFlyoutItem { Text = "No running AI session found", IsEnabled = false });
+            AgentMenu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("NoAiSessionItem"), IsEnabled = false });
         int iconSize = (int)Math.Round(16 * (XamlRoot?.RasterizationScale ?? 1));
         foreach (var target in targets)
         {
@@ -969,7 +968,7 @@ public sealed partial class MainPage : Page
         target ??= AgentSend.FindTargets().FirstOrDefault();
         if (target is null)
         {
-            ShowError("No running AI session found. Start Claude Code or Codex in a terminal or VS Code, or open the Claude or ChatGPT app.");
+            ShowError(Loc.Get("NoAiSessionError"));
             return;
         }
         if (await CopyAsync() && await AgentSend.PasteAsync(target) is { } problem)
@@ -1004,11 +1003,11 @@ public sealed partial class MainPage : Page
         if (Directory.Exists(folder))
             picker.SuggestedFolder = folder;
         if (editable)
-            picker.FileTypeChoices.Add("Editable PNG image", [".png"]);
+            picker.FileTypeChoices.Add(Loc.Get("FileTypeEditablePng"), [".png"]);
         else
         {
-            picker.FileTypeChoices.Add("PNG image", [".png"]);
-            picker.FileTypeChoices.Add("JPEG image", [".jpg", ".jpeg"]);
+            picker.FileTypeChoices.Add(Loc.Get("FileTypePng"), [".png"]);
+            picker.FileTypeChoices.Add(Loc.Get("FileTypeJpeg"), [".jpg", ".jpeg"]);
         }
         var result = await picker.PickSaveFileAsync();
         return result is not null && await SaveToAsync(result.Path, editable);
@@ -1038,7 +1037,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            ShowError($"The capture was not saved: {e.Message}");
+            ShowError(Loc.Format("CaptureNotSaved", e.Message));
             return false;
         }
         editor.Document?.MarkClean();
@@ -1054,7 +1053,7 @@ public sealed partial class MainPage : Page
             SuggestedFileName = Path.GetFileNameWithoutExtension(video),
             DefaultFileExtension = ".mp4",
         };
-        picker.FileTypeChoices.Add("MP4 video", [".mp4"]);
+        picker.FileTypeChoices.Add(Loc.Get("FileTypeMp4"), [".mp4"]);
         var result = await picker.PickSaveFileAsync();
         return result is not null && await SaveVideoToAsync(result.Path);
     }
@@ -1071,7 +1070,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception e) when (e is IOException or UnauthorizedAccessException)
         {
-            ShowError($"The recording was not saved: {e.Message}");
+            ShowError(Loc.Format("RecordingNotSaved", e.Message));
             return false;
         }
     }
@@ -1089,7 +1088,7 @@ public sealed partial class MainPage : Page
             }
             catch (Exception e)
             {
-                ShowError($"The share sheet did not open: {e.Message}");
+                ShowError(Loc.Format("ShareFailed", e.Message));
             }
             return;
         }
@@ -1101,7 +1100,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception e)
         {
-            ShowError($"The share sheet did not open: {e.Message}");
+            ShowError(Loc.Format("ShareFailed", e.Message));
         }
     }
 
@@ -1131,7 +1130,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception ex)
         {
-            ShowError("The capture history did not open: " + ex.Message);
+            ShowError(Loc.Format("HistoryOpenFailed", ex.Message));
         }
     }
 
@@ -1149,11 +1148,10 @@ public sealed partial class MainPage : Page
         {
             panel.Children.Add(new TextBlock
             {
-                Text = $"Capture history is off. Turn it on in Settings to keep your last {HistoryPolicy.MaxItems} captures, "
-                    + "encrypted for your Windows account.",
+                Text = Loc.Format("HistoryOff", HistoryPolicy.MaxItems),
                 TextWrapping = TextWrapping.Wrap,
             });
-            var settings = new Button { Content = "Open Settings" };
+            var settings = new Button { Content = Loc.Get("OpenSettings") };
             settings.Click += (_, _) => { flyout.Hide(); Frame.Navigate(typeof(SettingsPage)); };
             panel.Children.Add(settings);
             flyout.ShowAt(HistoryButton);
@@ -1163,17 +1161,17 @@ public sealed partial class MainPage : Page
         var entries = await CaptureHistory.ListAsync();
 
         var header = new Grid();
-        header.Children.Add(new TextBlock { Text = "History", Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center });
+        header.Children.Add(new TextBlock { Text = Loc.Get("HistoryHeader"), Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center });
         if (entries.Count > 0)
         {
-            var clear = new Button { Content = "Clear all", HorizontalAlignment = HorizontalAlignment.Right };
+            var clear = new Button { Content = Loc.Get("HistoryClearAll"), HorizontalAlignment = HorizontalAlignment.Right };
             clear.Click += (_, _) => { flyout.Hide(); _ = ClearHistoryAsync(); };
             header.Children.Add(clear);
         }
         panel.Children.Add(header);
         if (entries.Count == 0)
         {
-            panel.Children.Add(new TextBlock { Text = "No captures yet.", Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
+            panel.Children.Add(new TextBlock { Text = Loc.Get("HistoryEmpty"), Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
             flyout.ShowAt(HistoryButton);
             return;
         }
@@ -1196,10 +1194,10 @@ public sealed partial class MainPage : Page
                 Content = content, Width = 164, Height = 124, Padding = new Thickness(4),
                 HorizontalContentAlignment = HorizontalAlignment.Stretch, VerticalContentAlignment = VerticalAlignment.Stretch,
             };
-            AutomationProperties.SetName(item, "Capture from " + taken);
-            ToolTipService.SetToolTip(item, "Open (right-click to delete)");
+            AutomationProperties.SetName(item, Loc.Format("HistoryItemName", taken));
+            ToolTipService.SetToolTip(item, Loc.Get("HistoryItemTip"));
             item.Click += (_, _) => { flyout.Hide(); _ = OpenHistoryItemAsync(id); };
-            var delete = new MenuFlyoutItem { Text = "Delete", Icon = new FontIcon { Glyph = "" } };
+            var delete = new MenuFlyoutItem { Text = Loc.Get("HistoryDelete"), Icon = new FontIcon { Glyph = "" } };
             delete.Click += async (_, _) =>
             {
                 grid.Children.Remove(item);
@@ -1239,7 +1237,7 @@ public sealed partial class MainPage : Page
         await WriteHistoryAsync();
         if (await CaptureHistory.LoadAsync(id) is not { } file)
         {
-            ShowError("This capture cannot be read. It is damaged or was encrypted for another Windows account.");
+            ShowError(Loc.Get("HistoryItemUnreadable"));
             return;
         }
         Message.IsOpen = false;
@@ -1263,9 +1261,9 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = "Delete all captures in the history?",
-                PrimaryButtonText = "Delete",
-                CloseButtonText = "Cancel",
+                Title = Loc.Get("HistoryClearTitle"),
+                PrimaryButtonText = Loc.Get("HistoryDelete"),
+                CloseButtonText = Loc.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Close,
             };
             if (await dialog.ShowAsync() != ContentDialogResult.Primary)
@@ -1313,7 +1311,7 @@ public sealed partial class MainPage : Page
     private async Task RecognizeAsync(int run, EditorCanvas editor)
     {
         TextActionsBusy = true;
-        TextActionsStatus.Text = "Reading text…";
+        TextActionsStatus.Text = Loc.Get("TextReading");
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = false;
         QrResults.Children.Clear();
         editor.Highlights = [];
@@ -1330,7 +1328,7 @@ public sealed partial class MainPage : Page
         }
         catch (Exception e)
         {
-            failure = "Text recognition failed: " + e.Message;
+            failure = Loc.Format("TextRecognitionFailed", e.Message);
         }
         if (run != _textRun)
             return;
@@ -1340,21 +1338,20 @@ public sealed partial class MainPage : Page
         editor.Highlights = [
             .. _lines.Where(l => l.Words.Count > 0).Select(l => Pad(l.Words.Select(w => w.Box).Aggregate((a, b) => a.Union(b)), new Vector2(3, 4))),
             .. codes.Select(c => Pad(c.Box, new Vector2(12)))];
-        string text = lines is null
-            ? "No text recognition language is installed (Settings > Time & language > Language & region)."
-            : _lines.Count == 0 ? "No text found." : _lines.Count == 1 ? "1 line of text." : $"{_lines.Count} lines of text.";
+        string text = lines is null ? Loc.Get("OcrLanguageMissing")
+            : _lines.Count == 0 ? Loc.Get("TextNone") : _lines.Count == 1 ? Loc.Get("TextOneLine") : Loc.Format("TextLines", _lines.Count);
         if (codes.Count > 0)
-            text += codes.Count == 1 ? " 1 QR code:" : $" {codes.Count} QR codes:";
+            text = Loc.Format("TextWithQr", text, codes.Count == 1 ? Loc.Get("QrOne") : Loc.Format("QrMany", codes.Count));
         TextActionsStatus.Text = failure ?? text;
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
         for (int i = 0; i < codes.Count; i++)
-            QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? "" : $" {i + 1}"));
+            QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? null : i + 1));
 
         static FloatRect Pad(FloatRect r, Vector2 by) => new(r.Min - by, r.Max + by);
     }
 
     /// <summary>Payload (shortened), Copy, and Open link for http / https.</summary>
-    private StackPanel QrItem(string payload, string number)
+    private StackPanel QrItem(string payload, int? number)
     {
         var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
         var label = new TextBlock
@@ -1364,17 +1361,17 @@ public sealed partial class MainPage : Page
             MaxWidth = 360,
             TextTrimming = TextTrimming.CharacterEllipsis,
         };
-        AutomationProperties.SetName(label, "QR code: " + payload);
+        AutomationProperties.SetName(label, Loc.Format("QrLabelName", payload));
         ToolTipService.SetToolTip(label, payload);
-        var copy = new Button { Content = "Copy" };
-        AutomationProperties.SetName(copy, "Copy QR code" + number);
-        copy.Click += (_, _) => CopyText(payload, "QR code copied.");
+        var copy = new Button { Content = Loc.Get("QrCopy") };
+        AutomationProperties.SetName(copy, number is { } n ? Loc.Format("QrCopyNumberName", n) : Loc.Get("QrCopyName"));
+        copy.Click += (_, _) => CopyText(payload, Loc.Get("QrCopied"));
         item.Children.Add(label);
         item.Children.Add(copy);
         if (Uri.TryCreate(payload, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
         {
-            var open = new Button { Content = "Open link" };
-            AutomationProperties.SetName(open, "Open link" + number);
+            var open = new Button { Content = Loc.Get("QrOpenLink") };
+            AutomationProperties.SetName(open, number is { } n2 ? Loc.Format("QrOpenLinkNumberName", n2) : Loc.Get("QrOpenLink"));
             ToolTipService.SetToolTip(open, uri.AbsoluteUri);
             open.Click += async (_, _) => await Launcher.LaunchUriAsync(uri);
             item.Children.Add(open);
@@ -1382,7 +1379,7 @@ public sealed partial class MainPage : Page
         return item;
     }
 
-    private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines), "Text copied.");
+    private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines), Loc.Get("TextCopied"));
 
     private void CopyText(string text, string done)
     {
@@ -1390,7 +1387,7 @@ public sealed partial class MainPage : Page
         if (CaptureOutput.CopyTextToClipboard(owner, text))
             TextActionsStatus.Text = done;
         else
-            ShowError("The clipboard is in use by another app; the text was not copied.");
+            ShowError(Loc.Get("ClipboardBusyText"));
     }
 
     /// <summary>Blacks out email addresses and phone numbers in the image pixels as one undo step.</summary>
@@ -1398,7 +1395,7 @@ public sealed partial class MainPage : Page
     {
         var boxes = OcrText.Sensitive(_lines, 2);
         if (boxes.Count == 0)
-            TextActionsStatus.Text = "No email addresses or phone numbers found.";
+            TextActionsStatus.Text = Loc.Get("RedactNoneFound");
         else
             _editor?.Document?.Redact(boxes); // the change reads the image again
     }

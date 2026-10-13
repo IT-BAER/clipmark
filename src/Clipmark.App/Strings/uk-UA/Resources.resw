@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="HotkeyTakenError" xml:space="preserve">
+    <value>{0} уже використовується іншою програмою. Виберіть інше сполучення клавіш у параметрах.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+PrintScreen</comment>
+  </data>
+  <data name="RecordHotkeyTakenError" xml:space="preserve">
+    <value>{0} уже використовується іншою програмою. Виберіть інше сполучення клавіш для запису в параметрах.</value>
+    <comment>{0} = hotkey, e.g. Ctrl+Shift+PrintScreen</comment>
+  </data>
+  <data name="StopRecordingBeforeExit" xml:space="preserve">
+    <value>Зупиніть запис, перш ніж вийти з Clipmark.</value>
+  </data>
+  <data name="ApiOverloaded" xml:space="preserve">
+    <value>Сервіс Anthropic перевантажений або недоступний. Повторіть спробу трохи пізніше.</value>
+  </data>
+  <data name="ApiRateLimited" xml:space="preserve">
+    <value>Досягнуто ліміт запитів. Повторіть спробу трохи пізніше.</value>
+  </data>
+  <data name="ApiKeyInvalid" xml:space="preserve">
+    <value>Ключ API недійсний. Перевірте його в розділі «Параметри» &gt; «ШІ».</value>
+  </data>
+  <data name="ApiForbidden" xml:space="preserve">
+    <value>Цей ключ API не може використовувати цю модель або функцію.</value>
+  </data>
+  <data name="ApiModelUnavailable" xml:space="preserve">
+    <value>Ця модель недоступна. Виберіть іншу модель у розділі «Параметри» &gt; «ШІ».</value>
+  </data>
+  <data name="AiCaptureTooLarge" xml:space="preserve">
+    <value>Знімок завеликий для надсилання.</value>
+  </data>
+  <data name="ApiRateLimitedWait" xml:space="preserve">
+    <value>Досягнуто ліміт запитів. Повторіть спробу через {0} с.</value>
+    <comment>{0} = whole seconds to wait</comment>
+  </data>
+  <data name="ApiRequestFailed" xml:space="preserve">
+    <value>Запит не виконано (HTTP {0}).</value>
+    <comment>{0} = HTTP status code</comment>
+  </data>
+  <data name="ApiAnswerStopped" xml:space="preserve">
+    <value>Відповідь перервано: {0}</value>
+    <comment>{0} = error text from the API (English)</comment>
+  </data>
+  <data name="ApiRefusal" xml:space="preserve">
+    <value>Claude відмовився відповідати на цей запит.</value>
+  </data>
+  <data name="ApiMaxTokens" xml:space="preserve">
+    <value>Відповідь обрізано через обмеження довжини.</value>
+  </data>
+  <data name="ApiRejected" xml:space="preserve">
+    <value>Запит відхилено.</value>
+  </data>
+  <data name="ApiRejectedWith" xml:space="preserve">
+    <value>Запит відхилено: {0}</value>
+    <comment>{0} = reason from the API (English)</comment>
+  </data>
+  <data name="AiNoData" xml:space="preserve">
+    <value>Від Anthropic немає даних уже {0:0} с. Повторіть спробу.</value>
+    <comment>{0} = seconds</comment>
+  </data>
+  <data name="AiConnectionClosed" xml:space="preserve">
+    <value>З’єднання закрилося до завершення відповіді. Повторіть спробу.</value>
+  </data>
+  <data name="EditableDataNotJson" xml:space="preserve">
+    <value>Редаговані дані не є дійсним JSON.</value>
+  </data>
+  <data name="EditableDataInvalid" xml:space="preserve">
+    <value>Редаговані дані недійсні: {0}</value>
+    <comment>{0} = technical detail in English, with its own final period</comment>
+  </data>
+  <data name="AgentClaudeApp" xml:space="preserve">
+    <value>Програма Claude</value>
+    <comment>Send to AI menu: the Claude desktop app</comment>
+  </data>
+  <data name="AgentChatGptApp" xml:space="preserve">
+    <value>Програма ChatGPT</value>
+    <comment>Send to AI menu: the ChatGPT desktop app</comment>
+  </data>
+  <data name="AgentVsCode" xml:space="preserve">
+    <value>VS Code ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentTerminal" xml:space="preserve">
+    <value>Термінал ({0})</value>
+    <comment>{0} = Claude or Codex</comment>
+  </data>
+  <data name="AgentWithTitle" xml:space="preserve">
+    <value>{0}: {1}</value>
+    <comment>{0} = target kind, e.g. Terminal (Claude); {1} = window or tab title</comment>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Скасувати</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="ModeRectangle" xml:space="preserve">
+    <value>Прямокутник</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeWindow" xml:space="preserve">
+    <value>Вікно</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFullScreen" xml:space="preserve">
+    <value>На весь екран</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeAllMonitors" xml:space="preserve">
+    <value>Усі монітори</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ModeFreeform" xml:space="preserve">
+    <value>Довільна форма</value>
+    <comment>Capture mode</comment>
+  </data>
+  <data name="ShapeRectangle" xml:space="preserve">
+    <value>Прямокутник</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeOval" xml:space="preserve">
+    <value>Овал</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeLine" xml:space="preserve">
+    <value>Лінія</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ShapeArrow" xml:space="preserve">
+    <value>Стрілка</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="ColorBlack" xml:space="preserve">
+    <value>Чорний</value>
+  </data>
+  <data name="ColorWhite" xml:space="preserve">
+    <value>Білий</value>
+  </data>
+  <data name="ColorRed" xml:space="preserve">
+    <value>Червоний</value>
+  </data>
+  <data name="ColorYellow" xml:space="preserve">
+    <value>Жовтий</value>
+  </data>
+  <data name="ColorGreen" xml:space="preserve">
+    <value>Зелений</value>
+  </data>
+  <data name="ColorBlue" xml:space="preserve">
+    <value>Синій</value>
+  </data>
+  <data name="WidthThin" xml:space="preserve">
+    <value>Тонка</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthMedium" xml:space="preserve">
+    <value>Середня</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthThick" xml:space="preserve">
+    <value>Товста</value>
+    <comment>Stroke width preset</comment>
+  </data>
+  <data name="WidthPixels" xml:space="preserve">
+    <value>{0:0} пікс.</value>
+    <comment>{0} = width in pixels</comment>
+  </data>
+  <data name="ToolWithShortcut" xml:space="preserve">
+    <value>{0} ({1})</value>
+    <comment>Menu item: {0} = tool name, {1} = shortcut key letter</comment>
+  </data>
+  <data name="DelayNone" xml:space="preserve">
+    <value>Без затримки</value>
+  </data>
+  <data name="DelaySeconds" xml:space="preserve">
+    <value>{0} с</value>
+    <comment>{0} = 3, 5 or 10 (never 1)</comment>
+  </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} с</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
+  <data name="ModeButtonName" xml:space="preserve">
+    <value>Режим знімка: {0}</value>
+    <comment>{0} = mode name</comment>
+  </data>
+  <data name="DelayButtonName" xml:space="preserve">
+    <value>Затримка: {0}</value>
+    <comment>{0} = No delay or N seconds</comment>
+  </data>
+  <data name="ShapesButtonName" xml:space="preserve">
+    <value>Фігури: {0}</value>
+    <comment>{0} = shape name</comment>
+  </data>
+  <data name="StyleButtonName" xml:space="preserve">
+    <value>Колір і товщина: {0}, {1}</value>
+    <comment>{0} = color name or #RRGGBB, {1} = width name or N px</comment>
+  </data>
+  <data name="StartHint" xml:space="preserve">
+    <value>Натисніть «Створити» або {0}, щоб зробити знімок, або {1}, щоб записати екран.</value>
+    <comment>{0} = capture hotkey, {1} = recording hotkey</comment>
+  </data>
+  <data name="SaveChangesTitle" xml:space="preserve">
+    <value>Зберегти зміни в цьому знімку?</value>
+  </data>
+  <data name="SaveChangesSave" xml:space="preserve">
+    <value>Зберегти</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="SaveChangesDontSave" xml:space="preserve">
+    <value>Не зберігати</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="PremiumSelect" xml:space="preserve">
+    <value>виділення й переміщення об’єктів</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAttachedArrows" xml:space="preserve">
+    <value>стрілки, прикріплені до фігур</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumText" xml:space="preserve">
+    <value>текстові підписи</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumFill" xml:space="preserve">
+    <value>інструмент «Заливка»</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEyedropper" xml:space="preserve">
+    <value>піпетку</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumSendToAi" xml:space="preserve">
+    <value>надсилання знімків ШІ-помічникам</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumHistory" xml:space="preserve">
+    <value>історію знімків</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumAiChat" xml:space="preserve">
+    <value>запитання до ШІ про ваші знімки</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumEditablePng" xml:space="preserve">
+    <value>збереження редагованих PNG</value>
+    <comment>Fills {0} of PremiumBody</comment>
+  </data>
+  <data name="PremiumLockedHelp" xml:space="preserve">
+    <value>Функція Premium, заблокована</value>
+    <comment>Screen reader help text</comment>
+  </data>
+  <data name="PremiumTitle" xml:space="preserve">
+    <value>Clipmark Premium</value>
+  </data>
+  <data name="PremiumBody" xml:space="preserve">
+    <value>Clipmark Premium містить: {0}. Ваша {1}-денна пробна версія закінчилася.</value>
+    <comment>{0} = feature (Premium* keys), {1} = trial length in days</comment>
+  </data>
+  <data name="PremiumBuy" xml:space="preserve">
+    <value>Купити Premium</value>
+  </data>
+  <data name="PremiumEnterKey" xml:space="preserve">
+    <value>Ввести ліцензійний ключ</value>
+  </data>
+  <data name="SaveEditable" xml:space="preserve">
+    <value>Зберегти як редагований PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditablePremium" xml:space="preserve">
+    <value>Зберегти як редагований PNG (Premium)</value>
+  </data>
+  <data name="SendToAiTip" xml:space="preserve">
+    <value>Надіслати ШІ</value>
+  </data>
+  <data name="SendToAiPremium" xml:space="preserve">
+    <value>Надіслати ШІ (Premium)</value>
+  </data>
+  <data name="HistoryTip" xml:space="preserve">
+    <value>Історія знімків</value>
+  </data>
+  <data name="HistoryPremium" xml:space="preserve">
+    <value>Історія знімків (Premium)</value>
+  </data>
+  <data name="AskAiTip" xml:space="preserve">
+    <value>Запитати ШІ про цей знімок</value>
+  </data>
+  <data name="AskAiPremium" xml:space="preserve">
+    <value>Запитати ШІ (Premium)</value>
+  </data>
+  <data name="ItemSelected" xml:space="preserve">
+    <value>Вибрано</value>
+    <comment>Screen reader item status</comment>
+  </data>
+  <data name="WidthSliderHeader" xml:space="preserve">
+    <value>Товщина (колесо миші)</value>
+  </data>
+  <data name="WidthSliderName" xml:space="preserve">
+    <value>Товщина</value>
+  </data>
+  <data name="MoreColors" xml:space="preserve">
+    <value>Інші кольори</value>
+  </data>
+  <data name="CustomColor" xml:space="preserve">
+    <value>Власний колір</value>
+  </data>
+  <data name="ClipboardBusyColor" xml:space="preserve">
+    <value>Буфер обміну зайнятий іншою програмою; колір не скопійовано.</value>
+  </data>
+  <data name="ClipboardBusyRecording" xml:space="preserve">
+    <value>Буфер обміну зайнятий іншою програмою; запис не скопійовано.</value>
+  </data>
+  <data name="ClipboardBusyCapture" xml:space="preserve">
+    <value>Буфер обміну зайнятий іншою програмою; знімок не скопійовано.</value>
+  </data>
+  <data name="ClipboardBusyText" xml:space="preserve">
+    <value>Буфер обміну зайнятий іншою програмою; текст не скопійовано.</value>
+  </data>
+  <data name="NoAiSessionItem" xml:space="preserve">
+    <value>Запущений сеанс ШІ не знайдено</value>
+  </data>
+  <data name="NoAiSessionError" xml:space="preserve">
+    <value>Запущений сеанс ШІ не знайдено. Запустіть Claude Code або Codex у терміналі чи VS Code або відкрийте програму Claude чи ChatGPT.</value>
+  </data>
+  <data name="FileTypeEditablePng" xml:space="preserve">
+    <value>Редаговане зображення PNG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypePng" xml:space="preserve">
+    <value>Зображення PNG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeJpeg" xml:space="preserve">
+    <value>Зображення JPEG</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="FileTypeMp4" xml:space="preserve">
+    <value>Відео MP4</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="CaptureNotSaved" xml:space="preserve">
+    <value>Знімок не збережено: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="RecordingNotSaved" xml:space="preserve">
+    <value>Запис не збережено: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ShareFailed" xml:space="preserve">
+    <value>Не вдалося відкрити вікно «Поділитися»: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOpenFailed" xml:space="preserve">
+    <value>Не вдалося відкрити історію знімків: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="HistoryOff" xml:space="preserve">
+    <value>Історію знімків вимкнено. Увімкніть її в параметрах, щоб зберігати останні знімки (не більше {0}) у зашифрованому вигляді для вашого облікового запису Windows.</value>
+    <comment>{0} = number of captures kept</comment>
+  </data>
+  <data name="OpenSettings" xml:space="preserve">
+    <value>Відкрити параметри</value>
+  </data>
+  <data name="HistoryHeader" xml:space="preserve">
+    <value>Історія</value>
+  </data>
+  <data name="HistoryClearAll" xml:space="preserve">
+    <value>Очистити все</value>
+  </data>
+  <data name="HistoryEmpty" xml:space="preserve">
+    <value>Знімків ще немає.</value>
+  </data>
+  <data name="HistoryItemName" xml:space="preserve">
+    <value>Знімок від {0}</value>
+    <comment>{0} = date and time</comment>
+  </data>
+  <data name="HistoryItemTip" xml:space="preserve">
+    <value>Відкрити (клацніть правою кнопкою миші, щоб видалити)</value>
+  </data>
+  <data name="HistoryDelete" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="HistoryItemUnreadable" xml:space="preserve">
+    <value>Не вдається прочитати цей знімок. Він пошкоджений або зашифрований для іншого облікового запису Windows.</value>
+  </data>
+  <data name="HistoryClearTitle" xml:space="preserve">
+    <value>Видалити всі знімки з історії?</value>
+  </data>
+  <data name="TextReading" xml:space="preserve">
+    <value>Розпізнавання тексту…</value>
+  </data>
+  <data name="TextRecognitionFailed" xml:space="preserve">
+    <value>Не вдалося розпізнати текст: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="OcrLanguageMissing" xml:space="preserve">
+    <value>Не встановлено мову для розпізнавання тексту (Параметри &gt; Час і мова &gt; Мова й регіон).</value>
+    <comment>Path names the Windows Settings pages</comment>
+  </data>
+  <data name="TextNone" xml:space="preserve">
+    <value>Текст не знайдено.</value>
+  </data>
+  <data name="TextOneLine" xml:space="preserve">
+    <value>Один рядок тексту.</value>
+  </data>
+  <data name="TextLines" xml:space="preserve">
+    <value>Рядків тексту: {0}.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="TextWithQr" xml:space="preserve">
+    <value>{0} {1}</value>
+    <comment>{0} = line count sentence, {1} = QrOne or QrMany</comment>
+  </data>
+  <data name="QrOne" xml:space="preserve">
+    <value>1 QR-код:</value>
+  </data>
+  <data name="QrMany" xml:space="preserve">
+    <value>QR-коди ({0}):</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="QrLabelName" xml:space="preserve">
+    <value>QR-код: {0}</value>
+    <comment>{0} = QR code content</comment>
+  </data>
+  <data name="QrCopy" xml:space="preserve">
+    <value>Копіювати</value>
+    <comment>Button</comment>
+  </data>
+  <data name="QrCopyName" xml:space="preserve">
+    <value>Копіювати QR-код</value>
+  </data>
+  <data name="QrCopyNumberName" xml:space="preserve">
+    <value>Копіювати QR-код {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopied" xml:space="preserve">
+    <value>QR-код скопійовано.</value>
+  </data>
+  <data name="QrOpenLink" xml:space="preserve">
+    <value>Відкрити посилання</value>
+  </data>
+  <data name="QrOpenLinkNumberName" xml:space="preserve">
+    <value>Відкрити посилання {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="TextCopied" xml:space="preserve">
+    <value>Текст скопійовано.</value>
+  </data>
+  <data name="RedactNoneFound" xml:space="preserve">
+    <value>Адреси електронної пошти й номери телефонів не знайдено.</value>
+  </data>
+  <data name="AskAiTitle" xml:space="preserve">
+    <value>Запитати ШІ</value>
+  </data>
+  <data name="AskAiNewChat" xml:space="preserve">
+    <value>Новий чат</value>
+  </data>
+  <data name="AskAiNewChatTip" xml:space="preserve">
+    <value>Почати спочатку з поточним виглядом знімка</value>
+  </data>
+  <data name="AskAiNoKey" xml:space="preserve">
+    <value>Додайте свій ключ API Anthropic у параметрах, щоб ставити запитання про ваші знімки.</value>
+  </data>
+  <data name="AskAiConversationName" xml:space="preserve">
+    <value>Розмова зі ШІ</value>
+  </data>
+  <data name="AskAiStatusName" xml:space="preserve">
+    <value>Стан «Запитати ШІ»</value>
+  </data>
+  <data name="AskAiPlaceholder" xml:space="preserve">
+    <value>Поставте запитання про цей знімок</value>
+  </data>
+  <data name="AskAiQuestionName" xml:space="preserve">
+    <value>Запитання</value>
+  </data>
+  <data name="AskAiInputTip" xml:space="preserve">
+    <value>Enter надсилає, Shift+Enter — новий рядок</value>
+  </data>
+  <data name="AskAiStopName" xml:space="preserve">
+    <value>Зупинити</value>
+  </data>
+  <data name="AskAiSendName" xml:space="preserve">
+    <value>Надіслати запитання</value>
+  </data>
+  <data name="AskAiStopTip" xml:space="preserve">
+    <value>Зупинити відповідь</value>
+  </data>
+  <data name="AskAiSendTip" xml:space="preserve">
+    <value>Надіслати (Enter)</value>
+  </data>
+  <data name="AiConsentTitle" xml:space="preserve">
+    <value>Надіслати цей знімок до Anthropic?</value>
+  </data>
+  <data name="AiConsentBody" xml:space="preserve">
+    <value>Функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваші запитання до Anthropic ({0}) з використанням вашого власного ключа API. Діють умови Anthropic, а плату за використання ключа стягує Anthropic. Нічого не надсилається, доки ви не надішлете запитання, а Clipmark не зберігає розмову.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiConsentSend" xml:space="preserve">
+    <value>Надіслати</value>
+    <comment>Dialog button</comment>
+  </data>
+  <data name="AskAiAnswering" xml:space="preserve">
+    <value>{0} відповідає… {1}</value>
+    <comment>{0} = model name, {1} = AskAiImageSent sentence or empty</comment>
+  </data>
+  <data name="AskAiStopped" xml:space="preserve">
+    <value>Зупинено.</value>
+  </data>
+  <data name="AskAiImageSent" xml:space="preserve">
+    <value>Зображення надіслано в розмірі {0} × {1} пікс.</value>
+    <comment>{0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="AskAiQuestionBubbleName" xml:space="preserve">
+    <value>Запитання: {0}</value>
+    <comment>{0} = the question</comment>
+  </data>
+  <data name="AskAiAnswerName" xml:space="preserve">
+    <value>Відповідь</value>
+  </data>
+  <data name="AskAiCopyAnswer" xml:space="preserve">
+    <value>Копіювати відповідь</value>
+  </data>
+  <data name="ClipboardBusyAnswer" xml:space="preserve">
+    <value>Буфер обміну зайнятий іншою програмою; відповідь не скопійовано.</value>
+  </data>
+  <data name="TrayNewCapture" xml:space="preserve">
+    <value>Новий знімок</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayNewRecording" xml:space="preserve">
+    <value>Новий запис</value>
+    <comment>Tray menu; the hotkey follows after a tab</comment>
+  </data>
+  <data name="TrayMode" xml:space="preserve">
+    <value>Режим</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayDelay" xml:space="preserve">
+    <value>Затримка</value>
+    <comment>Tray submenu</comment>
+  </data>
+  <data name="TrayOpen" xml:space="preserve">
+    <value>Відкрити Clipmark</value>
+  </data>
+  <data name="TraySettings" xml:space="preserve">
+    <value>Параметри</value>
+  </data>
+  <data name="TrayExit" xml:space="preserve">
+    <value>Вийти</value>
+  </data>
+  <data name="CaptureFailed" xml:space="preserve">
+    <value>Не вдалося зробити знімок: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="ToastNoText" xml:space="preserve">
+    <value>У виділеній ділянці немає тексту</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastTextCopied" xml:space="preserve">
+    <value>Текст скопійовано в буфер обміну</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="AutoSaveFailed" xml:space="preserve">
+    <value>Не вдалося виконати автозбереження: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="SelectionSize" xml:space="preserve">
+    <value>{0} × {1}</value>
+    <comment>Selection size label: {0} = width, {1} = height in pixels</comment>
+  </data>
+  <data name="PillClose" xml:space="preserve">
+    <value>Закрити</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillTextExtractor" xml:space="preserve">
+    <value>Витяг тексту</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillPhoto" xml:space="preserve">
+    <value>Фото</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillVideo" xml:space="preserve">
+    <value>Відео</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="RecordBarSaving" xml:space="preserve">
+    <value>Збереж.</value>
+    <comment>Recording bar status; short, the space fits about 8 characters</comment>
+  </data>
+  <data name="RecordingNotStarted" xml:space="preserve">
+    <value>Не вдалося почати запис: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="RecordingUnsupported" xml:space="preserve">
+    <value>Для запису екрана потрібна Windows 10 версії 1903 або новішої.</value>
+  </data>
+  <data name="RecordingNoEncoder" xml:space="preserve">
+    <value>Відеокодер недоступний ({0}).</value>
+    <comment>{0} = Windows failure reason (English identifier)</comment>
+  </data>
+  <data name="RecordingFailed" xml:space="preserve">
+    <value>Помилка запису: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioFailed" xml:space="preserve">
+    <value>Не вдається записати звук: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioDeviceLost" xml:space="preserve">
+    <value>Звуковий пристрій зупинився під час запису; звук із нього закінчується на цьому місці.</value>
+  </data>
+  <data name="AudioNoSpeakers" xml:space="preserve">
+    <value>Немає активних динаміків або навушників, тому системний звук не записується.</value>
+  </data>
+  <data name="AudioNoMicrophone" xml:space="preserve">
+    <value>Мікрофон не підключено, тому звук із мікрофона не записується.</value>
+  </data>
+  <data name="AudioUnsupportedFormat" xml:space="preserve">
+    <value>Звуковий пристрій використовує {0}-бітний звук, який Clipmark не може записати.</value>
+    <comment>{0} = bit depth</comment>
+  </data>
+  <data name="AudioSystemFailed" xml:space="preserve">
+    <value>Не вдається записати системний звук: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AudioMicrophoneFailed" xml:space="preserve">
+    <value>Не вдається записати звук із мікрофона: {0}</value>
+    <comment>{0} = error message</comment>
+  </data>
+  <data name="AgentFallback" xml:space="preserve">
+    <value>Знімок у буфері обміну: натисніть {0} у полі введення.</value>
+    <comment>{0} = Ctrl+V or Alt+V</comment>
+  </data>
+  <data name="AgentClosed" xml:space="preserve">
+    <value>{0} закрито. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentElevated" xml:space="preserve">
+    <value>{0} запущено від імені адміністратора, тому Clipmark не може вводити в нього дані. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentOtherTab" xml:space="preserve">
+    <value>У Windows Terminal відкрито іншу вкладку (або вкладку перейменовано). Спочатку перейдіть на вкладку «{0}». {1}</value>
+    <comment>{0} = tab title, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentNotForeground" xml:space="preserve">
+    <value>Windows не вивела {0} на передній план. {1}</value>
+    <comment>{0} = AI session name, {1} = AgentFallback sentence</comment>
+  </data>
+  <data name="AgentPasteBlocked" xml:space="preserve">
+    <value>Windows заблокувала клавішу вставлення. {0}</value>
+    <comment>{0} = AgentFallback sentence</comment>
+  </data>
+  <data name="ToastRecordingSaved" xml:space="preserve">
+    <value>Запис збережено</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureCopied" xml:space="preserve">
+    <value>Знімок скопійовано в буфер обміну</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastCaptureTaken" xml:space="preserve">
+    <value>Знімок зроблено</value>
+    <comment>Notification title</comment>
+  </data>
+  <data name="ToastSavedTo" xml:space="preserve">
+    <value>Збережено в {0}</value>
+    <comment>{0} = file path</comment>
+  </data>
+  <data name="CanvasName" xml:space="preserve">
+    <value>Знімок екрана</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="CanvasTextBoxName" xml:space="preserve">
+    <value>Текстове поле</value>
+    <comment>Screen reader name</comment>
+  </data>
+  <data name="EditableDataMismatch" xml:space="preserve">
+    <value>Редаговані дані не відповідають базовому зображенню.</value>
+  </data>
+  <data name="EditableDataDropped" xml:space="preserve">
+    <value>{0} Зображення відкриється без об’єктів.</value>
+    <comment>{0} = why the editable data could not be read</comment>
+  </data>
+  <data name="AiTimeout" xml:space="preserve">
+    <value>{0} не відповів вчасно. Повторіть спробу.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiTlsFailed" xml:space="preserve">
+    <value>Не вдалося встановити захищене з’єднання з {0}. Імовірно, проксі-сервер або програма безпеки перевіряє трафік HTTPS.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiProxyAuth" xml:space="preserve">
+    <value>Проксі-сервер вимагає автентифікації.</value>
+  </data>
+  <data name="AiUnreachable" xml:space="preserve">
+    <value>Не вдається підключитися до {0}: {1} Перевірте мережу або проксі-сервер.</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="AiConnectionBroke" xml:space="preserve">
+    <value>З’єднання з {0} перервано: {1}</value>
+    <comment>{0} = API host name, {1} = system error message</comment>
+  </data>
+  <data name="ToggleOn" xml:space="preserve">
+    <value>Увімк.</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="ToggleOff" xml:space="preserve">
+    <value>Вимк.</value>
+    <comment>Toggle switch state</comment>
+  </data>
+  <data name="LanguageWindowsDefault" xml:space="preserve">
+    <value>Як у Windows</value>
+    <comment>Language list entry: follow the Windows display language</comment>
+  </data>
+  <data name="RecordingsFolder" xml:space="preserve">
+    <value>Записи зберігаються в {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
+  <data name="PrintScreenHintPackaged" xml:space="preserve">
+    <value>Щоб використовувати PrtScn для Clipmark, вимкніть параметр Windows, який відкриває захоплення екрана клавішею PrtScn (Bluetooth і пристрої &gt; Клавіатура; у старіших версіях Windows 11: Спеціальні можливості &gt; Клавіатура), а потім виберіть PrintScreen як сполучення клавіш вище.</value>
+    <comment>Paths name Windows Settings pages; PrintScreen is the key name as shown in the list</comment>
+  </data>
+  <data name="VersionText" xml:space="preserve">
+    <value>Clipmark {0}</value>
+    <comment>{0} = version number</comment>
+  </data>
+  <data name="LicenseActive" xml:space="preserve">
+    <value>Clipmark Premium активовано.</value>
+  </data>
+  <data name="LicenseTrialOneDay" xml:space="preserve">
+    <value>Пробна версія Premium: залишився 1 день.</value>
+  </data>
+  <data name="LicenseTrialDays" xml:space="preserve">
+    <value>Пробна версія Premium: залишилося днів: {0}.</value>
+    <comment>{0} = days left, 0 or 2 and more</comment>
+  </data>
+  <data name="LicenseTrialEnded" xml:space="preserve">
+    <value>Пробна версія Premium закінчилася. Інструменти Premium заблоковано; решта працює як раніше.</value>
+  </data>
+  <data name="AiHint" xml:space="preserve">
+    <value>Функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання до Anthropic ({0}) з використанням вашого власного ключа API, лише коли ви надсилаєте запитання. Плату за використання ключа стягує Anthropic. Ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері; програми, запущені під вашим обліковим записом Windows, можуть його прочитати.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiHintPremium" xml:space="preserve">
+    <value>Функція Premium. Функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання до Anthropic ({0}) з використанням вашого власного ключа API, лише коли ви надсилаєте запитання. Плату за використання ключа стягує Anthropic. Ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері; програми, запущені під вашим обліковим записом Windows, можуть його прочитати.</value>
+    <comment>{0} = API host name</comment>
+  </data>
+  <data name="AiKeyNone" xml:space="preserve">
+    <value>Ключ API не збережено.</value>
+  </data>
+  <data name="AiKeySaved" xml:space="preserve">
+    <value>Ключ API збережено.</value>
+  </data>
+  <data name="AiKeySavedEnds" xml:space="preserve">
+    <value>Ключ API збережено, закінчується на {0}.</value>
+    <comment>{0} = last characters of the key</comment>
+  </data>
+  <data name="AiKeyPasteFirst" xml:space="preserve">
+    <value>Спочатку вставте ключ.</value>
+  </data>
+  <data name="AiKeySaveFailed" xml:space="preserve">
+    <value>Не вдалося зберегти ключ у диспетчері облікових даних.</value>
+  </data>
+  <data name="AiKeyTesting" xml:space="preserve">
+    <value>Перевірка…</value>
+  </data>
+  <data name="AiKeyWorks" xml:space="preserve">
+    <value>Ключ працює.</value>
+  </data>
+  <data name="AiKeyRemoved" xml:space="preserve">
+    <value>Ключ API видалено.</value>
+  </data>
+  <data name="AiKeyRemoveFailed" xml:space="preserve">
+    <value>Не вдалося видалити ключ із диспетчера облікових даних.</value>
+  </data>
+  <data name="HistoryHint" xml:space="preserve">
+    <value>Зберігає останні знімки (не більше {0}) разом з їхніми об’єктами (до {1} МБ) у зашифрованому вигляді для вашого облікового запису Windows, лише на цьому комп’ютері. Після вимкнення історію буде видалено.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryHintPremium" xml:space="preserve">
+    <value>Функція Premium. Зберігає останні знімки (не більше {0}) разом з їхніми об’єктами (до {1} МБ) у зашифрованому вигляді для вашого облікового запису Windows, лише на цьому комп’ютері. Після вимкнення історію буде видалено.</value>
+    <comment>{0} = number of captures, {1} = size limit in MB</comment>
+  </data>
+  <data name="HistoryOffTitleOne" xml:space="preserve">
+    <value>Видалити знімок з історії?</value>
+  </data>
+  <data name="HistoryOffTitle" xml:space="preserve">
+    <value>Видалити знімки з історії (усього: {0})?</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="HistoryOffConfirm" xml:space="preserve">
+    <value>Вимкнути й видалити</value>
+  </data>
+  <data name="LicenseActivated" xml:space="preserve">
+    <value>Ліцензію активовано.</value>
+  </data>
+  <data name="LicenseInvalid" xml:space="preserve">
+    <value>Цей ліцензійний ключ недійсний. Переконайтеся, що ви вставили його повністю.</value>
+  </data>
+  <data name="PrintScreenChangeFailed" xml:space="preserve">
+    <value>Не вдалося змінити параметр Windows: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="StartupDisabledByUser" xml:space="preserve">
+    <value>Clipmark вимкнено в диспетчері завдань &gt; «Автозавантаження». Увімкніть його там.</value>
+  </data>
+  <data name="StartupDisabledByPolicy" xml:space="preserve">
+    <value>Ваша організація не дозволяє автоматичний запуск Clipmark разом із Windows.</value>
+  </data>
+  <data name="HotkeyOk" xml:space="preserve">
+    <value>{0} запускає захоплення.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="RecordHotkeyOk" xml:space="preserve">
+    <value>{0} починає й зупиняє запис.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="HotkeyTaken" xml:space="preserve">
+    <value>{0} уже використовується іншою програмою. Виберіть інше сполучення.</value>
+    <comment>{0} = hotkey</comment>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="SettingsBack.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="SettingsTitle.Text" xml:space="preserve">
+    <value>Параметри</value>
+  </data>
+  <data name="SettingsLicenseHeader.Text" xml:space="preserve">
+    <value>Ліцензія</value>
+  </data>
+  <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Стан ліцензії</value>
+  </data>
+  <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
+    <value>Вставте ліцензійний ключ</value>
+  </data>
+  <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ліцензійний ключ</value>
+  </data>
+  <data name="SettingsLicenseActivate.Content" xml:space="preserve">
+    <value>Активувати</value>
+  </data>
+  <data name="SettingsLicenseResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Результат активації ліцензії</value>
+  </data>
+  <data name="SettingsLicenseBuy.Content" xml:space="preserve">
+    <value>Купити Clipmark Premium</value>
+  </data>
+  <data name="SettingsHotkeyHeader.Text" xml:space="preserve">
+    <value>Сполучення клавіш для знімка</value>
+  </data>
+  <data name="SettingsHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Клавіша сполучення</value>
+  </data>
+  <data name="SettingsPrintScreen.Header" xml:space="preserve">
+    <value>Відкривати Clipmark клавішею PrtScn</value>
+  </data>
+  <data name="SettingsPrintScreen.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Відкривати Clipmark клавішею PrtScn</value>
+  </data>
+  <data name="SettingsPrintScreenHint.Text" xml:space="preserve">
+    <value>Вимикає параметр Windows, який відкриває Ножиці клавішею PrtScn. Після вимкнення цього параметра його буде відновлено.</value>
+  </data>
+  <data name="SettingsPrintScreenLink.Content" xml:space="preserve">
+    <value>Відкрити параметри клавіатури Windows</value>
+  </data>
+  <data name="SettingsStartupHeader.Text" xml:space="preserve">
+    <value>Автозавантаження</value>
+  </data>
+  <data name="SettingsStartup.Header" xml:space="preserve">
+    <value>Запускати Clipmark під час запуску Windows</value>
+  </data>
+  <data name="SettingsStartup.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Запускати Clipmark під час запуску Windows</value>
+  </data>
+  <data name="SettingsDefaultCaptureHeader.Text" xml:space="preserve">
+    <value>Знімок за замовчуванням</value>
+  </data>
+  <data name="SettingsMode.Header" xml:space="preserve">
+    <value>Режим</value>
+  </data>
+  <data name="SettingsDelay.Header" xml:space="preserve">
+    <value>Затримка</value>
+  </data>
+  <data name="SettingsAfterCaptureHeader.Text" xml:space="preserve">
+    <value>Після знімка</value>
+  </data>
+  <data name="SettingsClipboard.Header" xml:space="preserve">
+    <value>Копіювати в буфер обміну</value>
+  </data>
+  <data name="SettingsToast.Header" xml:space="preserve">
+    <value>Показувати сповіщення</value>
+  </data>
+  <data name="SettingsAutoSave.Header" xml:space="preserve">
+    <value>Зберігати автоматично</value>
+  </data>
+  <data name="SettingsChangeFolder.Content" xml:space="preserve">
+    <value>Змінити папку</value>
+  </data>
+  <data name="SettingsResetFolder.Content" xml:space="preserve">
+    <value>За замовчуванням</value>
+  </data>
+  <data name="SettingsHistory.Header" xml:space="preserve">
+    <value>Вести історію знімків</value>
+  </data>
+  <data name="SettingsHistory.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Вести історію знімків</value>
+  </data>
+  <data name="SettingsRecordingHeader.Text" xml:space="preserve">
+    <value>Запис екрана</value>
+  </data>
+  <data name="SettingsRecordHotkeyKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Клавіша сполучення для запису</value>
+  </data>
+  <data name="SettingsSystemAudio.Header" xml:space="preserve">
+    <value>Записувати системний звук</value>
+  </data>
+  <data name="SettingsMicrophone.Header" xml:space="preserve">
+    <value>Записувати мікрофон</value>
+  </data>
+  <data name="SettingsAiHeader.Text" xml:space="preserve">
+    <value>Запитати ШІ</value>
+  </data>
+  <data name="SettingsAiKeyStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Стан ключа API</value>
+  </data>
+  <data name="SettingsAiKey.PlaceholderText" xml:space="preserve">
+    <value>Вставте ключ API Anthropic</value>
+  </data>
+  <data name="SettingsAiKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ключ API Anthropic</value>
+  </data>
+  <data name="SettingsAiSave.Content" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+  <data name="SettingsAiSave.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Зберегти ключ API</value>
+  </data>
+  <data name="SettingsAiTest.Content" xml:space="preserve">
+    <value>Перевірити ключ</value>
+  </data>
+  <data name="SettingsAiTest.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Перевірити ключ API</value>
+  </data>
+  <data name="SettingsAiRemove.Content" xml:space="preserve">
+    <value>Видалити ключ</value>
+  </data>
+  <data name="SettingsAiRemove.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Видалити ключ API</value>
+  </data>
+  <data name="SettingsAiResult.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Результат перевірки ключа API</value>
+  </data>
+  <data name="SettingsAiModel.Header" xml:space="preserve">
+    <value>Модель</value>
+  </data>
+  <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Модель ШІ</value>
+  </data>
+  <data name="SettingsLanguageHeader.Text" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="SettingsLanguage.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Мова</value>
+  </data>
+  <data name="SettingsLanguageNote.Text" xml:space="preserve">
+    <value>Перезапустіть Clipmark, щоб застосувати нову мову.</value>
+  </data>
+  <data name="SettingsAboutHeader.Text" xml:space="preserve">
+    <value>Відомості</value>
+  </data>
+  <data name="SettingsVersion.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Версія</value>
+  </data>
+  <data name="SettingsSourceLink.Content" xml:space="preserve">
+    <value>Вихідний код і випуски</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Новий знімок</value>
+  </data>
+  <data name="NewButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Новий знімок</value>
+  </data>
+  <data name="NewButtonText.Text" xml:space="preserve">
+    <value>Створити</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Новий запис</value>
+  </data>
+  <data name="RecordButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Новий запис</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Відкрити зображення або редагований PNG (Ctrl+O)</value>
+  </data>
+  <data name="OpenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Відкрити</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Історія знімків</value>
+  </data>
+  <data name="HistoryButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Історія знімків</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Режим знімка</value>
+  </data>
+  <data name="ModeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Режим знімка</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Затримка</value>
+  </data>
+  <data name="DelayButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Затримка</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Виділення (V)</value>
+  </data>
+  <data name="SelectButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Виділення</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Перо (P)</value>
+  </data>
+  <data name="PenButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Перо</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Маркер (H)</value>
+  </data>
+  <data name="HighlighterButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Маркер</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Гумка (E)</value>
+  </data>
+  <data name="EraserButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Гумка</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Текст (T)</value>
+  </data>
+  <data name="TextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Текст</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Фігури</value>
+  </data>
+  <data name="ShapeButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Фігури</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Піпетка (I): копіює колір у форматі #RRGGBB</value>
+  </data>
+  <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Піпетка</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Заливка (G): прямокутник або овал, інакше тло полотна</value>
+  </data>
+  <data name="BucketButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Заливка</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Колір і товщина</value>
+  </data>
+  <data name="StyleButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Колір і товщина</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Обрізання</value>
+  </data>
+  <data name="CropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Обрізання</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Застосувати обрізання (Enter)</value>
+  </data>
+  <data name="ApplyCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Застосувати обрізання</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Скасувати обрізання (Esc)</value>
+  </data>
+  <data name="CancelCropButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Скасувати обрізання</value>
+  </data>
+  <data name="CropXLabel.Text" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.PlaceholderText" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ліва межа (пікс.); можна вводити вирази, наприклад 100+20</value>
+  </data>
+  <data name="CropX.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>X обрізання</value>
+  </data>
+  <data name="CropYLabel.Text" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.PlaceholderText" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Верхня межа (пікс.)</value>
+  </data>
+  <data name="CropY.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Y обрізання</value>
+  </data>
+  <data name="CropWLabel.Text" xml:space="preserve">
+    <value>Ш</value>
+  </data>
+  <data name="CropW.PlaceholderText" xml:space="preserve">
+    <value>Ш</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ширина (пікс.); можна вводити вирази, наприклад 800+20</value>
+  </data>
+  <data name="CropW.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Ширина обрізання</value>
+  </data>
+  <data name="CropHLabel.Text" xml:space="preserve">
+    <value>В</value>
+  </data>
+  <data name="CropH.PlaceholderText" xml:space="preserve">
+    <value>В</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Висота (пікс.)</value>
+  </data>
+  <data name="CropH.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Висота обрізання</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Дії з текстом: копіювання тексту, приховування адрес електронної пошти й номерів телефонів, читання QR-кодів</value>
+  </data>
+  <data name="TextActionsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Дії з текстом</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Скасувати (Ctrl+Z)</value>
+  </data>
+  <data name="UndoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Повторити (Ctrl+Y)</value>
+  </data>
+  <data name="RedoButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Повторити</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Зберегти як (Ctrl+S)</value>
+  </data>
+  <data name="SaveButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Зберегти як</value>
+  </data>
+  <data name="SaveEditableItem.Text" xml:space="preserve">
+    <value>Зберегти як редагований PNG (Ctrl+Shift+S)</value>
+  </data>
+  <data name="SaveEditableItem.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Об’єкти залишаються редагованими. У файлі також зберігається необрізане зображення та все, що намальовано поверх нього.</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Копіювати (Ctrl+C)</value>
+  </data>
+  <data name="CopyButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Копіювати</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Поділитися</value>
+  </data>
+  <data name="ShareButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Поділитися</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Надіслати ШІ</value>
+  </data>
+  <data name="AgentButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Надіслати ШІ</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Запитати ШІ про цей знімок</value>
+  </data>
+  <data name="AskAiButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Запитати ШІ</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Параметри</value>
+  </data>
+  <data name="SettingsButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Параметри</value>
+  </data>
+  <data name="TextActionsStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Стан дій з текстом</value>
+  </data>
+  <data name="CopyAllTextButton.Content" xml:space="preserve">
+    <value>Копіювати весь текст</value>
+  </data>
+  <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Копіювати весь текст</value>
+  </data>
+  <data name="QuickRedactButton.Content" xml:space="preserve">
+    <value>Швидке приховування</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Зафарбовує чорним адреси електронної пошти й номери телефонів на зображенні</value>
+  </data>
+  <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Швидке приховування</value>
+  </data>
+  <data name="VideoPlayer.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Запис</value>
+  </data>
+  <data name="AppDescription" xml:space="preserve">
+    <value>Знімки екрана, примітки та запис екрана</value>
+  </data>
+</root>

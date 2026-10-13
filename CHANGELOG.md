@@ -18,6 +18,9 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - The tray icon is shown on the taskbar the first time a copy of Clipmark runs; hiding it later in Windows settings
   is kept.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
+- 16 interface languages: English, German, French, Italian, Spanish, Portuguese (Brazil), Japanese, Korean, Chinese
+  (Simplified and Traditional), Dutch, Polish, Russian, Swedish, Turkish and Ukrainian. Clipmark follows the Windows
+  display language, or pick one in Settings > Language. German is reviewed; the others are machine-translated.
 
 ### Changed
 - License: the Elastic License 2.0 replaces the MIT License. The source stays public; it must not be used to remove or

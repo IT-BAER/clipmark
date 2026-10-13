@@ -46,7 +46,7 @@ internal sealed unsafe class WasapiCapture : IDisposable
             int hr = ((delegate* unmanaged[Stdcall]<nint, int, int, nint*, int>)Slot<nint>(enumerator, 4))(enumerator, loopback ? 0 : 1, 0, &device);
             if (hr == NotFound)
             {
-                error = loopback ? "No speakers or headphones are active, so system audio is not recorded." : "No microphone is connected, so the microphone is not recorded.";
+                error = Loc.Get(loopback ? "AudioNoSpeakers" : "AudioNoMicrophone");
                 return null;
             }
             Marshal.ThrowExceptionForHR(hr);
@@ -61,7 +61,7 @@ internal sealed unsafe class WasapiCapture : IDisposable
             bool isFloat = tag == 3 || (tag == 0xFFFE && *(Guid*)(f + 24) == FloatSubtype);
             if (!(isFloat ? bits == 32 : bits is 16 or 24 or 32))
             {
-                error = $"The audio device uses {bits}-bit audio, which Clipmark cannot record.";
+                error = Loc.Format("AudioUnsupportedFormat", bits);
                 return null;
             }
             // IAudioClient 3 Initialize(shareMode, streamFlags, bufferDuration, periodicity, format, sessionGuid): 200 ms buffer
@@ -76,7 +76,7 @@ internal sealed unsafe class WasapiCapture : IDisposable
         }
         catch (Exception e)
         {
-            error = (loopback ? "System audio" : "The microphone") + " cannot be recorded: " + e.Message;
+            error = Loc.Format(loopback ? "AudioSystemFailed" : "AudioMicrophoneFailed", e.Message);
             return null;
         }
         finally

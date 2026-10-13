@@ -379,6 +379,45 @@ internal sealed class TestDriver
             case "wait":
                 await Task.Delay(int.Parse(arg, CultureInfo.InvariantCulture));
                 break;
+            case "scroll":
+                // scroll Y: the first scrollable ScrollViewer in the window jumps to vertical offset Y (DIP).
+                (Descendants(Root.Content).OfType<ScrollViewer>().FirstOrDefault(v => v.ScrollableHeight > 0)
+                    ?? throw new InvalidOperationException("nothing to scroll")).ChangeView(null, double.Parse(arg, CultureInfo.InvariantCulture), null, true);
+                await Task.Delay(300);
+                break;
+            case "clipcheck":
+                // clipcheck FILE: appends visible TextBlocks that are trimmed, wider than their box (single line) or sticking out of an
+                // ancestor (up to the nearest ScrollViewer) or their root.
+                var clipped = new List<string>();
+                var clipRoots = new List<FrameworkElement> { (FrameworkElement)Root.Content };
+                clipRoots.AddRange(VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).Select(p => p.Child).OfType<FrameworkElement>());
+                foreach (var clipRoot in clipRoots)
+                    foreach (var tb in new[] { clipRoot }.Concat(Descendants(clipRoot).OfType<FrameworkElement>()).OfType<TextBlock>())
+                    {
+                        if (tb.ActualWidth <= 0 || string.IsNullOrEmpty(tb.Text) || Ancestors(tb).Any(a => a is UIElement { Visibility: Visibility.Collapsed }))
+                            continue;
+                        bool scrolls = Ancestors(tb).Any(a => a is ScrollViewer);
+                        var probe = new TextBlock { Text = tb.Text, FontSize = tb.FontSize, FontFamily = tb.FontFamily, FontWeight = tb.FontWeight,
+                            FontStyle = tb.FontStyle, CharacterSpacing = tb.CharacterSpacing };
+                        probe.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+                        var bounds = tb.TransformToVisual(clipRoot).TransformBounds(new Windows.Foundation.Rect(0, 0, tb.ActualWidth, tb.ActualHeight));
+                        var overflow = Ancestors(tb).TakeWhile(a => a is not ScrollViewer && a != clipRoot).OfType<FrameworkElement>()
+                            .FirstOrDefault(a => a.ActualWidth > 0 && tb.TransformToVisual(a).TransformBounds(new Windows.Foundation.Rect(0, 0, tb.ActualWidth, tb.ActualHeight))
+                                is var b && (b.Right > a.ActualWidth + 1 || b.Left < -1));
+                        string? why = tb.IsTextTrimmed ? "trimmed"
+                            : tb.TextWrapping == TextWrapping.NoWrap && probe.DesiredSize.Width > tb.ActualWidth + 1 ? $"needs {probe.DesiredSize.Width:F0} has {tb.ActualWidth:F0}"
+                            : overflow is not null ? $"overflows {overflow.GetType().Name} {overflow.Name}"
+                            : bounds.Right > clipRoot.ActualWidth + 1 || bounds.Left < -1 || (!scrolls && bounds.Bottom > clipRoot.ActualHeight + 1) ? $"outside root {bounds}" : null;
+                        if (why is not null)
+                            clipped.Add($"{why}: {tb.Text}");
+                    }
+                File.AppendAllLines(arg, clipped.Count == 0 ? ["(none)"] : clipped);
+                break;
+            case "closepopups":
+                foreach (var open in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
+                    open.IsOpen = false;
+                await Task.Delay(300);
+                break;
             case "history":
                 AppSettings.Update(s => s with { HistoryEnabled = arg == "on" });
                 break;
@@ -435,6 +474,10 @@ internal sealed class TestDriver
     /// <summary>First visible element in the window or an open popup whose automation name (or menu item text) matches.</summary>
     private FrameworkElement? Find(string name)
     {
+        // '*' in NAME matches any text (names built at run time from a format string).
+        var wildcard = name.Contains('*') ? new System.Text.RegularExpressions.Regex(
+            "^" + string.Join(".*", name.Split('*').Select(System.Text.RegularExpressions.Regex.Escape)) + "$") : null;
+        bool Matches(string? s) => s is not null && (wildcard?.IsMatch(s) ?? s == name);
         var roots = new List<DependencyObject> { Root.Content };
         roots.AddRange(VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).Select(p => (DependencyObject)p.Child));
         var queue = new Queue<DependencyObject>(roots);
@@ -443,8 +486,8 @@ internal sealed class TestDriver
             var node = queue.Dequeue();
             if (node is FrameworkElement { Visibility: Visibility.Visible } fe)
             {
-                if (AutomationProperties.GetName(fe) == name || (fe is MenuFlyoutItem item && item.Text == name)
-                    || (fe is Button { Content: string text } && text == name))
+                if (Matches(AutomationProperties.GetName(fe)) || (fe is MenuFlyoutItem item && Matches(item.Text))
+                    || (fe is Button { Content: string text } && Matches(text)))
                     return fe;
             }
             else if (node is UIElement { Visibility: Visibility.Collapsed })
@@ -477,6 +520,12 @@ internal sealed class TestDriver
             foreach (var d in Descendants(child))
                 yield return d;
         }
+    }
+
+    private static IEnumerable<DependencyObject> Ancestors(DependencyObject node)
+    {
+        for (var p = VisualTreeHelper.GetParent(node); p is not null; p = VisualTreeHelper.GetParent(p))
+            yield return p;
     }
 
     private static void Click(FrameworkElement element, bool open)

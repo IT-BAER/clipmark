@@ -28,6 +28,10 @@ public sealed partial class SettingsPage : Page
     public SettingsPage()
     {
         InitializeComponent();
+        // Code, not a style: setters cannot use x:Uid, and the WinUI default follows the Windows display language.
+        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, HistorySwitch,
+                     SystemAudioSwitch, MicrophoneSwitch })
+            (toggle.OnContent, toggle.OffContent) = (Loc.Get("ToggleOn"), Loc.Get("ToggleOff"));
         foreach (int key in Keys)
         {
             KeyBox.Items.Add(Hotkey.KeyName(key));
@@ -36,9 +40,12 @@ public sealed partial class SettingsPage : Page
         foreach (var m in MainPage.Modes)
             ModeBox.Items.Add(m.Text);
         foreach (int d in ClipmarkSettings.DelayChoices)
-            DelayBox.Items.Add(d == 0 ? "No delay" : $"{d} seconds");
+            DelayBox.Items.Add(MainPage.DelayText(d));
         foreach (var model in AiModels.All)
             AiModelBox.Items.Add(model.Name);
+        LanguageBox.Items.Add(Loc.Get("LanguageWindowsDefault"));
+        foreach (var language in UiLanguages.All)
+            LanguageBox.Items.Add(language.NativeName);
 
         var s = AppSettings.Current;
         CtrlBox.IsChecked = s.Hotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
@@ -60,7 +67,7 @@ public sealed partial class SettingsPage : Page
         RecKeyBox.SelectedIndex = Math.Max(0, Array.IndexOf(Keys, s.RecordHotkey.Key));
         SystemAudioSwitch.IsOn = s.RecordSystemAudio;
         MicrophoneSwitch.IsOn = s.RecordMicrophone;
-        RecordingsFolderText.Text = "Recordings are saved to " + CaptureOutput.RecordingsFolder;
+        RecordingsFolderText.Text = Loc.Format("RecordingsFolder", CaptureOutput.RecordingsFolder);
         ShowRecordHotkeyStatus();
         PrintScreenSwitch.IsOn = s.PrintScreenRestore is not null;
         if (CaptureOutput.IsPackaged())
@@ -68,13 +75,12 @@ public sealed partial class SettingsPage : Page
             // Packaged: Windows keeps HKCU writes in the package's private hive, so the switch cannot reach the Windows option.
             PrintScreenSwitch.Visibility = Visibility.Collapsed;
             PrintScreenSettingsLink.Visibility = Visibility.Visible;
-            PrintScreenHint.Text = "To use Print Screen for Clipmark, turn off the Windows option that opens screen capture with "
-                + "Print Screen (Bluetooth & devices > Keyboard; on older Windows 11: Accessibility > Keyboard), then choose "
-                + "PrintScreen as the hotkey above.";
+            PrintScreenHint.Text = Loc.Get("PrintScreenHintPackaged");
         }
         ShowStartup(SystemIntegration.StartupStateAsync);
-        VersionText.Text = "Clipmark " + App.Version;
+        VersionText.Text = Loc.Format("VersionText", App.Version);
         AiModelBox.SelectedIndex = AiModels.All.ToList().IndexOf(AiModels.Find(s.AiModel));
+        LanguageBox.SelectedIndex = 1 + UiLanguages.All.ToList().FindIndex(l => l.Tag == s.Language); // -1 + 1 = Windows default
         ShowAiKey();
         ShowLicense();
         _loading = false;
@@ -92,23 +98,20 @@ public sealed partial class SettingsPage : Page
         var license = AppLicense.Current;
         LicenseStatusText.Text = license.Status switch
         {
-            LicenseStatus.Licensed => "Clipmark Premium is active.",
-            LicenseStatus.Trial => $"Premium trial: {license.TrialDaysLeft} {(license.TrialDaysLeft == 1 ? "day" : "days")} left.",
-            _ => "The Premium trial has ended. Premium tools are locked; everything else keeps working.",
+            LicenseStatus.Licensed => Loc.Get("LicenseActive"),
+            LicenseStatus.Trial => license.TrialDaysLeft == 1 ? Loc.Get("LicenseTrialOneDay") : Loc.Format("LicenseTrialDays", license.TrialDaysLeft),
+            _ => Loc.Get("LicenseTrialEnded"),
         };
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
         ShowHistory();
-        AiHint.Text = (license.IsEnabled(PremiumFeature.AiChat) ? "" : "Premium feature. ")
-            + "Ask AI sends the capture as shown (annotations and redactions included) and your question to Anthropic "
-            + $"({ClaudeChat.Host}) under your own API key, only when you send a question. Anthropic bills the key. "
-            + "The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.";
+        AiHint.Text = Loc.Format(license.IsEnabled(PremiumFeature.AiChat) ? "AiHint" : "AiHintPremium", ClaudeChat.Host);
     }
 
     private void ShowAiKey()
     {
         string? hint = AnthropicKeyStore.Hint();
-        AiKeyStatus.Text = hint is null ? "No API key saved." : hint.Length == 0 ? "API key saved." : $"API key saved, ends in {hint}.";
+        AiKeyStatus.Text = hint is null ? Loc.Get("AiKeyNone") : hint.Length == 0 ? Loc.Get("AiKeySaved") : Loc.Format("AiKeySavedEnds", hint);
         AiTestButton.IsEnabled = AiRemoveButton.IsEnabled = hint is not null;
     }
 
@@ -117,10 +120,10 @@ public sealed partial class SettingsPage : Page
         string key = AiKeyBox.Password.Trim();
         if (key.Length == 0)
         {
-            AiResultText.Text = "Paste the key first.";
+            AiResultText.Text = Loc.Get("AiKeyPasteFirst");
             return;
         }
-        AiResultText.Text = AnthropicKeyStore.Save(key) ? "API key saved." : "The key could not be saved in Credential Manager.";
+        AiResultText.Text = Loc.Get(AnthropicKeyStore.Save(key) ? "AiKeySaved" : "AiKeySaveFailed");
         AiKeyBox.Password = "";
         ShowAiKey();
     }
@@ -130,15 +133,15 @@ public sealed partial class SettingsPage : Page
         if (AnthropicKeyStore.Read() is not { } key)
             return;
         AiTestButton.IsEnabled = false;
-        AiResultText.Text = "Testing…";
+        AiResultText.Text = Loc.Get("AiKeyTesting");
         string? problem = await ClaudeChat.TestKeyAsync(key, CancellationToken.None);
-        AiResultText.Text = problem ?? "Key works.";
+        AiResultText.Text = problem ?? Loc.Get("AiKeyWorks");
         ShowAiKey();
     }
 
     private void OnAiRemove(object sender, RoutedEventArgs e)
     {
-        AiResultText.Text = AnthropicKeyStore.Delete() ? "API key removed." : "The key could not be removed from Credential Manager.";
+        AiResultText.Text = Loc.Get(AnthropicKeyStore.Delete() ? "AiKeyRemoved" : "AiKeyRemoveFailed");
         ShowAiKey();
     }
 
@@ -146,6 +149,16 @@ public sealed partial class SettingsPage : Page
     {
         if (!_loading && AiModelBox.SelectedIndex >= 0)
             AppSettings.Update(s => s with { AiModel = AiModels.All[AiModelBox.SelectedIndex].Id });
+    }
+
+    /// <summary>Takes effect at the next start: App applies the language override once, before the first window.</summary>
+    private void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_loading || LanguageBox.SelectedIndex < 0)
+            return;
+        string? language = LanguageBox.SelectedIndex == 0 ? null : UiLanguages.All[LanguageBox.SelectedIndex - 1].Tag;
+        AppSettings.Update(s => s with { Language = language });
+        LanguageNote.Visibility = Visibility.Visible;
     }
 
     /// <summary>Premium gates turning the history on; turning it off always works.</summary>
@@ -157,9 +170,7 @@ public sealed partial class SettingsPage : Page
         HistorySwitch.IsOn = on;
         _loading = wasLoading;
         HistorySwitch.IsEnabled = licensed || on;
-        HistoryHint.Text = (licensed ? "" : "Premium feature. ")
-            + $"Keeps the last {HistoryPolicy.MaxItems} captures with their objects (up to {HistoryPolicy.MaxBytes / (1024 * 1024)} MB), "
-            + "encrypted for your Windows account and stored only on this PC. Turning it off deletes the history.";
+        HistoryHint.Text = Loc.Format(licensed ? "HistoryHint" : "HistoryHintPremium", HistoryPolicy.MaxItems, HistoryPolicy.MaxBytes / (1024 * 1024));
     }
 
     private async void OnHistoryToggled(object sender, RoutedEventArgs e)
@@ -177,9 +188,9 @@ public sealed partial class SettingsPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
-                Title = count == 1 ? "Delete the capture in the history?" : $"Delete the {count} captures in the history?",
-                PrimaryButtonText = "Turn off and delete",
-                CloseButtonText = "Cancel",
+                Title = count == 1 ? Loc.Get("HistoryOffTitleOne") : Loc.Format("HistoryOffTitle", count),
+                PrimaryButtonText = Loc.Get("HistoryOffConfirm"),
+                CloseButtonText = Loc.Get("Cancel"),
                 DefaultButton = ContentDialogButton.Close,
             };
             if (await dialog.ShowAsync() != ContentDialogResult.Primary)
@@ -198,10 +209,10 @@ public sealed partial class SettingsPage : Page
         if (AppLicense.Activate(LicenseKeyBox.Text))
         {
             LicenseKeyBox.Text = "";
-            LicenseResultText.Text = "License activated.";
+            LicenseResultText.Text = Loc.Get("LicenseActivated");
         }
         else
-            LicenseResultText.Text = "This license key is not valid. Check that you pasted all of it.";
+            LicenseResultText.Text = Loc.Get("LicenseInvalid");
         ShowLicense();
     }
 
@@ -230,7 +241,7 @@ public sealed partial class SettingsPage : Page
         }
         catch (Exception ex) when (ex is UnauthorizedAccessException or System.Security.SecurityException or IOException)
         {
-            HotkeyStatus.Text = "The Windows setting could not be changed: " + ex.Message;
+            HotkeyStatus.Text = Loc.Format("PrintScreenChangeFailed", ex.Message);
         }
         _loading = true;
         ShowHotkey(AppSettings.Current.Hotkey);
@@ -270,8 +281,8 @@ public sealed partial class SettingsPage : Page
         _loading = wasLoading;
         StartupStatus.Text = state switch
         {
-            StartupTaskState.DisabledByUser => "Clipmark is turned off in Task Manager > Startup apps. Turn it on there.",
-            StartupTaskState.DisabledByPolicy => "Your organization does not allow Clipmark to start with Windows.",
+            StartupTaskState.DisabledByUser => Loc.Get("StartupDisabledByUser"),
+            StartupTaskState.DisabledByPolicy => Loc.Get("StartupDisabledByPolicy"),
             _ => "",
         };
         StartupStatus.Visibility = StartupStatus.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
@@ -291,8 +302,8 @@ public sealed partial class SettingsPage : Page
     {
         var app = (App)Application.Current;
         RecordHotkeyStatus.Text = app.RecordHotkeyRegistered
-            ? $"{AppSettings.Current.RecordHotkey} starts and stops a recording."
-            : $"{AppSettings.Current.RecordHotkey} is used by another app. Choose a different combination.";
+            ? Loc.Format("RecordHotkeyOk", AppSettings.Current.RecordHotkey)
+            : Loc.Format("HotkeyTaken", AppSettings.Current.RecordHotkey);
         RecordHotkeyStatus.Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources[
             app.RecordHotkeyRegistered ? "TextFillColorSecondaryBrush" : "SystemFillColorCriticalBrush"];
     }
@@ -322,8 +333,8 @@ public sealed partial class SettingsPage : Page
     {
         var app = (App)Application.Current;
         HotkeyStatus.Text = app.HotkeyRegistered
-            ? $"{AppSettings.Current.Hotkey} starts a capture."
-            : $"{AppSettings.Current.Hotkey} is used by another app. Choose a different combination.";
+            ? Loc.Format("HotkeyOk", AppSettings.Current.Hotkey)
+            : Loc.Format("HotkeyTaken", AppSettings.Current.Hotkey);
         HotkeyStatus.Foreground = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources[
             app.HotkeyRegistered ? "TextFillColorSecondaryBrush" : "SystemFillColorCriticalBrush"];
     }

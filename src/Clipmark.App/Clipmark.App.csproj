@@ -35,6 +35,13 @@
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
+  <!-- MSIX: the language is picked inside the app, so every language ships in the main package
+       instead of per-language resource packs (MS Learn "Build resources into your app package"). -->
+  <PropertyGroup Condition="'$(WindowsPackageType)' != 'None'">
+    <AppxBundleAutoResourcePackageQualifiers>Scale|DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
+    <AppxDefaultResourceQualifiers>Language=en-US;de-DE;fr-FR;it-IT;es-ES;pt-BR;ja-JP;ko-KR;nl-NL;pl-PL;ru-RU;sv-SE;tr-TR;uk-UA;zh-Hans;zh-Hant</AppxDefaultResourceQualifiers>
+  </PropertyGroup>
+
   <!--
     Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
     Tools extension to be activated for this project even if the Windows App SDK Nuget
