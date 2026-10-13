@@ -7,7 +7,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Clipmark Premium: 30-day trial, then offline license keys. Premium covers select, attached arrows, text, fill,
-  eyedropper, editable PNG, Send to AI and the capture history; editable PNGs still open without a license.
+  eyedropper, editable PNG, Send to AI, Ask AI and the capture history; editable PNGs still open without a license.
+- Ask AI: ask Claude about the capture in a toolbar flyout with your own Anthropic API key (Sonnet 5.5, Opus 5.5 or
+  Haiku 5.5). Answers stream in as formatted text; Stop, follow-up questions and New chat. The key is kept in Windows
+  Credential Manager; the first send asks for consent. This is the only feature that uses the network.
 - Send to AI: pastes the capture into a running Claude Code or Codex CLI, the Claude or ChatGPT desktop app, or the
   Claude or Codex VS Code extension, with each agent's own icon in the menu.
 - Capture history (opt-in): the last 25 captures, encrypted for the Windows user, with a thumbnail flyout; edits are
@@ -15,6 +18,12 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - The tray icon is shown on the taskbar the first time a copy of Clipmark runs; hiding it later in Windows settings
   is kept.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
+
+### Changed
+- Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
+  benchmark of 54 screenshot-style images it made 0.22% character errors, Snipping Tool 2.40% and the Windows text
+  recognition used before 8.52%. Windows text recognition stays as the fallback.
+- Text actions dim the image and show each recognized line as a rounded cutout, like Snipping Tool.
 
 ### Fixed
 - Exiting from the tray right after an edit no longer loses that edit in the capture history.

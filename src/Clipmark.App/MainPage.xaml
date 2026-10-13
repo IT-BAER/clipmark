@@ -28,6 +28,16 @@
         </Grid.RowDefinitions>
 
         <Grid Padding="8,4,8,8" ColumnSpacing="8">
+            <Grid.Resources>
+                <!-- WinUI pads buttons 1 DIP more at the bottom for the text baseline; icon buttons need it even (same height).
+                     Split buttons set Padding 11,6.5,11,6.5 and drop-down buttons 11,5.5,11,5.5 themselves (a based-on style crashes them). -->
+                <Style TargetType="Button" BasedOn="{StaticResource DefaultButtonStyle}">
+                    <Setter Property="Padding" Value="11,5.5,11,5.5" />
+                </Style>
+                <Style TargetType="ToggleButton" BasedOn="{StaticResource DefaultToggleButtonStyle}">
+                    <Setter Property="Padding" Value="11,5.5,11,5.5" />
+                </Style>
+            </Grid.Resources>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -51,12 +61,12 @@
                 <Button x:Name="HistoryButton" Click="OnHistoryClick" ToolTipService.ToolTip="Capture history" AutomationProperties.Name="Capture history">
                     <FontIcon FontSize="16" Glyph="&#xE81C;" />
                 </Button>
-                <DropDownButton x:Name="ModeButton" ToolTipService.ToolTip="Capture mode" AutomationProperties.Name="Capture mode">
+                <DropDownButton x:Name="ModeButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Capture mode" AutomationProperties.Name="Capture mode">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="ModeMenu" Placement="Bottom" />
                     </DropDownButton.Flyout>
                 </DropDownButton>
-                <DropDownButton x:Name="DelayButton" ToolTipService.ToolTip="Delay" AutomationProperties.Name="Delay">
+                <DropDownButton x:Name="DelayButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Delay" AutomationProperties.Name="Delay">
                     <DropDownButton.Flyout>
                         <MenuFlyout x:Name="DelayMenu" Placement="Bottom" />
                     </DropDownButton.Flyout>
@@ -89,7 +99,7 @@
                         <FontIcon x:Name="TextLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <ToggleSplitButton x:Name="ShapeButton" IsCheckedChanged="OnShapeCheckedChanged"
+                <ToggleSplitButton x:Name="ShapeButton" Padding="11,6.5,11,6.5" IsCheckedChanged="OnShapeCheckedChanged"
                                    ToolTipService.ToolTip="Shapes" AutomationProperties.Name="Shapes">
                     <ToggleSplitButton.Flyout>
                         <MenuFlyout x:Name="ShapeMenu" Placement="Bottom" />
@@ -109,7 +119,7 @@
                         <FontIcon x:Name="BucketLock" Style="{StaticResource LockBadge}" />
                     </Grid>
                 </ToggleButton>
-                <DropDownButton x:Name="StyleButton" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
+                <DropDownButton x:Name="StyleButton" Padding="11,5.5,11,5.5" ToolTipService.ToolTip="Color and width" AutomationProperties.Name="Color and width">
                     <DropDownButton.Flyout>
                         <Flyout x:Name="StyleFlyout" Placement="Bottom" />
                     </DropDownButton.Flyout>
@@ -157,7 +167,7 @@
             </StackPanel>
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4">
                 <StackPanel x:Name="OutputTools" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
-                    <SplitButton Click="OnSave" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
+                    <SplitButton Click="OnSave" Padding="11,6.5,11,6.5" ToolTipService.ToolTip="Save as (Ctrl+S)" AutomationProperties.Name="Save as">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
                             <MenuFlyout Placement="Bottom">
@@ -176,13 +186,17 @@
                     <Button Click="OnShare" ToolTipService.ToolTip="Share" AutomationProperties.Name="Share">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
-                    <SplitButton x:Name="AgentButton" Click="OnSendToAgent" ToolTipService.ToolTip="Send to AI"
+                    <SplitButton x:Name="AgentButton" Padding="11,6.5,11,6.5" Click="OnSendToAgent" ToolTipService.ToolTip="Send to AI"
                                  AutomationProperties.Name="Send to AI">
                         <FontIcon FontSize="16" Glyph="&#xE724;" />
                         <SplitButton.Flyout>
                             <MenuFlyout x:Name="AgentMenu" Placement="Bottom" Opening="OnAgentMenuOpening" />
                         </SplitButton.Flyout>
                     </SplitButton>
+                    <Button x:Name="AskAiButton" Click="OnAskAi" ToolTipService.ToolTip="Ask AI about this capture"
+                            AutomationProperties.Name="Ask AI">
+                        <FontIcon FontSize="16" Glyph="&#xE8BD;" />
+                    </Button>
                 </StackPanel>
                 <Button Click="OnSettings" Background="Transparent" BorderThickness="0"
                         ToolTipService.ToolTip="Settings" AutomationProperties.Name="Settings">

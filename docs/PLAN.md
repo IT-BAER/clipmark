@@ -186,3 +186,85 @@ New repo only; nothing on the system changes until M6 (hotkey takeover). Shotosh
 - [x] T1 Tray icon visible by default: measured that a new exe path gets a NotifyIconSettings entry about 1.5 s after NIM_ADD without IsPromoted (overflow), and IsPromoted=1 shows the icon live. `Shell\TrayPromotion.cs` polls up to 15 s and writes IsPromoted=1 only when absent (Core `TrayIconEntry`, 9 tests, packaged `{6D809377-...}` Program Files prefix). AOT zip in a new folder: no entry -> first run IsPromoted=1 + taskbar button; set to 0 + restart -> stays 0, hidden. Skipped in test mode and --measure-startup
 - Core 394 / 394; Debug x64 0 warnings; `publish-release.ps1` exit 0 (28.4 MB, local only)
 - Independent review (opus-risk-reviewer): 1 Important fixed (the WT guard compared a console title cached at menu open; now read again at paste time), Minor fixed: title length capped at the buffer, std handles restored after AttachConsole / FreeConsole, tray scan opens foreign entries read-only, exit flush capped at 5 s. Accepted: Ctrl+C / close of the attached console during the microsecond attach. Re-verified: V1 GREEN, V8 both directions (refused 4 / 4 with the other tab active, `[Image #2]` with the agent tab active), T1 on a fresh Debug copy
+
+## M10 Ask AI (Premium)
+- Plan approved by the owner 12 October 2026 ("proceed").
+### Decisions (12 October 2026, owner)
+- Refusals: no server-side fallbacks.
+- Access: bring-your-own Anthropic API key only. No IT-BAER relay (the Cloudflare free-plan facts were checked; the relay is not built).
+- Models, selectable in Settings: Claude Sonnet 5.5 `claude-sonnet-5-5` (default, $2 / $10 per MTok), Claude Opus 5.5 `claude-opus-5-5` ($4 / $20), Claude Haiku 5.5 `claude-haiku-5-5` ($0.10 / $0.50). IDs and prices from the claude-api skill, cached 6 October 2026.
+- Licensing: Premium, new `PremiumFeature.AiChat` in `src\Clipmark.Core\Licensing\Entitlement.cs` (same single license as Send to AI and History).
+- UI: "Ask AI" toolbar button with a flyout (not a side pane).
+- HTTP: official `Anthropic` NuGet package if the Native AOT publish is clean and a real call works; else `HttpClient` + System.Text.Json source generation.
+- Answers: Markdown, parsed with Markdig 1.4.0 (nuget.org), rendered by our own renderer into a selectable `RichTextBlock`. Reason: no maintained WinUI 3 Markdown control on nuget.org (7.x toolkit control archived, Labs control is a preview on a separate feed).
+
+### Behaviour
+- Button "Ask AI" right after Send to AI. Hidden for recordings, disabled without an image. Free state: the existing "Clipmark Premium" dialog.
+- No key stored: the flyout shows "Add your Anthropic API key in Settings" with a button that opens Settings > AI.
+- Settings > AI: API key (PasswordBox; Save, Test, Remove), model dropdown, one line on what is sent where. Test = `GET /v1/models` (no token cost): shows "Key works" or the error.
+- Key storage: Credential Manager generic credential `Clipmark/AnthropicKey`, persist local machine (does not roam). Never in settings.json, never logged, never shown again after save (only "Key saved, ends in ...xxxx").
+- Consent: first send shows a dialog once: the capture as shown (annotations and redactions included) and the question go to Anthropic under the user's own key; Anthropic's terms apply. Stored as `aiConsent` in settings.
+- Image sent: the flattened export (same pixels as Copy; redactions burned in, the editable base image is never sent). Long edge scaled down to at most 2576 px (API limit); exact byte limit per image checked in M10.0, JPEG fallback if PNG exceeds it.
+- Conversation: one per editor session. First message = image + question; follow-ups resend the history (the API is stateless) with `cache_control` on the image block so later turns read it from cache. Cleared on New, Open, History open and window close. "New chat" starts over with the current image (after edits). Never written to disk, not part of the capture history.
+- Request: streaming, `max_tokens` 16000, short system prompt (answer about the screenshot, in the user's language, concise), adaptive thinking (model default), `output_config.effort` "low" (claude-api skill guidance for chat; checked in M10.0). Refusals: `stop_reason` "refusal" shows a message. No server-side fallbacks (owner, 12 October 2026): the user can rephrase or switch the model.
+- Streaming UI: text deltas collected off the UI thread, Markdown re-rendered at most every 50 ms on the DispatcherQueue; Stop cancels the request. Closing the flyout (light dismiss) does not cancel; reopening shows the running or finished answer. Copy button per answer.
+- Input: Enter sends, Shift+Enter new line, Esc closes the flyout; single-letter tool shortcuts are off while the box has focus (existing text-field rule).
+- Errors shown in the flyout: 401 invalid key, 403, 429 (with retry-after), 529 / 5xx overloaded, no network or proxy / TLS failure, timeout. HttpClient uses the system proxy.
+
+### Tasks (each ends green before the next)
+- [x] M10.0 Spike (scratch project, not committed; net10.0 PublishAot console, win-x64):
+  a) `Anthropic` 12.51.0: publish exit 0 but 971 IL2026 + 972 IL3050 (reflection JSON in `Anthropic.Core`, incl. the SSE reader), exe 8,388,096 bytes vs 933,888 baseline. Not AOT-clean, so by rule: raw `HttpClient` + `Utf8JsonWriter` / `JsonDocument` (raw variant: 0 warnings, exe 4,743,680 bytes)
+  b) Markdig 1.4.0: 0 warnings, exe 1,968,640 bytes (+1,034,752); the AOT exe parsed heading, paragraph, list, fenced code, emphasis, inline code, link
+  c) Live vision docs (12 October 2026): 10 MB per image base64 on the Claude API, 32 MB per request, max 8000x8000 px, PNG / JPEG / GIF / WebP; Claude 4.7+ (all three 5.5 models) up to 2576 px long edge / 4784 visual tokens, larger images are downscaled by the API (not rejected)
+  d) Raw AOT exe, key from the Bitwarden broker, synthetic 2560x1440 probe (9 pt menu, "Probe 4711", red error line), German question, Sonnet 5.5: effort low HTTP 200, first text 1157 ms, total 4352 ms, 537 output tokens, 0 thinking tokens; effort medium (same request) first text 816 ms, total 4103 ms, cache read 4817 tokens. Both answers correct (4711, Datei / Bearbeiten / Ansicht / Hilfe, 0x80070005 explained, in German). Effort "low" kept
+- [x] M10.1 Core `Clipmark.Core.Ai` (TDD, red first): `AiModels` (ids, names, default), `ImageFit` (scale to <= 2576 long edge), `ChatConversation` (turns, busy state, reset), Markdown block model from the Markdig AST (testable without XAML), `ApiError` mapping (status + error body to a user message), settings `aiModel` / `aiConsent` with defaults for old files, `PremiumFeature.AiChat`. Raw path only: request JSON builder (incl. `cache_control`) and SSE parser (split chunks, `ping`, `error` event, `message_stop`). Done 12 October 2026: `src\Clipmark.Core\Ai\` (AiModels, ImageFit, ChatConversation, ChatRequest, SseParser, ChatStreamEvent, ApiError, MarkdownModel), Markdig 1.4.0 in Core, settings aiModel / aiConsent, PremiumFeature.AiChat; 8 new test files, Core 473 / 473 (was 394), Core Release build 0 warnings. An answer that completes without text drops its question (turns keep alternating). Open for M10.2: `MainPage.xaml.cs` FeatureName(PremiumFeature) needs an AiChat arm (falls back to "saving editable PNGs")
+- [x] M10.2 App: `Ai\AnthropicKeyStore` (CredRead / CredWrite / CredDelete, existing `Interop\Native.cs` imports), `Ai\ClaudeChat` (SDK or HttpClient), `Ai\MarkdownView` (RichTextBlock renderer, Cascadia Mono code blocks, links open in the browser), Settings > AI section, toolbar button + flyout in `MainPage.xaml(.cs)`, consent dialog, Premium gate. `--restore-system` also deletes `Clipmark/AnthropicKey`. Done 12 October 2026: `src\Clipmark.App\Ai\` (AnthropicKeyStore, ClaudeChat raw HttpClient, MarkdownView), `MainPage.AskAi.cs` (flyout, consent, 50 ms render tick, Stop, New chat, reset on New / Open / History / close), Settings > Ask AI section, `CaptureOutput` encodes scaled (Fant), `Native.CredDelete`. Core gained `ChatStream` (SSE body reader, 60 s idle timeout, `AiException`): 6 tests, Core 479 / 479. Debug build 0 warnings. Debug-only test hooks: `CLIPMARK_TEST_AI_BASE`, `CLIPMARK_TEST_THEME`, driver commands askai / aiask / aiwait / aikey / aikeyenv / select / assert answer(s).
+- [x] M10.3 Verification:
+  - Done 12 October 2026: `.claude\m1-harness\m10-script.ps1` + `ai-mock.ps1` GREEN (no-key hint, Save / Test / Remove, model choice, consent once, request shape incl. a 3000x1500 capture sent as 2576x1288 PNG with cache_control, follow-up history, Stop, stream error, 401, 429 retry-after, refusal, New / Open clears, recording hides the button, key in no file, `--restore-system` deletes the credential, Free = Premium dialog and nothing sent). `m10-real.ps1` with the owner's key via the broker: Sonnet 5.5 answer contains 4711 in about 3 s, dark and light screenshots reviewed, test credential deleted afterwards.
+  - Done 12 October 2026 (second session): m10-script failed in a batch because the cloaked test window lost the foreground and WinUI light-dismissed the flyout (log: Closing with no app frame, foreground elsewhere; 2 of 16 runs, steal-loop 2 of 8 red, 0 of 16 after the fix). Debug fix: `MainPage.AiDismissedInBackground` + `HideAiFlyout`, the driver reopens the flyout before the next command; driver timer starts on Loaded, new `ready` command, `Start-TestApp` waits up to 15 s, `cmd.txt` read retried on IOException. m43 / m61 read the test-dir settings (stale since 1a3708d). Regression batch GREEN: m23-m25, m31-m38, m43 (pwsh), m26-mem (23.6 MB), m41 / m42 (pwsh), m61, v2-free, m10-script (35 checks); m37 one red s3 in 1 of 4 runs (bucket Blue, no Ask AI code path; 3 of 3 green alone). `publish-m0.ps1` all exit 0, A / D no IL warnings, C the known IL2104 pair, MSIX exit 0. `aot-uia-smoke.ps1` GREEN 27 checks on D, A and the extracted release zip. `measure-m0.ps1` (5 runs, median window / first frame, idle WS / private): A 337 / 362 ms, 115 / 93.6 MB, 75.83 MB without pdb (M5.6 71.88); C 455 / 483 ms, 130.8 / 95.2 MB, 98.23 MB (92.91); D 353 / 372 ms, 114.5 / 95 MB, 16.99 MB without pdb (13.04); MSIX 6.9 MB (5.3); Snipping Tool same run 382 ms. `m10-aot-real.ps1` on the extracted zip, owner's key via the broker: answer contains 4711, image sent at 2560 x 1440, test key deleted, `%LOCALAPPDATA%\Clipmark` restored; UIA found the answer only after reopening the flyout (follow-up).
+  - Debug driver against a local mock (Debug-only `CLIPMARK_TEST_AI_BASE`, HttpListener on 127.0.0.1 serving canned SSE): request has image + question + chosen model; streamed text appears in order; Stop cancels; 401 and 429 messages; follow-up resends history with `cache_control`; New clears; no key = Settings hint; Free state = Premium dialog; consent once.
+  - Key: credential exists after Save, settings.json and logs do not contain the key (search), Remove deletes it.
+  - Real call with the owner's key (cents): Debug and the AOT release zip, synthetic capture "Probe 4711", answer contains 4711; Markdown answer screenshot reviewed in light and dark theme.
+  - m-scripts and `aot-uia-smoke.ps1` GREEN; `scripts\measure-m0.ps1` size / start delta recorded.
+- [x] M10.4 (written 12 October 2026: privacy policy Ask AI section, README features / Premium / Remove / Privacy, CHANGELOG, `internetClient` in the manifest, Markdig BSD-2-Clause in THIRD-PARTY-NOTICES; manifest validated: MSIX build in `scripts\publish-m0.ps1` exit 0, 12 October 2026) Docs in the same release: `docs\privacy-policy.md` line 15 and README Privacy (line 149) say network use = api.anthropic.com only for Ask AI, with the user's key, only when a question is sent; README Premium + Remove steps (credential); CHANGELOG [Unreleased]; `Package.appxmanifest` adds `internetClient` (full trust is not network-isolated, but the Store listing should declare it); THIRD-PARTY-NOTICES (Markdig BSD-2, Anthropic SDK MIT if used).
+- [x] M10.5 Independent review (risk gate: credentials, network, data leaving the PC) by opus-risk-reviewer; one correction loop. `scripts\publish-release.ps1` exit 0, smoke on the extracted zip. Done 12 October 2026: review APPROVED, no Critical / Important, 6 Minor. Fixed: Test key 30 s limit (stall-server check: timeout message after 35 s), any cancel not by the caller maps to the timeout message, license checked again at send, a key of 8 characters or fewer shows "API key saved.". Left as follow-ups: `DefaultProxyCredentials` for NTLM / Kerberos proxies, SSE line / event size cap. `publish-release.ps1` exit 0, `Clipmark-1.0.0-win-x64.zip` 30,174,872 bytes, 242 files, no pdb; smoke GREEN on the extracted exe.
+
+### Risks
+- Captures leave the PC: consent dialog, privacy policy and README must ship in the same release; redacted pixels only; base image never sent.
+- API key: Credential Manager is readable by any process of the same user (same level as browser-stored secrets). Accepted, stated in Settings.
+- Corporate proxy / TLS inspection can block api.anthropic.com: clear error, no silent retry loop.
+- AOT: SDK or Markdig may use reflection; the spike decides, raw HTTP is the fallback; Markdig without fallback would mean own minimal parser (re-ask).
+- Wide all-monitor captures (7040x1748) shrink to 2576x640: small text gets unreadable. Shown as "sent at WxH" in the flyout; tiling deferred.
+- Model IDs are fixed in Core; a retired model returns 404: needs a release to update.
+- Refusal false positives (Sonnet 5.5 safety categories) cost the user a request.
+
+### Rollback
+Additive feature: remove the button and the Settings section; `--restore-system` and the README Remove steps delete `Clipmark/AnthropicKey`. No server, nothing on IT-BAER infrastructure.
+
+### Blocker
+- Owner's Anthropic API key for M10.0 d) and the M10.3 real call (cents). Provided through the Bitwarden broker (claude-bw) or typed into Settings by the owner; never printed.
+
+### Deferred
+- Relay (owner decided BYOK only); becomes relevant if buyers without a key ask for Ask AI.
+- Tiling of wide captures; token / cost display per answer; chat persistence; OCR text as extra context; recordings.
+
+## M11 Own OCR engine (12-13 October 2026)
+Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Microsoft's private code. Benchmark and prototype in
+`.claude\ocr-bench` (not committed): 54 generated images (48 GDI / GDI+ ClearType and grayscale text images in 10 fonts, 11-32 px,
+10 themes; 6 full screens 1920x1080 to 3840x2160), ground truth per line, CER with optimal line assignment.
+- [x] M11.1 References: Snipping Tool 11.2608.41.0 through its own UI (UIA: open file, Text scannen, copy all text) 2.40% CER /
+  81.4% exact lines; Windows.Media.Ocr de-DE 8.52% / 59.4%.
+- [x] M11.2 Variants (Python, ONNX Runtime): PP-OCRv6 small det + rec best; worse: v6 medium det / rec, v5 mobile det, v5 latin rec
+  (0.65%), box padding, cubic / area resize, INT8 rec (3.08%). Gains: crop lines from the full-resolution image, one line per rec
+  call with 2 line heights of right padding, det long side up to 3200, same-row merge, drop <= 2-char lines below 0.9 confidence
+  (toolbar icons). Recognizer head pruned to 1652 Latin / Greek / symbol characters: 21.2 MB -> 12.9 MB, same output.
+- [x] M11.3 C# engine `Clipmark.Core.TextActions.Ocr` (ONNX Runtime 1.30.0, models in `Assets\Ocr`), 24 tests; word boxes tile the
+  line box at space centers (Quick redact covers whole words). Bench: C# = Python = 0.22% CER / 95.0% exact lines (78 edits /
+  35433 chars); small images 0.18% (Snipping Tool 0.97%), screens 0.25% (3.43%). Median 374 ms per image, 2560x1440 screen 2.1 s.
+- [x] M11.4 App: `TextRecognizer` uses the engine unless the Windows OCR language is not Latin script (then Windows OCR, also the
+  fallback on any engine failure); engine cached, disposed after 2 min idle with a compacting GC. Detector without memory arena
+  (it kept ~640 MB). AOT: private 118 MB -> 233 MB while cached, 147 MB after idle (Windows OCR path: 130 MB). Release zip
+  57,345,321 bytes (was 30,174,872). Text actions highlight: one rounded cutout per line, dim black alpha 110, matches Snipping
+  Tool within 4 px on the fixture. Core 503 / 503, regression 19 / 19, aot-uia-smoke GREEN (reads "+43 660").
+- Open: real-world screenshots without ground truth only checked by eye; light theme and other text sizes of the highlight not
+  measured; CJK / Cyrillic users keep Windows OCR.

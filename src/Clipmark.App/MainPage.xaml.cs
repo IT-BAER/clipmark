@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
+using System.Numerics;
 using Windows.System;
 
 namespace Clipmark.App;
@@ -195,7 +196,7 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
         SaveEditableItem.Visibility = Visibility.Collapsed;
-        AgentButton.Visibility = Visibility.Collapsed; // the agents take images, not video
+        AgentButton.Visibility = AskAiButton.Visibility = Visibility.Collapsed; // the agents take images, not video
     }
 
     private void CloseVideo()
@@ -207,7 +208,7 @@ public sealed partial class MainPage : Page
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
         SaveEditableItem.Visibility = Visibility.Visible;
-        AgentButton.Visibility = Visibility.Visible;
+        AgentButton.Visibility = AskAiButton.Visibility = Visibility.Visible;
     }
 
     internal void ShowImage(string path) => ShowEditor(new EditorCanvas(path), CaptureHistory.IdFor(path));
@@ -219,6 +220,7 @@ public sealed partial class MainPage : Page
     {
         AppLicense.Refresh();
         CloseVideo();
+        ResetAiChat();
         if (_editor is not null)
         {
             _ = WriteHistoryAsync();
@@ -260,6 +262,8 @@ public sealed partial class MainPage : Page
         }
         if (_editor is null)
             return;
+        ResetAiChat();
+        HideAiFlyout();
         _ = WriteHistoryAsync();
         _editor.Close();
         _editor = null;
@@ -343,7 +347,9 @@ public sealed partial class MainPage : Page
         KeyboardAccelerators.Add(accelerator);
     }
 
-    private bool Typing => _editor?.IsEditingText == true || (XamlRoot is not null && FocusManager.GetFocusedElement(XamlRoot) is TextBox);
+    /// <remarks>The Ask AI flyout counts as typing: Ctrl+C there copies selected answer text, not the capture.</remarks>
+    private bool Typing => _aiFlyout?.IsOpen == true || _editor?.IsEditingText == true
+        || (XamlRoot is not null && FocusManager.GetFocusedElement(XamlRoot) is TextBox);
 
     private static VirtualKeyModifiers Modifiers()
     {
@@ -363,8 +369,8 @@ public sealed partial class MainPage : Page
     /// </summary>
     internal bool HandleKey(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_editor is null)
-            return false;
+        if (_editor is null || _aiFlyout?.IsOpen == true)
+            return false; // Esc in the Ask AI flyout closes the flyout, not the selection
         // Text being edited keeps every key except Esc, which commits it.
         if (_editor.IsEditingText)
         {
@@ -460,6 +466,7 @@ public sealed partial class MainPage : Page
         PremiumFeature.Eyedropper => "the eyedropper",
         PremiumFeature.SendToAi => "sending captures to AI assistants",
         PremiumFeature.History => "the capture history",
+        PremiumFeature.AiChat => "asking AI about your captures",
         _ => "saving editable PNGs",
     };
 
@@ -483,6 +490,7 @@ public sealed partial class MainPage : Page
             ? "Save as editable PNG (Ctrl+Shift+S)" : "Save as editable PNG (Premium)";
         ToolTipService.SetToolTip(AgentButton, license.IsEnabled(PremiumFeature.SendToAi) ? "Send to AI" : "Send to AI (Premium)");
         ToolTipService.SetToolTip(HistoryButton, license.IsEnabled(PremiumFeature.History) ? "Capture history" : "Capture history (Premium)");
+        ToolTipService.SetToolTip(AskAiButton, license.IsEnabled(PremiumFeature.AiChat) ? "Ask AI about this capture" : "Ask AI (Premium)");
         if (PremiumFor(_tool) is { } current && !license.IsEnabled(current))
             _tool = EditorTool.Pen; // the editor commits text being edited on the tool change
         ApplyTool();
@@ -1328,7 +1336,10 @@ public sealed partial class MainPage : Page
             return;
         TextActionsBusy = false;
         _lines = lines ?? [];
-        editor.Highlights = [.. _lines.SelectMany(l => l.Words.Select(w => w.Box)), .. codes.Select(c => c.Box)];
+        // One box per line, padded to Snipping Tool's look (image pixels); detector line boxes already carry ~9 x 7 px margin.
+        editor.Highlights = [
+            .. _lines.Where(l => l.Words.Count > 0).Select(l => Pad(l.Words.Select(w => w.Box).Aggregate((a, b) => a.Union(b)), new Vector2(3, 4))),
+            .. codes.Select(c => Pad(c.Box, new Vector2(12)))];
         string text = lines is null
             ? "No text recognition language is installed (Settings > Time & language > Language & region)."
             : _lines.Count == 0 ? "No text found." : _lines.Count == 1 ? "1 line of text." : $"{_lines.Count} lines of text.";
@@ -1338,6 +1349,8 @@ public sealed partial class MainPage : Page
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
         for (int i = 0; i < codes.Count; i++)
             QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? "" : $" {i + 1}"));
+
+        static FloatRect Pad(FloatRect r, Vector2 by) => new(r.Min - by, r.Max + by);
     }
 
     /// <summary>Payload (shortened), Copy, and Open link for http / https.</summary>

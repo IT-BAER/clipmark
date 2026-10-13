@@ -1,3 +1,4 @@
+using Clipmark.Core.Ai;
 using Clipmark.Core.Settings;
 
 namespace Clipmark.Core.Tests;
@@ -19,6 +20,8 @@ public class SettingsStoreTests
         Assert.True(s.RecordSystemAudio);
         Assert.False(s.RecordMicrophone);
         Assert.False(s.HistoryEnabled);
+        Assert.Equal(AiModels.Default.Id, s.AiModel);
+        Assert.False(s.AiConsent);
     }
 
     [Fact]
@@ -30,8 +33,17 @@ public class SettingsStoreTests
             Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = true,
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
+            AiModel = "claude-opus-5-5", AiConsent = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
+    }
+
+    [Fact]
+    public void Unknown_model_id_is_kept_as_read()
+    {
+        var s = SettingsStore.Parse("""{ "aiModel": "claude-future-9", "aiConsent": true }""");
+        Assert.Equal("claude-future-9", s.AiModel);
+        Assert.True(s.AiConsent);
     }
 
     [Fact]
@@ -83,6 +95,8 @@ public class SettingsStoreTests
         Assert.True(s.RecordSystemAudio);
         Assert.False(s.RecordMicrophone);
         Assert.False(s.HistoryEnabled);
+        Assert.Equal(AiModels.Default.Id, s.AiModel);
+        Assert.False(s.AiConsent);
     }
 
     [Fact]

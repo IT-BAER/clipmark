@@ -109,6 +109,24 @@
                     <TextBlock x:Name="RecordingsFolderText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 
+                <StackPanel x:Name="AiSection" Spacing="8">
+                    <TextBlock Text="Ask AI" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <TextBlock x:Name="AiKeyStatus" TextWrapping="Wrap" AutomationProperties.Name="API key status" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <PasswordBox x:Name="AiKeyBox" PlaceholderText="Paste your Anthropic API key" Width="380"
+                                     AutomationProperties.Name="Anthropic API key" />
+                        <Button Content="Save" Click="OnAiSave" AutomationProperties.Name="Save API key" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button x:Name="AiTestButton" Content="Test key" Click="OnAiTest" AutomationProperties.Name="Test API key" />
+                        <Button x:Name="AiRemoveButton" Content="Remove key" Click="OnAiRemove" AutomationProperties.Name="Remove API key" />
+                    </StackPanel>
+                    <TextBlock x:Name="AiResultText" TextWrapping="Wrap" AutomationProperties.Name="API key result" />
+                    <ComboBox x:Name="AiModelBox" Header="Model" MinWidth="220" SelectionChanged="OnAiModelChanged"
+                              AutomationProperties.Name="AI model" />
+                    <TextBlock x:Name="AiHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
                 <StackPanel Spacing="4">
                     <TextBlock Text="About" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <TextBlock x:Name="VersionText" AutomationProperties.Name="Version" />

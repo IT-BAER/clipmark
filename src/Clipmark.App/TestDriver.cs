@@ -31,8 +31,12 @@ namespace Clipmark.App;
 /// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
-/// | settext NAME VALUE (TextBox, value = last word) | assert text NAME = TEXT (TextBlock contains) | assert none NAME | assert tool TOOL
+/// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
+/// | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
 /// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0)
+/// | askai (Ask AI button) | aiask TEXT (types the question, clicks Send) | aiwait (answer finished, up to 30 s)
+/// | aikey KEY|none (stores or deletes the API key) | aikeyenv VAR (key from an environment variable)
+/// | assert answer TEXT (last answer contains) | assert answers N | ready (a capture is shown, up to 15 s)
 /// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
@@ -49,7 +53,6 @@ internal sealed class TestDriver
         _timer = page.DispatcherQueue.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(100);
         _timer.Tick += async (_, _) => await PollAsync();
-        _timer.Start();
     }
 
     private XamlRoot? _root;
@@ -68,18 +71,33 @@ internal sealed class TestDriver
         string cmd = Path.Combine(_dir, "cmd.txt");
         if (_busy || !File.Exists(cmd))
             return;
+        string[] lines;
+        try
+        {
+            lines = File.ReadAllLines(cmd);
+            File.Delete(cmd);
+        }
+        catch (IOException)
+        {
+            return; // another process (a virus scanner) still holds the new file: next tick
+        }
         _busy = true;
         string line = "", result = "ok";
         try
         {
-            string[] lines = File.ReadAllLines(cmd);
-            File.Delete(cmd);
             foreach (string raw in lines)
             {
                 line = raw;
                 var parts = raw.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length > 0 && !parts[0].StartsWith('#'))
-                    await RunAsync(parts[0], parts.Length > 1 ? parts[1] : "");
+                if (parts.Length == 0 || parts[0].StartsWith('#'))
+                    continue;
+                // The cloaked test window can lose the foreground to the user's desktop; reopen as a user would.
+                if (_page.AiDismissedInBackground && _page.IsLoaded)
+                {
+                    _page.OpenAskAi();
+                    await Task.Delay(400);
+                }
+                await RunAsync(parts[0], parts.Length > 1 ? parts[1] : "");
             }
         }
         catch (Exception e)
@@ -275,11 +293,22 @@ internal sealed class TestDriver
                 break;
             case "settext":
                 int textCut = arg.LastIndexOf(' ');
-                (Find(arg[..textCut]) as TextBox ?? throw new InvalidOperationException("text box not found")).Text = arg[(textCut + 1)..];
+                switch (Find(arg[..textCut]))
+                {
+                    case TextBox tb: tb.Text = arg[(textCut + 1)..]; break;
+                    case PasswordBox pb: pb.Password = arg[(textCut + 1)..]; break;
+                    default: throw new InvalidOperationException("text box not found");
+                }
+                break;
+            case "select":
+                int selectCut = arg.LastIndexOf(' ');
+                (Find(arg[..selectCut]) as ComboBox ?? throw new InvalidOperationException("combo box not found")).SelectedIndex =
+                    int.Parse(arg[(selectCut + 1)..], CultureInfo.InvariantCulture);
                 break;
             case "assert" when arg.StartsWith("text "):
                 var (textName, expectedText) = (arg[5..].Split(" = ", 2)[0], arg[5..].Split(" = ", 2)[1]);
-                string shownText = (Find(textName) as TextBlock)?.Text ?? throw new InvalidOperationException("text block not found");
+                string shownText = Find(textName) switch { TextBlock tb => tb.Text, TextBox shownBox => shownBox.Text, _ => null }
+                    ?? throw new InvalidOperationException("text block not found");
                 if (!shownText.Contains(expectedText, StringComparison.Ordinal))
                     throw new InvalidOperationException($"text is '{shownText}'");
                 break;
@@ -317,6 +346,17 @@ internal sealed class TestDriver
                 if (selected != int.Parse(arg[9..], CultureInfo.InvariantCulture))
                     throw new InvalidOperationException($"{selected} selected");
                 break;
+            case "assert" when arg.StartsWith("answers "):
+                int answers = Answers().Count;
+                if (answers != int.Parse(arg[8..], CultureInfo.InvariantCulture))
+                    throw new InvalidOperationException($"{answers} answers");
+                break;
+            case "assert" when arg.StartsWith("answer "):
+                string answerText = Answers().LastOrDefault() is { } last
+                    ? string.Concat(last.Blocks.OfType<Microsoft.UI.Xaml.Documents.Paragraph>().Select(p => InlineText(p.Inlines) + "\n")) : "";
+                if (!answerText.Contains(arg[7..], StringComparison.Ordinal))
+                    throw new InvalidOperationException($"answer is '{answerText}'");
+                break;
             case "assert":
                 string state = _page.Editor?.Document is not { } doc ? "empty" : doc.IsDirty ? "dirty" : "clean";
                 if (state != arg)
@@ -346,6 +386,41 @@ internal sealed class TestDriver
                 int stored = (await CaptureHistory.ListAsync()).Count;
                 if (stored != int.Parse(arg, CultureInfo.InvariantCulture))
                     throw new InvalidOperationException($"{stored} history items");
+                break;
+            case "askai":
+                _page.OpenAskAi();
+                await Task.Delay(400);
+                break;
+            case "aiask":
+                (Find("Question") as TextBox ?? throw new InvalidOperationException("no question box")).Text = arg;
+                Click(Find("Send question") ?? throw new InvalidOperationException("no send button"), open: false);
+                await Task.Delay(300);
+                break;
+            case "ready":
+                for (int t = 0; _page.Editor?.Document is null; t += 100)
+                {
+                    if (t > 15000)
+                        throw new InvalidOperationException("no capture shown");
+                    await Task.Delay(100);
+                }
+                break;
+            case "aiwait":
+                for (int t = 0; _page.AiBusy; t += 100)
+                {
+                    if (t > 30000)
+                        throw new InvalidOperationException("the answer did not finish");
+                    await Task.Delay(100);
+                }
+                await Task.Delay(100);
+                break;
+            case "aikey":
+                if (!(arg == "none" ? Ai.AnthropicKeyStore.Delete() : Ai.AnthropicKeyStore.Save(arg)))
+                    throw new InvalidOperationException("credential not changed");
+                break;
+            case "aikeyenv":
+                // aikeyenv VAR: stores the key from an environment variable (real-call checks; the key never appears in a command file).
+                if (Environment.GetEnvironmentVariable(arg) is not { Length: > 0 } envKey || !Ai.AnthropicKeyStore.Save(envKey.Trim()))
+                    throw new InvalidOperationException($"{arg} not set or not stored");
                 break;
             case "openhistory":
                 var entries = await CaptureHistory.ListAsync();
@@ -379,6 +454,19 @@ internal sealed class TestDriver
         }
         return null;
     }
+
+    /// <summary>The Ask AI answers in the open flyout, oldest first.</summary>
+    private List<RichTextBlock> Answers() =>
+        VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).SelectMany(p => Descendants(p.Child)).OfType<RichTextBlock>()
+            .Where(r => AutomationProperties.GetName(r) == "Answer").ToList();
+
+    private static string InlineText(IEnumerable<Microsoft.UI.Xaml.Documents.Inline> inlines) => string.Concat(inlines.Select(i => i switch
+    {
+        Microsoft.UI.Xaml.Documents.Run r => r.Text,
+        Microsoft.UI.Xaml.Documents.Span s => InlineText(s.Inlines),
+        Microsoft.UI.Xaml.Documents.LineBreak => "\n",
+        _ => "",
+    }));
 
     private static IEnumerable<DependencyObject> Descendants(DependencyObject root)
     {

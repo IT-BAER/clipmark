@@ -903,15 +903,16 @@ internal sealed class EditorCanvas
     {
         if (_highlights.Count == 0)
             return;
-        var accent = Accent;
-        var fill = Windows.UI.Color.FromArgb(56, accent.R, accent.G, accent.B);
-        float dip = Scale / _zoom;
-        foreach (var r in _highlights)
-        {
-            var size = r.Max - r.Min;
-            ds.FillRectangle(r.Min.X, r.Min.Y, size.X, size.Y, fill);
-            ds.DrawRectangle(r.Min.X, r.Min.Y, size.X, size.Y, accent, dip);
-        }
+        // Snipping Tool look: the view darkened (white 255 -> 145), highlights cut out as rounded boxes in image pixels.
+        const float radius = 5;
+        var view = View;
+        var boxes = _highlights.Select(r => CanvasGeometry.CreateRoundedRectangle(ds, r.Min.X, r.Min.Y, r.Max.X - r.Min.X, r.Max.Y - r.Min.Y, radius, radius)).ToArray();
+        using var holes = CanvasGeometry.CreateGroup(ds, boxes, CanvasFilledRegionDetermination.Winding);
+        using var area = CanvasGeometry.CreateRectangle(ds, view.X, view.Y, view.Width, view.Height);
+        using var dim = area.CombineWith(holes, Matrix3x2.Identity, CanvasGeometryCombine.Exclude);
+        ds.FillGeometry(dim, Windows.UI.Color.FromArgb(110, 0, 0, 0));
+        foreach (var box in boxes)
+            box.Dispose();
     }
 
     /// <summary>Canvas color under the image; shows where the image is transparent or the canvas grew past it.</summary>
