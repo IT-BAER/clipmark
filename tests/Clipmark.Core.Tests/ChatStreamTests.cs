@@ -56,6 +56,20 @@ public sealed class ChatStreamTests
     }
 
     [Fact]
+    public async Task Thinking_goes_to_onThinking_and_signature_is_ignored()
+    {
+        const string Think = "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"thinking_delta\",\"thinking\":\"hmm\"}}\n\n"
+            + "event: content_block_delta\ndata: {\"type\":\"content_block_delta\",\"index\":0,\"delta\":{\"type\":\"signature_delta\",\"signature\":\"sig\"}}\n\n";
+        var text = new List<string>();
+        var thinking = new List<string>();
+
+        await ChatStream.ReadAsync(Body(Think + Delta("Hi") + Stop), text.Add, Idle, default, thinking.Add);
+
+        Assert.Equal(["hmm"], thinking);
+        Assert.Equal(["Hi"], text);
+    }
+
+    [Fact]
     public async Task A_character_split_across_reads_is_decoded_whole()
     {
         byte[] all = Encoding.UTF8.GetBytes(Delta("Grüße") + Stop);

@@ -52,9 +52,9 @@ internal static class ClaudeChat
         }
     }
 
-    /// <summary>Streams one answer: text deltas go to <paramref name="onText"/> on a pool thread. Returns the stop reason.</summary>
+    /// <summary>Streams one answer: text deltas go to <paramref name="onText"/> and thinking deltas to <paramref name="onThinking"/> on a pool thread. Returns the stop reason.</summary>
     /// <exception cref="AiException">The message to show.</exception>
-    public static async Task<string> SendAsync(string key, byte[] body, Action<string> onText, CancellationToken ct)
+    public static async Task<string> SendAsync(string key, byte[] body, Action<string> onText, CancellationToken ct, Action<string>? onThinking = null)
     {
         try
         {
@@ -65,7 +65,7 @@ internal static class ClaudeChat
             if (!response.IsSuccessStatusCode)
                 throw new AiException(await FailureAsync(response, ct).ConfigureAwait(false));
             using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
-            return await ChatStream.ReadAsync(stream, onText, Idle, ct).ConfigureAwait(false);
+            return await ChatStream.ReadAsync(stream, onText, Idle, ct, onThinking).ConfigureAwait(false);
         }
         catch (Exception e) when (Network(e, ct) is { } message)
         {

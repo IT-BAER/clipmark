@@ -2,13 +2,13 @@ using System.Text.Json;
 
 namespace Clipmark.Core.Ai;
 
-public enum ChatStreamKind { TextDelta, Stop, Error, Ignore }
+public enum ChatStreamKind { TextDelta, ThinkingDelta, Stop, Error, Ignore }
 
 public sealed record ChatStreamEvent(ChatStreamKind Kind, string? Text = null, string? StopReason = null, string? ErrorType = null, string? ErrorMessage = null)
 {
     private static readonly ChatStreamEvent IgnoreEvent = new(ChatStreamKind.Ignore);
 
-    /// <summary>Maps one Messages API stream payload; only text deltas, the stop reason and errors matter.</summary>
+    /// <summary>Maps one Messages API stream payload; only text and thinking deltas, the stop reason and errors matter.</summary>
     public static ChatStreamEvent From(string dataJson)
     {
         JsonDocument doc;
@@ -23,6 +23,8 @@ public sealed record ChatStreamEvent(ChatStreamKind Kind, string? Text = null, s
             {
                 case "content_block_delta" when root.TryGetProperty("delta", out var d) && Str(d, "type") == "text_delta" && Str(d, "text") is { } text:
                     return new ChatStreamEvent(ChatStreamKind.TextDelta, Text: text);
+                case "content_block_delta" when root.TryGetProperty("delta", out var d) && Str(d, "type") == "thinking_delta" && Str(d, "thinking") is { } thinking:
+                    return new ChatStreamEvent(ChatStreamKind.ThinkingDelta, Text: thinking);
                 case "message_delta" when root.TryGetProperty("delta", out var d) && Str(d, "stop_reason") is { } reason:
                     return new ChatStreamEvent(ChatStreamKind.Stop, StopReason: reason);
                 case "error":

@@ -1001,6 +1001,9 @@
   <data name="AskAiEffortName" xml:space="preserve">
     <value>Svarsdjup</value>
   </data>
+  <data name="AskAiThinking" xml:space="preserve">
+    <value>Resonemang</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>Språk</value>
   </data>

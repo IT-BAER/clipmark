@@ -27,7 +27,6 @@ public sealed class ChatStreamEventTests
     }
 
     [Theory]
-    [InlineData("""{"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":"x"}}""")]
     [InlineData("""{"type":"content_block_delta","index":0,"delta":{"type":"signature_delta","signature":"x"}}""")]
     [InlineData("""{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{"}}""")]
     [InlineData("""{"type":"message_delta","delta":{"stop_reason":null},"usage":{"output_tokens":1}}""")]
@@ -37,6 +36,13 @@ public sealed class ChatStreamEventTests
     public void Other_events_are_ignored(string json)
     {
         Assert.Equal(ChatStreamKind.Ignore, ChatStreamEvent.From(json).Kind);
+    }
+
+    [Fact]
+    public void Thinking_delta_maps_to_ThinkingDelta()
+    {
+        var e = ChatStreamEvent.From("""{"type":"content_block_delta","index":0,"delta":{"type":"thinking_delta","thinking":"hmm"}}""");
+        Assert.Equal(new ChatStreamEvent(ChatStreamKind.ThinkingDelta, Text: "hmm"), e);
     }
 
     [Fact]

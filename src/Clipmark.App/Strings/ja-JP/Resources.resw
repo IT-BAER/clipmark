@@ -1001,6 +1001,9 @@
   <data name="AskAiEffortName" xml:space="preserve">
     <value>回答の深さ</value>
   </data>
+  <data name="AskAiThinking" xml:space="preserve">
+    <value>思考</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>言語</value>
   </data>

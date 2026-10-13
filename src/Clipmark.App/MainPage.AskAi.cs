@@ -24,9 +24,10 @@ public sealed partial class MainPage
     private const int MaxImageBytes = 10_000_000 / 4 * 3;
 
     private readonly ChatConversation _chat = new();
-    private readonly List<(ChatRole Role, string Text, FrameworkElement View, RichTextBlock? Answer)> _aiViews = [];
-    // Text deltas from the network thread wait here for the 50 ms render tick; the lock also guards _aiRun.
+    private readonly List<(ChatRole Role, string Text, FrameworkElement View, RichTextBlock? Answer, string Thinking, TextBlock? ThinkingText)> _aiViews = [];
+    // Text and thinking deltas from the network thread wait here for the 50 ms render tick; the lock on _aiPending also guards _aiRun and _aiPendingThinking.
     private readonly StringBuilder _aiPending = new();
+    private readonly StringBuilder _aiPendingThinking = new();
     private int _aiRun;
     private CancellationTokenSource? _aiCts;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _aiTimer;
@@ -290,7 +291,14 @@ public sealed partial class MainPage
                     if (run == _aiRun)
                         _aiPending.Append(text);
                 }
-            }, cts.Token);
+            }, cts.Token, thinking =>
+            {
+                lock (_aiPending)
+                {
+                    if (run == _aiRun)
+                        _aiPendingThinking.Append(thinking);
+                }
+            });
         }
         catch (AiException e)
         {
@@ -309,11 +317,8 @@ public sealed partial class MainPage
         _aiCts = null;
         _aiTimer?.Stop();
         DrainAiText();
-        string? unanswered = _chat.Turns[^1].Role == ChatRole.User ? _chat.Turns[^1].Text : null;
-        if (error is null && !cancelled)
-            _chat.Complete(stop);
-        else
-            _chat.Fail();
+        // Complete and Fail both end the turn; an answer without text (thinking only) returns its question.
+        string? unanswered = _chat.Fail();
         if (unanswered is not null && _aiInput.Text.Length == 0)
             _aiInput.Text = unanswered; // no text came back: the question returns to the box
         SyncAiTurns();
@@ -376,19 +381,22 @@ public sealed partial class MainPage
         _aiTimer.Start();
     }
 
-    /// <summary>Moves the text received so far into the conversation; true when there was any.</summary>
+    /// <summary>Moves the thinking and text received so far into the conversation; true when there was any.</summary>
     private bool DrainAiText()
     {
-        string text;
+        string text, thinking;
         lock (_aiPending)
         {
             text = _aiPending.ToString();
+            thinking = _aiPendingThinking.ToString();
             _aiPending.Clear();
+            _aiPendingThinking.Clear();
         }
-        if (text.Length == 0)
-            return false;
-        _chat.AppendDelta(text);
-        return true;
+        if (thinking.Length > 0)
+            _chat.AppendThinking(thinking);
+        if (text.Length > 0)
+            _chat.AppendDelta(text);
+        return text.Length > 0 || thinking.Length > 0;
     }
 
     /// <summary>Ends the conversation (New chat, a new capture, closing the capture); a running answer is cancelled and dropped.</summary>
@@ -398,6 +406,7 @@ public sealed partial class MainPage
         {
             _aiRun++;
             _aiPending.Clear();
+            _aiPendingThinking.Clear();
         }
         _aiCts?.Cancel();
         _aiCts = null;
@@ -435,10 +444,13 @@ public sealed partial class MainPage
                 changed = true;
             }
             var view = _aiViews[i];
-            if (view.Answer is not null && view.Text != turns[i].Text)
+            if (view.Answer is not null && (view.Text != turns[i].Text || view.Thinking != turns[i].Thinking))
             {
-                MarkdownView.Render(view.Answer, turns[i].Text);
-                _aiViews[i] = view with { Text = turns[i].Text };
+                var turn = turns[i];
+                if (view.Text != turn.Text)
+                    MarkdownView.Render(view.Answer, turn.Text);
+                ShowAnswerParts((StackPanel)view.View, view.ThinkingText!, turn);
+                _aiViews[i] = view with { Text = turn.Text, Thinking = turn.Thinking };
                 changed = true;
             }
         }
@@ -446,7 +458,7 @@ public sealed partial class MainPage
             ScrollAiToEnd();
     }
 
-    private (ChatRole, string, FrameworkElement, RichTextBlock?) TurnView(int index, ChatTurn turn)
+    private (ChatRole, string, FrameworkElement, RichTextBlock?, string, TextBlock?) TurnView(int index, ChatTurn turn)
     {
         if (turn.Role == ChatRole.User)
         {
@@ -458,7 +470,7 @@ public sealed partial class MainPage
                 Child = new TextBlock { Text = turn.Text, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true },
             };
             AutomationProperties.SetName(bubble, Loc.Format("AskAiQuestionBubbleName", turn.Text));
-            return (ChatRole.User, turn.Text, bubble, null);
+            return (ChatRole.User, turn.Text, bubble, null, "", null);
         }
         var answer = new RichTextBlock { TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true };
         AutomationProperties.SetName(answer, Loc.Get("AskAiAnswerName"));
@@ -475,7 +487,36 @@ public sealed partial class MainPage
                     Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), _chat.Turns[index].Text))
                 ShowAiStatus(Loc.Get("ClipboardBusyAnswer"), error: true);
         };
-        return (ChatRole.Assistant, "", new StackPanel { Spacing = 2, Children = { answer, copy } }, answer);
+        var thinking = new TextBlock
+        {
+            TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true, Foreground = SecondaryBrush,
+            Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"],
+        };
+        var expander = new Expander
+        {
+            Header = new TextBlock { Text = Loc.Get("AskAiThinking"), Foreground = SecondaryBrush, Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"] },
+            IsExpanded = false, Content = thinking, MinHeight = 0, Padding = new Thickness(0),
+            HorizontalAlignment = HorizontalAlignment.Left, HorizontalContentAlignment = HorizontalAlignment.Left,
+        };
+        // Plain like the header: lightweight styling drops the card fill, border and height.
+        var clear = new SolidColorBrush(Colors.Transparent);
+        foreach (string key in (string[])["ExpanderHeaderBackground", "ExpanderHeaderBorderBrush", "ExpanderContentBackground", "ExpanderContentBorderBrush"])
+            expander.Resources[key] = clear;
+        expander.Resources["ExpanderMinHeight"] = 0d;
+        expander.Resources["ExpanderHeaderPadding"] = new Thickness(0, 0, 8, 0);
+        expander.Resources["ExpanderContentPadding"] = new Thickness(0, 4, 0, 4);
+        AutomationProperties.SetName(expander, Loc.Get("AskAiThinking"));
+        var panel = new StackPanel { Spacing = 2, Children = { expander, answer, copy } };
+        ShowAnswerParts(panel, thinking, new ChatTurn(ChatRole.Assistant, "", ""));
+        return (ChatRole.Assistant, "", panel, answer, "", thinking);
+    }
+
+    /// <summary>The panel holds the thinking expander, the answer and the copy button; a part without content is hidden.</summary>
+    private static void ShowAnswerParts(StackPanel panel, TextBlock thinking, ChatTurn turn)
+    {
+        thinking.Text = turn.Thinking;
+        panel.Children[0].Visibility = turn.Thinking.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+        panel.Children[2].Visibility = turn.Text.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void ScrollAiToEnd() =>

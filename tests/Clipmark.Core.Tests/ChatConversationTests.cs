@@ -89,6 +89,40 @@ public sealed class ChatConversationTests
     }
 
     [Fact]
+    public void Thinking_grows_the_assistant_turn_and_survives_text_deltas()
+    {
+        var c = Started();
+        c.Ask("q");
+        c.AppendThinking("a");
+        c.AppendThinking("b");
+        Assert.Equal((ChatRole.Assistant, "", "ab"), (c.Turns[^1].Role, c.Turns[^1].Text, c.Turns[^1].Thinking));
+
+        c.AppendDelta("Hi");
+        c.Complete("end_turn");
+        Assert.Equal(("Hi", "ab"), (c.Turns[^1].Text, c.Turns[^1].Thinking));
+    }
+
+    [Fact]
+    public void AppendThinking_is_ignored_when_not_busy()
+    {
+        var c = Started();
+        c.AppendThinking("x");
+        Assert.Empty(c.Turns);
+    }
+
+    [Fact]
+    public void Thinking_only_counts_as_no_answer()
+    {
+        var c = Started();
+        c.Ask("q");
+        c.AppendThinking("hmm");
+        c.AppendDelta("  ");
+
+        Assert.Equal("q", c.Fail());
+        Assert.Empty(c.Turns);
+    }
+
+    [Fact]
     public void Start_and_Reset_clear_the_turns_and_Reset_drops_the_image()
     {
         var c = Started();

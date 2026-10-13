@@ -9,10 +9,10 @@ public sealed class AiException(string message) : Exception(message);
 public static class ChatStream
 {
     /// <summary>
-    /// Reads a streaming Messages API body: text deltas go to <paramref name="onText"/> in order, the stop reason is returned.
+    /// Reads a streaming Messages API body: text deltas go to <paramref name="onText"/> and thinking deltas to <paramref name="onThinking"/> in order, the stop reason is returned.
     /// Throws <see cref="AiException"/> for an error event, a body that ends without a stop reason, or no data for <paramref name="idle"/>.
     /// </summary>
-    public static async Task<string> ReadAsync(Stream body, Action<string> onText, TimeSpan idle, CancellationToken ct)
+    public static async Task<string> ReadAsync(Stream body, Action<string> onText, TimeSpan idle, CancellationToken ct, Action<string>? onThinking = null)
     {
         var parser = new SseParser();
         var decoder = Encoding.UTF8.GetDecoder();
@@ -44,6 +44,9 @@ public static class ChatStream
                 {
                     case ChatStreamKind.TextDelta:
                         onText(e.Text!);
+                        break;
+                    case ChatStreamKind.ThinkingDelta:
+                        onThinking?.Invoke(e.Text!);
                         break;
                     case ChatStreamKind.Stop:
                         stopReason = e.StopReason;

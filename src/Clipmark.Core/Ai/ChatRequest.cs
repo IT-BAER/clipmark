@@ -4,7 +4,7 @@ namespace Clipmark.Core.Ai;
 
 public static class ChatRequest
 {
-    public const string SystemPrompt = "You answer questions about the attached screenshot. Reply in the user's language, concise.";
+    public const string SystemPrompt = "You answer questions about the attached screenshot. Reply in the language of the user's question, not the language shown in the screenshot. Be concise.";
 
     /// <summary>The streaming Messages API body. The image rides in the first user message only; a pending answer is left out.</summary>
     public static byte[] Build(ChatConversation c, string model, string effort = AiEfforts.Default, int maxTokens = 16000)
@@ -22,6 +22,7 @@ public static class ChatRequest
             w.WriteString("system", SystemPrompt);
             w.WriteStartObject("thinking");
             w.WriteString("type", "adaptive");
+            w.WriteString("display", "summarized");
             w.WriteEndObject();
             w.WriteStartObject("output_config");
             w.WriteString("effort", effort);
