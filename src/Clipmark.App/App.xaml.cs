@@ -87,7 +87,9 @@ public partial class App : Application
         // Before any window or Loc use; test mode pins a language so TestDriver's English names work on any Windows.
         string? language = TestDir is null ? AppSettings.Current.Language
             : Environment.GetEnvironmentVariable("CLIPMARK_TEST_LANG") is { Length: > 0 } testLang ? testLang : "en-US";
-        Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language ?? "";
+        // MRT Core rejects "" (E_INVALIDARG); the override is per process, so no override = the Windows display language.
+        if (language is not null)
+            Microsoft.Windows.Globalization.ApplicationLanguages.PrimaryLanguageOverride = language;
         Clipmark.Core.CoreText.Resolve = Loc.TryGet;
         string? marker = Arg("--measure-startup");
         _dispatcher = DispatcherQueue.GetForCurrentThread();
