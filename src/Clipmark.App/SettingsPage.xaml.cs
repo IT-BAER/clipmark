@@ -43,8 +43,8 @@ public sealed partial class SettingsPage : Page
             DelayBox.Items.Add(MainPage.DelayText(d));
         foreach (var model in AiModels.All)
             AiModelBox.Items.Add(model.Name);
-        foreach (string key in (string[])["AiEffortLow", "AiEffortMedium", "AiEffortHigh"]) // order of AiEfforts.All
-            AiEffortBox.Items.Add(Loc.Get(key));
+        foreach (string effort in AiEfforts.All)
+            AiEffortBox.Items.Add(MainPage.EffortText(effort));
         LanguageBox.Items.Add(Loc.Get("LanguageWindowsDefault"));
         foreach (var language in UiLanguages.All)
             LanguageBox.Items.Add(language.NativeName);

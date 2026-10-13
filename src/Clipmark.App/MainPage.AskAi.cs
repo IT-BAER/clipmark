@@ -35,6 +35,7 @@ public sealed partial class MainPage
     private ScrollViewer _aiScroll = null!;
     private TextBox _aiInput = null!;
     private Button _aiSend = null!, _aiNewChat = null!;
+    private ComboBox _aiEffort = null!;
     private TextBlock _aiModelText = null!, _aiStatus = null!;
     private string? _aiSentAt;
 
@@ -122,11 +123,38 @@ public sealed partial class MainPage
             else
                 _ = AskAsync();
         };
+        // Same saved value as Settings > Ask AI > Answer depth; applies to the next question.
+        _aiEffort = new ComboBox { VerticalAlignment = VerticalAlignment.Bottom };
+        foreach (string effort in AiEfforts.All)
+            _aiEffort.Items.Add(EffortText(effort));
+        // A ComboBox sizes to the selected label; the widest label's width keeps the question box from moving on a change.
+        _aiEffort.Loaded += (_, _) =>
+        {
+            if (_aiEffort.MinWidth > 0 || _aiEffort.SelectedItem is not string shown)
+                return;
+            static double TextWidth(string text)
+            {
+                var t = new TextBlock { Text = text };
+                t.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+                return t.DesiredSize.Width;
+            }
+            _aiEffort.MinWidth = _aiEffort.ActualWidth - TextWidth(shown) + _aiEffort.Items.Cast<string>().Max(TextWidth);
+        };
+        AutomationProperties.SetName(_aiEffort, Loc.Get("AskAiEffortName"));
+        ToolTipService.SetToolTip(_aiEffort, Loc.Get("AskAiEffortName"));
+        _aiEffort.SelectionChanged += (_, _) =>
+        {
+            if (_aiEffort.SelectedIndex >= 0 && AiEfforts.All[_aiEffort.SelectedIndex] is var effort && effort != AppSettings.Current.AiEffort)
+                AppSettings.Update(s => s with { AiEffort = effort });
+        };
         var input = new Grid { ColumnSpacing = 8 };
         input.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         input.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-        Grid.SetColumn(_aiSend, 1);
+        input.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+        Grid.SetColumn(_aiEffort, 1);
+        Grid.SetColumn(_aiSend, 2);
         input.Children.Add(_aiInput);
+        input.Children.Add(_aiEffort);
         input.Children.Add(_aiSend);
         _aiChatPanel = new StackPanel { Spacing = 8, Children = { _aiScroll, _aiStatus, input } };
 
@@ -158,13 +186,17 @@ public sealed partial class MainPage
 
     private static Brush SecondaryBrush => (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"];
 
-    /// <summary>Key hint or chat, and the model name; a key saved or removed in Settings shows on the next open.</summary>
+    /// <summary>Label for an <see cref="AiEfforts"/> value: resource AiEffortLow / AiEffortMedium / AiEffortHigh.</summary>
+    internal static string EffortText(string effort) => Loc.Get("AiEffort" + char.ToUpperInvariant(effort[0]) + effort[1..]);
+
+    /// <summary>Key hint or chat, model name and answer depth; a key saved or removed in Settings shows on the next open.</summary>
     private void SyncAiFlyout()
     {
         bool hasKey = AnthropicKeyStore.HasKey;
         _aiNoKeyPanel.Visibility = hasKey ? Visibility.Collapsed : Visibility.Visible;
         _aiChatPanel.Visibility = hasKey ? Visibility.Visible : Visibility.Collapsed;
         _aiModelText.Text = AiModels.Find(AppSettings.Current.AiModel).Name;
+        _aiEffort.SelectedIndex = AiEfforts.All.ToList().IndexOf(AppSettings.Current.AiEffort);
     }
 
     private void ShowAiBusy()

@@ -1007,6 +1007,9 @@
   <data name="AiEffortHigh" xml:space="preserve">
     <value>Kapsamlı</value>
   </data>
+  <data name="AskAiEffortName" xml:space="preserve">
+    <value>Yanıt derinliği</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>Dil</value>
   </data>

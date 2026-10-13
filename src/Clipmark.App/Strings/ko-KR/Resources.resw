@@ -1007,6 +1007,9 @@
   <data name="AiEffortHigh" xml:space="preserve">
     <value>심층</value>
   </data>
+  <data name="AskAiEffortName" xml:space="preserve">
+    <value>답변 깊이</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>언어</value>
   </data>
