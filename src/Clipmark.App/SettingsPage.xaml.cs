@@ -43,6 +43,8 @@ public sealed partial class SettingsPage : Page
             DelayBox.Items.Add(MainPage.DelayText(d));
         foreach (var model in AiModels.All)
             AiModelBox.Items.Add(model.Name);
+        foreach (string key in (string[])["AiEffortLow", "AiEffortMedium", "AiEffortHigh"]) // order of AiEfforts.All
+            AiEffortBox.Items.Add(Loc.Get(key));
         LanguageBox.Items.Add(Loc.Get("LanguageWindowsDefault"));
         foreach (var language in UiLanguages.All)
             LanguageBox.Items.Add(language.NativeName);
@@ -80,6 +82,7 @@ public sealed partial class SettingsPage : Page
         ShowStartup(SystemIntegration.StartupStateAsync);
         VersionText.Text = Loc.Format("VersionText", App.Version);
         AiModelBox.SelectedIndex = AiModels.All.ToList().IndexOf(AiModels.Find(s.AiModel));
+        AiEffortBox.SelectedIndex = AiEfforts.All.ToList().IndexOf(s.AiEffort);
         LanguageBox.SelectedIndex = 1 + UiLanguages.All.ToList().FindIndex(l => l.Tag == s.Language); // -1 + 1 = Windows default
         ShowAiKey();
         ShowLicense();
@@ -149,6 +152,12 @@ public sealed partial class SettingsPage : Page
     {
         if (!_loading && AiModelBox.SelectedIndex >= 0)
             AppSettings.Update(s => s with { AiModel = AiModels.All[AiModelBox.SelectedIndex].Id });
+    }
+
+    private void OnAiEffortChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loading && AiEffortBox.SelectedIndex >= 0)
+            AppSettings.Update(s => s with { AiEffort = AiEfforts.All[AiEffortBox.SelectedIndex] });
     }
 
     /// <summary>Takes effect at the next start: App applies the language override once, before the first window.</summary>

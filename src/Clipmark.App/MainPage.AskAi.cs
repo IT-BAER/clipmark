@@ -247,7 +247,7 @@ public sealed partial class MainPage
         _chat.Ask(question);
         _aiInput.Text = "";
         var model = AiModels.Find(AppSettings.Current.AiModel);
-        byte[] body = ChatRequest.Build(_chat, model.Id);
+        byte[] body = ChatRequest.Build(_chat, model.Id, AppSettings.Current.AiEffort);
         var cts = _aiCts = new CancellationTokenSource();
         SyncAiTurns();
         ShowAiBusy();

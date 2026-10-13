@@ -20,7 +20,7 @@ public sealed class ChatRequestTests
         Assert.Equal(16000, r.GetProperty("max_tokens").GetInt32());
         Assert.True(r.GetProperty("stream").GetBoolean());
         Assert.Equal(ChatRequest.SystemPrompt, r.GetProperty("system").GetString());
-        Assert.Equal("low", r.GetProperty("output_config").GetProperty("effort").GetString());
+        Assert.Equal("medium", r.GetProperty("output_config").GetProperty("effort").GetString());
 
         var msgs = r.GetProperty("messages");
         Assert.Equal(1, msgs.GetArrayLength());

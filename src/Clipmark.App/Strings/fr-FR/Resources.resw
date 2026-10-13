@@ -992,6 +992,21 @@
   <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Modèle d'IA</value>
   </data>
+  <data name="SettingsAiEffort.Header" xml:space="preserve">
+    <value>Profondeur de réponse</value>
+  </data>
+  <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Profondeur de réponse de l'IA</value>
+  </data>
+  <data name="AiEffortLow" xml:space="preserve">
+    <value>Rapide</value>
+  </data>
+  <data name="AiEffortMedium" xml:space="preserve">
+    <value>Équilibrée</value>
+  </data>
+  <data name="AiEffortHigh" xml:space="preserve">
+    <value>Approfondie</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>Langue</value>
   </data>

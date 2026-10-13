@@ -113,6 +113,7 @@
                     </StackPanel>
                     <TextBlock x:Name="AiResultText" x:Uid="SettingsAiResult" TextWrapping="Wrap" />
                     <ComboBox x:Name="AiModelBox" x:Uid="SettingsAiModel" MinWidth="220" SelectionChanged="OnAiModelChanged" />
+                    <ComboBox x:Name="AiEffortBox" x:Uid="SettingsAiEffort" MinWidth="220" SelectionChanged="OnAiEffortChanged" />
                     <TextBlock x:Name="AiHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
 

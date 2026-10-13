@@ -130,6 +130,24 @@ public class SettingsStoreTests
     }
 
     [Fact]
+    public void Ai_effort_round_trips_and_defaults_to_medium()
+    {
+        Assert.Equal("medium", new ClipmarkSettings().AiEffort);
+        Assert.Equal("medium", SettingsStore.Parse("""{ "hotkey": "Ctrl+F8" }""").AiEffort);
+        Assert.Equal("high", SettingsStore.Parse(SettingsStore.Serialize(new ClipmarkSettings { AiEffort = "high" })).AiEffort);
+        Assert.Equal("low", SettingsStore.Parse("""{ "aiEffort": "low" }""").AiEffort);
+    }
+
+    [Theory]
+    [InlineData("max")]
+    [InlineData("HIGH")]
+    [InlineData("")]
+    public void Unknown_ai_effort_reads_as_medium(string effort)
+    {
+        Assert.Equal("medium", SettingsStore.Parse($$"""{ "aiEffort": "{{effort}}" }""").AiEffort);
+    }
+
+    [Fact]
     public void Ui_languages_are_unique_tags_with_native_names()
     {
         Assert.Equal(16, UiLanguages.All.Count);

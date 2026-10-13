@@ -992,6 +992,21 @@
   <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>AI-modell</value>
   </data>
+  <data name="SettingsAiEffort.Header" xml:space="preserve">
+    <value>Svarsdjup</value>
+  </data>
+  <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>AI-svarsdjup</value>
+  </data>
+  <data name="AiEffortLow" xml:space="preserve">
+    <value>Snabb</value>
+  </data>
+  <data name="AiEffortMedium" xml:space="preserve">
+    <value>Balanserad</value>
+  </data>
+  <data name="AiEffortHigh" xml:space="preserve">
+    <value>Grundlig</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>Språk</value>
   </data>

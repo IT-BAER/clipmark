@@ -9,8 +9,9 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Clipmark Premium: 30-day trial, then offline license keys. Premium covers select, attached arrows, text, fill,
   eyedropper, editable PNG, Send to AI, Ask AI and the capture history; editable PNGs still open without a license.
 - Ask AI: ask Claude about the capture in a toolbar flyout with your own Anthropic API key (Sonnet 5.5, Opus 5.5 or
-  Haiku 5.5). Answers stream in as formatted text; Stop, follow-up questions and New chat. The key is kept in Windows
-  Credential Manager; the first send asks for consent. This is the only feature that uses the network.
+  Haiku 5.5; answer depth Fast, Balanced or Thorough in Settings). Answers stream in as formatted text; Stop,
+  follow-up questions and New chat. The key is kept in Windows Credential Manager; the first send asks for consent.
+  This is the only feature that uses the network.
 - Send to AI: pastes the capture into a running Claude Code or Codex CLI, the Claude or ChatGPT desktop app, or the
   Claude or Codex VS Code extension, with each agent's own icon in the menu.
 - Capture history (opt-in): the last 25 captures, encrypted for the Windows user, with a thumbnail flyout; edits are

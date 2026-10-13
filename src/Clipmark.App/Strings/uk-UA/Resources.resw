@@ -992,6 +992,21 @@
   <data name="SettingsAiModel.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Модель ШІ</value>
   </data>
+  <data name="SettingsAiEffort.Header" xml:space="preserve">
+    <value>Глибина відповіді</value>
+  </data>
+  <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Глибина відповіді ШІ</value>
+  </data>
+  <data name="AiEffortLow" xml:space="preserve">
+    <value>Швидко</value>
+  </data>
+  <data name="AiEffortMedium" xml:space="preserve">
+    <value>Збалансовано</value>
+  </data>
+  <data name="AiEffortHigh" xml:space="preserve">
+    <value>Детально</value>
+  </data>
   <data name="SettingsLanguageHeader.Text" xml:space="preserve">
     <value>Мова</value>
   </data>

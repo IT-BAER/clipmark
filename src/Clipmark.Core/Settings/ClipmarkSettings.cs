@@ -30,6 +30,9 @@ public sealed record ClipmarkSettings
     /// <summary>Model id for Ask AI; kept as read, resolve it with <see cref="AiModels.Find"/>.</summary>
     public string AiModel { get; init; } = AiModels.Default.Id;
 
+    /// <summary>Ask AI <c>output_config.effort</c>, one of <see cref="AiEfforts.All"/>.</summary>
+    public string AiEffort { get; init; } = AiEfforts.Default;
+
     /// <summary>The user accepted sending captures to Anthropic.</summary>
     public bool AiConsent { get; init; }
 
@@ -90,6 +93,7 @@ public static class SettingsStore
             w.WriteBoolean("recordMicrophone", s.RecordMicrophone);
             w.WriteBoolean("historyEnabled", s.HistoryEnabled);
             w.WriteString("aiModel", s.AiModel);
+            w.WriteString("aiEffort", s.AiEffort);
             w.WriteBoolean("aiConsent", s.AiConsent);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteString("language", s.Language);
@@ -131,6 +135,7 @@ public static class SettingsStore
                 RecordMicrophone = Bool("recordMicrophone", d.RecordMicrophone),
                 HistoryEnabled = Bool("historyEnabled", d.HistoryEnabled),
                 AiModel = string.IsNullOrWhiteSpace(Str("aiModel")) ? d.AiModel : Str("aiModel")!,
+                AiEffort = AiEfforts.All.Contains(Str("aiEffort")) ? Str("aiEffort")! : d.AiEffort,
                 AiConsent = Bool("aiConsent", d.AiConsent),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
                 Language = UiLanguages.IsValid(Str("language")) ? Str("language") : null,

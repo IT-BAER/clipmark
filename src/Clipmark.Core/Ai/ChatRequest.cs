@@ -7,7 +7,7 @@ public static class ChatRequest
     public const string SystemPrompt = "You answer questions about the attached screenshot. Reply in the user's language, concise.";
 
     /// <summary>The streaming Messages API body. The image rides in the first user message only; a pending answer is left out.</summary>
-    public static byte[] Build(ChatConversation c, string model, string effort = "low", int maxTokens = 16000)
+    public static byte[] Build(ChatConversation c, string model, string effort = AiEfforts.Default, int maxTokens = 16000)
     {
         var turns = c.Turns;
         int count = c.IsBusy && turns.Count > 0 && turns[^1].Role == ChatRole.Assistant ? turns.Count - 1 : turns.Count;
