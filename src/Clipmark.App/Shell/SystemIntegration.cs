@@ -10,7 +10,12 @@ namespace Clipmark.App.Shell;
 /// </summary>
 internal static class SystemIntegration
 {
-    private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run", RunValue = "Clipmark";
+    private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+#if DEBUG
+    private const string RunValue = "Clipmark.Debug"; // keeps an installed release's autostart entry intact
+#else
+    private const string RunValue = "Clipmark";
+#endif
     private const string KeyboardKey = @"Control Panel\Keyboard", PrintScreenValue = "PrintScreenKeyForSnippingEnabled";
 
     public static readonly Hotkey PrintScreen = new(HotkeyModifiers.None, 0x2C);
@@ -103,10 +108,8 @@ internal static class SystemIntegration
         RestorePrintScreen();
         RunEntry = false;
         Ai.AnthropicKeyStore.Delete();
-#if DEBUG
-        if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_REGROOT") is { Length: > 0 })
-            return; // test runs keep the developer's shortcut
+#if !DEBUG
+        StartMenuShortcut.Remove(); // Debug builds never own the shortcut (App.OwnsShortcut)
 #endif
-        StartMenuShortcut.Remove();
     }
 }
