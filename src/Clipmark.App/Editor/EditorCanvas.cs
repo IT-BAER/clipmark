@@ -903,14 +903,15 @@ internal sealed class EditorCanvas
     {
         if (_highlights.Count == 0)
             return;
-        // Snipping Tool look: the view darkened (white 255 -> 145), highlights cut out as rounded boxes in image pixels.
+        // Snipping Tool look (measured 11.2608.41.0): gray 77 at alpha 157 over the view (white 255 -> 146, dark 32 -> 60),
+        // highlights cut out as rounded boxes in image pixels.
         const float radius = 5;
         var view = View;
         var boxes = _highlights.Select(r => CanvasGeometry.CreateRoundedRectangle(ds, r.Min.X, r.Min.Y, r.Max.X - r.Min.X, r.Max.Y - r.Min.Y, radius, radius)).ToArray();
         using var holes = CanvasGeometry.CreateGroup(ds, boxes, CanvasFilledRegionDetermination.Winding);
         using var area = CanvasGeometry.CreateRectangle(ds, view.X, view.Y, view.Width, view.Height);
         using var dim = area.CombineWith(holes, Matrix3x2.Identity, CanvasGeometryCombine.Exclude);
-        ds.FillGeometry(dim, Windows.UI.Color.FromArgb(110, 0, 0, 0));
+        ds.FillGeometry(dim, Windows.UI.Color.FromArgb(157, 77, 77, 77));
         foreach (var box in boxes)
             box.Dispose();
     }

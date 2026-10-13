@@ -25,7 +25,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
   benchmark of 54 screenshot-style images it made 0.22% character errors, Snipping Tool 2.40% and the Windows text
   recognition used before 8.52%. Windows text recognition stays as the fallback.
-- Text actions dim the image and show each recognized line as a rounded cutout, like Snipping Tool.
+- Text actions dim the image with Snipping Tool's gray veil and show each recognized line as a rounded cutout.
 
 ### Fixed
 - Exiting from the tray right after an edit no longer loses that edit in the capture history.

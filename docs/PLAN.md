@@ -266,8 +266,18 @@ Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Micro
   (it kept ~640 MB). AOT: private 118 MB -> 233 MB while cached, 147 MB after idle (Windows OCR path: 130 MB). Release zip
   57,345,321 bytes (was 30,174,872). Text actions highlight: one rounded cutout per line, dim black alpha 110, matches Snipping
   Tool within 4 px on the fixture. Core 503 / 503, regression 19 / 19, aot-uia-smoke GREEN (reads "+43 660").
-- Open: real-world screenshots without ground truth only checked by eye; light theme and other text sizes of the highlight not
-  measured; CJK / Cyrillic users keep Windows OCR.
+- [x] M11.5 Second bench (13 October 2026): 60 web pages rendered by headless Edge (light / dark, 12-15 px, scale 1.0-1.5,
+  6 fonts, ClearType). CER own 0.89% / 94.1% exact rows, Snipping Tool 1.07% / 90.5%, Windows.Media.Ocr 8.92% / 51.7%.
+  Snipping Tool runs off-screen: own desktop, image opened by `ms-screensketch:edit?...&filePath=` (its file dialog fails
+  off the default desktop), clipboard restored per image. 195 of 265 own errors are PowerShell `----` separator rows:
+  detector probability <= 0.021, the recognizer cannot read them either, Snipping Tool drops them too; left as is (owner).
+- [x] M11.6 Highlight vs Snipping Tool on 11 pages (light and dark, every scale): 642 / 724 cutout edges within 4 px,
+  median offset <= 1.5 px; outliers are different line grouping. Snipping Tool dims with gray 77 at alpha 157 (fit over
+  347 value bins, median residual 0.5), not black at 110: same on white, dark 32 -> 60 instead of 18. EditorCanvas uses
+  gray 77 / 157 now; TestDriver shots: dark 32 -> 59, 43 -> 64, light 255 -> 145, 243 -> 140 (Snipping 60 / 64 / 145 / 141).
+  The plain Debug build is packaged (its exe alone fails with REGDB_E_CLASSNOTREG); TestDriver runs need
+  `dotnet publish -c Debug -r win-x64 -p:Platform=x64 -p:WindowsPackageType=None -p:WindowsAppSDKSelfContained=true -p:SelfContained=true`.
+- Open: real-world screenshots without ground truth only checked by eye; CJK / Cyrillic users keep Windows OCR.
 
 ## License change (13 October 2026, owner)
 - From the commit after 31d560a: Elastic License 2.0 instead of MIT (source stays public; no removing or working around the
