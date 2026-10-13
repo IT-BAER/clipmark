@@ -11,6 +11,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -160,9 +161,33 @@ public sealed partial class MainPage : Page
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
         Unloaded += (_, _) => AppSettings.Changed -= OnSettingsChanged;
         ActualThemeChanged += (_, _) => OnSettingsChanged(AppSettings.Current); // the highlight holds brushes of one theme
+        foreach (var flyout in new FlyoutBase[] { ModeMenu, DelayMenu, ShapeMenu, StyleFlyout, SaveMenu, AgentMenu })
+            PassToolbarClicks(flyout);
         Loaded += (_, _) => { AppLicense.Changed += OnLicenseChanged; ApplyLicense(); };
         Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
         OnSettingsChanged(AppSettings.Current);
+    }
+
+    /// <summary>
+    /// While the flyout is open, a click on another toolbar control closes it and reaches that control (the light-dismiss
+    /// overlay swallows it otherwise); its own button ignores clicks then, so a click there only closes it.
+    /// </summary>
+    private void PassToolbarClicks(FlyoutBase flyout)
+    {
+        flyout.OverlayInputPassThroughElement = Toolbar;
+        UIElement? owner = null;
+        flyout.Opened += (_, _) =>
+        {
+            owner = flyout.Target;
+            if (owner is not null)
+                owner.IsHitTestVisible = false;
+        };
+        flyout.Closed += (_, _) =>
+        {
+            if (owner is not null)
+                owner.IsHitTestVisible = true;
+            owner = null;
+        };
     }
 
     /// <summary>Accent look (as a checked tool button) on a button, or the default look; covers hover and pressed too.</summary>
@@ -1207,6 +1232,7 @@ public sealed partial class MainPage : Page
         }
         var panel = new StackPanel { Spacing = 8, Width = 352 };
         var flyout = new Flyout { Content = panel, Placement = Microsoft.UI.Xaml.Controls.Primitives.FlyoutPlacementMode.BottomEdgeAlignedLeft };
+        PassToolbarClicks(flyout);
         if (!AppSettings.Current.HistoryEnabled)
         {
             panel.Children.Add(new TextBlock

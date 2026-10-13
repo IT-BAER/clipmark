@@ -27,7 +27,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Padding="8,4,8,8" ColumnSpacing="8">
+        <Grid x:Name="Toolbar" Padding="8,4,8,8" ColumnSpacing="8">
             <Grid.Resources>
                 <!-- WinUI pads buttons 1 DIP more at the bottom for the text baseline; icon buttons need it even (same height).
                      Split buttons set Padding 11,6.5,11,6.5 and drop-down buttons 11,5.5,11,5.5 themselves (a based-on style crashes them). -->
@@ -154,7 +154,7 @@
                     <SplitButton x:Uid="SaveButton" Click="OnSave" Padding="11,6.5,11,6.5">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
-                            <MenuFlyout Placement="Bottom">
+                            <MenuFlyout x:Name="SaveMenu" Placement="Bottom">
                                 <MenuFlyoutItem x:Name="SaveEditableItem" x:Uid="SaveEditableItem" Click="OnSaveEditable">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE70F;" />

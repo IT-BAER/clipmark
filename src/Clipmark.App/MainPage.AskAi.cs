@@ -159,6 +159,7 @@ public sealed partial class MainPage
             Placement = FlyoutPlacementMode.BottomEdgeAlignedRight,
             FlyoutPresenterStyle = new Style(typeof(FlyoutPresenter)) { Setters = { new Setter(MaxWidthProperty, 560) } },
         };
+        PassToolbarClicks(_aiFlyout);
         _aiFlyout.Closing += (_, _) => AiDismissedInBackground = !_aiHiding
             && Interop.Native.GetForegroundWindow() != Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
         _aiFlyout.Opened += (_, _) =>

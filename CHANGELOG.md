@@ -8,19 +8,20 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ### Added
 - Clipmark Premium: 30-day trial, then offline license keys. Premium covers select, attached arrows, text, fill,
   eyedropper, editable PNG, Send to AI, Ask AI and the capture history; editable PNGs still open without a license.
+  The trial start is also kept in the registry and in Windows Credential Manager, so reinstalling does not restart it.
 - Ask AI: ask Claude about the capture in a toolbar flyout with your own Anthropic API key (Sonnet 5.5, Opus 5.5 or
-  Haiku 5.5; effort low, med, high or xhigh in the chat header or Settings). Answers stream in as formatted text with
-  a collapsed Thinking summary; Stop, follow-up questions and New chat. The key is kept in Windows Credential Manager;
-  the first send asks for consent. This is the only feature that uses the network.
+  Haiku 5.5; answer depth low, med, high or xhigh in the chat header or Settings). Answers stream in as formatted
+  text with a collapsed Thinking summary; Stop, follow-up questions and New chat. The key is kept in Windows
+  Credential Manager; the first send asks for consent. This is the only feature that uses the network.
 - Send to AI: pastes the capture into a running Claude Code or Codex CLI, the Claude or ChatGPT desktop app, or the
   Claude or Codex VS Code extension, with each agent's own icon in the menu.
 - Capture history (opt-in): the last 25 captures, encrypted for the Windows user, with a thumbnail flyout; edits are
   written back to the item.
 - The tray icon is shown on the taskbar the first time a copy of Clipmark runs; hiding it later in Windows settings
   is kept.
-- Text actions: select part of the recognized text by dragging across it (by character, across lines) or double-clicking a word, and copy it
-  with Ctrl+C, the right-click menu or Copy selection; Ctrl+A selects all text. A drag that starts on recognized text
-  selects it whatever tool is active; elsewhere the tool works as before.
+- Text actions: select part of the recognized text by dragging across it (by character, across lines) or by
+  double-clicking a word, and copy it with Ctrl+C, the right-click menu or Copy selection; Ctrl+A selects all text.
+  A drag that starts on recognized text selects it whatever tool is active; elsewhere the tool works as before.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
 - 16 interface languages: English, German, French, Italian, Spanish, Portuguese (Brazil), Japanese, Korean, Chinese
   (Simplified and Traditional), Dutch, Polish, Russian, Swedish, Turkish and Ukrainian. Clipmark follows the Windows
@@ -34,7 +35,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
   work around the license key check, or to offer Clipmark as a hosted service. Release 1.0.0 stays MIT licensed.
 - Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
   benchmark of 54 screenshot-style images it made 0.22% character errors, Snipping Tool 2.40% and the Windows text
-  recognition used before 8.52%. Windows text recognition stays as the fallback.
+  recognition used before 8.52%. Windows text recognition still reads non-Latin languages and is the fallback when
+  the engine fails.
 - Text actions dim the image with Snipping Tool's gray veil and show each recognized line as a rounded cutout.
 
 ### Fixed
@@ -43,8 +45,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
   typing into another tab when the agent's tab is not active.
 - The editor no longer crashes on opening an image in the release (Native AOT) build.
 - Recordings no longer start with a black frame.
-- The tray menu follows Windows dark mode; toggle switches show English On / Off.
+- The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.
+- With a toolbar menu open, a click on another toolbar button closes the menu and acts at once; before, the
+  first click only closed the menu.
 
 ## [1.0.0] - 2026-10-11
 

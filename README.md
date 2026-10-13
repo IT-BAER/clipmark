@@ -41,8 +41,9 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - Stored only on this PC in `%LOCALAPPDATA%\Clipmark\History`, encrypted for your Windows account (DPAPI)
 
 **Text actions**
-- OCR copy (built-in offline OCR engine): drag across the recognized text or double-click a word to copy part of
-  it (Ctrl+C, right-click or Copy selection), or copy all of it
+- OCR copy: drag across the recognized text or double-click a word to copy part of it (Ctrl+C, right-click or
+  Copy selection), or copy all of it. The built-in offline OCR engine reads Latin-script languages; other languages
+  use Windows text recognition
 - Quick redact of email addresses and phone numbers, QR code decoding
 
 **Send to AI (Premium)**
@@ -54,8 +55,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - Ask Claude questions about the capture in a flyout next to the toolbar; answers stream in with formatting, and you
   can stop an answer, ask follow-up questions or start a new chat
 - Uses your own Anthropic API key, stored in Windows Credential Manager; pick Claude Sonnet 5.5, Opus 5.5 or Haiku 5.5
-  in Settings; the effort (low, med, high or xhigh: how much Claude reasons before it answers) is set in the chat header
-  or in Settings
+  in Settings; the answer depth (low, med, high or xhigh: how much Claude reasons before it answers) is set in the
+  chat header or in Settings > Ask AI
 - Sends the capture as shown (redactions burned in) and your question to api.anthropic.com only when you send a
   question, after a one-time consent; nothing goes to IT-BAER
 
