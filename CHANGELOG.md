@@ -20,6 +20,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
 
 ### Changed
+- License: the Elastic License 2.0 replaces the MIT License. The source stays public; it must not be used to remove or
+  work around the license key check, or to offer Clipmark as a hosted service. Release 1.0.0 stays MIT licensed.
 - Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
   benchmark of 54 screenshot-style images it made 0.22% character errors, Snipping Tool 2.40% and the Windows text
   recognition used before 8.52%. Windows text recognition stays as the fallback.

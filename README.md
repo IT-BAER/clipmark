@@ -5,8 +5,9 @@
 <h1 align="center">Clipmark</h1>
 
 <p align="center">
-  Screen capture, annotation and screen recording for Windows 11.<br>
-  The Snipping Tool workflow with a real annotation editor, in a small Native AOT app.
+  <b>Snipping Tool on steroids.</b><br>
+  Screen capture, annotation and screen recording for Windows 11, in a small Native AOT app.<br>
+  <sub>Clipmark is an independent project and is not affiliated with Microsoft. Snipping Tool is a trademark of Microsoft.</sub>
 </p>
 
 ![Clipmark editor](docs/images/editor.png)
@@ -97,7 +98,8 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 
 ## Free and Premium
 
-The source code is MIT licensed. Clipmark 1.0.0 has no license check: every feature is free.
+The source code is public under the [Elastic License 2.0](LICENSE): you may read, build and change it, but not remove or
+work around the license key check. Clipmark 1.0.0 was MIT licensed and has no license check: every feature is free.
 
 From the next release on, a new install starts a 30-day Premium trial. After the trial, these features need a license
 key: select / move / resize / rotate, attached arrows, text labels, fill, eyedropper, saving editable PNGs, Send to AI,
@@ -166,4 +168,5 @@ Clipmark is an independent project and is not affiliated with Microsoft. See
 
 ## License
 
-[MIT](LICENSE)
+[Elastic License 2.0](LICENSE). Versions up to and including commit 31d560a, among them release 1.0.0, were published
+under the MIT License.

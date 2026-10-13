@@ -268,3 +268,15 @@ Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Micro
   Tool within 4 px on the fixture. Core 503 / 503, regression 19 / 19, aot-uia-smoke GREEN (reads "+43 660").
 - Open: real-world screenshots without ground truth only checked by eye; light theme and other text sizes of the highlight not
   measured; CJK / Cyrillic users keep Windows OCR.
+
+## License change (13 October 2026, owner)
+- From the commit after 31d560a: Elastic License 2.0 instead of MIT (source stays public; no removing or working around the
+  license key check, no hosted service). Chosen over PolyForm Shield 1.0.0 (does not cover patching for own use) and
+  FSL-1.1-MIT (turns MIT after 2 years). Published commits up to 31d560a and release 1.0.0 stay MIT.
+
+## M12 Snipping Tool feature parity (planned 13 October 2026, owner)
+Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on steroids" (README tagline) is true.
+- [ ] M12.1 Full audit of Snipping Tool 11.2608.41.0 features against Clipmark (UIA walk of every menu, toolbar and setting).
+- [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
+- [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
+- [ ] M12.4 Remaining gaps from M12.1.
