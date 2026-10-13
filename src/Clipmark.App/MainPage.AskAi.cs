@@ -70,8 +70,9 @@ public sealed partial class MainPage
     {
         if (_aiFlyout is not null)
             return;
-        var title = new TextBlock { Text = Loc.Get("AskAiTitle"), Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center };
-        _aiModelText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, Foreground = SecondaryBrush, Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"] };
+        // Tight line bounds: centring uses the glyphs, not the line box, so the two text sizes line up.
+        var title = new TextBlock { Text = Loc.Get("AskAiTitle"), Style = (Style)Application.Current.Resources["BodyStrongTextBlockStyle"], VerticalAlignment = VerticalAlignment.Center, TextLineBounds = TextLineBounds.Tight };
+        _aiModelText = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextLineBounds = TextLineBounds.Tight, Foreground = SecondaryBrush, Style = (Style)Application.Current.Resources["CaptionTextBlockStyle"] };
         _aiNewChat = new Button { Content = Loc.Get("AskAiNewChat"), IsEnabled = false, HorizontalAlignment = HorizontalAlignment.Right };
         ToolTipService.SetToolTip(_aiNewChat, Loc.Get("AskAiNewChatTip"));
         _aiNewChat.Click += (_, _) => ResetAiChat();
