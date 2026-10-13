@@ -208,7 +208,7 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
         SaveEditableItem.Visibility = Visibility.Collapsed;
-        AgentButton.Visibility = AskAiButton.Visibility = Visibility.Collapsed; // the agents take images, not video
+        AgentButton.Visibility = AskAiButton.Visibility = AiSeparator.Visibility = Visibility.Collapsed; // the agents take images, not video
     }
 
     private void CloseVideo()
@@ -220,7 +220,7 @@ public sealed partial class MainPage : Page
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
         SaveEditableItem.Visibility = Visibility.Visible;
-        AgentButton.Visibility = AskAiButton.Visibility = Visibility.Visible;
+        AgentButton.Visibility = AskAiButton.Visibility = AiSeparator.Visibility = Visibility.Visible;
     }
 
     internal void ShowImage(string path) => ShowEditor(new EditorCanvas(path), CaptureHistory.IdFor(path));

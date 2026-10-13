@@ -147,6 +147,9 @@
             </StackPanel>
             <StackPanel Grid.Column="2" HorizontalAlignment="Right" Orientation="Horizontal" Spacing="4">
                 <StackPanel x:Name="OutputTools" Orientation="Horizontal" Spacing="4" Visibility="Collapsed">
+                    <Button x:Uid="CopyButton" Click="OnCopy">
+                        <FontIcon FontSize="16" Glyph="&#xE8C8;" />
+                    </Button>
                     <SplitButton x:Uid="SaveButton" Click="OnSave" Padding="11,6.5,11,6.5">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
@@ -159,12 +162,10 @@
                             </MenuFlyout>
                         </SplitButton.Flyout>
                     </SplitButton>
-                    <Button x:Uid="CopyButton" Click="OnCopy">
-                        <FontIcon FontSize="16" Glyph="&#xE8C8;" />
-                    </Button>
                     <Button x:Uid="ShareButton" Click="OnShare">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
+                    <Border x:Name="AiSeparator" Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
                     <SplitButton x:Name="AgentButton" x:Uid="AgentButton" Padding="11,6.5,11,6.5" Click="OnSendToAgent">
                         <FontIcon FontSize="16" Glyph="&#xE724;" />
                         <SplitButton.Flyout>
