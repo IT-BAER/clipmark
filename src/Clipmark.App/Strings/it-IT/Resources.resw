@@ -998,15 +998,6 @@
   <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Profondità della risposta dell'IA</value>
   </data>
-  <data name="AiEffortLow" xml:space="preserve">
-    <value>Veloce</value>
-  </data>
-  <data name="AiEffortMedium" xml:space="preserve">
-    <value>Bilanciata</value>
-  </data>
-  <data name="AiEffortHigh" xml:space="preserve">
-    <value>Approfondita</value>
-  </data>
   <data name="AskAiEffortName" xml:space="preserve">
     <value>Profondità della risposta</value>
   </data>

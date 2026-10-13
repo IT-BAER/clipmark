@@ -20,6 +20,9 @@ public static class ChatRequest
             w.WriteNumber("max_tokens", maxTokens);
             w.WriteBoolean("stream", true);
             w.WriteString("system", SystemPrompt);
+            w.WriteStartObject("thinking");
+            w.WriteString("type", "adaptive");
+            w.WriteEndObject();
             w.WriteStartObject("output_config");
             w.WriteString("effort", effort);
             w.WriteEndObject();

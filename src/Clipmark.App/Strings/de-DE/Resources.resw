@@ -998,15 +998,6 @@
   <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>KI-Antworttiefe</value>
   </data>
-  <data name="AiEffortLow" xml:space="preserve">
-    <value>Schnell</value>
-  </data>
-  <data name="AiEffortMedium" xml:space="preserve">
-    <value>Ausgewogen</value>
-  </data>
-  <data name="AiEffortHigh" xml:space="preserve">
-    <value>Gründlich</value>
-  </data>
   <data name="AskAiEffortName" xml:space="preserve">
     <value>Antworttiefe</value>
   </data>

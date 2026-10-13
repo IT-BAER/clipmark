@@ -45,7 +45,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - Ask Claude questions about the capture in a flyout next to the toolbar; answers stream in with formatting, and you
   can stop an answer, ask follow-up questions or start a new chat
 - Uses your own Anthropic API key, stored in Windows Credential Manager; pick Claude Sonnet 5.5, Opus 5.5 or Haiku 5.5
-  and the answer depth (Fast, Balanced or Thorough: how much Claude reasons before it answers) in Settings; the depth can also be changed in the chat
+  in Settings; the effort (low, med, high or xhigh: how much Claude reasons before it answers) is set in the chat header
+  or in Settings
 - Sends the capture as shown (redactions burned in) and your question to api.anthropic.com only when you send a
   question, after a one-time consent; nothing goes to IT-BAER
 

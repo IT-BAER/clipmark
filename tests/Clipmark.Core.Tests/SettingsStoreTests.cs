@@ -136,6 +136,7 @@ public class SettingsStoreTests
         Assert.Equal("medium", SettingsStore.Parse("""{ "hotkey": "Ctrl+F8" }""").AiEffort);
         Assert.Equal("high", SettingsStore.Parse(SettingsStore.Serialize(new ClipmarkSettings { AiEffort = "high" })).AiEffort);
         Assert.Equal("low", SettingsStore.Parse("""{ "aiEffort": "low" }""").AiEffort);
+        Assert.Equal("xhigh", SettingsStore.Parse("""{ "aiEffort": "xhigh" }""").AiEffort);
     }
 
     [Theory]

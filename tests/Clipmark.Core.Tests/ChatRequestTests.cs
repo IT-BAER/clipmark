@@ -21,6 +21,7 @@ public sealed class ChatRequestTests
         Assert.True(r.GetProperty("stream").GetBoolean());
         Assert.Equal(ChatRequest.SystemPrompt, r.GetProperty("system").GetString());
         Assert.Equal("medium", r.GetProperty("output_config").GetProperty("effort").GetString());
+        Assert.Equal("adaptive", r.GetProperty("thinking").GetProperty("type").GetString());
 
         var msgs = r.GetProperty("messages");
         Assert.Equal(1, msgs.GetArrayLength());

@@ -998,15 +998,6 @@
   <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>AI の回答の深さ</value>
   </data>
-  <data name="AiEffortLow" xml:space="preserve">
-    <value>高速</value>
-  </data>
-  <data name="AiEffortMedium" xml:space="preserve">
-    <value>バランス</value>
-  </data>
-  <data name="AiEffortHigh" xml:space="preserve">
-    <value>詳細</value>
-  </data>
   <data name="AskAiEffortName" xml:space="preserve">
     <value>回答の深さ</value>
   </data>

@@ -17,10 +17,10 @@ public static class AiModels
     public static AiModel Find(string? id) => All.FirstOrDefault(m => m.Id == id) ?? Default;
 }
 
-/// <summary>Ask AI answer depth: low = Fast, medium = Balanced, high = Thorough.</summary>
+/// <summary>Ask AI <c>output_config.effort</c> values; every listed model accepts all of them.</summary>
 public static class AiEfforts
 {
-    public static readonly IReadOnlyList<string> All = ["low", "medium", "high"];
+    public static readonly IReadOnlyList<string> All = ["low", "medium", "high", "xhigh"];
 
     public const string Default = "medium";
 }

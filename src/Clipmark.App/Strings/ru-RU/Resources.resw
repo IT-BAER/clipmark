@@ -998,15 +998,6 @@
   <data name="SettingsAiEffort.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Глубина ответа ИИ</value>
   </data>
-  <data name="AiEffortLow" xml:space="preserve">
-    <value>Быстро</value>
-  </data>
-  <data name="AiEffortMedium" xml:space="preserve">
-    <value>Сбалансированно</value>
-  </data>
-  <data name="AiEffortHigh" xml:space="preserve">
-    <value>Подробно</value>
-  </data>
   <data name="AskAiEffortName" xml:space="preserve">
     <value>Глубина ответа</value>
   </data>
