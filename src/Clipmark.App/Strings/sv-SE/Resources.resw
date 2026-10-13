@@ -206,6 +206,10 @@
     <value>{0} sekunder</value>
     <comment>{0} = 3, 5 or 10 (never 1)</comment>
   </data>
+  <data name="DelayShort" xml:space="preserve">
+    <value>{0} s</value>
+    <comment>Delay button text: {0} = seconds</comment>
+  </data>
   <data name="ModeButtonName" xml:space="preserve">
     <value>Skärmklippsläge: {0}</value>
     <comment>{0} = mode name</comment>

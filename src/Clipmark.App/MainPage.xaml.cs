@@ -159,6 +159,7 @@ public sealed partial class MainPage : Page
         ImageScroller.ViewChanged += (_, e) => { if (!e.IsIntermediate) Relayout(); };
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
         Unloaded += (_, _) => AppSettings.Changed -= OnSettingsChanged;
+        ActualThemeChanged += (_, _) => OnSettingsChanged(AppSettings.Current); // the highlight holds brushes of one theme
         Loaded += (_, _) => { AppLicense.Changed += OnLicenseChanged; ApplyLicense(); };
         Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
         OnSettingsChanged(AppSettings.Current);
@@ -174,6 +175,13 @@ public sealed partial class MainPage : Page
                     button.Resources["Button" + part + state] = Application.Current.Resources["AccentButton" + part + state];
                 else
                     button.Resources.Remove("Button" + part + state);
+                if (part == "Foreground") // drop-down chevron
+                {
+                    if (on)
+                        button.Resources["DropDownButtonForegroundSecondary" + state] = Application.Current.Resources["AccentButtonForeground" + state];
+                    else
+                        button.Resources.Remove("DropDownButtonForegroundSecondary" + state);
+                }
             }
         foreach (var (property, part) in new[] { (Control.BackgroundProperty, "Background"), (Control.ForegroundProperty, "Foreground"), (Control.BorderBrushProperty, "BorderBrush") })
         {
@@ -187,6 +195,10 @@ public sealed partial class MainPage : Page
             button.BackgroundSizing = BackgroundSizing.OuterBorderEdge;
         else
             button.ClearValue(Control.BackgroundSizingProperty);
+        // The template reads the keys when it loads (a later change does not reach the resting chevron): load it again.
+        var template = button.Template;
+        button.Template = null;
+        button.Template = template;
     }
 
     internal static string DelayText(int seconds) => seconds == 0 ? Loc.Get("DelayNone") : Loc.Format("DelaySeconds", seconds);
@@ -199,7 +211,18 @@ public sealed partial class MainPage : Page
         Mark(ModeMenu, 0, Modes.Length, modeIndex);
 
         int delayIndex = Array.IndexOf(ClipmarkSettings.DelayChoices, s.DelaySeconds);
-        DelayButton.Content ??= new FontIcon { Glyph = "\uE916", FontSize = 16 };
+        var delayIcon = new FontIcon { Glyph = "\uE916", FontSize = 16 };
+        // Line height of the 16 px icon, so the button keeps the height of the icon buttons.
+        DelayButton.Content = s.DelaySeconds == 0 ? delayIcon : new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            Spacing = 8,
+            Children =
+            {
+                delayIcon,
+                new TextBlock { Text = Loc.Format("DelayShort", s.DelaySeconds), LineHeight = 16, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, VerticalAlignment = VerticalAlignment.Center },
+            },
+        };
         Highlight(DelayButton, s.DelaySeconds != 0);
         AutomationProperties.SetName(DelayButton, Loc.Format("DelayButtonName", DelayText(s.DelaySeconds)));
         Mark(DelayMenu, 0, ClipmarkSettings.DelayChoices.Length, delayIndex);

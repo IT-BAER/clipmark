@@ -28,8 +28,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - Output toolbar order: Copy, Save, Share, then Send to AI and Ask AI after a separator.
-- The Delay button keeps its timer icon and is highlighted while a delay is set, instead of showing the
-  seconds and growing taller; New is as tall as the other toolbar buttons.
+- The Delay button is highlighted while a delay is set and shows the timer icon with the seconds; it no
+  longer grows taller than the other toolbar buttons, and neither does New.
 - License: the Elastic License 2.0 replaces the MIT License. The source stays public; it must not be used to remove or
   work around the license key check, or to offer Clipmark as a hosted service. Release 1.0.0 stays MIT licensed.
 - Text recognition uses Clipmark's own OCR engine (PaddleOCR PP-OCRv6 models on ONNX Runtime, on your PC). On a
