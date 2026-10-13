@@ -6,7 +6,7 @@ namespace Clipmark.App;
 internal static class AppSettings
 {
     public static readonly string FilePath = Path.Combine(
-        App.TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Clipmark"), "settings.json");
+        App.DataDir, "settings.json");
 
     public static ClipmarkSettings Current { get; private set; } = SettingsStore.Load(FilePath);
 

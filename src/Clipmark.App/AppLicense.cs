@@ -29,7 +29,7 @@ internal static class AppLicense
     private static readonly Lazy<byte[]> DeviceSecret = new(ReadDeviceSecret);
 
     private static readonly string FilePath = Path.Combine(
-        App.TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Clipmark"), "license.json");
+        App.DataDir, "license.json");
 
     public static Entitlement Current { get; private set; } = new(LicenseStatus.Free);
 

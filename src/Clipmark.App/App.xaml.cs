@@ -22,9 +22,17 @@ public partial class App : Application
 #if DEBUG
     /// <summary>Test mode (Debug only): the window stays cloaked and TestDriver takes commands from this folder.</summary>
     internal static readonly string? TestDir = Environment.GetEnvironmentVariable("CLIPMARK_TEST_DIR");
+    // Debug builds run next to an installed release: own instance key and data folder, and they leave its Start menu shortcut alone.
+    private const string InstanceKey = "Clipmark.Debug", DataName = "Clipmark.Debug";
+    internal const bool OwnsShortcut = false;
 #else
     internal static readonly string? TestDir = null;
+    private const string InstanceKey = "Clipmark", DataName = "Clipmark";
+    internal const bool OwnsShortcut = true;
 #endif
+    /// <summary>Settings, license and capture history folder.</summary>
+    internal static readonly string DataDir =
+        TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DataName);
 
     private MainWindow? _window;
     private TrayHost? _tray;
@@ -82,12 +90,12 @@ public partial class App : Application
         AppNotificationManager.Default.NotificationInvoked += (_, e) =>
             _dispatcher.TryEnqueue(() => OpenCapture(OpenArgument(e)));
         CaptureOutput.ToastClicked += path => _dispatcher.TryEnqueue(() => OpenCapture(path));
-        CaptureOutput.RegisterNotifications(writeShortcut: TestDir is null && marker is null);
+        CaptureOutput.RegisterNotifications(writeShortcut: OwnsShortcut && marker is null);
 
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
         if (marker is null)
         {
-            var main = AppInstance.FindOrRegisterForKey("Clipmark");
+            var main = AppInstance.FindOrRegisterForKey(InstanceKey);
             if (!main.IsCurrent)
             {
                 await main.RedirectActivationToAsync(activation);
@@ -173,7 +181,8 @@ public partial class App : Application
 
     private void RegisterHotkey(ClipmarkSettings s)
     {
-        if (_tray is null)
+        // Test mode takes no global hotkeys: an installed copy holds them, and the conflict bar would shift every test shot.
+        if (_tray is null || TestDir is not null)
             return;
         if (s.Hotkey != _registeredHotkey)
         {

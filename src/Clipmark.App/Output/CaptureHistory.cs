@@ -13,7 +13,7 @@ namespace Clipmark.App.Output;
 internal static class CaptureHistory
 {
     public static readonly string Folder = Path.Combine(
-        App.TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Clipmark"), "History");
+        App.DataDir, "History");
 
     private static readonly byte[] Entropy = "Clipmark capture history 1"u8.ToArray();
     private static readonly HistoryStore Store = new(Folder, Protect, Unprotect);
