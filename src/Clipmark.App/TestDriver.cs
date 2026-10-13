@@ -181,6 +181,21 @@ internal sealed class TestDriver
             case "release":
                 (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
                 break;
+            case "rightclick":
+                // rightclick X,Y: right-click at image px; fails when it opens no text menu.
+                var at4 = arg.Split(',');
+                if (!(_page.Editor ?? throw new InvalidOperationException("no capture shown")).RightClick(
+                    new Vector2(float.Parse(at4[0], CultureInfo.InvariantCulture), float.Parse(at4[1], CultureInfo.InvariantCulture))))
+                    throw new InvalidOperationException("no text menu");
+                await Task.Delay(300);
+                break;
+            case "assert" when arg.StartsWith("selection "):
+                // assert selection TEXT: the selected recognized text; \n is a line break, "-" means none.
+                string selection = _page.Editor?.SelectedText ?? "";
+                string expectedSelection = arg[10..] == "-" ? "" : arg[10..].Replace("\\n", Environment.NewLine);
+                if (selection != expectedSelection)
+                    throw new InvalidOperationException($"selection is '{selection}'");
+                break;
             case "shot":
                 await RenderAsync((UIElement)Root.Content, arg);
                 int n = 0;

@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Microsoft.Windows.Storage.Pickers;
+using System.Globalization;
 using System.Numerics;
 using Windows.System;
 
@@ -107,6 +108,11 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.V, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Select));
         Shortcut(VirtualKey.A, VirtualKeyModifiers.Control, () =>
         {
+            if (_editor?.TextLines.Count > 0)
+            {
+                _editor.SelectAllText();
+                return;
+            }
             SelectTool(EditorTool.Select);
             if (_tool == EditorTool.Select)
                 _editor?.Select(s => s.SelectAll());
@@ -119,7 +125,13 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.G, VirtualKeyModifiers.None, () => SelectTool(EditorTool.Bucket));
         Shortcut(VirtualKey.Z, VirtualKeyModifiers.Control, () => _editor?.Undo());
         Shortcut(VirtualKey.Y, VirtualKeyModifiers.Control, () => _editor?.Redo());
-        Shortcut(VirtualKey.C, VirtualKeyModifiers.Control, () => _ = CopyAsync());
+        Shortcut(VirtualKey.C, VirtualKeyModifiers.Control, () =>
+        {
+            if (_editor?.SelectedText is { Length: > 0 } selected)
+                CopyText(selected, Loc.Get("TextCopied"));
+            else
+                _ = CopyAsync();
+        });
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control, () => _ = SaveAsync());
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
@@ -231,6 +243,8 @@ public sealed partial class MainPage : Page
         _historyRevision = null;
         _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); ScheduleHistoryWrite(); };
         _editor.Problem += ShowError;
+        _editor.TextSelectionChanged += OnTextSelectionChanged;
+        _editor.TextMenuRequested += ShowTextMenu;
         _textKey = null;
         SyncTextActions();
         _editor.CropFrameChanged += SyncCropFields;
@@ -1281,6 +1295,7 @@ public sealed partial class MainPage : Page
     private (IReadOnlyList<PixelRect> Redactions, PixelRect? Crop)? _textKey;
     private int _textRun;
     private IReadOnlyList<OcrLine> _lines = [];
+    private string _textStatus = ""; // recognition result, shown again when the text selection is cleared
 
     /// <summary>True while text recognition runs (test driver).</summary>
     internal bool TextActionsBusy { get; private set; }
@@ -1297,7 +1312,10 @@ public sealed partial class MainPage : Page
             _lines = [];
             TextActionsBusy = false;
             if (_editor is not null)
+            {
                 _editor.Highlights = [];
+                _editor.TextLines = [];
+            }
             TextActionsBar.Visibility = Visibility.Collapsed;
             return;
         }
@@ -1311,6 +1329,7 @@ public sealed partial class MainPage : Page
     private async Task RecognizeAsync(int run, EditorCanvas editor)
     {
         TextActionsBusy = true;
+        editor.TextLines = []; // before the status: clearing a selection restores the old status
         TextActionsStatus.Text = Loc.Get("TextReading");
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = false;
         QrResults.Children.Clear();
@@ -1342,8 +1361,9 @@ public sealed partial class MainPage : Page
             : _lines.Count == 0 ? Loc.Get("TextNone") : _lines.Count == 1 ? Loc.Get("TextOneLine") : Loc.Format("TextLines", _lines.Count);
         if (codes.Count > 0)
             text = Loc.Format("TextWithQr", text, codes.Count == 1 ? Loc.Get("QrOne") : Loc.Format("QrMany", codes.Count));
-        TextActionsStatus.Text = failure ?? text;
+        TextActionsStatus.Text = _textStatus = failure ?? text;
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
+        editor.TextLines = _lines;
         for (int i = 0; i < codes.Count; i++)
             QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? null : i + 1));
 
@@ -1380,6 +1400,26 @@ public sealed partial class MainPage : Page
     }
 
     private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines), Loc.Get("TextCopied"));
+
+    private void OnCopySelectedText(object sender, RoutedEventArgs e) => CopyText(_editor?.SelectedText ?? "", Loc.Get("TextCopied"));
+
+    /// <summary>Enables Copy selection and shows the selected character count, or the recognition result without a selection.</summary>
+    private void OnTextSelectionChanged()
+    {
+        string selected = _editor?.SelectedText ?? "";
+        CopySelectedTextButton.IsEnabled = selected.Length > 0;
+        int count = new StringInfo(selected.Replace(Environment.NewLine, "")).LengthInTextElements;
+        TextActionsStatus.Text = selected.Length == 0 ? _textStatus : count == 1 ? Loc.Get("TextSelectedOne") : Loc.Format("TextSelected", count);
+    }
+
+    private void ShowTextMenu(Windows.Foundation.Point at)
+    {
+        if (_editor is not { } editor)
+            return;
+        var copy = new MenuFlyoutItem { Text = Loc.Get("CopyTextMenu"), Icon = new FontIcon { Glyph = "\uE8C8" } };
+        copy.Click += (_, _) => CopyText(editor.SelectedText, Loc.Get("TextCopied"));
+        new MenuFlyout { Items = { copy } }.ShowAt(editor.Control, new Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowOptions { Position = at });
+    }
 
     private void CopyText(string text, string done)
     {

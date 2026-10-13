@@ -186,6 +186,7 @@
                         HorizontalAlignment="Center" Visibility="Collapsed">
                 <TextBlock x:Name="TextActionsStatus" x:Uid="TextActionsStatus" VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <Button x:Name="CopySelectedTextButton" x:Uid="CopySelectedTextButton" Click="OnCopySelectedText" IsEnabled="False" />
                 <Button x:Name="CopyAllTextButton" x:Uid="CopyAllTextButton" Click="OnCopyAllText" IsEnabled="False" />
                 <Button x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False" />
                 <StackPanel x:Name="QrResults" Orientation="Horizontal" Spacing="8" />

@@ -290,6 +290,13 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
 - [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.4 Remaining gaps from M12.1.
+- [x] M12.5 Select and copy part of the recognized text (owner request 13 October 2026). Decisions (owner): a drag that
+  starts on text selects, elsewhere the tool acts; character carets estimated by splitting word boxes evenly per text
+  element (OCR gives word boxes only); Ctrl+C, right-click "Copy text", "Copy selection" button, Ctrl+A selects all.
+  Core `OcrSelection` (19 xUnit tests). TestDriver (en-US + de-DE, Pen active): drag across two lines selects, draws
+  nothing; Ctrl+C / menu / button put the selection on the clipboard; Shift+click extends; Ctrl+A + Ctrl+C equals
+  Copy all text; drag off text draws; Text actions off restores normal drawing; clipcheck (none).
+  Not verified (no real input): I-beam cursor, real mouse drag and right-click (TestDriver calls Press / Drag / RightClick).
 
 ## M13 Localization (planned 13 October 2026, owner)
 Goal (owner): the app speaks the top Windows user languages.

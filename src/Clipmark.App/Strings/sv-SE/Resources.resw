@@ -476,6 +476,16 @@
   <data name="TextCopied" xml:space="preserve">
     <value>Texten kopierades.</value>
   </data>
+  <data name="TextSelectedOne" xml:space="preserve">
+    <value>1 tecken markerat.</value>
+  </data>
+  <data name="TextSelected" xml:space="preserve">
+    <value>{0} tecken markerade.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="CopyTextMenu" xml:space="preserve">
+    <value>Kopiera text</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
     <value>Inga e-postadresser eller telefonnummer hittades.</value>
   </data>
@@ -1249,6 +1259,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Kopiera all text</value>
+  </data>
+  <data name="CopySelectedTextButton.Content" xml:space="preserve">
+    <value>Kopiera markering</value>
+  </data>
+  <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kopiera markering</value>
   </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Snabbmaskering</value>

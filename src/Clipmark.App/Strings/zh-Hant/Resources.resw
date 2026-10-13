@@ -476,6 +476,16 @@
   <data name="TextCopied" xml:space="preserve">
     <value>已複製文字。</value>
   </data>
+  <data name="TextSelectedOne" xml:space="preserve">
+    <value>已選取 1 個字元。</value>
+  </data>
+  <data name="TextSelected" xml:space="preserve">
+    <value>已選取 {0} 個字元。</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="CopyTextMenu" xml:space="preserve">
+    <value>複製文字</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
     <value>找不到電子郵件地址或電話號碼。</value>
   </data>
@@ -1249,6 +1259,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>複製所有文字</value>
+  </data>
+  <data name="CopySelectedTextButton.Content" xml:space="preserve">
+    <value>複製選取範圍</value>
+  </data>
+  <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>複製選取範圍</value>
   </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>快速遮蔽</value>

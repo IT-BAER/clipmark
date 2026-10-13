@@ -476,6 +476,16 @@
   <data name="TextCopied" xml:space="preserve">
     <value>Metin kopyalandı.</value>
   </data>
+  <data name="TextSelectedOne" xml:space="preserve">
+    <value>1 karakter seçildi.</value>
+  </data>
+  <data name="TextSelected" xml:space="preserve">
+    <value>{0} karakter seçildi.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="CopyTextMenu" xml:space="preserve">
+    <value>Metni kopyala</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
     <value>E-posta adresi veya telefon numarası bulunamadı.</value>
   </data>
@@ -1249,6 +1259,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Tüm metni kopyala</value>
+  </data>
+  <data name="CopySelectedTextButton.Content" xml:space="preserve">
+    <value>Seçimi kopyala</value>
+  </data>
+  <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Seçimi kopyala</value>
   </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Hızlı karartma</value>

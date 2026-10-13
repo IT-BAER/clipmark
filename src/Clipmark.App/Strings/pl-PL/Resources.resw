@@ -476,6 +476,16 @@
   <data name="TextCopied" xml:space="preserve">
     <value>Skopiowano tekst.</value>
   </data>
+  <data name="TextSelectedOne" xml:space="preserve">
+    <value>Zaznaczono 1 znak.</value>
+  </data>
+  <data name="TextSelected" xml:space="preserve">
+    <value>Zaznaczone znaki: {0}.</value>
+    <comment>{0} = 2 or more</comment>
+  </data>
+  <data name="CopyTextMenu" xml:space="preserve">
+    <value>Kopiuj tekst</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
     <value>Nie znaleziono adresów e-mail ani numerów telefonów.</value>
   </data>
@@ -1249,6 +1259,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Kopiuj cały tekst</value>
+  </data>
+  <data name="CopySelectedTextButton.Content" xml:space="preserve">
+    <value>Kopiuj zaznaczenie</value>
+  </data>
+  <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kopiuj zaznaczenie</value>
   </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Szybkie zasłanianie</value>

@@ -2,6 +2,7 @@ using System.Numerics;
 using Clipmark.App.Capture;
 using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
+using Clipmark.Core.TextActions;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Geometry;
 using Microsoft.Graphics.Canvas.Text;
@@ -18,6 +19,12 @@ using Overlay = Microsoft.UI.Xaml.Controls.Canvas;
 using TextBox = Microsoft.UI.Xaml.Controls.TextBox;
 
 namespace Clipmark.App.Editor;
+
+/// <summary>Grid that sets the pointer cursor for its children (ProtectedCursor is protected).</summary>
+internal sealed partial class CursorHost : Grid
+{
+    public InputCursor? Cursor { set => ProtectedCursor = value; }
+}
 
 /// <summary>Win2D surface for one capture. Draws in image pixel space: one image pixel = one physical pixel at zoom 1.</summary>
 internal sealed class EditorCanvas
@@ -64,6 +71,61 @@ internal sealed class EditorCanvas
     private byte[]? _composite;
     private PixelRect _compositeArea;
     private Vector2? _hover;
+    // Text actions: recognized lines, the character selection in them (anchor = drag start) and the I-beam cursor state.
+    private IReadOnlyList<OcrLine> _textLines = [];
+    private (OcrCaret Anchor, OcrCaret Focus)? _textSelection;
+    private bool _selectingText;
+    private bool _ibeam;
+    private static readonly InputCursor IBeam = InputSystemCursor.Create(InputSystemCursorShape.IBeam);
+    private readonly CursorHost _host;
+
+    /// <summary>Recognized text (text actions); a drag that starts on it selects characters. Setting it clears the selection.</summary>
+    public IReadOnlyList<OcrLine> TextLines
+    {
+        get => _textLines;
+        set
+        {
+            _textLines = value;
+            SetTextSelection(null);
+        }
+    }
+
+    /// <summary>Selected recognized text; empty without a selection.</summary>
+    public string SelectedText => _textSelection is { } s ? OcrSelection.Text(_textLines, s.Anchor, s.Focus) : "";
+
+    /// <summary>Raised when the text selection changes.</summary>
+    public event Action? TextSelectionChanged;
+
+    /// <summary>Raised on a right-click on selected text, with the point in control DIPs.</summary>
+    public event Action<Windows.Foundation.Point>? TextMenuRequested;
+
+    public void SelectAllText()
+    {
+        if (_textLines.Count > 0)
+            SetTextSelection(OcrSelection.All(_textLines));
+    }
+
+    private void SetTextSelection((OcrCaret Anchor, OcrCaret Focus)? selection)
+    {
+        if (selection == _textSelection)
+            return;
+        _textSelection = selection;
+        Control.Invalidate();
+        TextSelectionChanged?.Invoke();
+    }
+
+    /// <summary>Right-click at an image px point: on selected text raises <see cref="TextMenuRequested"/>; false elsewhere.</summary>
+    public bool RightClick(Vector2 point)
+    {
+        if (_textSelection is not { } s)
+            return false;
+        var pad = new Vector2(HitDips * Scale / _zoom);
+        if (!OcrSelection.Boxes(_textLines, s.Anchor, s.Focus).Any(b => new FloatRect(b.Min - pad, b.Max + pad).Contains(point)))
+            return false;
+        var dips = (point + _origin) / Scale;
+        TextMenuRequested?.Invoke(new Windows.Foundation.Point(dips.X, dips.Y));
+        return true;
+    }
 
     /// <summary>Raised when the eyedropper picks a color (alpha 255).</summary>
     public event Action<Rgba>? ColorPicked;
@@ -151,7 +213,12 @@ internal sealed class EditorCanvas
             var p = e.GetPosition(Control);
             DoubleClick(new Vector2((float)p.X * Scale, (float)p.Y * Scale) - _origin);
         };
-        Host = new Grid
+        Control.RightTapped += (_, e) =>
+        {
+            var p = e.GetPosition(Control);
+            e.Handled = RightClick(new Vector2((float)p.X * Scale, (float)p.Y * Scale) - _origin);
+        };
+        Host = _host = new CursorHost
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
@@ -361,7 +428,7 @@ internal sealed class EditorCanvas
 
     private float Scale => Control.Dpi / 96;
 
-    private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null;
+    private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null || _selectingText;
 
     /// <summary>Shown part of the document: the whole canvas while cropping, else the crop.</summary>
     private PixelRect View => IsCropping ? Document!.Bounds : Document!.Crop ?? Document.Bounds;
@@ -499,6 +566,9 @@ internal sealed class EditorCanvas
     {
         if (Tool == EditorTool.Eyedropper && !IsCropping)
             Hover(ImagePoint(e));
+        bool ibeam = !IsCropping && (_selectingText || OcrSelection.HitTest(_textLines, ImagePoint(e), HitDips * Scale / _zoom) is not null);
+        if (ibeam != _ibeam)
+            _host.Cursor = (_ibeam = ibeam) ? IBeam : null;
         if (!Dragging)
             return;
         Drag(ImagePoint(e), IsShift(e));
@@ -510,6 +580,15 @@ internal sealed class EditorCanvas
     {
         if (_session is null || _selection is null || Dragging)
             return;
+        // On recognized text a press selects characters whatever the tool; Shift extends the selection.
+        if (!IsCropping && OcrSelection.HitTest(_textLines, point, HitDips * Scale / _zoom) is { } caret)
+        {
+            CommitText();
+            _selectingText = true;
+            SetTextSelection(shift && _textSelection is { } current ? (current.Anchor, caret) : (caret, caret));
+            return;
+        }
+        SetTextSelection(null);
         if (Tool == EditorTool.Text && !IsCropping)
         {
             TextClick(point);
@@ -555,6 +634,12 @@ internal sealed class EditorCanvas
 
     public void Drag(Vector2 point, bool shift)
     {
+        if (_selectingText)
+        {
+            if (_textSelection is { } s && OcrSelection.Nearest(_textLines, point) is { } focus)
+                SetTextSelection((s.Anchor, focus));
+            return;
+        }
         if (_handle is { } h && Document is not null)
         {
             var to = point + _grab;
@@ -578,6 +663,13 @@ internal sealed class EditorCanvas
     public void Release()
     {
         _handle = null;
+        if (_selectingText)
+        {
+            _selectingText = false;
+            if (_textSelection is { } s && s.Anchor == s.Focus)
+                SetTextSelection(null);
+            return;
+        }
         if (_selection?.IsActive == true)
         {
             _selection.End();
@@ -767,6 +859,7 @@ internal sealed class EditorCanvas
             var dragged = _selection?.Live.Select(o => live.GetValueOrDefault(o.Id, o)) ?? [];
             DrawSnapTargets(ds, dragged.Append(_session?.Live), live);
             DrawHighlights(ds);
+            DrawTextSelection(ds);
         }
         if (_session?.Live is { } drawing)
             DrawObject(ds, drawing);
@@ -915,6 +1008,16 @@ internal sealed class EditorCanvas
         ds.FillGeometry(dim, Windows.UI.Color.FromArgb(157, 77, 77, 77));
         foreach (var box in boxes)
             box.Dispose();
+    }
+
+    // Accent at alpha 96, 2 px taller than the glyph boxes.
+    private void DrawTextSelection(CanvasDrawingSession ds)
+    {
+        if (_textSelection is not { } s)
+            return;
+        var accent = Accent;
+        foreach (var r in OcrSelection.Boxes(_textLines, s.Anchor, s.Focus))
+            ds.FillRectangle(r.Min.X, r.Min.Y - 2, r.Max.X - r.Min.X, r.Max.Y - r.Min.Y + 4, Windows.UI.Color.FromArgb(96, accent.R, accent.G, accent.B));
     }
 
     /// <summary>Canvas color under the image; shows where the image is transparent or the canvas grew past it.</summary>
