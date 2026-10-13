@@ -33,9 +33,16 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - "Save as editable PNG" keeps every object editable when you reopen the file **(Premium)**. Any copy of Clipmark opens
   editable PNGs.
 
+**Capture history (Premium, off by default)**
+- Turn it on in Settings > "Keep a capture history". The History button (clock icon) in the toolbar then shows your
+  last 25 captures (up to 250 MB) as thumbnails
+- Click a thumbnail to reopen the capture with every object still editable; your edits are saved back to it
+- Right-click a thumbnail to delete it, or use Clear all; turning the setting off deletes the whole history
+- Stored only on this PC in `%LOCALAPPDATA%\Clipmark\History`, encrypted for your Windows account (DPAPI)
+
 **Text actions**
-- OCR copy (built-in offline OCR engine): drag across the recognized text or double-click a word to copy part of it (Ctrl+C, right-click or
-  Copy selection), or copy all of it
+- OCR copy (built-in offline OCR engine): drag across the recognized text or double-click a word to copy part of
+  it (Ctrl+C, right-click or Copy selection), or copy all of it
 - Quick redact of email addresses and phone numbers, QR code decoding
 
 **Send to AI (Premium)**
@@ -51,11 +58,6 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
   or in Settings
 - Sends the capture as shown (redactions burned in) and your question to api.anthropic.com only when you send a
   question, after a one-time consent; nothing goes to IT-BAER
-
-**Capture history (Premium, off by default)**
-- Keeps your last 25 captures with their annotations in `%LOCALAPPDATA%\Clipmark\History`, encrypted for your Windows
-  account (DPAPI)
-- Edits you make to a history item are written back to it
 
 **Screen recording**
 - Record a region, a window area or a full screen to MP4 (H.264 + AAC, 30 fps)
