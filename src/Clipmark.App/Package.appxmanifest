@@ -15,7 +15,7 @@
   <Identity
     Name="B1A4BD56-7F62-4DFB-B1B7-558FD8903F06"
     Publisher="CN=IT-BAER"
-    Version="1.0.0.0" />
+    Version="1.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="B1A4BD56-7F62-4DFB-B1B7-558FD8903F06" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
