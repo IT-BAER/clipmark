@@ -73,6 +73,8 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | | Clipmark | Snipping Tool |
 |---|---|---|
 | Capture modes | Rectangle, window, full screen (one monitor), all monitors, freeform | Rectangle, window, full screen (all monitors as one image), freeform |
+| Capture delay | 3, 5 or 10 seconds | 3, 5 or 10 seconds |
+| Text extractor (region text straight to the clipboard) | Yes | Yes |
 | Pen, highlighter, eraser | Yes | Yes |
 | Shapes | Rectangle, oval, line, arrow | Rectangle, oval, line, arrow, emoji |
 | Shape fill | Yes, also fills the background (Premium) | Yes, fill and outline color |
@@ -82,8 +84,9 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | Color picker | Eyedropper in the editor (Premium) | In the capture toolbar |
 | Reopen a capture with editable objects | Yes, editable PNG (Premium to save) | No |
 | OCR copy and quick redact | Yes | Yes |
+| OCR character errors on 60 rendered web pages (our benchmark) | 0.89% | 1.07% |
 | Copy recognized text as a table | No | Yes |
-| QR code decoding | Yes | Not seen in the tested version |
+| QR code decoding (links and plain text) | Yes, with Copy and Open link | Yes, as a chip on the code |
 | Screen recording | Region, window area or full screen; MP4 with system audio and microphone | Rectangle or window; MP4 with system audio and microphone, edit in Clipchamp |
 | Send the capture to an AI agent | Yes (Premium) | No |
 | Perfect screenshot (automatic fit to content) | No | Copilot+ PCs only |
