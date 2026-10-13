@@ -181,6 +181,13 @@ internal sealed class TestDriver
             case "release":
                 (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
                 break;
+            case "vstate":
+                // vstate NAME STATE: puts a control into a visual state (PointerOver, Pressed, Normal) without pointer input.
+                int stateCut = arg.LastIndexOf(' ');
+                if (Find(arg[..stateCut]) is not Control stateControl || !VisualStateManager.GoToState(stateControl, arg[(stateCut + 1)..], false))
+                    throw new InvalidOperationException("control or state not found");
+                await Task.Delay(100);
+                break;
             case "rightclick":
                 // rightclick X,Y: right-click at image px; fails when it opens no text menu.
                 var at4 = arg.Split(',');

@@ -164,6 +164,31 @@ public sealed partial class MainPage : Page
         OnSettingsChanged(AppSettings.Current);
     }
 
+    /// <summary>Accent look (as a checked tool button) on a button, or the default look; covers hover and pressed too.</summary>
+    private static void Highlight(Button button, bool on)
+    {
+        foreach (var part in new[] { "Background", "Foreground", "BorderBrush" })
+            foreach (var state in new[] { "", "PointerOver", "Pressed" })
+            {
+                if (on)
+                    button.Resources["Button" + part + state] = Application.Current.Resources["AccentButton" + part + state];
+                else
+                    button.Resources.Remove("Button" + part + state);
+            }
+        foreach (var (property, part) in new[] { (Control.BackgroundProperty, "Background"), (Control.ForegroundProperty, "Foreground"), (Control.BorderBrushProperty, "BorderBrush") })
+        {
+            if (on)
+                button.SetValue(property, Application.Current.Resources["AccentButton" + part]);
+            else
+                button.ClearValue(property);
+        }
+        // The accent border is translucent over the fill, as in AccentButtonStyle.
+        if (on)
+            button.BackgroundSizing = BackgroundSizing.OuterBorderEdge;
+        else
+            button.ClearValue(Control.BackgroundSizingProperty);
+    }
+
     internal static string DelayText(int seconds) => seconds == 0 ? Loc.Get("DelayNone") : Loc.Format("DelaySeconds", seconds);
 
     private void OnSettingsChanged(ClipmarkSettings s)
@@ -174,7 +199,8 @@ public sealed partial class MainPage : Page
         Mark(ModeMenu, 0, Modes.Length, modeIndex);
 
         int delayIndex = Array.IndexOf(ClipmarkSettings.DelayChoices, s.DelaySeconds);
-        DelayButton.Content = s.DelaySeconds == 0 ? new FontIcon { Glyph = "\uE916", FontSize = 16 } : Loc.Format("DelayShort", s.DelaySeconds);
+        DelayButton.Content ??= new FontIcon { Glyph = "\uE916", FontSize = 16 };
+        Highlight(DelayButton, s.DelaySeconds != 0);
         AutomationProperties.SetName(DelayButton, Loc.Format("DelayButtonName", DelayText(s.DelaySeconds)));
         Mark(DelayMenu, 0, ClipmarkSettings.DelayChoices.Length, delayIndex);
 

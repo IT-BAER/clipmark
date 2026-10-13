@@ -47,7 +47,8 @@
                 <Button x:Name="NewButton" x:Uid="NewButton" Click="OnNew" Style="{StaticResource AccentButtonStyle}">
                     <StackPanel Orientation="Horizontal" Spacing="8">
                         <FontIcon FontSize="16" Glyph="&#xF406;" />
-                        <TextBlock x:Uid="NewButtonText" />
+                        <!-- Line height of the 16 px icons, so the button is as tall as the icon buttons. -->
+                        <TextBlock x:Uid="NewButtonText" LineHeight="16" LineStackingStrategy="BlockLineHeight" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 <Button x:Name="RecordButton" x:Uid="RecordButton" Click="OnNewRecording">
