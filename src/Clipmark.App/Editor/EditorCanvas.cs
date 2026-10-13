@@ -249,6 +249,11 @@ internal sealed class EditorCanvas
     /// <summary>Double-click with Select edits the text under the point.</summary>
     internal void DoubleClick(Vector2 point)
     {
+        if (!IsCropping && !Dragging && OcrSelection.HitTest(_textLines, point, HitDips * Scale / _zoom) is { } caret)
+        {
+            SetTextSelection(OcrSelection.Word(_textLines, caret));
+            return;
+        }
         if (Tool == EditorTool.Select && !IsCropping && !Dragging && !IsEditingText
             && Document?.HitTest(point, HitDips * Scale / _zoom) is TextObject text)
             BeginText(text.Position, text);

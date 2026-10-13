@@ -34,7 +34,7 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
   editable PNGs.
 
 **Text actions**
-- OCR copy (built-in offline OCR engine): drag across the recognized text to copy part of it (Ctrl+C, right-click or
+- OCR copy (built-in offline OCR engine): drag across the recognized text or double-click a word to copy part of it (Ctrl+C, right-click or
   Copy selection), or copy all of it
 - Quick redact of email addresses and phone numbers, QR code decoding
 

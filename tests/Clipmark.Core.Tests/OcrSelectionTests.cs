@@ -79,6 +79,17 @@ public class OcrSelectionTests
         Assert.Empty(OcrSelection.Boxes(Text2, new(0, 4), new(0, 4)));
     }
 
+    [Theory]
+    [InlineData(0, 0, "Hello")]
+    [InlineData(0, 5, "Hello")]  // end of "Hello"
+    [InlineData(0, 6, "world")]  // start of "world"
+    [InlineData(1, 9, "line")]
+    public void Word_spans_the_word_around_a_caret(int line, int offset, string word)
+    {
+        var (start, end) = OcrSelection.Word(Text2, new OcrCaret(line, offset));
+        Assert.Equal(word, OcrSelection.Text(Text2, start, end));
+    }
+
     [Fact]
     public void All_selects_the_same_text_as_copy_all()
     {

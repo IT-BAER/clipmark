@@ -36,6 +36,19 @@ public static class OcrSelection
     /// <summary>Caret for a dragged point anywhere: on the closest line, at the nearest character boundary; null without words.</summary>
     public static OcrCaret? Nearest(IReadOnlyList<OcrLine> lines, Vector2 point) => Closest(lines, point, float.PositiveInfinity);
 
+    /// <summary>Start and end of the word that holds the caret (a caret at a word edge belongs to that word).</summary>
+    public static (OcrCaret Start, OcrCaret End) Word(IReadOnlyList<OcrLine> lines, OcrCaret caret)
+    {
+        int start = 0;
+        foreach (var word in lines[caret.Line].Words)
+        {
+            if (caret.Offset <= start + word.Text.Length)
+                return (caret with { Offset = start }, caret with { Offset = start + word.Text.Length });
+            start += word.Text.Length + 1;
+        }
+        return (caret, caret);
+    }
+
     /// <summary>Start of the first line and end of the last.</summary>
     public static (OcrCaret Start, OcrCaret End) All(IReadOnlyList<OcrLine> lines) =>
         lines.Count == 0 ? (default, default) : (default, new OcrCaret(lines.Count - 1, LineText(lines[^1]).Length));

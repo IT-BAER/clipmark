@@ -18,7 +18,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
   written back to the item.
 - The tray icon is shown on the taskbar the first time a copy of Clipmark runs; hiding it later in Windows settings
   is kept.
-- Text actions: select part of the recognized text by dragging across it (by character, across lines) and copy it
+- Text actions: select part of the recognized text by dragging across it (by character, across lines) or double-clicking a word, and copy it
   with Ctrl+C, the right-click menu or Copy selection; Ctrl+A selects all text. A drag that starts on recognized text
   selects it whatever tool is active; elsewhere the tool works as before.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
