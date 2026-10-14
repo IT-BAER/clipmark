@@ -63,7 +63,7 @@ public sealed partial class MainPage
         }
         BuildAiFlyout();
         SyncAiFlyout();
-        _aiFlyout!.ShowAt(AskAiButton);
+        _aiFlyout!.ShowAt(Anchor(AskAiButton));
     }
 
     private void BuildAiFlyout()
@@ -336,7 +336,7 @@ public sealed partial class MainPage
         {
             HideAiFlyout(); // one popup at a time: the dialog, then the chat again
             bool agreed = await ConfirmAiConsentAsync();
-            _aiFlyout!.ShowAt(AskAiButton);
+            _aiFlyout!.ShowAt(Anchor(AskAiButton));
             if (!agreed)
                 return false;
         }

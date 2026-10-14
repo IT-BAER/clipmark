@@ -29,7 +29,22 @@ public sealed partial class MainWindow : Window
         };
         ApplyTheme(AppSettings.Current);
         AppSettings.Changed += ApplyTheme;
+        RootFrame.Loaded += (_, _) =>
+        {
+            ApplyMinWidth();
+            RootFrame.XamlRoot.Changed += (_, _) => ApplyMinWidth(); // monitor scale
+        };
         RootFrame.Navigate(typeof(MainPage));
+    }
+
+    /// <summary>Narrowest window in DIP: the compact toolbar fits (Snipping Tool: 643 px at 125 %).</summary>
+    private const double MinWidthDip = 514;
+
+    private void ApplyMinWidth()
+    {
+        int width = (int)Math.Ceiling(MinWidthDip * RootFrame.XamlRoot.RasterizationScale);
+        if (AppWindow.Presenter is OverlappedPresenter presenter && presenter.PreferredMinimumWidth != width)
+            presenter.PreferredMinimumWidth = width;
     }
 
     /// <summary>The Theme setting for the content root (pages, dialogs and flyouts inherit it) and the caption buttons.</summary>

@@ -64,6 +64,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - The record bar dot is anti-aliased.
 - With a toolbar menu open, a click on another toolbar button closes the menu and acts at once; before, the
   first click only closed the menu.
+- A narrow window no longer hides toolbar buttons. When one row does not fit, the edit tools move to a second row
+  and wrap there; the top row then drops the New label, moves Send to AI, Ask AI, Open and History into More, and
+  drops the delay label, in that order. The window is at least 643 px wide at 125 % scale, as Snipping Tool.
+  While cropping, the crop controls replace the draw tools. Text actions and QR code results wrap to new lines.
 
 ## [1.0.0] - 2026-10-11
 

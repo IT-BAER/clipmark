@@ -243,21 +243,20 @@ public sealed partial class MainPage : Page
         int delayIndex = Array.IndexOf(ClipmarkSettings.DelayChoices, s.DelaySeconds);
         var delayIcon = new FontIcon { Glyph = "\uE916", FontSize = 16 };
         // Line height of the 16 px icon, so the button keeps the height of the icon buttons.
-        DelayButton.Content = s.DelaySeconds == 0 ? delayIcon : new StackPanel
+        _delayLabel = s.DelaySeconds == 0 ? null
+            : new TextBlock { Text = Loc.Format("DelayShort", s.DelaySeconds), LineHeight = 16, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, VerticalAlignment = VerticalAlignment.Center };
+        DelayButton.Content = _delayLabel is null ? delayIcon : new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 8,
-            Children =
-            {
-                delayIcon,
-                new TextBlock { Text = Loc.Format("DelayShort", s.DelaySeconds), LineHeight = 16, LineStackingStrategy = LineStackingStrategy.BlockLineHeight, VerticalAlignment = VerticalAlignment.Center },
-            },
+            Children = { delayIcon, _delayLabel },
         };
         Highlight(DelayButton, s.DelaySeconds != 0);
         AutomationProperties.SetName(DelayButton, Loc.Format("DelayButtonName", DelayText(s.DelaySeconds)));
         Mark(DelayMenu, 0, ClipmarkSettings.DelayChoices.Length, delayIndex);
 
         Hint.Text = Loc.Format("StartHint", s.Hotkey, s.RecordHotkey);
+        FitToolbar();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -289,7 +288,8 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
         SaveEditableItem.Visibility = Visibility.Collapsed;
-        AgentButton.Visibility = AskAiButton.Visibility = AiSeparator.Visibility = Visibility.Collapsed; // the agents take images, not video
+        _aiTools = false; // the agents take images, not video
+        FitToolbar();
     }
 
     private void CloseVideo()
@@ -301,7 +301,7 @@ public sealed partial class MainPage : Page
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
         SaveEditableItem.Visibility = Visibility.Visible;
-        AgentButton.Visibility = AskAiButton.Visibility = AiSeparator.Visibility = Visibility.Visible;
+        _aiTools = true;
     }
 
     internal void ShowImage(string path) => ShowEditor(new EditorCanvas(path), CaptureHistory.IdFor(path));
@@ -346,6 +346,7 @@ public sealed partial class MainPage : Page
         ImageScroller.Visibility = Visibility.Visible;
         EditTools.Visibility = Visibility.Visible;
         OutputTools.Visibility = Visibility.Visible;
+        FitToolbar();
     }
 
     /// <summary>Ends the editor session and frees its Win2D resources; the page shows the start hint again.</summary>
@@ -356,6 +357,7 @@ public sealed partial class MainPage : Page
             CloseVideo();
             OutputTools.Visibility = Visibility.Collapsed;
             Hint.Visibility = Visibility.Visible;
+            FitToolbar();
         }
         if (_editor is null)
             return;
@@ -373,6 +375,7 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Visible;
         UpdateHistory();
         SyncTextActions();
+        FitToolbar();
     }
 
     private bool _confirming; // one dialog at a time
@@ -668,6 +671,14 @@ public sealed partial class MainPage : Page
         ShapeButton.IsChecked = !cropping && _tool >= EditorTool.Rectangle;
         CropButton.IsChecked = cropping;
         ApplyCropButton.Visibility = CancelCropButton.Visibility = CropFields.Visibility = cropping ? Visibility.Visible : Visibility.Collapsed;
+        // The crop controls take the place of the draw tools, which do nothing while cropping.
+        var draw = cropping ? Visibility.Collapsed : Visibility.Visible;
+        if (SelectButton.Visibility != draw)
+        {
+            foreach (var tool in new UIElement[] { SelectButton, PenButton, HighlighterButton, EraserButton, TextButton, ShapeButton, EyedropperButton, BucketButton, StyleButton, DrawSeparator })
+                tool.Visibility = draw;
+            FitToolbar();
+        }
         SyncCropFields();
         int shapeIndex = Array.FindIndex(Shapes, s => s.Tool == _shape);
         ShapeButton.Content = new FontIcon { Glyph = Shapes[shapeIndex].Glyph, FontSize = 16 };
@@ -1118,13 +1129,15 @@ public sealed partial class MainPage : Page
 
     private void OnSendToAgent(SplitButton sender, SplitButtonClickEventArgs e) => _ = SendToAgentAsync(null);
 
+    private void OnAgentMenuOpening(object? sender, object e) => FillAgentItems(AgentMenu.Items);
+
     /// <summary>Lists the running Claude, Codex and ChatGPT sessions, most recently active first.</summary>
-    private void OnAgentMenuOpening(object? sender, object e)
+    private void FillAgentItems(IList<MenuFlyoutItemBase> items)
     {
-        AgentMenu.Items.Clear();
+        items.Clear();
         var targets = AgentSend.FindTargets(out var processes);
         if (targets.Count == 0)
-            AgentMenu.Items.Add(new MenuFlyoutItem { Text = Loc.Get("NoAiSessionItem"), IsEnabled = false });
+            items.Add(new MenuFlyoutItem { Text = Loc.Get("NoAiSessionItem"), IsEnabled = false });
         int iconSize = (int)Math.Round(16 * (XamlRoot?.RasterizationScale ?? 1));
         foreach (var target in targets)
         {
@@ -1134,7 +1147,7 @@ public sealed partial class MainPage : Page
                 Icon = AgentIcons.For(target, processes, iconSize) is { } image ? new ImageIcon { Source = image } : new FontIcon { Glyph = target.Host switch { AgentHost.DesktopApp => "", AgentHost.VsCode => "", _ => "" } },
             };
             item.Click += (_, _) => _ = SendToAgentAsync(target);
-            AgentMenu.Items.Add(item);
+            items.Add(item);
         }
     }
 
@@ -1338,7 +1351,7 @@ public sealed partial class MainPage : Page
             var settings = new Button { Content = Loc.Get("OpenSettings") };
             settings.Click += (_, _) => { flyout.Hide(); Frame.Navigate(typeof(SettingsPage)); };
             panel.Children.Add(settings);
-            flyout.ShowAt(HistoryButton);
+            flyout.ShowAt(Anchor(HistoryButton));
             return;
         }
         await WriteHistoryAsync(); // the open item shows its latest edits
@@ -1356,7 +1369,7 @@ public sealed partial class MainPage : Page
         if (entries.Count == 0)
         {
             panel.Children.Add(new TextBlock { Text = Loc.Get("HistoryEmpty"), Foreground = (Brush)Application.Current.Resources["TextFillColorSecondaryBrush"] });
-            flyout.ShowAt(HistoryButton);
+            flyout.ShowAt(Anchor(HistoryButton));
             return;
         }
         var grid = new VariableSizedWrapGrid { Orientation = Orientation.Horizontal, ItemWidth = 172, ItemHeight = 132, MaximumRowsOrColumns = 2 };
@@ -1393,7 +1406,7 @@ public sealed partial class MainPage : Page
         }
         bool closed = false;
         flyout.Closed += (_, _) => closed = true;
-        flyout.ShowAt(HistoryButton);
+        flyout.ShowAt(Anchor(HistoryButton));
         foreach (var (id, image) in images) // thumbnails one by one; an unreadable item keeps an empty tile
         {
             if (closed)
@@ -1546,9 +1559,9 @@ public sealed partial class MainPage : Page
     }
 
     /// <summary>Payload (shortened) and the actions for its kind: Copy and Open link, Call and Copy number, or Send email and Copy address.</summary>
-    private StackPanel QrItem(string payload, int? number)
+    private WrapPanel QrItem(string payload, int? number)
     {
-        var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        var item = new WrapPanel { Spacing = 4, LineSpacing = 4 };
         var label = new TextBlock
         {
             Text = payload.Length > 48 ? payload[..47] + "…" : payload,
@@ -1660,8 +1673,16 @@ public sealed partial class MainPage : Page
 
     private void OnRedactClear(object sender, RoutedEventArgs e) => _editor?.Document?.ClearRedactions();
 
-    private void OnMoreMenuOpening(object? sender, object e) =>
+    private void OnMoreMenuOpening(object? sender, object e)
+    {
         ZoomItem.IsEnabled = RulerItem.IsEnabled = PrintItem.IsEnabled = PaintItem.IsEnabled = _editor is not null && _video is null;
+        OpenItem.Text = AutomationProperties.GetName(OpenButton);
+        HistoryItem.Text = AutomationProperties.GetName(HistoryButton);
+        AgentItem.Text = AutomationProperties.GetName(AgentButton);
+        AskAiItem.Text = AutomationProperties.GetName(AskAiButton);
+        if (AgentItem.Visibility == Visibility.Visible)
+            FillAgentItems(AgentItem.Items);
+    }
 
     private void OnRulerToggled(object sender, RoutedEventArgs e) => SetRuler(RulerItem.IsChecked);
 

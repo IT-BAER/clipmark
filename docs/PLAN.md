@@ -319,6 +319,19 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
   nothing; Ctrl+C / menu / button put the selection on the clipboard; Shift+click extends; Ctrl+A + Ctrl+C equals
   Copy all text; drag off text draws; Text actions off restores normal drawing; clipcheck (none).
   Not verified (no real input): I-beam cursor, real mouse drag and right-click (TestDriver calls Press / Drag / RightClick).
+- [x] M12.6 Narrow window layout (owner report 14 October 2026: tools hidden or cut off in a narrow window). Cause: one
+  toolbar row `* | Auto | *` without overflow, no minimum window size; one row needs about 1440 DIP. Before, TestDriver
+  `cutcheck` (new: buttons cut by an ancestor layout slot or the window) found 8 cut buttons at 1400 px and 19 at 640 px
+  (125 %), 11 in crop mode at 1800 px. Snipping Tool 11.2608.41.0 measured off-screen (UIA): minimum 643 px; at 900 px
+  and narrower the edit tools move to a bottom bar; New and Edit in Paint drop their labels.
+  Decisions (owner): edit tools to a second row on top (wraps there); crop controls replace the draw tools while
+  cropping; minimum 643 px at 125 % (514 DIP, `OverlappedPresenter.PreferredMinimumWidth` takes physical px), so the
+  top row drops in order the New label, Send to AI + Ask AI, Open + History (into More), the delay label.
+  Core `WrapLayout`, `ToolbarFit` (6 xUnit tests), App `WrapPanel` (toolbar edit row, Text actions bar, QR results).
+  Verified: cutcheck 0 at 1800 / 1400 / 1100 / 900 / 760 / 643 px for image, crop, delay 10 s, Text actions with
+  3 QR codes (en-US, de-DE); requests below 643 px end at 643 px; More menu items open Ask AI and History; Copy as
+  table TestDriver 9/9; Core 693/693. Not verified: real window drag-resize, other monitor scales than 125 %.
+  Seen, not changed: the video player's own cast button is cut by 2 DIP at every width (MediaTransportControls).
 
 ## M13 Localization (planned 13 October 2026, owner)
 Goal (owner): the app speaks the top Windows user languages.

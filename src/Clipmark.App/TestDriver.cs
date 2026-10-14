@@ -612,6 +612,28 @@ internal sealed class TestDriver
                     }
                 File.AppendAllLines(arg, clipped.Count == 0 ? ["(none)"] : clipped);
                 break;
+            case "cutcheck":
+                // cutcheck FILE: appends visible buttons in the window that are cut off: the button rect intersected with the window and
+                // the layout slot of each ancestor (the clip WinUI applies when a panel is wider than its slot) is narrower than the button.
+                var content = (FrameworkElement)Root.Content;
+                var cutOff = new List<string>();
+                int checkedButtons = 0;
+                foreach (var button in Descendants(content).OfType<Microsoft.UI.Xaml.Controls.Primitives.ButtonBase>())
+                {
+                    if (button.ActualWidth <= 0 || Ancestors(button).Prepend(button).Any(a => a is UIElement { Visibility: Visibility.Collapsed }))
+                        continue;
+                    checkedButtons++;
+                    var full = button.TransformToVisual(content).TransformBounds(new Windows.Foundation.Rect(0, 0, button.ActualWidth, button.ActualHeight));
+                    var seen = full;
+                    seen.Intersect(new Windows.Foundation.Rect(0, 0, content.ActualWidth, content.ActualHeight));
+                    for (DependencyObject node = button; node != content && VisualTreeHelper.GetParent(node) is UIElement parent; node = parent)
+                        if (node is FrameworkElement fe)
+                            seen.Intersect(parent.TransformToVisual(content).TransformBounds(Microsoft.UI.Xaml.Controls.Primitives.LayoutInformation.GetLayoutSlot(fe)));
+                    if (seen.IsEmpty || seen.Width < full.Width - 1)
+                        cutOff.Add($"cut: {(AutomationProperties.GetName(button) is { Length: > 0 } label ? label : button.Name)} shows {(seen.IsEmpty ? 0 : seen.Width):F0} of {full.Width:F0} at x {full.X:F0}");
+                }
+                File.AppendAllLines(arg, cutOff.Count == 0 ? [$"(none, {checkedButtons} buttons)"] : cutOff);
+                break;
             case "closepopups":
                 foreach (var open in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
                     open.IsOpen = false;
