@@ -1489,7 +1489,7 @@ public sealed partial class MainPage : Page
             _ => (Loc.Get("QrCopy"), "QrCopyNumberName", Loc.Get("QrCopied")),
         };
         string copyName = kind == QrKind.Text || kind == QrKind.Link ? Loc.Get("QrCopyName") : copy.Text;
-        if (kind is QrKind.Phone or QrKind.Email && Uri.TryCreate(payload, UriKind.Absolute, out var target))
+        if (QrPayload.Target(kind, value) is { } target)
         {
             bool phone = kind == QrKind.Phone;
             item.Children.Add(QrButton(phone ? Loc.Get("QrCall") : Loc.Get("QrSendEmail"), phone ? "QrCallNumberName" : "QrSendEmailNumberName", number,

@@ -20,4 +20,23 @@ public class QrPayloadTests
     {
         Assert.Equal((kind, value), QrPayload.Parse(payload));
     }
+
+    [Theory]
+    [InlineData(QrKind.Phone, "+43 660 123", "tel:+43 660 123")]
+    [InlineData(QrKind.Phone, "+43 (660) 12-3.4/5", "tel:+43 (660) 12-3.4/5")]
+    [InlineData(QrKind.Email, "a.b@c.at", "mailto:a.b@c.at")]
+    [InlineData(QrKind.Phone, "123?x=1", null)]
+    [InlineData(QrKind.Phone, "123;ext=4", null)]
+    [InlineData(QrKind.Email, @"a?attach=C:\x@b.at", null)]
+    [InlineData(QrKind.Email, "a@b.at&attach=x", null)]
+    [InlineData(QrKind.Email, "a@b.at#x", null)]
+    [InlineData(QrKind.Email, "a b@c.at", null)]
+    [InlineData(QrKind.Link, "https://x.at", null)]
+    [InlineData(QrKind.Text, "tel:1", null)]
+    public void Target_is_rebuilt_from_the_value_alone(QrKind kind, string value, string? expected)
+    {
+        var target = QrPayload.Target(kind, value);
+        Assert.Equal(expected, target is null ? null : Uri.UnescapeDataString(target.AbsoluteUri));
+        Assert.True(target is null || (target.Query.Length == 0 && target.Fragment.Length == 0));
+    }
 }
