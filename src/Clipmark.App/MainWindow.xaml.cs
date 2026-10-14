@@ -17,6 +17,7 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppWindow.SetIcon("Assets/AppIcon.ico");
+        AppWindow.SetPresenter(_presenter);
         Handle = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
         AppWindow.Closing += async (_, e) =>
@@ -40,11 +41,14 @@ public sealed partial class MainWindow : Window
     /// <summary>Narrowest window in DIP: the compact toolbar fits (Snipping Tool: 643 px at 125 %).</summary>
     private const double MinWidthDip = 514;
 
+    /// <summary>Own presenter: Native AOT returns AppWindow.Presenter as the base type, so a cast to OverlappedPresenter fails.</summary>
+    private readonly OverlappedPresenter _presenter = OverlappedPresenter.Create();
+
     private void ApplyMinWidth()
     {
         int width = (int)Math.Ceiling(MinWidthDip * RootFrame.XamlRoot.RasterizationScale);
-        if (AppWindow.Presenter is OverlappedPresenter presenter && presenter.PreferredMinimumWidth != width)
-            presenter.PreferredMinimumWidth = width;
+        if (_presenter.PreferredMinimumWidth != width)
+            _presenter.PreferredMinimumWidth = width;
     }
 
     /// <summary>The Theme setting for the content root (pages, dialogs and flyouts inherit it) and the caption buttons.</summary>

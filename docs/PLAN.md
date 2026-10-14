@@ -329,7 +329,8 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
   top row drops in order the New label, Send to AI + Ask AI, Open + History (into More), the delay label.
   Core `WrapLayout`, `ToolbarFit` (6 xUnit tests), App `WrapPanel` (toolbar edit row, Text actions bar, QR results).
   Verified: cutcheck 0 at 1800 / 1400 / 1100 / 900 / 760 / 643 px for image, crop, delay 10 s, Text actions with
-  3 QR codes (en-US, de-DE); requests below 643 px end at 643 px; More menu items open Ask AI and History; Copy as
+  3 QR codes (en-US, de-DE); requests below 643 px end at 643 px (Debug and Native AOT release; AOT returns
+  AppWindow.Presenter as the base type, so the window sets its own OverlappedPresenter); More menu items open Ask AI and History; Copy as
   table TestDriver 9/9; Core 693/693. Not verified: real window drag-resize, other monitor scales than 125 %.
   Seen, not changed: the video player's own cast button is cut by 2 DIP at every width (MediaTransportControls).
 
