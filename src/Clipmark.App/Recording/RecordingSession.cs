@@ -127,6 +127,11 @@ internal sealed class RecordingSession
         else if (_bar.State == RecordBarState.Recording && _recorder is not null)
         {
             _bar.Timer = RecordingTime.Format(_recorder.Elapsed);
+            // A device lost mid-recording: its button shows off and cannot be unmuted.
+            if (_bar.MicrophoneLive && !_recorder.IsLive(loopback: false))
+                _bar.Microphone = _bar.MicrophoneLive = false;
+            if (_bar.SystemAudioLive && !_recorder.IsLive(loopback: true))
+                _bar.SystemAudio = _bar.SystemAudioLive = false;
             if (_recorder.Faulted)
                 _ = StopAsync(keep: true); // StopAsync reports the failure
         }

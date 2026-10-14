@@ -69,6 +69,9 @@ internal sealed class ScreenRecorder
 
     public void Resume() => _clock.Resume(Stopwatch.GetTimestamp());
 
+    /// <summary>The source was opened at the start and was not lost since.</summary>
+    public bool IsLive(bool loopback) => Volatile.Read(ref _mixIndex[loopback ? 0 : 1]) >= 0 && _mixer is not null;
+
     /// <summary>Mutes or unmutes a source without stopping it; false when that source is not recording.</summary>
     public bool SetMuted(bool loopback, bool muted)
     {

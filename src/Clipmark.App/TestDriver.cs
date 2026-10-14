@@ -31,7 +31,7 @@ namespace Clipmark.App;
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] [pause=AT:LEN]... [mute=system|mic:AT:LEN]... (records that desktop region straight to FILE,
 /// pausing / muting at AT ms after the start for LEN ms; warnings go to DIR\warnings.txt)
-/// | barshot X,Y,W,H recording|paused|micmuted FILE (record bar for that region in that state, grabbed from the screen: needs CLIPMARK_TEST_SHOWBAR=1;
+/// | barshot X,Y,W,H idle|recording|paused|micmuted FILE (record bar for that region in that state, grabbed from the screen: needs CLIPMARK_TEST_SHOWBAR=1;
 /// the Pause / Resume tooltip text goes to DIR\bartip.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
@@ -481,7 +481,7 @@ internal sealed class TestDriver
                 using (var shownBar = new Recording.RecordBar(barArea, microphone: true, systemAudio: true))
                 {
                     shownBar.MicrophoneLive = shownBar.SystemAudioLive = true;
-                    shownBar.State = Recording.RecordBarState.Recording;
+                    shownBar.State = barWords[1] == "idle" ? Recording.RecordBarState.Idle : Recording.RecordBarState.Recording;
                     shownBar.Timer = "00:42";
                     shownBar.Paused = barWords[1] == "paused";
                     shownBar.Microphone = barWords[1] != "micmuted";

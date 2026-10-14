@@ -42,7 +42,7 @@ internal sealed unsafe partial class RecordBar : Win32Window
     public RecordBarState State
     {
         get => _state;
-        set { _state = value; Repaint(); }
+        set { _state = value; UpdateTip(); Repaint(); }
     }
 
     /// <summary>The recording is paused: Resume glyph, dimmed timer.</summary>
@@ -142,12 +142,13 @@ internal sealed unsafe partial class RecordBar : Win32Window
     private void UpdateTip()
     {
         if (_tip != 0)
-            SendTip(TTM_UPDATETIPTEXTW);
+            SendTip(TTM_SETTOOLINFOW);
     }
 
+    /// <summary>Text and rect of the tool; no text (no tooltip) while the button is disabled.</summary>
     private void SendTip(uint message)
     {
-        fixed (char* text = Loc.Get(_paused ? "RecordResume" : "RecordPause"))
+        fixed (char* text = _state != RecordBarState.Recording ? "" : Loc.Get(_paused ? "RecordResume" : "RecordPause"))
         {
             var info = new TTTOOLINFOW
             {
@@ -175,7 +176,7 @@ internal sealed unsafe partial class RecordBar : Win32Window
 #endif
 
     private const uint ICC_BAR_CLASSES = 0x4, TTS_ALWAYSTIP = 0x1, TTS_NOPREFIX = 0x2, TTF_SUBCLASS = 0x10,
-        TTM_ADDTOOLW = 0x0400 + 50, TTM_UPDATETIPTEXTW = 0x0400 + 57;
+        TTM_ADDTOOLW = 0x0400 + 50, TTM_SETTOOLINFOW = 0x0400 + 54;
 
     private struct INITCOMMONCONTROLSEX { public uint dwSize, dwICC; }
 
