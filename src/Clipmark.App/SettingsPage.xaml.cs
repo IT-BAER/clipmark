@@ -29,7 +29,7 @@ public sealed partial class SettingsPage : Page
     {
         InitializeComponent();
         // Code, not a style: setters cannot use x:Uid, and the WinUI default follows the Windows display language.
-        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, HistorySwitch,
+        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, HistorySwitch,
                      SystemAudioSwitch, MicrophoneSwitch })
             (toggle.OnContent, toggle.OffContent) = (Loc.Get("ToggleOn"), Loc.Get("ToggleOff"));
         foreach (int key in Keys)
@@ -60,6 +60,7 @@ public sealed partial class SettingsPage : Page
         ClipboardSwitch.IsOn = s.CopyToClipboard;
         ToastSwitch.IsOn = s.ShowToast;
         AutoSaveSwitch.IsOn = s.AutoSave;
+        OcrLineBreaksSwitch.IsOn = s.OcrRemoveLineBreaks;
         ShowFolder(s);
         ShowHotkeyStatus();
         RecCtrlBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
@@ -375,6 +376,7 @@ public sealed partial class SettingsPage : Page
             AppSettings.Update(s => s with
             {
                 CopyToClipboard = ClipboardSwitch.IsOn, ShowToast = ToastSwitch.IsOn, AutoSave = AutoSaveSwitch.IsOn,
+                OcrRemoveLineBreaks = OcrLineBreaksSwitch.IsOn,
             });
     }
 

@@ -91,7 +91,7 @@ internal sealed class EditorCanvas
     }
 
     /// <summary>Selected recognized text; empty without a selection.</summary>
-    public string SelectedText => _textSelection is { } s ? OcrSelection.Text(_textLines, s.Anchor, s.Focus) : "";
+    public string SelectedText => _textSelection is { } s ? OcrSelection.Text(_textLines, s.Anchor, s.Focus, AppSettings.Current.OcrRemoveLineBreaks) : "";
 
     /// <summary>Raised when the text selection changes.</summary>
     public event Action? TextSelectionChanged;

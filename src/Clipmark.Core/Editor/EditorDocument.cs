@@ -153,6 +153,12 @@ public sealed class EditorDocument
         if (added.Count > 0) Push(Current with { Redactions = Current.Redactions.AddRange(added) });
     }
 
+    /// <summary>Removes every redaction box as one undo step; nothing to do without any.</summary>
+    public void ClearRedactions()
+    {
+        if (Current.Redactions.Count > 0) Push(Current with { Redactions = [] });
+    }
+
     public void SetCrop(PixelRect rect)
     {
         var clamped = rect.Intersect(Bounds);

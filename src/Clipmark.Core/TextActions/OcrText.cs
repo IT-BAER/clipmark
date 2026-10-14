@@ -10,19 +10,24 @@ public readonly record struct OcrWord(string Text, FloatRect Box);
 
 public sealed record OcrLine(IReadOnlyList<OcrWord> Words);
 
+public enum SensitiveKind { Email, Phone }
+
+/// <summary>A box over an email address or phone number, in image pixels.</summary>
+public readonly record struct SensitiveMatch(PixelRect Box, SensitiveKind Kind);
+
 public static partial class OcrText
 {
-    /// <summary>Words joined by spaces, lines by newlines.</summary>
-    public static string Join(IEnumerable<OcrLine> lines) =>
-        string.Join(Environment.NewLine, lines.Select(l => string.Join(' ', l.Words.Select(w => w.Text))));
+    /// <summary>Words joined by spaces, lines by newlines (or by spaces when removeLineBreaks).</summary>
+    public static string Join(IEnumerable<OcrLine> lines, bool removeLineBreaks = false) =>
+        string.Join(removeLineBreaks ? " " : Environment.NewLine, lines.Select(l => string.Join(' ', l.Words.Select(w => w.Text))));
 
     /// <summary>
     /// Boxes over email addresses and phone numbers: the union of the words each match touches, rounded outward and
     /// grown by pad px. Dates and IPv4 addresses are masked first so they never count as phone digits.
     /// </summary>
-    public static IReadOnlyList<PixelRect> Sensitive(IEnumerable<OcrLine> lines, int pad)
+    public static IReadOnlyList<SensitiveMatch> Sensitive(IEnumerable<OcrLine> lines, int pad)
     {
-        var found = new List<PixelRect>();
+        var found = new List<SensitiveMatch>();
         foreach (var line in lines)
         {
             var text = new StringBuilder();
@@ -60,8 +65,8 @@ public static partial class OcrText
                     minX = line.Words[first - 1].Box.Max.X + pad;
                 if (phone && last < spans.Count - 1 && line.Words[last + 1].Box.Min.X - r.Max.X > height)
                     maxX = line.Words[last + 1].Box.Min.X - pad;
-                found.Add(PixelRect.FromCorners((int)MathF.Floor(minX), (int)MathF.Floor(r.Min.Y) - pad,
-                    (int)MathF.Ceiling(maxX), (int)MathF.Ceiling(r.Max.Y) + pad));
+                found.Add(new(PixelRect.FromCorners((int)MathF.Floor(minX), (int)MathF.Floor(r.Min.Y) - pad,
+                    (int)MathF.Ceiling(maxX), (int)MathF.Ceiling(r.Max.Y) + pad), phone ? SensitiveKind.Phone : SensitiveKind.Email));
             }
         }
         return found;

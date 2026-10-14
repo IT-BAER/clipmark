@@ -1332,4 +1332,53 @@
     <value>未能打开文件夹：{0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>电子邮件地址</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>删除所有涂黑</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>请在菜单中打开电子邮件地址或电话号码</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>拨打电话</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>拨打电话 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>复制号码</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>复制号码 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>发送电子邮件</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>发送电子邮件 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>复制地址</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>复制地址 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>已复制电话号码。</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>已复制电子邮件地址。</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>文本提取: 删除换行</value>
+  </data>
 </root>

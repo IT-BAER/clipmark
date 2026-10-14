@@ -34,8 +34,18 @@ public class SettingsStoreTests
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
             AiModel = "claude-opus-5-5", AiConsent = true,
+            RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
+    }
+
+    [Fact]
+    public void Text_action_options_default_and_old_files_keep_the_defaults()
+    {
+        var s = SettingsStore.Parse("""{ "autoSave": true }""");
+        Assert.True(s.RedactEmail);
+        Assert.True(s.RedactPhone);
+        Assert.False(s.OcrRemoveLineBreaks);
     }
 
     [Fact]

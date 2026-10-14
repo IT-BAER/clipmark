@@ -1332,4 +1332,53 @@
     <value>Klasör açılamadı: {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>E-posta adresleri</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>Telefon numaraları</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>Tüm karartmaları kaldır</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>Menüden e-posta adreslerini veya telefon numaralarını açın</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>Ara {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>Numarayı kopyala</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>Numarayı kopyala {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>E-posta gönder</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>E-posta gönder {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>Adresi kopyala</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>Adresi kopyala {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>Telefon numarası kopyalandı.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>E-posta adresi kopyalandı.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>Metin çıkarıcı: satır sonlarını kaldır</value>
+  </data>
 </root>

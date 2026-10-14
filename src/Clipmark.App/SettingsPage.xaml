@@ -83,6 +83,7 @@
                         <Button Grid.Column="2" x:Name="ResetFolderButton" x:Uid="SettingsResetFolder" Click="OnResetFolder" />
                         <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
                     </Grid>
+                    <ToggleSwitch x:Name="OcrLineBreaksSwitch" x:Uid="SettingsOcrRemoveLineBreaks" Toggled="OnTogglesChanged" />
                     <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
                     <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>

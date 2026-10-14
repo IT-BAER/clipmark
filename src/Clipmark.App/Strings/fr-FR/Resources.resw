@@ -1332,4 +1332,53 @@
     <value>Le dossier n'a pas pu être ouvert : {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>Adresses e-mail</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>Numéros de téléphone</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>Supprimer tous les masquages</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>Activez les adresses e-mail ou les numéros de téléphone dans le menu</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>Appeler</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>Appeler {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>Copier le numéro</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>Copier le numéro {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>Envoyer un e-mail</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>Envoyer un e-mail {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>Copier l'adresse</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>Copier l'adresse {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>Numéro de téléphone copié.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>Adresse e-mail copiée.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>Extracteur de texte : supprimer les sauts de ligne</value>
+  </data>
 </root>

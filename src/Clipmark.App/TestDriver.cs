@@ -257,7 +257,7 @@ internal sealed class TestDriver
                 }
                 break;
             case "assert" when arg.StartsWith("status "):
-                string status = (Find("Text actions status") as TextBlock)?.Text ?? throw new InvalidOperationException("no status");
+                string status = Descendants(Root.Content).OfType<TextBlock>().FirstOrDefault(x => x.Name == "TextActionsStatus")?.Text ?? throw new InvalidOperationException("no status");
                 if (!status.Contains(arg[7..], StringComparison.Ordinal))
                     throw new InvalidOperationException($"status is '{status}'");
                 break;
@@ -514,7 +514,7 @@ internal sealed class TestDriver
             if (node is FrameworkElement { Visibility: Visibility.Visible } fe)
             {
                 if (Matches(AutomationProperties.GetName(fe)) || (fe is MenuFlyoutItem item && Matches(item.Text)) || (fe is MenuFlyoutSubItem sub && Matches(sub.Text))
-                    || (fe is Button { Content: string text } && Matches(text)))
+                    || (fe is Button { Content: string text } && Matches(text)) || (fe is ToggleSwitch { Header: string header } && Matches(header)))
                     return fe;
             }
             else if (node is UIElement { Visibility: Visibility.Collapsed })

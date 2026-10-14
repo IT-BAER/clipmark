@@ -55,6 +55,9 @@ public class RedactionTests
         Assert.Equal([100, 100, 100, 255, 8, 9, 10, 255], small);
     }
 
+    private static IReadOnlyList<PixelRect> Boxes(IEnumerable<OcrLine> lines, int pad) =>
+        [.. OcrText.Sensitive(lines, pad).Select(m => m.Box)];
+
     private static OcrLine Line(params string[] words) =>
         new([.. words.Select((w, i) => new OcrWord(w, new(new(i * 100, 0), new(i * 100 + 80, 20))))]);
 
@@ -64,7 +67,7 @@ public class RedactionTests
     [Fact]
     public void An_email_covers_its_word()
     {
-        Assert.Equal([Words(1, 1)], OcrText.Sensitive([Line("Mail:", "test.user+tag@example.com,", "danke")], 2));
+        Assert.Equal([Words(1, 1)], Boxes([Line("Mail:", "test.user+tag@example.com,", "danke")], 2));
     }
 
     [Theory]
@@ -74,7 +77,7 @@ public class RedactionTests
     [InlineData("+49/89/1234-567")]
     public void A_phone_number_covers_all_its_words_but_not_the_label(params string[] number)
     {
-        Assert.Equal([Words(1, number.Length)], OcrText.Sensitive([Line(["Tel.", .. number, "abends"])], 2));
+        Assert.Equal([Words(1, number.Length)], Boxes([Line(["Tel.", .. number, "abends"])], 2));
     }
 
     [Theory]
@@ -86,7 +89,7 @@ public class RedactionTests
     [InlineData("12:30")]
     public void Dates_addresses_and_short_numbers_are_not_phone_numbers(string word)
     {
-        Assert.Empty(OcrText.Sensitive([Line("am", word, "um")], 2));
+        Assert.Empty(Boxes([Line("am", word, "um")], 2));
     }
 
     // Measured: Windows OCR returned "Tel." and "1234567" but no words for "+43 660" between them.
@@ -99,7 +102,7 @@ public class RedactionTests
     [Fact]
     public void A_phone_number_extends_over_unread_gaps_to_its_neighbors()
     {
-        Assert.Equal([PixelRect.FromCorners(69, 171, 558, 198)], OcrText.Sensitive([Gapped()], 2));
+        Assert.Equal([PixelRect.FromCorners(69, 171, 558, 198)], Boxes([Gapped()], 2));
     }
 
     [Fact]
@@ -109,13 +112,13 @@ public class RedactionTests
             new OcrWord("Tel.", new(new(20, 172), new(67, 196))),
             new OcrWord("1234567", new(new(76, 173), new(191, 196))),
         ]);
-        Assert.Equal([PixelRect.FromCorners(74, 171, 193, 198)], OcrText.Sensitive([line], 2));
+        Assert.Equal([PixelRect.FromCorners(74, 171, 193, 198)], Boxes([line], 2));
     }
 
     [Fact]
     public void Several_matches_in_several_lines_are_found_separately()
     {
-        var found = OcrText.Sensitive([Line("a@b.at", "x", "c@d.com"), Line("x", "0660", "1234567")], 2);
+        var found = Boxes([Line("a@b.at", "x", "c@d.com"), Line("x", "0660", "1234567")], 2);
         Assert.Equal(3, found.Count);
     }
 
@@ -123,5 +126,37 @@ public class RedactionTests
     public void Join_puts_words_on_lines()
     {
         Assert.Equal($"Hallo Welt{Environment.NewLine}zwei", OcrText.Join([Line("Hallo", "Welt"), Line("zwei")]));
+    }
+
+    [Fact]
+    public void Join_can_remove_line_breaks()
+    {
+        Assert.Equal("Hallo Welt zwei", OcrText.Join([Line("Hallo", "Welt"), Line("zwei")], removeLineBreaks: true));
+    }
+
+    [Fact]
+    public void Sensitive_matches_carry_their_kind()
+    {
+        var found = OcrText.Sensitive([Line("a@b.at", "x", "0660", "1234567")], 2);
+        Assert.Equal([SensitiveKind.Email, SensitiveKind.Phone], found.Select(m => m.Kind));
+    }
+
+    [Fact]
+    public void ClearRedactions_is_one_undo_step_and_undo_restores_them()
+    {
+        var doc = new EditorDocument(100, 50);
+        doc.Redact([new PixelRect(10, 10, 20, 5), new PixelRect(30, 30, 5, 5)]);
+        doc.ClearRedactions();
+        Assert.Empty(doc.Redactions);
+        doc.Undo();
+        Assert.Equal(2, doc.Redactions.Count);
+    }
+
+    [Fact]
+    public void ClearRedactions_without_redactions_adds_no_step()
+    {
+        var doc = new EditorDocument(100, 50);
+        doc.ClearRedactions();
+        Assert.False(doc.CanUndo);
     }
 }

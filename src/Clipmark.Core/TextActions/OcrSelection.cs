@@ -13,8 +13,8 @@ public readonly record struct OcrCaret(int Line, int Offset) : IComparable<OcrCa
 /// <summary>Character selection in recognized text; character positions are estimated by splitting word boxes evenly.</summary>
 public static class OcrSelection
 {
-    /// <summary>Text between two carets in either order: line parts joined by newlines, as in <see cref="OcrText.Join"/>.</summary>
-    public static string Text(IReadOnlyList<OcrLine> lines, OcrCaret a, OcrCaret b)
+    /// <summary>Text between two carets in either order: line parts joined by newlines (spaces when removeLineBreaks), as in <see cref="OcrText.Join"/>.</summary>
+    public static string Text(IReadOnlyList<OcrLine> lines, OcrCaret a, OcrCaret b, bool removeLineBreaks = false)
     {
         var (from, to) = a.CompareTo(b) <= 0 ? (a, b) : (b, a);
         var parts = new List<string>();
@@ -24,7 +24,7 @@ public static class OcrSelection
             int start = i == from.Line ? from.Offset : 0, end = i == to.Line ? to.Offset : text.Length;
             parts.Add(text[start..end]);
         }
-        return string.Join(Environment.NewLine, parts);
+        return string.Join(removeLineBreaks ? " " : Environment.NewLine, parts);
     }
 
     /// <summary>

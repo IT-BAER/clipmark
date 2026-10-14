@@ -1332,4 +1332,53 @@
     <value>Det gick inte att öppna mappen: {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>E-postadresser</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>Telefonnummer</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>Ta bort all maskering</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>Aktivera e-postadresser eller telefonnummer i menyn</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>Ring</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>Ring {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>Kopiera nummer</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>Kopiera nummer {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>Skicka e-post</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>Skicka e-post {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>Kopiera adress</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>Kopiera adress {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>Telefonnumret kopierades.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>E-postadressen kopierades.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>Textextrahering: ta bort radbrytningar</value>
+  </data>
 </root>

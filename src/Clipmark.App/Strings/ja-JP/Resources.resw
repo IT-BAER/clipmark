@@ -1332,4 +1332,53 @@
     <value>フォルダーを開けませんでした: {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>メール アドレス</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>電話番号</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>すべての黒塗りを削除</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>メニューでメール アドレスまたは電話番号をオンにしてください</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>電話をかける</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>電話をかける {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>番号をコピー</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>番号をコピー {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>メールを送信</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>メールを送信 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>アドレスをコピー</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>アドレスをコピー {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>電話番号をコピーしました。</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>メール アドレスをコピーしました。</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>テキスト抽出: 改行を削除する</value>
+  </data>
 </root>

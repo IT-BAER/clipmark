@@ -92,7 +92,7 @@ internal sealed class CaptureController(nint clipboardOwner)
             CaptureOutput.ShowTextToast(Loc.Get("ToastNoText"));
             return;
         }
-        if (CaptureOutput.CopyTextToClipboard(clipboardOwner, OcrText.Join(lines)))
+        if (CaptureOutput.CopyTextToClipboard(clipboardOwner, OcrText.Join(lines, AppSettings.Current.OcrRemoveLineBreaks)))
             CaptureOutput.ShowTextToast(Loc.Get("ToastTextCopied"));
         else
             Failed?.Invoke(Loc.Get("ClipboardBusyText"));

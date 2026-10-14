@@ -1332,4 +1332,53 @@
     <value>폴더를 열지 못했습니다. {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>이메일 주소</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>전화번호</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>모든 가리기 제거</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>메뉴에서 이메일 주소 또는 전화번호를 켜세요</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>전화 걸기</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>전화 걸기 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>번호 복사</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>번호 복사 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>이메일 보내기</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>이메일 보내기 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>주소 복사</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>주소 복사 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>전화번호를 복사했습니다.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>이메일 주소를 복사했습니다.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>텍스트 추출: 줄 바꿈 제거</value>
+  </data>
 </root>

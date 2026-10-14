@@ -1332,4 +1332,53 @@
     <value>未能開啟資料夾：{0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>電子郵件地址</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>電話號碼</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>移除所有遮蔽</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>請在功能表中開啟電子郵件地址或電話號碼</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>撥打電話</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>撥打電話 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>複製號碼</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>複製號碼 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>傳送電子郵件</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>傳送電子郵件 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>複製地址</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>複製地址 {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>已複製電話號碼。</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>已複製電子郵件地址。</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>文字擷取: 移除換行</value>
+  </data>
 </root>

@@ -41,6 +41,15 @@ public sealed record ClipmarkSettings
 
     /// <summary>UI language tag from <see cref="UiLanguages"/>; null = the Windows display language.</summary>
     public string? Language { get; init; }
+
+    /// <summary>Quick redact covers email addresses.</summary>
+    public bool RedactEmail { get; init; } = true;
+
+    /// <summary>Quick redact covers phone numbers.</summary>
+    public bool RedactPhone { get; init; } = true;
+
+    /// <summary>Text extractor joins lines with spaces instead of line breaks.</summary>
+    public bool OcrRemoveLineBreaks { get; init; }
 }
 
 /// <summary>The languages the UI offers: BCP-47 tag and the language's own name.</summary>
@@ -97,6 +106,9 @@ public static class SettingsStore
             w.WriteBoolean("aiConsent", s.AiConsent);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteString("language", s.Language);
+            w.WriteBoolean("redactEmail", s.RedactEmail);
+            w.WriteBoolean("redactPhone", s.RedactPhone);
+            w.WriteBoolean("ocrRemoveLineBreaks", s.OcrRemoveLineBreaks);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -139,6 +151,9 @@ public static class SettingsStore
                 AiConsent = Bool("aiConsent", d.AiConsent),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
                 Language = UiLanguages.IsValid(Str("language")) ? Str("language") : null,
+                RedactEmail = Bool("redactEmail", d.RedactEmail),
+                RedactPhone = Bool("redactPhone", d.RedactPhone),
+                OcrRemoveLineBreaks = Bool("ocrRemoveLineBreaks", d.OcrRemoveLineBreaks),
             };
         }
     }

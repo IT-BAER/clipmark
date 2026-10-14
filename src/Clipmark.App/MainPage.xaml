@@ -231,7 +231,16 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <Button x:Name="CopySelectedTextButton" x:Uid="CopySelectedTextButton" Click="OnCopySelectedText" IsEnabled="False" />
                 <Button x:Name="CopyAllTextButton" x:Uid="CopyAllTextButton" Click="OnCopyAllText" IsEnabled="False" />
-                <Button x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False" />
+                <SplitButton x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False">
+                    <SplitButton.Flyout>
+                        <MenuFlyout x:Name="QuickRedactMenu" Placement="Bottom" Opening="OnQuickRedactMenuOpening">
+                            <ToggleMenuFlyoutItem x:Name="RedactEmailItem" x:Uid="RedactEmailItem" Click="OnRedactKindToggled" />
+                            <ToggleMenuFlyoutItem x:Name="RedactPhoneItem" x:Uid="RedactPhoneItem" Click="OnRedactKindToggled" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="RedactClearItem" x:Uid="RedactClearItem" Click="OnRedactClear" />
+                        </MenuFlyout>
+                    </SplitButton.Flyout>
+                </SplitButton>
                 <StackPanel x:Name="QrResults" Orientation="Horizontal" Spacing="8" />
             </StackPanel>
             <InfoBar x:Name="Message" Margin="8,0,8,8" IsOpen="False" Severity="Error" />

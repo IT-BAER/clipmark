@@ -1332,4 +1332,53 @@
     <value>Не вдалося відкрити папку: {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>Адреси електронної пошти</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>Номери телефонів</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>Видалити всі приховування</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>Увімкніть у меню адреси електронної пошти або номери телефонів</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>Зателефонувати</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>Зателефонувати {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>Копіювати номер</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>Копіювати номер {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>Надіслати лист</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>Надіслати лист {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>Копіювати адресу</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>Копіювати адресу {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>Номер телефону скопійовано.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>Адресу електронної пошти скопійовано.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>Вилучення тексту: видаляти розриви рядків</value>
+  </data>
 </root>

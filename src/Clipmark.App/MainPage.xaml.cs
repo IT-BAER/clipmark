@@ -1467,7 +1467,7 @@ public sealed partial class MainPage : Page
         static FloatRect Pad(FloatRect r, Vector2 by) => new(r.Min - by, r.Max + by);
     }
 
-    /// <summary>Payload (shortened), Copy, and Open link for http / https.</summary>
+    /// <summary>Payload (shortened) and the actions for its kind: Copy and Open link, Call and Copy number, or Send email and Copy address.</summary>
     private StackPanel QrItem(string payload, int? number)
     {
         var item = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
@@ -1480,23 +1480,41 @@ public sealed partial class MainPage : Page
         };
         AutomationProperties.SetName(label, Loc.Format("QrLabelName", payload));
         ToolTipService.SetToolTip(label, payload);
-        var copy = new Button { Content = Loc.Get("QrCopy") };
-        AutomationProperties.SetName(copy, number is { } n ? Loc.Format("QrCopyNumberName", n) : Loc.Get("QrCopyName"));
-        copy.Click += (_, _) => CopyText(payload, Loc.Get("QrCopied"));
         item.Children.Add(label);
-        item.Children.Add(copy);
-        if (Uri.TryCreate(payload, UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+        var (kind, value) = QrPayload.Parse(payload);
+        (string Text, string NumberName, string Done) copy = kind switch
         {
-            var open = new Button { Content = Loc.Get("QrOpenLink") };
-            AutomationProperties.SetName(open, number is { } n2 ? Loc.Format("QrOpenLinkNumberName", n2) : Loc.Get("QrOpenLink"));
+            QrKind.Phone => (Loc.Get("QrCopyNumber"), "QrCopyNumberOfName", Loc.Get("QrNumberCopied")),
+            QrKind.Email => (Loc.Get("QrCopyAddress"), "QrCopyAddressNumberName", Loc.Get("QrAddressCopied")),
+            _ => (Loc.Get("QrCopy"), "QrCopyNumberName", Loc.Get("QrCopied")),
+        };
+        string copyName = kind == QrKind.Text || kind == QrKind.Link ? Loc.Get("QrCopyName") : copy.Text;
+        if (kind is QrKind.Phone or QrKind.Email && Uri.TryCreate(payload, UriKind.Absolute, out var target))
+        {
+            bool phone = kind == QrKind.Phone;
+            item.Children.Add(QrButton(phone ? Loc.Get("QrCall") : Loc.Get("QrSendEmail"), phone ? "QrCallNumberName" : "QrSendEmailNumberName", number,
+                async () => await Launcher.LaunchUriAsync(target), null));
+        }
+        item.Children.Add(QrButton(copy.Text, copy.NumberName, number, () => CopyText(value, copy.Done), copyName));
+        if (kind == QrKind.Link && Uri.TryCreate(payload, UriKind.Absolute, out var uri))
+        {
+            var open = QrButton(Loc.Get("QrOpenLink"), "QrOpenLinkNumberName", number, async () => await Launcher.LaunchUriAsync(uri), null);
             ToolTipService.SetToolTip(open, uri.AbsoluteUri);
-            open.Click += async (_, _) => await Launcher.LaunchUriAsync(uri);
             item.Children.Add(open);
         }
         return item;
     }
 
-    private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines), Loc.Get("TextCopied"));
+    /// <summary>A QR action button; its automation name is the text, or the single-code name, and with several codes the numbered one.</summary>
+    private static Button QrButton(string text, string numberNameKey, int? number, Action click, string? name)
+    {
+        var button = new Button { Content = text };
+        AutomationProperties.SetName(button, number is { } n ? Loc.Format(numberNameKey, n) : name ?? text);
+        button.Click += (_, _) => click();
+        return button;
+    }
+
+    private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines, AppSettings.Current.OcrRemoveLineBreaks), Loc.Get("TextCopied"));
 
     private void OnCopySelectedText(object sender, RoutedEventArgs e) => CopyText(_editor?.SelectedText ?? "", Loc.Get("TextCopied"));
 
@@ -1527,15 +1545,31 @@ public sealed partial class MainPage : Page
             ShowError(Loc.Get("ClipboardBusyText"));
     }
 
-    /// <summary>Blacks out email addresses and phone numbers in the image pixels as one undo step.</summary>
-    private void OnQuickRedact(object sender, RoutedEventArgs e)
+    /// <summary>Blacks out the enabled kinds (email addresses, phone numbers) in the image pixels as one undo step.</summary>
+    private void OnQuickRedact(SplitButton sender, SplitButtonClickEventArgs e)
     {
-        var boxes = OcrText.Sensitive(_lines, 2);
-        if (boxes.Count == 0)
+        var s = AppSettings.Current;
+        var boxes = OcrText.Sensitive(_lines, 2)
+            .Where(m => m.Kind == SensitiveKind.Email ? s.RedactEmail : s.RedactPhone).Select(m => m.Box).ToList();
+        if (!s.RedactEmail && !s.RedactPhone)
+            TextActionsStatus.Text = Loc.Get("RedactNoKinds");
+        else if (boxes.Count == 0)
             TextActionsStatus.Text = Loc.Get("RedactNoneFound");
         else
             _editor?.Document?.Redact(boxes); // the change reads the image again
     }
+
+    private void OnQuickRedactMenuOpening(object? sender, object e)
+    {
+        RedactEmailItem.IsChecked = AppSettings.Current.RedactEmail;
+        RedactPhoneItem.IsChecked = AppSettings.Current.RedactPhone;
+        RedactClearItem.IsEnabled = _editor?.Document is { Redactions.Count: > 0 };
+    }
+
+    private void OnRedactKindToggled(object sender, RoutedEventArgs e) =>
+        AppSettings.Update(s => s with { RedactEmail = RedactEmailItem.IsChecked, RedactPhone = RedactPhoneItem.IsChecked });
+
+    private void OnRedactClear(object sender, RoutedEventArgs e) => _editor?.Document?.ClearRedactions();
 
     private void OnMoreMenuOpening(object? sender, object e) =>
         ZoomItem.IsEnabled = PrintItem.IsEnabled = PaintItem.IsEnabled = _editor is not null && _video is null;

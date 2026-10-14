@@ -91,6 +91,12 @@ public class OcrSelectionTests
     }
 
     [Fact]
+    public void A_selection_over_lines_can_remove_line_breaks()
+    {
+        Assert.Equal("world sec", OcrSelection.Text(Text2, new(1, 3), new(0, 6), removeLineBreaks: true));
+    }
+
+    [Fact]
     public void All_selects_the_same_text_as_copy_all()
     {
         var (start, end) = OcrSelection.All(Text2);

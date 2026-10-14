@@ -1332,4 +1332,53 @@
     <value>Не удалось открыть папку: {0}</value>
     <comment>{0} = folder path</comment>
   </data>
+  <data name="RedactEmailItem.Text" xml:space="preserve">
+    <value>Адреса электронной почты</value>
+  </data>
+  <data name="RedactPhoneItem.Text" xml:space="preserve">
+    <value>Номера телефонов</value>
+  </data>
+  <data name="RedactClearItem.Text" xml:space="preserve">
+    <value>Удалить все скрытия</value>
+  </data>
+  <data name="RedactNoKinds" xml:space="preserve">
+    <value>Включите в меню адреса электронной почты или номера телефонов</value>
+  </data>
+  <data name="QrCall" xml:space="preserve">
+    <value>Позвонить</value>
+  </data>
+  <data name="QrCallNumberName" xml:space="preserve">
+    <value>Позвонить {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyNumber" xml:space="preserve">
+    <value>Копировать номер</value>
+  </data>
+  <data name="QrCopyNumberOfName" xml:space="preserve">
+    <value>Копировать номер {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrSendEmail" xml:space="preserve">
+    <value>Отправить письмо</value>
+  </data>
+  <data name="QrSendEmailNumberName" xml:space="preserve">
+    <value>Отправить письмо {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrCopyAddress" xml:space="preserve">
+    <value>Копировать адрес</value>
+  </data>
+  <data name="QrCopyAddressNumberName" xml:space="preserve">
+    <value>Копировать адрес {0}</value>
+    <comment>{0} = QR code number</comment>
+  </data>
+  <data name="QrNumberCopied" xml:space="preserve">
+    <value>Номер телефона скопирован.</value>
+  </data>
+  <data name="QrAddressCopied" xml:space="preserve">
+    <value>Адрес электронной почты скопирован.</value>
+  </data>
+  <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
+    <value>Извлечение текста: удалять переносы строк</value>
+  </data>
 </root>
