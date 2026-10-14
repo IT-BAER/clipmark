@@ -70,6 +70,25 @@ public sealed class ChatStreamTests
     }
 
     [Fact]
+    public async Task The_relay_usage_event_after_the_answer_goes_to_onRelayEvent_and_changes_nothing_else()
+    {
+        const string Usage = "event: releash.usage\ndata: {\"input_tokens\":1200,\"output_tokens\":80,\"cost_usd\":\"0.0123\",\"remaining_monthly_usd\":\"4.9877\"}\n\n";
+        var text = new List<string>();
+        var relay = new List<string>();
+
+        string reason = await ChatStream.ReadAsync(Body(Delta("Hi") + Stop + Usage), text.Add, Idle, default, onRelayEvent: relay.Add);
+
+        Assert.Equal(["Hi"], text);
+        Assert.Equal("end_turn", reason);
+        Assert.Single(relay);
+        Assert.Contains("4.9877", relay[0]);
+
+        text.Clear();
+        Assert.Equal("end_turn", await ChatStream.ReadAsync(Body(Delta("Hi") + Stop + Usage), text.Add, Idle, default));
+        Assert.Equal(["Hi"], text);
+    }
+
+    [Fact]
     public async Task A_character_split_across_reads_is_decoded_whole()
     {
         byte[] all = Encoding.UTF8.GetBytes(Delta("Grüße") + Stop);
