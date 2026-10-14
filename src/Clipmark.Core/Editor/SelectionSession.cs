@@ -222,10 +222,16 @@ public sealed class SelectionSession(EditorDocument document)
 
     public void Reorder(ZOrder move) => document.Reorder([.. Selected], move);
 
-    /// <summary>New color for the selection; highlighter strokes keep their transparency.</summary>
+    /// <summary>New RGB for the selection; every object keeps its own opacity (highlighter strokes stay at their fixed one).</summary>
     public void Recolor(Rgba color) => Change(o => o with
     {
-        Color = o is Stroke { Kind: StrokeKind.Highlighter } ? color with { A = ToolSession.HighlighterAlpha } : color,
+        Color = color with { A = o is Stroke { Kind: StrokeKind.Highlighter } ? ToolSession.HighlighterAlpha : o.Color.A },
+    });
+
+    /// <summary>New opacity for the selection, RGB kept; highlighter strokes stay at their fixed one.</summary>
+    public void Reopacity(byte alpha) => Change(o => o with
+    {
+        Color = o.Color with { A = o is Stroke { Kind: StrokeKind.Highlighter } ? ToolSession.HighlighterAlpha : alpha },
     });
 
     public void Rewidth(Func<EditorObject, float> width) => Change(o => o with { Width = width(o) });

@@ -214,6 +214,41 @@ public class SelectionSessionTests
         Assert.Equal(Blue with { A = 128 }, doc.Objects[1].Color);
     }
 
+    private static (EditorDocument Doc, SelectionSession Sel) Mixed()
+    {
+        var doc = new EditorDocument(400, 300);
+        doc.Add(new Stroke(doc.NewId(), StrokeKind.Pen, Red with { A = 100 }, 4, [new(20, 20), new(60, 20)]));
+        doc.Add(new Stroke(doc.NewId(), StrokeKind.Highlighter, Red with { A = 128 }, 20, [new(20, 100), new(60, 100)]));
+        doc.Add(new Shape(doc.NewId(), ShapeKind.Rectangle, Red, 2, new(100, 100), new(200, 150)));
+        doc.Add(new TextObject(doc.NewId(), Red with { A = 200 }, 12, new(10, 200), "Hi", new(20, 10)));
+        var s = new SelectionSession(doc);
+        s.SelectAll();
+        return (doc, s);
+    }
+
+    [Fact]
+    public void Recolor_keeps_each_objects_own_alpha()
+    {
+        var (doc, s) = Mixed();
+        s.Recolor(Blue);
+        Assert.Equal([100, 128, 255, 200], doc.Objects.Select(o => (int)o.Color.A));
+        Assert.All(doc.Objects, o => Assert.Equal((0, 0, 255), (o.Color.R, o.Color.G, o.Color.B)));
+    }
+
+    [Fact]
+    public void Reopacity_sets_alpha_per_object_keeps_rgb_and_highlighter_stays_128()
+    {
+        var (doc, s) = Mixed();
+        int changes = 0;
+        doc.Changed += () => changes++;
+        s.Reopacity(77);
+        Assert.Equal(1, changes);
+        Assert.Equal([77, 128, 77, 77], doc.Objects.Select(o => (int)o.Color.A));
+        Assert.All(doc.Objects, o => Assert.Equal((255, 0, 0), (o.Color.R, o.Color.G, o.Color.B)));
+        doc.Undo();
+        Assert.Equal([100, 128, 255, 200], doc.Objects.Select(o => (int)o.Color.A));
+    }
+
     [Fact]
     public void Resize_width_applies_a_width_per_object()
     {

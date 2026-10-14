@@ -25,7 +25,8 @@ namespace Clipmark.App;
 /// | assert count N | assert editing | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
 /// | shot FILE (window, plus FILE-popupN.png per open popup) | save FILE (export PNG) | wait MS
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
-/// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates)
+/// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
+/// | assert enabled|disabled NAME
 /// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
@@ -354,6 +355,12 @@ internal sealed class TestDriver
                 if (actualTheme.ToString() != arg[6..])
                     throw new InvalidOperationException($"theme is {actualTheme}");
                 break;
+            case "assert" when arg.StartsWith("enabled ") || arg.StartsWith("disabled "):
+                // assert enabled|disabled NAME
+                int space = arg.IndexOf(' ');
+                if ((Find(arg[(space + 1)..]) as Control ?? throw new InvalidOperationException("control not found")).IsEnabled != (arg[..space] == "enabled"))
+                    throw new InvalidOperationException($"control is not {arg[..space]}");
+                break;
             case "assert" when arg.StartsWith("has "):
                 if (Find(arg[4..]) is null)
                     throw new InvalidOperationException("element not found");
@@ -361,6 +368,11 @@ internal sealed class TestDriver
             case "set":
                 // NAME may contain spaces: the value is the last word. The NumberBox evaluates on losing focus.
                 int cut = arg.LastIndexOf(' ');
+                if (Find(arg[..cut]) is Slider slider)
+                {
+                    slider.Value = double.Parse(arg[(cut + 1)..], CultureInfo.InvariantCulture);
+                    break;
+                }
                 var box = Find(arg[..cut]) as NumberBox ?? throw new InvalidOperationException("number box not found");
                 box.Focus(FocusState.Programmatic);
                 await Task.Delay(100);

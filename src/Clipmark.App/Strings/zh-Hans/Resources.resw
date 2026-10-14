@@ -328,6 +328,12 @@
   <data name="WidthSliderName" xml:space="preserve">
     <value>粗细</value>
   </data>
+  <data name="OpacitySliderHeader" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="OpacitySliderName" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
   <data name="MoreColors" xml:space="preserve">
     <value>更多颜色</value>
   </data>

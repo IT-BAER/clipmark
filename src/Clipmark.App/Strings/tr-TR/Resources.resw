@@ -328,6 +328,12 @@
   <data name="WidthSliderName" xml:space="preserve">
     <value>Kalınlık</value>
   </data>
+  <data name="OpacitySliderHeader" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
+  <data name="OpacitySliderName" xml:space="preserve">
+    <value>Opaklık</value>
+  </data>
   <data name="MoreColors" xml:space="preserve">
     <value>Diğer renkler</value>
   </data>

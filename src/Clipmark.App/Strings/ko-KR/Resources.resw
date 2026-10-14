@@ -328,6 +328,12 @@
   <data name="WidthSliderName" xml:space="preserve">
     <value>두께</value>
   </data>
+  <data name="OpacitySliderHeader" xml:space="preserve">
+    <value>불투명도</value>
+  </data>
+  <data name="OpacitySliderName" xml:space="preserve">
+    <value>불투명도</value>
+  </data>
   <data name="MoreColors" xml:space="preserve">
     <value>색 더 보기</value>
   </data>

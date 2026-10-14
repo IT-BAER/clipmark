@@ -328,6 +328,12 @@
   <data name="WidthSliderName" xml:space="preserve">
     <value>太さ</value>
   </data>
+  <data name="OpacitySliderHeader" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
+  <data name="OpacitySliderName" xml:space="preserve">
+    <value>不透明度</value>
+  </data>
   <data name="MoreColors" xml:space="preserve">
     <value>その他の色</value>
   </data>

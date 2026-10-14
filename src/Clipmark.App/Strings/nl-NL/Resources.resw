@@ -328,6 +328,12 @@
   <data name="WidthSliderName" xml:space="preserve">
     <value>Dikte</value>
   </data>
+  <data name="OpacitySliderHeader" xml:space="preserve">
+    <value>Dekking</value>
+  </data>
+  <data name="OpacitySliderName" xml:space="preserve">
+    <value>Dekking</value>
+  </data>
   <data name="MoreColors" xml:space="preserve">
     <value>Meer kleuren</value>
   </data>

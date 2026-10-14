@@ -55,7 +55,7 @@ public sealed partial class MainPage : Page
     private readonly List<Button> _swatches = [], _presets = [];
     // Built on first open of the style flyout (the color picker costs start time).
     private ColorPicker? _picker;
-    private Slider? _widthSlider;
+    private Slider? _widthSlider, _opacitySlider;
     private static ColorPicker NewPicker() => new()
     {
         ColorSpectrumShape = ColorSpectrumShape.Ring, IsAlphaEnabled = false, IsMoreButtonVisible = false,
@@ -673,12 +673,17 @@ public sealed partial class MainPage : Page
         Mark(ShapeMenu, 0, Shapes.Length, shapeIndex);
 
         int group = Group;
-        var shown = _color[group];
+        var shown = _color[group] with { A = 255 };
         float shownWidth = _width[group];
         float[] presets = PresetsFor(group);
         // The style shows the text being edited, else with Select the topmost selected object.
-        var top = _editor?.EditingText ?? (_tool == EditorTool.Select && _editor?.Document is { } doc && _editor.Selection is { } sel
-            ? doc.Objects.LastOrDefault(o => sel.Selected.Contains(o.Id)) : null);
+        List<EditorObject> selected = _tool == EditorTool.Select && _editor?.Document is { } doc && _editor.Selection is { } sel
+            ? [.. doc.Objects.Where(o => sel.Selected.Contains(o.Id))] : [];
+        var top = _editor?.EditingText ?? selected.LastOrDefault();
+        // Opacity follows the text being edited, else the first selected non-highlighter object, else the tool group; highlighter alpha is fixed.
+        var solid = _editor?.EditingText ?? selected.FirstOrDefault(o => o is not Stroke { Kind: StrokeKind.Highlighter });
+        bool opacityOn = solid is not null || (_tool != EditorTool.Select && _tool != EditorTool.Highlighter);
+        byte shownAlpha = opacityOn ? solid?.Color.A ?? _color[group].A : ToolSession.HighlighterAlpha;
         if (top is not null)
         {
             shown = top.Color with { A = 255 };
@@ -714,6 +719,11 @@ public sealed partial class MainPage : Page
             MarkButton(_presets[i], i == widthIndex);
         if (_widthSlider is not null)
             _widthSlider.Value = shownWidth;
+        if (_opacitySlider is not null)
+        {
+            _opacitySlider.IsEnabled = opacityOn;
+            _opacitySlider.Value = Math.Round(shownAlpha * 100.0 / 255);
+        }
         if (_picker is not null)
             _picker.Color = EditorCanvas.ToColor(shown);
         _syncingStyle = false;
@@ -780,6 +790,7 @@ public sealed partial class MainPage : Page
         }
         var picker = _picker = NewPicker();
         var slider = _widthSlider = new Slider { Minimum = 1, Maximum = MaxStrokeWidth, StepFrequency = 1, Header = Loc.Get("WidthSliderHeader") };
+        var opacity = _opacitySlider = new Slider { Minimum = 10, Maximum = 100, StepFrequency = 1, Header = Loc.Get("OpacitySliderHeader") };
         var more = new Microsoft.UI.Xaml.Controls.Primitives.ToggleButton { Content = Loc.Get("MoreColors") };
         AutomationProperties.SetName(more, Loc.Get("MoreColors"));
         more.Checked += (_, _) => picker.Visibility = Visibility.Visible; // Checked also fires for a UIA Toggle (Click does not)
@@ -809,22 +820,44 @@ public sealed partial class MainPage : Page
             if (!_syncingStyle)
                 SetWidth(_ => (float)e.NewValue, (float)e.NewValue);
         };
-        StyleFlyout.Content = new StackPanel { Spacing = 12, Children = { swatches, more, picker, presets, slider } };
+        AutomationProperties.SetName(opacity, Loc.Get("OpacitySliderName"));
+        opacity.ValueChanged += (_, e) =>
+        {
+            if (!_syncingStyle)
+                SetOpacity((byte)Math.Round(e.NewValue * 255 / 100));
+        };
+        StyleFlyout.Content = new StackPanel { Spacing = 12, Children = { swatches, more, picker, presets, slider, opacity } };
     }
 
-    /// <summary>New color for the text being edited, else the selection (Select tool) or the current tool group.</summary>
+    /// <summary>New RGB (opacity kept) for the text being edited, else the selection (Select tool) or the current tool group.</summary>
     private void SetColor(Rgba color)
     {
-        if (_editor?.IsEditingText == true)
+        if (_editor?.EditingText is { } text)
         {
-            _editor.RestyleText(color: color);
+            _editor.RestyleText(color: color with { A = text.Color.A });
             if (_tool == EditorTool.Text)
-                _color[Group] = color;
+                _color[Group] = color with { A = text.Color.A };
         }
         else if (_tool == EditorTool.Select)
             _editor?.Select(s => s.Recolor(color));
         else
-            _color[Group] = color;
+            _color[Group] = color with { A = _color[Group].A };
+        ApplyTool();
+    }
+
+    /// <summary>New opacity (RGB kept) for the text being edited, else the selection (Select tool) or the current tool group.</summary>
+    private void SetOpacity(byte alpha)
+    {
+        if (_editor?.EditingText is { } text)
+        {
+            _editor.RestyleText(color: text.Color with { A = alpha });
+            if (_tool == EditorTool.Text)
+                _color[Group] = _color[Group] with { A = alpha };
+        }
+        else if (_tool == EditorTool.Select)
+            _editor?.Select(s => s.Reopacity(alpha));
+        else
+            _color[Group] = _color[Group] with { A = alpha };
         ApplyTool();
     }
 
