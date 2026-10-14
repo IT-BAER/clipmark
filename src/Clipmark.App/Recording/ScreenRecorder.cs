@@ -36,6 +36,10 @@ internal sealed class ScreenRecorder
     private readonly BlockingCollection<MediaStreamSample>? _audio;
     private readonly List<string> _warnings = [];
     private readonly bool _systemAudio, _microphone;
+    private readonly RecordingClock _clock = new();
+    // Mixer index of the system audio [0] and microphone [1] source; -1 when it is not recording.
+    private readonly int[] _mixIndex = [-1, -1];
+    private AudioMixer? _mixer;
 
     private GraphicsCaptureItem? _item;
     private Direct3D11CaptureFramePool? _pool;
@@ -56,7 +60,24 @@ internal sealed class ScreenRecorder
     /// <summary>Capture or audio failed; the session stops and reports it.</summary>
     public bool Faulted => _failure is not null || _transcode?.IsFaulted == true;
 
-    public TimeSpan Elapsed => _start == 0 ? TimeSpan.Zero : Stopwatch.GetElapsedTime(_start);
+    /// <summary>Recorded media time; it stands still while paused.</summary>
+    public TimeSpan Elapsed => _start == 0 ? TimeSpan.Zero : ToTime(_clock.MediaAt(Stopwatch.GetTimestamp()));
+
+    public bool IsPaused => _clock.IsPaused;
+
+    public void Pause() => _clock.Pause(Stopwatch.GetTimestamp());
+
+    public void Resume() => _clock.Resume(Stopwatch.GetTimestamp());
+
+    /// <summary>Mutes or unmutes a source without stopping it; false when that source is not recording.</summary>
+    public bool SetMuted(bool loopback, bool muted)
+    {
+        int index = Volatile.Read(ref _mixIndex[loopback ? 0 : 1]);
+        if (index < 0 || _mixer is not { } mixer)
+            return false;
+        mixer.SetMuted(index, muted);
+        return true;
+    }
 
     private ScreenRecorder(RecordingArea area, string path, bool systemAudio, bool microphone)
     {
@@ -135,6 +156,7 @@ internal sealed class ScreenRecorder
                 await Task.Delay(5);
         }
         _start = Stopwatch.GetTimestamp();
+        _clock.Start(_start);
         _videoThread = new Thread(VideoLoop) { IsBackground = true, Name = "Clipmark video", Priority = ThreadPriority.AboveNormal };
         _videoThread.Start();
         if (_audio is not null)
@@ -158,7 +180,7 @@ internal sealed class ScreenRecorder
     {
         try
         {
-            long next = _start;
+            long next = _start, sent = -1;
             while (!_stopping && next < _stopAt)
             {
                 long wait = next - Stopwatch.GetTimestamp();
@@ -167,18 +189,24 @@ internal sealed class ScreenRecorder
                 if (_stopping)
                     break;
                 TakeNewestFrame();
-                var target = new CanvasRenderTarget(_device, _width, _height, 96);
-                using (var ds = target.CreateDrawingSession())
+                // No frame for a tick inside a pause, or one that would not move forward (a pause raced this tick).
+                if (_clock.TryMap(next, out long media) && media > sent)
                 {
-                    ds.Clear(Microsoft.UI.Colors.Black);
-                    if (_latest is not null)
-                        ds.DrawImage(_latest);
+                    var target = new CanvasRenderTarget(_device, _width, _height, 96);
+                    using (var ds = target.CreateDrawingSession())
+                    {
+                        ds.Clear(Microsoft.UI.Colors.Black);
+                        if (_latest is not null)
+                            ds.DrawImage(_latest);
+                    }
+                    var sample = MediaStreamSample.CreateFromDirect3D11Surface(target, ToTime(media));
+                    sample.Duration = FrameDuration;
+                    sample.Processed += (_, _) => target.Dispose();
+                    if (_video.TryAdd(sample))
+                        sent = media;
+                    else
+                        target.Dispose(); // encoder behind: drop this frame
                 }
-                var sample = MediaStreamSample.CreateFromDirect3D11Surface(target, Timestamp(next));
-                sample.Duration = FrameDuration;
-                sample.Processed += (_, _) => target.Dispose();
-                if (!_video.TryAdd(sample))
-                    target.Dispose(); // encoder behind: drop this frame
                 next += TickQpc;
                 if (Stopwatch.GetTimestamp() - next > TickQpc * 4)
                     next = Stopwatch.GetTimestamp(); // fell far behind (sleep, debugger): skip instead of bursting
@@ -228,7 +256,10 @@ internal sealed class ScreenRecorder
                 if (!(loopback ? _systemAudio : _microphone))
                     continue;
                 if (WasapiCapture.TryOpen(loopback, out var error) is { } capture)
+                {
+                    _mixIndex[loopback ? 0 : 1] = sources.Count;
                     sources.Add(capture);
+                }
                 else
                     lock (_warnings) _warnings.Add(error!);
             }
@@ -239,11 +270,9 @@ internal sealed class ScreenRecorder
         {
             lock (_warnings) _warnings.Add(Loc.Format("AudioFailed", e.Message));
         }
+        var mixer = _mixer = new AudioMixer(Math.Max(1, sources.Count));
         opened.TrySetResult();
 
-        var mixer = new AudioMixer(Math.Max(1, sources.Count));
-        // Int128: QPC ticks x 10^7 overflow a long after about a day of uptime.
-        long start100ns = (long)((Int128)_start * 10_000_000 / Stopwatch.Frequency);
         var lost = new bool[sources.Count];
         try
         {
@@ -259,18 +288,23 @@ internal sealed class ScreenRecorder
                     try
                     {
                         s.Drain((samples, qpc100ns) =>
-                            mixer.Push(index, samples, s.Channels, s.SampleRate, (qpc100ns - start100ns) * AudioMixer.SampleRate / 10_000_000));
+                        {
+                            // Int128: QPC ticks x 10^7 overflow a long after about a day of uptime.
+                            if (_clock.TryMap((long)((Int128)qpc100ns * Stopwatch.Frequency / 10_000_000), out long media))
+                                mixer.Push(index, samples, s.Channels, s.SampleRate, (long)((Int128)media * AudioMixer.SampleRate / Stopwatch.Frequency));
+                        });
                     }
                     catch (Exception e) when (e is COMException or InvalidOperationException)
                     {
                         // Device unplugged or switched (AUDCLNT_E_DEVICE_INVALIDATED): keep recording without this source.
                         lost[i] = true;
+                        Volatile.Write(ref _mixIndex[Array.IndexOf(_mixIndex, i)], -1);
                         s.Dispose();
                         lock (_warnings) _warnings.Add(Loc.Get("AudioDeviceLost"));
                     }
                 }
                 long until = last ? Math.Min(_stopAt, Stopwatch.GetTimestamp()) : Stopwatch.GetTimestamp() - AudioLagQpc;
-                long target = (until - _start) * AudioMixer.SampleRate / Stopwatch.Frequency;
+                long target = _clock.MediaAt(until) * AudioMixer.SampleRate / Stopwatch.Frequency;
                 int frames = (int)Math.Min(target - mixer.FramesProduced, AudioMixer.SampleRate);
                 if (frames > 0)
                 {
@@ -305,7 +339,7 @@ internal sealed class ScreenRecorder
         }
     }
 
-    private TimeSpan Timestamp(long qpc) => TimeSpan.FromTicks((qpc - _start) * TimeSpan.TicksPerSecond / Stopwatch.Frequency);
+    private static TimeSpan ToTime(long qpc) => TimeSpan.FromTicks(qpc * TimeSpan.TicksPerSecond / Stopwatch.Frequency);
 
     private void Fail(Exception e)
     {

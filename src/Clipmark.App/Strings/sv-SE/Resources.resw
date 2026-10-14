@@ -646,6 +646,14 @@
     <value>Sparar</value>
     <comment>Recording bar status; short, the space fits about 8 characters</comment>
   </data>
+  <data name="RecordPause" xml:space="preserve">
+    <value>Pausa</value>
+    <comment>Recording bar button tooltip: pauses the recording</comment>
+  </data>
+  <data name="RecordResume" xml:space="preserve">
+    <value>Återuppta</value>
+    <comment>Recording bar button tooltip: continues a paused recording</comment>
+  </data>
   <data name="RecordingNotStarted" xml:space="preserve">
     <value>Inspelningen startade inte: {0}</value>
     <comment>{0} = error message</comment>

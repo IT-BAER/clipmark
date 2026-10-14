@@ -29,7 +29,10 @@ namespace Clipmark.App;
 /// | assert enabled|disabled NAME
 /// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
-/// | record X,Y,W,H MS FILE [system] [mic] (records that desktop region straight to FILE; warnings go to DIR\warnings.txt)
+/// | record X,Y,W,H MS FILE [system] [mic] [pause=AT:LEN]... [mute=system|mic:AT:LEN]... (records that desktop region straight to FILE,
+/// pausing / muting at AT ms after the start for LEN ms; warnings go to DIR\warnings.txt)
+/// | barshot X,Y,W,H recording|paused|micmuted FILE (record bar for that region in that state, grabbed from the screen: needs CLIPMARK_TEST_SHOWBAR=1;
+/// the Pause / Resume tooltip text goes to DIR\bartip.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
@@ -440,9 +443,54 @@ internal sealed class TestDriver
                     Capture.ScreenCapture.EnumerateMonitors()) ?? throw new InvalidOperationException("region is on no monitor");
                 var recorder = await Recording.ScreenRecorder.StartAsync(area, Path.GetFullPath(recordWords[2]),
                     recordWords.Contains("system"), recordWords.Contains("mic"));
-                await Task.Delay(int.Parse(recordWords[1], CultureInfo.InvariantCulture));
+                // AT and MS count from the recording clock's start, which lies before StartAsync returns.
+                var recordStart = System.Diagnostics.Stopwatch.GetTimestamp() - (long)(recorder.Elapsed.TotalSeconds * System.Diagnostics.Stopwatch.Frequency);
+                var recordEvents = new List<(int At, Action Run)>();
+                foreach (var option in recordWords.Skip(3).Where(w => w.Contains('=')))
+                {
+                    var parts = option.Split('=', ':');
+                    int from = int.Parse(parts[^2], CultureInfo.InvariantCulture), end = from + int.Parse(parts[^1], CultureInfo.InvariantCulture);
+                    if (parts[0] == "pause")
+                        recordEvents.AddRange([(from, recorder.Pause), (end, recorder.Resume)]);
+                    else
+                    {
+                        bool loopback = parts[1] == "system";
+                        recordEvents.AddRange([(from, () =>
+                        {
+                            if (!recorder.SetMuted(loopback, true))
+                                throw new InvalidOperationException($"{parts[1]} is not recording");
+                        }), (end, () => recorder.SetMuted(loopback, false))]);
+                    }
+                }
+                int recordMs = int.Parse(recordWords[1], CultureInfo.InvariantCulture);
+                foreach (var (due, run) in recordEvents.Where(e => e.At < recordMs).OrderBy(e => e.At).Append((recordMs, () => { })))
+                {
+                    int wait = due - (int)System.Diagnostics.Stopwatch.GetElapsedTime(recordStart).TotalMilliseconds;
+                    if (wait > 0)
+                        await Task.Delay(wait);
+                    run();
+                }
                 await recorder.StopAsync();
                 File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), recorder.Warnings);
+                break;
+            case "barshot":
+                var barWords = arg.Split(' ', 3);
+                var barXywh = barWords[0].Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                var barArea = Clipmark.Core.Recording.RecordingRegion.Fit(new Clipmark.Core.Capture.PixelRect(barXywh[0], barXywh[1], barXywh[2], barXywh[3]),
+                    Capture.ScreenCapture.EnumerateMonitors()) ?? throw new InvalidOperationException("region is on no monitor");
+                using (var shownBar = new Recording.RecordBar(barArea, microphone: true, systemAudio: true))
+                {
+                    shownBar.MicrophoneLive = shownBar.SystemAudioLive = true;
+                    shownBar.State = Recording.RecordBarState.Recording;
+                    shownBar.Timer = "00:42";
+                    shownBar.Paused = barWords[1] == "paused";
+                    shownBar.Microphone = barWords[1] != "micmuted";
+                    shownBar.Show();
+                    await Task.Delay(400);
+                    using (var desktop = Capture.ScreenCapture.CaptureDesktop())
+                        await File.WriteAllBytesAsync(barWords[2], await CaptureOutput.EncodePngAsync(desktop.Cut(shownBar.Bounds)));
+                    File.WriteAllText(Path.Combine(_dir, "bartip.txt"), shownBar.TestTip() ?? "no tooltip");
+                }
                 break;
             case "deliver":
                 var deliverWords = arg.Split(' ');

@@ -59,6 +59,16 @@ public sealed class AudioMixer
     }
 
     /// <summary>
+    /// A muted source adds silence in place of the audio pushed while muted; audio already queued still plays (with the
+    /// recorder's lag up to about 100 ms after the mute).
+    /// </summary>
+    public void SetMuted(int source, bool muted)
+    {
+        lock (_lock)
+            _sources[source].Muted = muted;
+    }
+
+    /// <summary>
     /// Adds source audio. With <paramref name="atFrame"/> (output frame index of its first sample) a gap before it becomes
     /// silence and a part that overlaps audio already queued or mixed is dropped.
     /// </summary>
@@ -67,6 +77,8 @@ public sealed class AudioMixer
         lock (_lock)
         {
             var s = _sources[source];
+            if (s.Muted)
+                interleaved = new float[interleaved.Length];
             long gap = atFrame is { } at ? at - (FramesProduced + s.Count / Channels) : 0;
             if (gap > Tolerance)
                 s.AddSilence((int)Math.Min(gap, _maxBacklog));
@@ -110,6 +122,8 @@ public sealed class AudioMixer
         private double _phase; // position between _input frames
 
         public int Count => _count;
+
+        public bool Muted;
 
         public float At(int i) => _out[_start + i];
 

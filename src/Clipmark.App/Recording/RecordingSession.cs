@@ -79,6 +79,24 @@ internal sealed class RecordingSession
             case (RecordBarButton.Record, RecordBarState.Recording):
                 _ = StopAsync(keep: true);
                 break;
+            case (RecordBarButton.Pause, RecordBarState.Recording):
+                if (_recorder!.IsPaused)
+                    _recorder.Resume();
+                else
+                    _recorder.Pause();
+                _bar.Paused = _recorder.IsPaused;
+                break;
+            case (RecordBarButton.Microphone, RecordBarState.Recording):
+                // Mutes the source in this recording only; the saved setting stays.
+                bool muteMic = _bar.Microphone;
+                _bar.MicrophoneLive = _recorder!.SetMuted(loopback: false, muteMic);
+                _bar.Microphone = _bar.MicrophoneLive && !muteMic;
+                break;
+            case (RecordBarButton.SystemAudio, RecordBarState.Recording):
+                bool muteSystem = _bar.SystemAudio;
+                _bar.SystemAudioLive = _recorder!.SetMuted(loopback: true, muteSystem);
+                _bar.SystemAudio = _bar.SystemAudioLive && !muteSystem;
+                break;
             case (RecordBarButton.Discard, RecordBarState.Recording):
                 _ = StopAsync(keep: false);
                 break;
@@ -125,6 +143,9 @@ internal sealed class RecordingSession
             string path = Path.Combine(folder, CaptureFileName.Next(DateTime.Now, name => File.Exists(Path.Combine(folder, name)), ".mp4"));
             var s = AppSettings.Current;
             _recorder = await ScreenRecorder.StartAsync(_area, path, s.RecordSystemAudio, s.RecordMicrophone);
+            // A source that is off or could not be opened shows off and cannot be unmuted.
+            _bar.Microphone = _bar.MicrophoneLive = _recorder.SetMuted(loopback: false, false);
+            _bar.SystemAudio = _bar.SystemAudioLive = _recorder.SetMuted(loopback: true, false);
             _bar.State = RecordBarState.Recording;
         }
         catch (Exception e)

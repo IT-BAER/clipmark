@@ -115,4 +115,36 @@ public class AudioMixerTests
         mixer.Push(0, Enumerable.Repeat(0.5f, 960).ToArray(), 2, 48000, atFrame: 490); // 10 frames late: jitter
         Assert.Equal(960, mixer.Buffered(0));
     }
+
+    [Fact]
+    public void A_muted_source_is_silent_and_unmute_mixes_it_again()
+    {
+        var mixer = new AudioMixer(2);
+        mixer.SetMuted(1, true);
+        mixer.Push(0, [0.5f, 0.5f], 2, 48000);
+        mixer.Push(1, [0.25f, 0.25f], 2, 48000);
+        Assert.Equal([16384, 16384], mixer.Pull(1).Select(s => (int)s));
+        Assert.Equal(0, mixer.Buffered(1)); // the muted audio kept its place in the queue
+
+        mixer.SetMuted(0, true);
+        mixer.Push(0, [0.5f, 0.5f], 2, 48000);
+        mixer.Push(1, [0.25f, 0.25f], 2, 48000);
+        Assert.Equal([0, 0], mixer.Pull(1).Select(s => (int)s));
+
+        mixer.SetMuted(0, false);
+        mixer.SetMuted(1, false);
+        mixer.Push(0, [0.5f, 0.5f], 2, 48000);
+        mixer.Push(1, [0.25f, 0.25f], 2, 48000);
+        Assert.Equal([24576, 24576], mixer.Pull(1).Select(s => (int)s));
+    }
+
+    [Fact]
+    public void Audio_pushed_before_mute_still_plays()
+    {
+        var mixer = new AudioMixer(1);
+        mixer.Push(0, [0.5f, 0.5f], 2, 48000);
+        mixer.SetMuted(0, true);
+        mixer.Push(0, [0.5f, 0.5f], 2, 48000, atFrame: 1);
+        Assert.Equal([16384, 16384, 0, 0], mixer.Pull(2).Select(s => (int)s));
+    }
 }

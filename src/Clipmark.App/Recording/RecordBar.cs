@@ -7,22 +7,24 @@ namespace Clipmark.App.Recording;
 
 internal enum RecordBarState { Idle, Countdown, Starting, Recording, Saving }
 
-internal enum RecordBarButton { Record, Microphone, SystemAudio, Discard }
+internal enum RecordBarButton { Record, Microphone, SystemAudio, Discard, Pause }
 
 /// <summary>
-/// Small topmost bar next to the recorded region: Record / Stop, timer, microphone, system audio, discard.
+/// Small topmost bar next to the recorded region: Record / Stop, Pause / Resume, timer, microphone, system audio, discard.
 /// Kept out of the recording (WDA_EXCLUDEFROMCAPTURE) and never activated, so the recorded app keeps the focus.
 /// </summary>
-internal sealed unsafe class RecordBar : Win32Window
+internal sealed unsafe partial class RecordBar : Win32Window
 {
     private const uint TestClick = WM_APP + 4;
+    private const int TimerLeft = 8 + 44 + 44;
     private static readonly uint Fill = Rgb(0x2B, 0x2B, 0x2B), Border = Rgb(0x45, 0x45, 0x45), White = Rgb(0xFF, 0xFF, 0xFF),
         Dim = Rgb(0x6E, 0x6E, 0x6E), Red = Rgb(0xFF, 0x3B, 0x30), Pressed = Rgb(0x48, 0x48, 0x48);
 
     private readonly PixelRect _monitor, _region;
     private RecordBarState _state;
     private string _timer = "00:00";
-    private bool _microphone, _systemAudio;
+    private bool _microphone, _systemAudio, _paused, _microphoneLive, _systemAudioLive;
+    private nint _tip;
 
     public event Action<RecordBarButton>? Clicked;
 
@@ -41,6 +43,27 @@ internal sealed unsafe class RecordBar : Win32Window
     {
         get => _state;
         set { _state = value; Repaint(); }
+    }
+
+    /// <summary>The recording is paused: Resume glyph, dimmed timer.</summary>
+    public bool Paused
+    {
+        get => _paused;
+        set { _paused = value; UpdateTip(); Repaint(); }
+    }
+
+    /// <summary>While recording: the microphone is part of the recording, so its button mutes it.</summary>
+    public bool MicrophoneLive
+    {
+        get => _microphoneLive;
+        set { _microphoneLive = value; Repaint(); }
+    }
+
+    /// <summary>While recording: system audio is part of the recording, so its button mutes it.</summary>
+    public bool SystemAudioLive
+    {
+        get => _systemAudioLive;
+        set { _systemAudioLive = value; Repaint(); }
     }
 
     public string Timer
@@ -73,7 +96,7 @@ internal sealed unsafe class RecordBar : Win32Window
 
     private int Dip(double v) => (int)Math.Round(v * GetDpiForWindow(Handle) / 96.0);
 
-    private int Width => Dip(8 + 40 + 4 + 64 + 4 + 40 + 4 + 40 + 4 + 40 + 8);
+    private int Width => Dip(TimerLeft + 64 + 4 + 40 + 4 + 40 + 4 + 40 + 8);
 
     private int Height => Dip(52);
 
@@ -98,7 +121,81 @@ internal sealed unsafe class RecordBar : Win32Window
         SetWindowRgn(Handle, CreateRoundRectRgn(0, 0, b.Width + 1, b.Height + 1, Dip(16), Dip(16)), true);
         SetWindowPos(Handle, HWND_TOPMOST, b.X, b.Y, b.Width, b.Height, SWP_NOACTIVATE | SWP_SHOWWINDOW);
         UpdateWindow(Handle);
+        AddTip();
     }
+
+    /// <summary>System tooltip on the Pause / Resume button (the control subclasses the bar for the mouse messages).</summary>
+    private void AddTip()
+    {
+        if (_tip != 0)
+            return;
+        var icc = new INITCOMMONCONTROLSEX { dwSize = (uint)sizeof(INITCOMMONCONTROLSEX), dwICC = ICC_BAR_CLASSES };
+        InitCommonControlsEx(&icc);
+        _tip = CreateWindowEx(WS_EX_TOPMOST | WS_EX_NOACTIVATE, "tooltips_class32", null, WS_POPUP | TTS_ALWAYSTIP | TTS_NOPREFIX,
+            0, 0, 0, 0, Handle, 0, GetModuleHandle(null), 0);
+        if (_tip == 0)
+            return;
+        ExcludeFromCapture(_tip);
+        SendTip(TTM_ADDTOOLW);
+    }
+
+    private void UpdateTip()
+    {
+        if (_tip != 0)
+            SendTip(TTM_UPDATETIPTEXTW);
+    }
+
+    private void SendTip(uint message)
+    {
+        fixed (char* text = Loc.Get(_paused ? "RecordResume" : "RecordPause"))
+        {
+            var info = new TTTOOLINFOW
+            {
+                cbSize = TipInfoSize, uFlags = TTF_SUBCLASS, hwnd = Handle, uId = 1,
+                rect = ButtonRect(RecordBarButton.Pause), lpszText = (nint)text,
+            };
+            SendMessage(_tip, message, 0, (nint)(&info));
+        }
+    }
+
+#if DEBUG
+    /// <summary>Test scripts: the Pause / Resume tooltip text as the control holds it, or null without the control.</summary>
+    internal string? TestTip()
+    {
+        if (_tip == 0)
+            return null;
+        var buffer = new char[80];
+        fixed (char* text = buffer)
+        {
+            var info = new TTTOOLINFOW { cbSize = TipInfoSize, hwnd = Handle, uId = 1, lpszText = (nint)text };
+            SendMessage(_tip, 0x0400 + 56, buffer.Length, (nint)(&info)); // TTM_GETTEXTW
+        }
+        return new string(buffer).TrimEnd('\0');
+    }
+#endif
+
+    private const uint ICC_BAR_CLASSES = 0x4, TTS_ALWAYSTIP = 0x1, TTS_NOPREFIX = 0x2, TTF_SUBCLASS = 0x10,
+        TTM_ADDTOOLW = 0x0400 + 50, TTM_UPDATETIPTEXTW = 0x0400 + 57;
+
+    private struct INITCOMMONCONTROLSEX { public uint dwSize, dwICC; }
+
+    // TTTOOLINFOW_V2_SIZE (no lpReserved): comctl32 5 (no v6 manifest) rejects the full size, version 6 takes both.
+    private static readonly uint TipInfoSize = (uint)(sizeof(TTTOOLINFOW) - sizeof(nint));
+
+    private struct TTTOOLINFOW
+    {
+        public uint cbSize, uFlags;
+        public nint hwnd;
+        public nuint uId;
+        public RECT rect;
+        public nint hinst, lpszText, lParam, lpReserved;
+    }
+
+    [System.Runtime.InteropServices.LibraryImport("comctl32.dll")]
+    private static partial int InitCommonControlsEx(INITCOMMONCONTROLSEX* icc);
+
+    [System.Runtime.InteropServices.LibraryImport("user32.dll", EntryPoint = "SendMessageW")]
+    private static partial nint SendMessage(nint hwnd, uint msg, nint wParam, nint lParam);
 
     private void Repaint() => InvalidateRect(Handle, null, false);
 
@@ -107,9 +204,10 @@ internal sealed unsafe class RecordBar : Win32Window
         int left = button switch
         {
             RecordBarButton.Record => 8,
-            RecordBarButton.Microphone => 8 + 40 + 4 + 64 + 4,
-            RecordBarButton.SystemAudio => 8 + 40 + 4 + 64 + 4 + 44,
-            _ => 8 + 40 + 4 + 64 + 4 + 88,
+            RecordBarButton.Pause => 8 + 44,
+            RecordBarButton.Microphone => TimerLeft + 64 + 4,
+            RecordBarButton.SystemAudio => TimerLeft + 64 + 4 + 44,
+            _ => TimerLeft + 64 + 4 + 88,
         };
         return new RECT { Left = Dip(left), Top = Dip(6), Right = Dip(left + 40), Bottom = Dip(46) };
     }
@@ -118,7 +216,10 @@ internal sealed unsafe class RecordBar : Win32Window
     {
         RecordBarButton.Record => _state is RecordBarState.Idle or RecordBarState.Countdown or RecordBarState.Recording,
         RecordBarButton.Discard => _state is not (RecordBarState.Starting or RecordBarState.Saving),
-        _ => _state is RecordBarState.Idle or RecordBarState.Countdown, // audio sources are fixed once recording runs
+        RecordBarButton.Pause => _state is RecordBarState.Recording,
+        // Before recording they toggle the setting; while recording they mute a source that is recording.
+        RecordBarButton.Microphone => _state is RecordBarState.Idle or RecordBarState.Countdown || _state is RecordBarState.Recording && _microphoneLive,
+        _ => _state is RecordBarState.Idle or RecordBarState.Countdown || _state is RecordBarState.Recording && _systemAudioLive,
     };
 
     private RecordBarButton? HitTest(int x, int y)
@@ -186,9 +287,10 @@ internal sealed unsafe class RecordBar : Win32Window
             FillBox(back, all, Fill, Border, Dip(8));
             foreach (var button in Enum.GetValues<RecordBarButton>())
                 PaintButton(back, button);
-            var timer = new RECT { Left = Dip(8 + 40 + 4), Top = Dip(6), Right = Dip(8 + 40 + 4 + 64), Bottom = Dip(46) };
+            var timer = new RECT { Left = Dip(TimerLeft), Top = Dip(6), Right = Dip(TimerLeft + 64), Bottom = Dip(46) };
             string text = _state switch { RecordBarState.Starting => "…", RecordBarState.Saving => Loc.Get("RecordBarSaving"), _ => _timer };
-            Text(back, timer, text, "Segoe UI", Dip(_state == RecordBarState.Countdown ? 20 : 14), _state == RecordBarState.Recording ? Red : White);
+            uint timerColor = _state != RecordBarState.Recording ? White : _paused ? Dim : Red;
+            Text(back, timer, text, "Segoe UI", Dip(_state == RecordBarState.Countdown ? 20 : 14), timerColor);
             BitBlt(dc, 0, 0, Width, Height, back, 0, 0, SRCCOPY);
         }
         finally
@@ -223,6 +325,9 @@ internal sealed unsafe class RecordBar : Win32Window
                 break;
             case RecordBarButton.SystemAudio:
                 Text(dc, r, _systemAudio ? "" : "", "Segoe Fluent Icons", Dip(16), color);
+                break;
+            case RecordBarButton.Pause:
+                Text(dc, r, _paused ? "" : "", "Segoe Fluent Icons", Dip(16), color);
                 break;
             case RecordBarButton.Discard:
                 Text(dc, r, "", "Segoe Fluent Icons", Dip(16), color);
