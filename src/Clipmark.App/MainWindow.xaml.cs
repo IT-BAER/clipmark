@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using Clipmark.App.Interop;
 using Clipmark.Core.Settings;
 using Microsoft.UI.Windowing;
@@ -17,8 +18,8 @@ public sealed partial class MainWindow : Window
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
         AppWindow.SetIcon("Assets/AppIcon.ico");
-        AppWindow.SetPresenter(_presenter);
         Handle = WinRT.Interop.WindowNative.GetWindowHandle(this);
+        unsafe { Native.SetWindowSubclass(Handle, &MinWidthProc, 1, 0); }
 
         AppWindow.Closing += async (_, e) =>
         {
@@ -30,25 +31,23 @@ public sealed partial class MainWindow : Window
         };
         ApplyTheme(AppSettings.Current);
         AppSettings.Changed += ApplyTheme;
-        RootFrame.Loaded += (_, _) =>
-        {
-            ApplyMinWidth();
-            RootFrame.XamlRoot.Changed += (_, _) => ApplyMinWidth(); // monitor scale
-        };
         RootFrame.Navigate(typeof(MainPage));
     }
 
     /// <summary>Narrowest window in DIP: the compact toolbar fits (Snipping Tool: 643 px at 125 %).</summary>
     private const double MinWidthDip = 514;
 
-    /// <summary>Own presenter: Native AOT returns AppWindow.Presenter as the base type, so a cast to OverlappedPresenter fails.</summary>
-    private readonly OverlappedPresenter _presenter = OverlappedPresenter.Create();
-
-    private void ApplyMinWidth()
+    /// <summary>
+    /// Minimum width from the window's DPI when Windows asks: during a DPI change the window already has the new DPI,
+    /// so the suggested size is not clamped to the old monitor's minimum.
+    /// </summary>
+    [UnmanagedCallersOnly]
+    private static unsafe nint MinWidthProc(nint hwnd, uint msg, nint wParam, nint lParam, nuint id, nuint data)
     {
-        int width = (int)Math.Ceiling(MinWidthDip * RootFrame.XamlRoot.RasterizationScale);
-        if (_presenter.PreferredMinimumWidth != width)
-            _presenter.PreferredMinimumWidth = width;
+        nint result = Native.DefSubclassProc(hwnd, msg, wParam, lParam);
+        if (msg == Native.WM_GETMINMAXINFO)
+            ((Native.MINMAXINFO*)lParam)->ptMinTrackSize.X = (int)Math.Ceiling(MinWidthDip * Native.GetDpiForWindow(hwnd) / 96);
+        return result;
     }
 
     /// <summary>The Theme setting for the content root (pages, dialogs and flyouts inherit it) and the caption buttons.</summary>

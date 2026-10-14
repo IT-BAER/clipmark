@@ -266,6 +266,18 @@ internal static unsafe partial class Native
     [LibraryImport("user32.dll")] public static partial uint GetDpiForWindow(nint hwnd);
     [LibraryImport("user32.dll")] public static partial int GetSystemMetricsForDpi(int index, uint dpi);
 
+    // Window subclassing (comctl32 5.82 exports both by name, no v6 manifest needed)
+    public const uint WM_GETMINMAXINFO = 0x0024;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MINMAXINFO { public POINT ptReserved, ptMaxSize, ptMaxPosition, ptMinTrackSize, ptMaxTrackSize; }
+
+    [LibraryImport("comctl32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    public static partial bool SetWindowSubclass(nint hwnd, delegate* unmanaged<nint, uint, nint, nint, nuint, nuint, nint> proc, nuint id, nuint data);
+
+    [LibraryImport("comctl32.dll")] public static partial nint DefSubclassProc(nint hwnd, uint msg, nint wParam, nint lParam);
+
     // Window enumeration
     [LibraryImport("user32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
