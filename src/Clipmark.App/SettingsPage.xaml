@@ -76,10 +76,12 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <TextBlock x:Name="FolderText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
                         <Button Grid.Column="1" x:Uid="SettingsChangeFolder" Click="OnBrowse" />
                         <Button Grid.Column="2" x:Name="ResetFolderButton" x:Uid="SettingsResetFolder" Click="OnResetFolder" />
+                        <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
                     </Grid>
                     <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
                     <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
@@ -97,7 +99,14 @@
                     <TextBlock x:Name="RecordHotkeyStatus" TextWrapping="Wrap" />
                     <ToggleSwitch x:Name="SystemAudioSwitch" x:Uid="SettingsSystemAudio" Toggled="OnRecordTogglesChanged" />
                     <ToggleSwitch x:Name="MicrophoneSwitch" x:Uid="SettingsMicrophone" Toggled="OnRecordTogglesChanged" />
-                    <TextBlock x:Name="RecordingsFolderText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="RecordingsFolderText" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <Button Grid.Column="1" x:Uid="SettingsOpenRecordingsFolder" Click="OnOpenRecordingsFolder" />
+                    </Grid>
                 </StackPanel>
 
                 <StackPanel x:Name="AiSection" Spacing="8">

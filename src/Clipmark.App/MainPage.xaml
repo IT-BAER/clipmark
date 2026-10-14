@@ -84,9 +84,18 @@
                 <ToggleButton x:Name="HighlighterButton" x:Uid="HighlighterButton" Tag="Highlighter" Click="OnToolClick">
                     <FontIcon FontSize="16" Glyph="&#xE7E6;" />
                 </ToggleButton>
-                <ToggleButton x:Name="EraserButton" x:Uid="EraserButton" Tag="Eraser" Click="OnToolClick">
+                <ToggleSplitButton x:Name="EraserButton" x:Uid="EraserButton" Padding="11,6.5,11,6.5" IsCheckedChanged="OnEraserCheckedChanged">
                     <FontIcon FontSize="16" Glyph="&#xE75C;" />
-                </ToggleButton>
+                    <ToggleSplitButton.Flyout>
+                        <MenuFlyout x:Name="EraserMenu" Placement="Bottom">
+                            <MenuFlyoutItem x:Uid="EraseAllItem" Click="OnEraseAll">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE74D;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </ToggleSplitButton.Flyout>
+                </ToggleSplitButton>
                 <ToggleButton x:Name="TextButton" x:Uid="TextButton" Tag="Text" Click="OnToolClick">
                     <Grid>
                         <FontIcon FontSize="16" Glyph="&#xE8D2;" />
@@ -177,6 +186,38 @@
                         <FontIcon FontSize="16" Glyph="&#xE8BD;" />
                     </Button>
                 </StackPanel>
+                <DropDownButton x:Name="MoreButton" x:Uid="MoreButton" Padding="11,5.5,11,5.5">
+                    <FontIcon FontSize="16" Glyph="&#xE712;" />
+                    <DropDownButton.Flyout>
+                        <MenuFlyout x:Name="MoreMenu" Placement="Bottom" Opening="OnMoreMenuOpening">
+                            <MenuFlyoutSubItem x:Name="ZoomItem" x:Uid="ZoomItem">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xE71E;" />
+                                </MenuFlyoutSubItem.Icon>
+                                <MenuFlyoutItem x:Uid="ZoomResetItem" Click="OnZoomReset" />
+                                <MenuFlyoutItem x:Uid="ZoomInItem" Click="OnZoomIn" />
+                                <MenuFlyoutItem x:Uid="ZoomOutItem" Click="OnZoomOut" />
+                                <MenuFlyoutItem x:Uid="ZoomFitItem" Click="OnZoomFit" />
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem x:Name="PrintItem" x:Uid="PrintItem" Click="OnPrint">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE749;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Name="PaintItem" x:Uid="PaintItem" Click="OnEditInPaint">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE70F;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem x:Uid="OpenFolderItem" Click="OnOpenScreenshotsFolder">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE838;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </DropDownButton.Flyout>
+                </DropDownButton>
                 <Button x:Uid="SettingsButton" Click="OnSettings" Background="Transparent" BorderThickness="0">
                     <FontIcon FontSize="16" Glyph="&#xE713;" />
                 </Button>

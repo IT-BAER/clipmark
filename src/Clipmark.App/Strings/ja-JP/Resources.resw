@@ -1281,4 +1281,55 @@
   <data name="AppDescription" xml:space="preserve">
     <value>画面キャプチャ、注釈、画面の録画</value>
   </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>その他</value>
+  </data>
+  <data name="ZoomItem.Text" xml:space="preserve">
+    <value>ズーム</value>
+  </data>
+  <data name="ZoomResetItem.Text" xml:space="preserve">
+    <value>100% (Ctrl+0)</value>
+  </data>
+  <data name="ZoomInItem.Text" xml:space="preserve">
+    <value>拡大 (Ctrl+Plus)</value>
+  </data>
+  <data name="ZoomOutItem.Text" xml:space="preserve">
+    <value>縮小 (Ctrl+Minus)</value>
+  </data>
+  <data name="ZoomFitItem.Text" xml:space="preserve">
+    <value>ウィンドウに合わせる</value>
+  </data>
+  <data name="PrintItem.Text" xml:space="preserve">
+    <value>印刷</value>
+  </data>
+  <data name="PaintItem.Text" xml:space="preserve">
+    <value>ペイントで編集</value>
+  </data>
+  <data name="OpenFolderItem.Text" xml:space="preserve">
+    <value>スクリーンショット フォルダーを開く</value>
+  </data>
+  <data name="EraseAllItem.Text" xml:space="preserve">
+    <value>すべての書き込みを消去</value>
+  </data>
+  <data name="SettingsOpenFolder.Content" xml:space="preserve">
+    <value>フォルダーを開く</value>
+  </data>
+  <data name="SettingsOpenRecordingsFolder.Content" xml:space="preserve">
+    <value>フォルダーを開く</value>
+  </data>
+  <data name="PrintFailed" xml:space="preserve">
+    <value>画像を印刷できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="PaintFailed" xml:space="preserve">
+    <value>ペイントを起動できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="OpenFolderFailed" xml:space="preserve">
+    <value>フォルダーを開けませんでした: {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
 </root>

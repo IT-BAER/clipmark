@@ -1281,4 +1281,55 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Знімки екрана, примітки та запис екрана</value>
   </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Додатково</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Додатково</value>
+  </data>
+  <data name="ZoomItem.Text" xml:space="preserve">
+    <value>Масштаб</value>
+  </data>
+  <data name="ZoomResetItem.Text" xml:space="preserve">
+    <value>100 % (Ctrl+0)</value>
+  </data>
+  <data name="ZoomInItem.Text" xml:space="preserve">
+    <value>Збільшити (Ctrl+Plus)</value>
+  </data>
+  <data name="ZoomOutItem.Text" xml:space="preserve">
+    <value>Зменшити (Ctrl+Minus)</value>
+  </data>
+  <data name="ZoomFitItem.Text" xml:space="preserve">
+    <value>За розміром вікна</value>
+  </data>
+  <data name="PrintItem.Text" xml:space="preserve">
+    <value>Друк</value>
+  </data>
+  <data name="PaintItem.Text" xml:space="preserve">
+    <value>Редагувати в Paint</value>
+  </data>
+  <data name="OpenFolderItem.Text" xml:space="preserve">
+    <value>Відкрити папку зі знімками екрана</value>
+  </data>
+  <data name="EraseAllItem.Text" xml:space="preserve">
+    <value>Видалити всі позначки</value>
+  </data>
+  <data name="SettingsOpenFolder.Content" xml:space="preserve">
+    <value>Відкрити папку</value>
+  </data>
+  <data name="SettingsOpenRecordingsFolder.Content" xml:space="preserve">
+    <value>Відкрити папку</value>
+  </data>
+  <data name="PrintFailed" xml:space="preserve">
+    <value>Не вдалося надрукувати зображення: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="PaintFailed" xml:space="preserve">
+    <value>Не вдалося запустити Paint: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="OpenFolderFailed" xml:space="preserve">
+    <value>Не вдалося відкрити папку: {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
 </root>

@@ -388,6 +388,10 @@ public sealed partial class SettingsPage : Page
         ShowFolder(AppSettings.Current);
     }
 
+    private void OnOpenFolder(object sender, RoutedEventArgs e) => CaptureOutput.OpenFolder(FolderText.Text);
+
+    private void OnOpenRecordingsFolder(object sender, RoutedEventArgs e) => CaptureOutput.OpenFolder(CaptureOutput.RecordingsFolder);
+
     private void OnResetFolder(object sender, RoutedEventArgs e)
     {
         AppSettings.Update(s => s with { SaveFolder = null });

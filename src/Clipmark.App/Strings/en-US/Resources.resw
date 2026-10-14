@@ -1281,4 +1281,55 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Screen capture, annotation and screen recording</value>
   </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>More</value>
+  </data>
+  <data name="ZoomItem.Text" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="ZoomResetItem.Text" xml:space="preserve">
+    <value>100% (Ctrl+0)</value>
+  </data>
+  <data name="ZoomInItem.Text" xml:space="preserve">
+    <value>Zoom in (Ctrl+Plus)</value>
+  </data>
+  <data name="ZoomOutItem.Text" xml:space="preserve">
+    <value>Zoom out (Ctrl+Minus)</value>
+  </data>
+  <data name="ZoomFitItem.Text" xml:space="preserve">
+    <value>Fit to window</value>
+  </data>
+  <data name="PrintItem.Text" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="PaintItem.Text" xml:space="preserve">
+    <value>Edit in Paint</value>
+  </data>
+  <data name="OpenFolderItem.Text" xml:space="preserve">
+    <value>Open screenshots folder</value>
+  </data>
+  <data name="EraseAllItem.Text" xml:space="preserve">
+    <value>Erase all mark-ups</value>
+  </data>
+  <data name="SettingsOpenFolder.Content" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
+  <data name="SettingsOpenRecordingsFolder.Content" xml:space="preserve">
+    <value>Open folder</value>
+  </data>
+  <data name="PrintFailed" xml:space="preserve">
+    <value>The image could not be printed: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="PaintFailed" xml:space="preserve">
+    <value>Paint could not be started: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="OpenFolderFailed" xml:space="preserve">
+    <value>The folder could not be opened: {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
 </root>

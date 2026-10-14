@@ -1281,4 +1281,55 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Skärmbilder, anteckningar och skärminspelning</value>
   </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mer</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mer</value>
+  </data>
+  <data name="ZoomItem.Text" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="ZoomResetItem.Text" xml:space="preserve">
+    <value>100 % (Ctrl+0)</value>
+  </data>
+  <data name="ZoomInItem.Text" xml:space="preserve">
+    <value>Zooma in (Ctrl+Plus)</value>
+  </data>
+  <data name="ZoomOutItem.Text" xml:space="preserve">
+    <value>Zooma ut (Ctrl+Minus)</value>
+  </data>
+  <data name="ZoomFitItem.Text" xml:space="preserve">
+    <value>Anpassa till fönstret</value>
+  </data>
+  <data name="PrintItem.Text" xml:space="preserve">
+    <value>Skriv ut</value>
+  </data>
+  <data name="PaintItem.Text" xml:space="preserve">
+    <value>Redigera i Paint</value>
+  </data>
+  <data name="OpenFolderItem.Text" xml:space="preserve">
+    <value>Öppna mappen Skärmbilder</value>
+  </data>
+  <data name="EraseAllItem.Text" xml:space="preserve">
+    <value>Ta bort alla markeringar</value>
+  </data>
+  <data name="SettingsOpenFolder.Content" xml:space="preserve">
+    <value>Öppna mapp</value>
+  </data>
+  <data name="SettingsOpenRecordingsFolder.Content" xml:space="preserve">
+    <value>Öppna mapp</value>
+  </data>
+  <data name="PrintFailed" xml:space="preserve">
+    <value>Det gick inte att skriva ut bilden: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="PaintFailed" xml:space="preserve">
+    <value>Det gick inte att starta Paint: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="OpenFolderFailed" xml:space="preserve">
+    <value>Det gick inte att öppna mappen: {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
 </root>

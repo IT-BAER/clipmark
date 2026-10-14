@@ -469,6 +469,9 @@ internal sealed class EditorCanvas
         Changed?.Invoke();
     }
 
+    /// <summary>Size of the shown part of the image (the whole canvas while cropping) in DIPs at zoom 100%.</summary>
+    public Windows.Foundation.Size ShownSizeDips => new(View.Width / Scale, View.Height / Scale);
+
     /// <summary>Image origin inside the control, in DIPs.</summary>
     public Windows.Foundation.Point ImageOrigin => new(_origin.X / Scale, _origin.Y / Scale);
 

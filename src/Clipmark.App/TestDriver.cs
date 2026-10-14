@@ -32,7 +32,7 @@ namespace Clipmark.App;
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
-/// | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
+/// | assert zoom F|fit (scroll viewer zoom factor within 0.02 of F or of the fit-to-window factor) | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
 /// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0)
 /// | askai (Ask AI button) | aiask TEXT (types the question, clicks Send) | aiwait (answer finished, up to 30 s)
 /// | aikey KEY|none (stores or deletes the API key) | aikeyenv VAR (key from an environment variable)
@@ -168,6 +168,11 @@ internal sealed class TestDriver
                 if (_page.RunKey(Enum.Parse<Windows.System.VirtualKey>(noKeyWords[0]),
                     noKeyWords.Contains("ctrl") ? Windows.System.VirtualKeyModifiers.Control : Windows.System.VirtualKeyModifiers.None))
                     throw new InvalidOperationException("key was handled");
+                break;
+            case "assert" when arg.StartsWith("zoom "):
+                float zoom = _page.ZoomFactor, expected = arg[5..] == "fit" ? (float)_page.FitZoom : float.Parse(arg[5..], CultureInfo.InvariantCulture);
+                if (MathF.Abs(zoom - expected) > 0.02f)
+                    throw new InvalidOperationException($"zoom is {zoom}");
                 break;
             case "assert" when arg.StartsWith("count "):
                 int count = _page.Editor?.Document?.Objects.Count ?? 0;
@@ -508,7 +513,7 @@ internal sealed class TestDriver
             var node = queue.Dequeue();
             if (node is FrameworkElement { Visibility: Visibility.Visible } fe)
             {
-                if (Matches(AutomationProperties.GetName(fe)) || (fe is MenuFlyoutItem item && Matches(item.Text))
+                if (Matches(AutomationProperties.GetName(fe)) || (fe is MenuFlyoutItem item && Matches(item.Text)) || (fe is MenuFlyoutSubItem sub && Matches(sub.Text))
                     || (fe is Button { Content: string text } && Matches(text)))
                     return fe;
             }

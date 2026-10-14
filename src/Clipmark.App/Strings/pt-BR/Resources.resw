@@ -1281,4 +1281,55 @@
   <data name="AppDescription" xml:space="preserve">
     <value>Captura de tela, anotações e gravação de tela</value>
   </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mais</value>
+  </data>
+  <data name="MoreButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Mais</value>
+  </data>
+  <data name="ZoomItem.Text" xml:space="preserve">
+    <value>Zoom</value>
+  </data>
+  <data name="ZoomResetItem.Text" xml:space="preserve">
+    <value>100% (Ctrl+0)</value>
+  </data>
+  <data name="ZoomInItem.Text" xml:space="preserve">
+    <value>Ampliar (Ctrl+Plus)</value>
+  </data>
+  <data name="ZoomOutItem.Text" xml:space="preserve">
+    <value>Reduzir (Ctrl+Minus)</value>
+  </data>
+  <data name="ZoomFitItem.Text" xml:space="preserve">
+    <value>Ajustar à janela</value>
+  </data>
+  <data name="PrintItem.Text" xml:space="preserve">
+    <value>Imprimir</value>
+  </data>
+  <data name="PaintItem.Text" xml:space="preserve">
+    <value>Editar no Paint</value>
+  </data>
+  <data name="OpenFolderItem.Text" xml:space="preserve">
+    <value>Abrir a pasta de capturas de tela</value>
+  </data>
+  <data name="EraseAllItem.Text" xml:space="preserve">
+    <value>Apagar todas as anotações</value>
+  </data>
+  <data name="SettingsOpenFolder.Content" xml:space="preserve">
+    <value>Abrir pasta</value>
+  </data>
+  <data name="SettingsOpenRecordingsFolder.Content" xml:space="preserve">
+    <value>Abrir pasta</value>
+  </data>
+  <data name="PrintFailed" xml:space="preserve">
+    <value>Não foi possível imprimir a imagem: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="PaintFailed" xml:space="preserve">
+    <value>Não foi possível iniciar o Paint: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="OpenFolderFailed" xml:space="preserve">
+    <value>Não foi possível abrir a pasta: {0}</value>
+    <comment>{0} = folder path</comment>
+  </data>
 </root>

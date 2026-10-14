@@ -133,6 +133,11 @@ public sealed partial class MainPage : Page
             else
                 _ = CopyAsync();
         });
+        Shortcut(VirtualKey.Number0, VirtualKeyModifiers.Control, () => ZoomTo(1));
+        foreach (var key in new[] { VirtualKey.Add, (VirtualKey)0xBB }) // numpad and main-row plus
+            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.In(ImageScroller.ZoomFactor)));
+        foreach (var key in new[] { VirtualKey.Subtract, (VirtualKey)0xBD })
+            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.Out(ImageScroller.ZoomFactor)));
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control, () => _ = SaveAsync());
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
@@ -161,7 +166,7 @@ public sealed partial class MainPage : Page
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
         Unloaded += (_, _) => AppSettings.Changed -= OnSettingsChanged;
         ActualThemeChanged += (_, _) => OnSettingsChanged(AppSettings.Current); // the highlight holds brushes of one theme
-        foreach (var flyout in new FlyoutBase[] { ModeMenu, DelayMenu, ShapeMenu, StyleFlyout, SaveMenu, AgentMenu })
+        foreach (var flyout in new FlyoutBase[] { ModeMenu, DelayMenu, ShapeMenu, EraserMenu, StyleFlyout, SaveMenu, AgentMenu, MoreMenu })
             PassToolbarClicks(flyout);
         Loaded += (_, _) => { AppLicense.Changed += OnLicenseChanged; ApplyLicense(); };
         Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
@@ -266,6 +271,8 @@ public sealed partial class MainPage : Page
     internal EditorCanvas? Editor => _editor;
 
     internal EditorTool Tool => _tool;
+
+    internal float ZoomFactor => ImageScroller.ZoomFactor;
 
     private string? _video;
 
@@ -625,6 +632,21 @@ public sealed partial class MainPage : Page
     {
         if (sender.IsChecked != (!Cropping && _tool >= EditorTool.Rectangle))
             SelectTool(_shape);
+    }
+
+    private void OnEraserCheckedChanged(ToggleSplitButton sender, ToggleSplitButtonIsCheckedChangedEventArgs e)
+    {
+        if (sender.IsChecked != (!Cropping && _tool == EditorTool.Eraser))
+            SelectTool(EditorTool.Eraser);
+    }
+
+    /// <summary>Removes every object as one undo step; redactions are part of the image and stay.</summary>
+    private void OnEraseAll(object sender, RoutedEventArgs e)
+    {
+        if (_editor?.Document is not { Objects.Count: > 0 } document)
+            return;
+        _editor.CommitText();
+        document.Remove([.. document.Objects.Select(o => o.Id)]);
     }
 
     /// <summary>Syncs the toolbar with the current tool and its group's color and width, and hands both to the editor.</summary>
@@ -1198,7 +1220,7 @@ public sealed partial class MainPage : Page
     private async Task OpenAsync()
     {
         var picker = new FileOpenPicker(XamlRoot.ContentIslandEnvironment.AppWindowId);
-        foreach (var ext in new[] { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".tif", ".tiff" })
+        foreach (var ext in new[] { ".png", ".jpg", ".jpeg", ".jfif", ".jpe", ".bmp", ".dib", ".gif", ".tif", ".tiff", ".ico" })
             picker.FileTypeFilter.Add(ext);
         string folder = AppSettings.Current.SaveFolder ?? CaptureOutput.DefaultFolder;
         if (Directory.Exists(folder))
@@ -1513,6 +1535,69 @@ public sealed partial class MainPage : Page
             TextActionsStatus.Text = Loc.Get("RedactNoneFound");
         else
             _editor?.Document?.Redact(boxes); // the change reads the image again
+    }
+
+    private void OnMoreMenuOpening(object? sender, object e) =>
+        ZoomItem.IsEnabled = PrintItem.IsEnabled = PaintItem.IsEnabled = _editor is not null && _video is null;
+
+    private void OnZoomReset(object sender, RoutedEventArgs e) => ZoomTo(1);
+
+    private void OnZoomIn(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.In(ImageScroller.ZoomFactor));
+
+    private void OnZoomOut(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.Out(ImageScroller.ZoomFactor));
+
+    private void OnZoomFit(object sender, RoutedEventArgs e) => ZoomTo(FitZoom);
+
+    /// <summary>Zoom that shows the whole shown image in the viewport.</summary>
+    internal double FitZoom => _editor is { } editor
+        ? ZoomMath.Fit(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, editor.ShownSizeDips.Width, editor.ShownSizeDips.Height) : 1;
+
+    /// <summary>Zooms to the factor around the viewport center.</summary>
+    private void ZoomTo(double factor)
+    {
+        if (_editor is null)
+            return;
+        float zoom = (float)Math.Clamp(factor, ImageScroller.MinZoomFactor, ImageScroller.MaxZoomFactor);
+        double ratio = zoom / ImageScroller.ZoomFactor, cx = ImageScroller.ViewportWidth / 2, cy = ImageScroller.ViewportHeight / 2;
+        ImageScroller.ChangeView((ImageScroller.HorizontalOffset + cx) * ratio - cx, (ImageScroller.VerticalOffset + cy) * ratio - cy, zoom, true);
+    }
+
+    /// <summary>Exports the flattened image as the copy does into a temp PNG; null when no image is shown.</summary>
+    private async Task<string?> ExportTempAsync()
+    {
+        if (_editor?.Export() is not { } image)
+            return null;
+        var png = await CaptureOutput.EncodePngAsync(image);
+        Directory.CreateDirectory(CaptureOutput.TempFolder);
+        string path = Path.Combine(CaptureOutput.TempFolder, $"clipmark-{DateTime.Now:yyyyMMdd-HHmmss-fff}.png");
+        await File.WriteAllBytesAsync(path, png);
+        return path;
+    }
+
+    private async void OnPrint(object sender, RoutedEventArgs e) =>
+        await ShellExportAsync("PrintFailed", path => new System.Diagnostics.ProcessStartInfo(path) { Verb = "print", UseShellExecute = true });
+
+    private async void OnEditInPaint(object sender, RoutedEventArgs e) =>
+        await ShellExportAsync("PaintFailed", path => new System.Diagnostics.ProcessStartInfo("mspaint.exe", $"\"{path}\"") { UseShellExecute = true });
+
+    private async Task ShellExportAsync(string errorKey, Func<string, System.Diagnostics.ProcessStartInfo> start)
+    {
+        try
+        {
+            if (await ExportTempAsync() is { } path)
+                System.Diagnostics.Process.Start(start(path))?.Dispose();
+        }
+        catch (Exception ex)
+        {
+            ShowError(Loc.Format(errorKey, ex.Message));
+        }
+    }
+
+    private void OnOpenScreenshotsFolder(object sender, RoutedEventArgs e)
+    {
+        string folder = AppSettings.Current.SaveFolder ?? CaptureOutput.DefaultFolder;
+        if (!CaptureOutput.OpenFolder(folder))
+            ShowError(Loc.Format("OpenFolderFailed", folder));
     }
 
     /// <summary>Ctrl+wheel zooms around the cursor; plain wheel scrolls.</summary>

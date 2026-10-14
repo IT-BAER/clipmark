@@ -20,6 +20,21 @@ internal static class CaptureOutput
     /// <summary>Holds captures for the toast image and the "open" action when auto-save is off.</summary>
     public static readonly string TempFolder = Path.Combine(Path.GetTempPath(), "Clipmark");
 
+    /// <summary>Opens the folder in Explorer, creating it first; false when it cannot be created or opened.</summary>
+    public static bool OpenFolder(string folder)
+    {
+        try
+        {
+            Directory.CreateDirectory(folder);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(folder) { UseShellExecute = true })?.Dispose();
+            return true;
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or System.ComponentModel.Win32Exception)
+        {
+            return false;
+        }
+    }
+
     /// <summary>Removes temp captures older than a day; toasts in the notification center may still point at newer ones.</summary>
     public static void CleanTempFolder()
     {
