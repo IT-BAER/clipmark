@@ -303,6 +303,9 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
   2.1 to 3.8 s, -5 dB around it (1 kHz tone). Not verified (no real input): Print, Call / Send email / Open link,
   toast texts, real overlay keys and drags, ruler drag / wheel, border on real overlay captures, caption-button theme,
   opacity slider drag, record bar clicks and tooltip, mic mute contrast (silent mic), lost-device mute path.
+  Review follow-ups `0dc00a8`: Pause tooltip text empty outside Recording (TestDriver barshot idle / recording / paused,
+  en-US + de-DE 3/3; the old build showed "Pause" in idle); a source lost mid-recording turns its bar button off on the
+  next 200 ms tick (code read only); README record bar image with Pause.
 - [x] M12.5 Select and copy part of the recognized text (owner request 13 October 2026). Decisions (owner): a drag that
   starts on text selects, elsewhere the tool acts; character carets estimated by splitting word boxes evenly per text
   element (OCR gives word boxes only); Ctrl+C, right-click "Copy text", "Copy selection" button, Ctrl+A selects all; double-click selects a word

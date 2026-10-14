@@ -156,10 +156,11 @@ Your screenshots and recordings stay where you saved them.
 
 | Action | Default |
 |---|---|
-| New capture | Ctrl+Print Screen, tray icon click, or New |
+| New capture | Ctrl+Print Screen, tray icon click, or New; Ctrl+E in the capture overlay toggles Quick markup |
 | New recording | Ctrl+Shift+Print Screen, tray menu, or the camera button; the same hotkey or a tray icon click stops it |
 | Tools | V select, P pen, H highlighter, E eraser, R / C / L / A shapes, T text, I eyedropper, G fill |
 | Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new |
+| Zoom | Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out, Ctrl+mouse wheel |
 | Selection | Ctrl+A select all, arrow keys nudge (Shift = 10 px), Page Up / Down z-order (Shift = to front / back), Del delete, Esc deselect |
 
 Recordings are saved to `Videos\Screen Recordings`. Screenshots go to `Pictures\Screenshots` (configurable) when
