@@ -286,10 +286,16 @@ Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Micro
 
 ## M12 Snipping Tool feature parity (planned 13 October 2026, owner)
 Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on steroids" (README tagline) is true.
-- [ ] M12.1 Full audit of Snipping Tool 11.2608.41.0 features against Clipmark (UIA walk of every menu, toolbar and setting).
+- [x] M12.1 Full audit of Snipping Tool 11.2608.41.0 features against Clipmark (UIA walk of every menu, toolbar and setting).
+  Done 14 October 2026: `docs\snipping-tool-audit.md`, 32 gaps (G1-G32); record toolbar, video editor and flighted tools
+  from the `resources.pri` string table only (recording needs a real drag).
 - [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
-- [ ] M12.4 Remaining gaps from M12.1.
+- [ ] M12.4 Remaining gaps from M12.1. Owner, 14 October 2026: only gaps Snipping Tool shows, no full photo /
+  video editor; keep it simple. Build G1-G5, G7, G8, G11-G15, G17, G20-G24 (G21 without camera RAW; G12, G23, G24 are
+  strings-only, kept by the owner). Out: G16 keyboard snipping, G25 trim, G26 GIF, G28 blur, G29 text formatting,
+  G30 scrolling screenshot, G31 draw and hold (strings only); G9 Bing, G27 Clipchamp, G32 Copilot (Microsoft services).
+  Deferred: G18 HDR (no HDR test monitor checked), G19 multiple windows.
 - [x] M12.5 Select and copy part of the recognized text (owner request 13 October 2026). Decisions (owner): a drag that
   starts on text selects, elsewhere the tool acts; character carets estimated by splitting word boxes evenly per text
   element (OCR gives word boxes only); Ctrl+C, right-click "Copy text", "Copy selection" button, Ctrl+A selects all; double-click selects a word
