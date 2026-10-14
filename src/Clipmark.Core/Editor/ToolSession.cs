@@ -21,6 +21,9 @@ public sealed class ToolSession(EditorDocument document)
     public float SnapTolerance { get; set; } = 6;
     /// <summary>False = line / arrow ends never attach (premium feature locked).</summary>
     public bool AttachEnabled { get; set; } = true;
+    /// <summary>Ruler on the canvas, if shown: a Pen / Highlighter stroke starting within <see cref="RulerTolerance"/> of a long edge runs straight on it.</summary>
+    public Ruler? ActiveRuler { get; set; }
+    public float RulerTolerance { get; set; } = 16;
     public bool IsActive { get; private set; }
 
     /// <summary>In-progress stroke or shape (Id 0), drawn on top until the drag ends.</summary>
@@ -86,7 +89,8 @@ public sealed class ToolSession(EditorDocument document)
             case EditorTool.Pen or EditorTool.Highlighter:
                 var kind = Tool == EditorTool.Pen ? StrokeKind.Pen : StrokeKind.Highlighter;
                 var color = kind == StrokeKind.Highlighter ? Color with { A = HighlighterAlpha } : Color;
-                Live = new Stroke(0, kind, color, Width, [.. _points]);
+                Live = new Stroke(0, kind, color, Width, ActiveRuler is { } ruler && ruler.EdgeNear(start, RulerTolerance) is { } edge
+                    ? [.. Ruler.Project(_points, edge)] : [.. _points]);
                 break;
             default:
                 var shape = Tool switch

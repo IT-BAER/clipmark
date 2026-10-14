@@ -1320,6 +1320,10 @@
   <data name="ZoomFitItem.Text" xml:space="preserve">
     <value>适应窗口</value>
   </data>
+  <data name="RulerItem.Text" xml:space="preserve">
+    <value>标尺</value>
+    <comment>More menu toggle; shows a drawing ruler over the image</comment>
+  </data>
   <data name="PrintItem.Text" xml:space="preserve">
     <value>打印</value>
   </data>

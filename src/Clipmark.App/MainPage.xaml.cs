@@ -320,6 +320,7 @@ public sealed partial class MainPage : Page
             _editor.Close();
         }
         _editor = editor;
+        RulerItem.IsChecked = false;
         _historyId = historyId;
         _historyRevision = _copyRevision = null;
         _copyTimer?.Stop();
@@ -363,6 +364,7 @@ public sealed partial class MainPage : Page
         _ = WriteHistoryAsync();
         _editor.Close();
         _editor = null;
+        RulerItem.IsChecked = false;
         _historyId = null;
         ImageScroller.Content = null;
         ImageScroller.Visibility = Visibility.Collapsed;
@@ -901,6 +903,8 @@ public sealed partial class MainPage : Page
         _wheelRest += delta;
         int notches = _wheelRest / 120;
         _wheelRest %= 120;
+        if (notches != 0 && !Cropping && _editor.RotateRuler(imagePoint, -notches))
+            return;
         if (notches == 0 || Cropping || _tool is EditorTool.Eraser or EditorTool.Eyedropper or EditorTool.Bucket)
             return;
         if (_editor.EditingText is not null)
@@ -1642,7 +1646,18 @@ public sealed partial class MainPage : Page
     private void OnRedactClear(object sender, RoutedEventArgs e) => _editor?.Document?.ClearRedactions();
 
     private void OnMoreMenuOpening(object? sender, object e) =>
-        ZoomItem.IsEnabled = PrintItem.IsEnabled = PaintItem.IsEnabled = _editor is not null && _video is null;
+        ZoomItem.IsEnabled = RulerItem.IsEnabled = PrintItem.IsEnabled = PaintItem.IsEnabled = _editor is not null && _video is null;
+
+    private void OnRulerToggled(object sender, RoutedEventArgs e) => SetRuler(RulerItem.IsChecked);
+
+    /// <summary>Shows or hides the ruler (per capture); the first time it is centered in the visible area.</summary>
+    internal void SetRuler(bool on)
+    {
+        RulerItem.IsChecked = on && _editor is not null;
+        if (_editor is { } editor)
+            editor.SetRuler(on, ImageScroller.TransformToVisual(editor.Control).TransformPoint(
+                new Windows.Foundation.Point(ImageScroller.ViewportWidth / 2, ImageScroller.ViewportHeight / 2)));
+    }
 
     private void OnZoomReset(object sender, RoutedEventArgs e) => ZoomTo(1);
 

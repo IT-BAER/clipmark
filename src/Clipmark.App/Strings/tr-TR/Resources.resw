@@ -1320,6 +1320,10 @@
   <data name="ZoomFitItem.Text" xml:space="preserve">
     <value>Pencereye sığdır</value>
   </data>
+  <data name="RulerItem.Text" xml:space="preserve">
+    <value>Cetvel</value>
+    <comment>More menu toggle; shows a drawing ruler over the image</comment>
+  </data>
   <data name="PrintItem.Text" xml:space="preserve">
     <value>Yazdır</value>
   </data>

@@ -199,6 +199,11 @@
                                 <MenuFlyoutItem x:Uid="ZoomOutItem" Click="OnZoomOut" />
                                 <MenuFlyoutItem x:Uid="ZoomFitItem" Click="OnZoomFit" />
                             </MenuFlyoutSubItem>
+                            <ToggleMenuFlyoutItem x:Name="RulerItem" x:Uid="RulerItem" Click="OnRulerToggled">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xECC6;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem x:Name="PrintItem" x:Uid="PrintItem" Click="OnPrint">
                                 <MenuFlyoutItem.Icon>

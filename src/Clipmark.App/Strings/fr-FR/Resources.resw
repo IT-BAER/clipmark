@@ -1320,6 +1320,10 @@
   <data name="ZoomFitItem.Text" xml:space="preserve">
     <value>Ajuster à la fenêtre</value>
   </data>
+  <data name="RulerItem.Text" xml:space="preserve">
+    <value>Règle</value>
+    <comment>More menu toggle; shows a drawing ruler over the image</comment>
+  </data>
   <data name="PrintItem.Text" xml:space="preserve">
     <value>Imprimer</value>
   </data>

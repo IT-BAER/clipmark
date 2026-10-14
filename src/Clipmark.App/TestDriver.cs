@@ -44,6 +44,7 @@ namespace Clipmark.App;
 /// | omove X,Y | odown X,Y | oup X,Y (desktop px, posted to the overlay) | ocancel (right click) | okey ESC|LETTER [ctrl] | opill NAME (center of a pill button to DIR\pill.txt)
 /// | ocolor X,Y (frozen pixel as #RRGGBB to DIR\ocolor.txt) | oshot FILE (the pill monitor as it is painted) | owait (the overlay run finished, up to 20 s)
 /// | setting colorformat hex|rgb|hsl | clipboard|toast|autosave|border on|off | borderwidth N | savefolder PATH
+/// | ruler on|off | rulerinfo (ruler half height in image px to DIR\ruler.txt) | rulerat X,Y ANGLE (image px, degrees) | assert ruler X,Y ANGLE (within 0.5 px / 0.1 degree; "off" = hidden)
 /// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
@@ -318,6 +319,25 @@ internal sealed class TestDriver
                 var at = wheelWords[1].Split(',');
                 _page.Wheel(int.Parse(wheelWords[0], CultureInfo.InvariantCulture), wheelWords.Contains("shift"),
                     new Vector2(float.Parse(at[0], CultureInfo.InvariantCulture), float.Parse(at[1], CultureInfo.InvariantCulture)));
+                break;
+            case "ruler":
+                _page.SetRuler(arg == "on");
+                break;
+            case "rulerinfo":
+                File.WriteAllText(Path.Combine(_dir, "ruler.txt"), (_page.Editor ?? throw new InvalidOperationException("no capture shown")).RulerHalfHeight.ToString(CultureInfo.InvariantCulture));
+                break;
+            case "rulerat":
+                var rulerAt = arg.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(v => float.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                (_page.Editor ?? throw new InvalidOperationException("no capture shown")).PlaceRuler(new Vector2(rulerAt[0], rulerAt[1]), rulerAt[2]);
+                break;
+            case "assert" when arg.StartsWith("ruler "):
+                var want = arg[6..].Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                var pose = _page.Editor?.RulerPose;
+                if (want[0] == "off" ? _page.Editor?.RulerVisible == true : pose is not { } rp
+                    || Math.Abs(rp.Center.X - float.Parse(want[0], CultureInfo.InvariantCulture)) > 0.5f
+                    || Math.Abs(rp.Center.Y - float.Parse(want[1], CultureInfo.InvariantCulture)) > 0.5f
+                    || Math.Abs(rp.Angle - float.Parse(want[2], CultureInfo.InvariantCulture)) > 0.1f)
+                    throw new InvalidOperationException($"ruler is {pose?.Center} {pose?.Angle}");
                 break;
             case "color":
                 // color #RRGGBB: sets the open style flyout's color ring.

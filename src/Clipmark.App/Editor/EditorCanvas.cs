@@ -33,6 +33,8 @@ internal sealed class EditorCanvas
     private const float HandleDips = 8;
     private const float HitDips = 6;
     private const float RotateDips = 24;
+    private const float RulerDips = 96;
+    private const float RulerSnapDips = 16;
     private const string TextFont = "Segoe UI";
 
     // Native AOT cannot unbox the "SystemAccentColor" resource (InvalidCastException on the first draw); UISettings returns the struct.
@@ -78,6 +80,12 @@ internal sealed class EditorCanvas
     private bool _ibeam;
     private static readonly InputCursor IBeam = InputSystemCursor.Create(InputSystemCursorShape.IBeam);
     private readonly CursorHost _host;
+    // Ruler (a view aid, never exported or saved): center in image px once placed, angle in degrees, viewport size in DIPs.
+    private Vector2? _rulerCenter;
+    private float _rulerAngle;
+    private bool _rulerShown, _movingRuler;
+    private Vector2 _rulerGrab;
+    private Vector2 _viewportDips;
 
     /// <summary>Recognized text (text actions); a drag that starts on it selects characters. Setting it clears the selection.</summary>
     public IReadOnlyList<OcrLine> TextLines
@@ -433,7 +441,49 @@ internal sealed class EditorCanvas
 
     private float Scale => Control.Dpi / 96;
 
-    private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null || _selectingText;
+    private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null || _selectingText || _movingRuler;
+
+    public bool RulerVisible => _rulerShown;
+
+    /// <summary>Ruler center (image px) and angle once it has been placed.</summary>
+    internal (Vector2 Center, float Angle)? RulerPose => _rulerCenter is { } c ? (c, _rulerAngle) : null;
+
+    internal float RulerHalfHeight => CurrentRuler.HalfHeight;
+
+    private Ruler CurrentRuler => new(_rulerCenter ?? Vector2.Zero, _rulerAngle, RulerDips / 2 * Scale / _zoom);
+
+    // 1.5 x the viewport diagonal, so the ruler spans the view at any angle.
+    private float RulerHalfLength => 0.75f * _viewportDips.Length() * Scale / _zoom;
+
+    private bool OnRuler(Vector2 point) => _rulerShown && !IsCropping && CurrentRuler.Contains(point, RulerHalfLength);
+
+    /// <summary>Shows or hides the ruler; the first time it is centered on the control DIP point.</summary>
+    public void SetRuler(bool on, Windows.Foundation.Point center)
+    {
+        _rulerShown = on;
+        _movingRuler &= on;
+        if (on)
+            _rulerCenter ??= new Vector2((float)center.X * Scale, (float)center.Y * Scale) - _origin;
+        Control.Invalidate();
+    }
+
+    /// <summary>Puts the ruler at an image px point and angle in degrees.</summary>
+    internal void PlaceRuler(Vector2 center, float angle)
+    {
+        _rulerCenter = center;
+        _rulerAngle = angle;
+        Control.Invalidate();
+    }
+
+    /// <summary>Turns the ruler by 15 degree steps when the point is on it; false elsewhere.</summary>
+    public bool RotateRuler(Vector2 point, int steps)
+    {
+        if (!OnRuler(point))
+            return false;
+        _rulerAngle = CurrentRuler.RotateBy(steps).Angle;
+        Control.Invalidate();
+        return true;
+    }
 
     /// <summary>Shown part of the document: the whole canvas while cropping, else the crop.</summary>
     private PixelRect View => IsCropping ? Document!.Bounds : Document!.Crop ?? Document.Bounds;
@@ -483,6 +533,7 @@ internal sealed class EditorCanvas
     {
         if (Document is null)
             return false;
+        _viewportDips = new Vector2((float)viewportWidth, (float)viewportHeight);
         if (zoom != _zoom)
         {
             _zoom = zoom;
@@ -588,6 +639,14 @@ internal sealed class EditorCanvas
     {
         if (_session is null || _selection is null || Dragging)
             return;
+        // A pen / highlighter press near an edge snaps instead of moving the ruler.
+        if (OnRuler(point) && !IsEditingText
+            && !(Tool is EditorTool.Pen or EditorTool.Highlighter && CurrentRuler.EdgeNear(point, RulerSnapDips * Scale / _zoom) is not null))
+        {
+            _movingRuler = true;
+            _rulerGrab = _rulerCenter!.Value - point;
+            return;
+        }
         // On recognized text a press selects characters whatever the tool; Shift extends the selection.
         if (!IsCropping && OcrSelection.HitTest(_textLines, point, HitDips * Scale / _zoom) is { } caret)
         {
@@ -636,12 +695,20 @@ internal sealed class EditorCanvas
         _session.Width = StrokeWidth;
         _session.SnapTolerance = HitDips * Scale / _zoom;
         _session.AttachEnabled = AttachEnabled;
+        _session.ActiveRuler = _rulerShown ? CurrentRuler : null;
+        _session.RulerTolerance = RulerSnapDips * Scale / _zoom;
         _session.Begin(point, shift);
         Control.Invalidate();
     }
 
     public void Drag(Vector2 point, bool shift)
     {
+        if (_movingRuler)
+        {
+            _rulerCenter = point + _rulerGrab;
+            Control.Invalidate();
+            return;
+        }
         if (_selectingText)
         {
             if (_textSelection is { } s && OcrSelection.Nearest(_textLines, point) is { } focus)
@@ -671,6 +738,11 @@ internal sealed class EditorCanvas
     public void Release()
     {
         _handle = null;
+        if (_movingRuler)
+        {
+            _movingRuler = false;
+            return;
+        }
         if (_selectingText)
         {
             _selectingText = false;
@@ -890,10 +962,45 @@ internal sealed class EditorCanvas
             ds.DrawText(size, at + new Vector2(dip), Microsoft.UI.Colors.Black, format);
             ds.DrawText(size, at, Microsoft.UI.Colors.White, format);
         }
+        if (_rulerShown)
+            DrawRuler(ds);
         if (_cropFrame is { } frame)
             DrawCropFrame(ds, frame, view);
         else if (Tool == EditorTool.Eyedropper && _hover is { } hover)
             DrawLoupe(ds, hover);
+    }
+
+    /// <summary>The ruler band with ticks every 10 image px (50 / 100 longer) on both long edges, and its angle, at a constant on-screen size.</summary>
+    private void DrawRuler(CanvasDrawingSession ds)
+    {
+        var ruler = CurrentRuler;
+        float dip = Scale / _zoom, half = RulerHalfLength, height = ruler.HalfHeight;
+        var c = ruler.Center;
+        var ink = Windows.UI.Color.FromArgb(255, 40, 40, 40);
+        var band = Windows.UI.Color.FromArgb(200, 245, 245, 245);
+        var transform = ds.Transform;
+        ds.Transform = Matrix3x2.CreateRotation(ruler.Angle * MathF.PI / 180, c) * transform;
+        ds.FillRectangle(c.X - half, c.Y - height, 2 * half, 2 * height, band);
+        ds.DrawLine(c.X - half, c.Y - height, c.X + half, c.Y - height, ink, dip);
+        ds.DrawLine(c.X - half, c.Y + height, c.X + half, c.Y + height, ink, dip);
+        float unit = 10; // coarser ticks while zoomed out so they stay apart
+        while (unit * _zoom < 5 * Scale)
+            unit *= 10;
+        for (int i = -(int)(half / unit); i <= (int)(half / unit); i++)
+        {
+            float x = c.X + i * unit, len = (i % 10 == 0 ? 20 : i % 5 == 0 ? 14 : 8) * dip;
+            ds.DrawLine(x, c.Y - height, x, c.Y - height + len, ink, dip);
+            ds.DrawLine(x, c.Y + height, x, c.Y + height - len, ink, dip);
+        }
+        ds.Transform = transform;
+        using var format = new CanvasTextFormat
+        {
+            FontSize = 16 * dip, FontFamily = TextFont,
+            HorizontalAlignment = CanvasHorizontalAlignment.Center, VerticalAlignment = CanvasVerticalAlignment.Center,
+        };
+        var label = new Windows.Foundation.Rect(c.X - 28 * dip, c.Y - 14 * dip, 56 * dip, 28 * dip);
+        ds.FillRoundedRectangle(label, 6 * dip, 6 * dip, band);
+        ds.DrawText($"{(int)ruler.Angle}\u00B0", label, ink, format);
     }
 
     /// <summary>

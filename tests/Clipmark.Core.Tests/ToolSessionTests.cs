@@ -151,4 +151,52 @@ public class ToolSessionTests
         Assert.Null(s.Live);
         Assert.Empty(doc.Objects);
     }
+
+    private static readonly Ruler Band = new(new(200, 150), 0, 48); // long edges at y = 102 and y = 198
+
+    private static ToolSession OnRuler(EditorTool tool, out EditorDocument doc)
+    {
+        var (d, s) = New(tool);
+        doc = d;
+        s.ActiveRuler = Band;
+        s.RulerTolerance = 16;
+        return s;
+    }
+
+    [Theory]
+    [InlineData(EditorTool.Pen, StrokeKind.Pen)]
+    [InlineData(EditorTool.Highlighter, StrokeKind.Highlighter)]
+    public void Stroke_starting_near_a_ruler_edge_ends_straight_on_it(EditorTool tool, StrokeKind kind)
+    {
+        var s = OnRuler(tool, out var doc);
+        s.Begin(new(50, 90), false);
+        s.Move(new(120, 140), false);
+        s.Move(new(350, 60), false);
+        Assert.All(Assert.IsType<Stroke>(s.Live).Points, p => Assert.Equal(102, p.Y, 0.01));
+        s.End();
+
+        var stroke = Assert.IsType<Stroke>(Assert.Single(doc.Objects));
+        Assert.Equal(kind, stroke.Kind);
+        Assert.True(stroke.Points.Length >= 2);
+        Assert.All(stroke.Points, p => Assert.Equal(102, p.Y, 0.01));
+        Assert.Equal([50f, 120f, 350f], stroke.Points.Select(p => p.X).ToArray());
+    }
+
+    [Fact]
+    public void Stroke_starting_far_from_the_ruler_stays_free_hand()
+    {
+        var s = OnRuler(EditorTool.Pen, out var doc);
+        Drag(s, false, new(50, 20), new(120, 40), new(350, 10));
+
+        var stroke = Assert.IsType<Stroke>(Assert.Single(doc.Objects));
+        Assert.Equal([new(50, 20), new(120, 40), new(350, 10)], stroke.Points.ToArray());
+    }
+
+    [Fact]
+    public void Shape_and_eraser_ignore_the_ruler()
+    {
+        var s = OnRuler(EditorTool.Rectangle, out var doc);
+        Drag(s, false, new(50, 100), new(150, 140));
+        Assert.Equal(new Vector2(150, 140), Assert.IsType<Shape>(Assert.Single(doc.Objects)).End);
+    }
 }

@@ -1320,6 +1320,10 @@
   <data name="ZoomFitItem.Text" xml:space="preserve">
     <value>Anpassa till fönstret</value>
   </data>
+  <data name="RulerItem.Text" xml:space="preserve">
+    <value>Linjal</value>
+    <comment>More menu toggle; shows a drawing ruler over the image</comment>
+  </data>
   <data name="PrintItem.Text" xml:space="preserve">
     <value>Skriv ut</value>
   </data>
