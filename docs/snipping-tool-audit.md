@@ -45,7 +45,8 @@ Clipmark: source at `337d689` (XAML, `Strings\en-US\Resources.resw`, C#).
 | G32 | Copilot features | Perfect Screenshot (hold Ctrl), Click to Do, Ask Copilot | None | strings |
 
 Status 14 October 2026: M12.4 closed G1-G5, G7, G8, G11-G15, G17 and G20-G24 (commits `29ad64a`..`89d06ab`,
-`0dc00a8`; G21 without camera RAW). Open: G6 emoji (M12.3), G10 copy as table (M12.2). Out of scope: G9, G16, G25-G32.
+`0dc00a8`; G21 without camera RAW). M12.2 closed G10 copy as table. Open: G6 emoji (M12.3). Out of scope: G9, G16,
+G25-G32.
 Deferred: G18 HDR, G19 multiple windows. The Clipmark column above shows the state at `337d689`.
 
 Same in both: rectangle / window / full screen / freeform capture, delay 3 / 5 / 10 s, text extractor, pen, highlighter,

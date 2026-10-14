@@ -482,6 +482,9 @@
   <data name="TextCopied" xml:space="preserve">
     <value>Text copied.</value>
   </data>
+  <data name="TableCopied" xml:space="preserve">
+    <value>Table copied.</value>
+  </data>
   <data name="TextSelectedOne" xml:space="preserve">
     <value>1 character selected.</value>
   </data>
@@ -1285,6 +1288,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Copy all text</value>
+  </data>
+  <data name="CopyTableButton.Content" xml:space="preserve">
+    <value>Copy as table</value>
+  </data>
+  <data name="CopyTableButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Copy as table</value>
   </data>
   <data name="CopySelectedTextButton.Content" xml:space="preserve">
     <value>Copy selection</value>

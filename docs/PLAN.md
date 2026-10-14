@@ -289,7 +289,12 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
 - [x] M12.1 Full audit of Snipping Tool 11.2608.41.0 features against Clipmark (UIA walk of every menu, toolbar and setting).
   Done 14 October 2026: `docs\snipping-tool-audit.md`, 32 gaps (G1-G32); record toolbar, video editor and flighted tools
   from the `resources.pri` string table only (recording needs a real drag).
-- [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
+- [x] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
+  Done 14 October 2026, free: Core `OcrTable` (rows from vertically overlapping lines, cells at gaps > 0.75x word
+  height, columns only from rows with several cells), clipboard HTML Format + tab text (Snipping Tool: HTML only).
+  Snipping Tool 11.2608.41.0 measured off-screen: same cells on grid / borderless / right-aligned tables; with a title
+  and note it merges 3 columns into one cell, Clipmark keeps them. Core 687/687; TestDriver en-US + de-DE 9/9 each
+  (6 tables exact, kv list, single column and prose disabled); Excel paste: 7x4 with borders.
 - [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
 - [x] M12.4 Remaining gaps from M12.1. Owner, 14 October 2026: only gaps Snipping Tool shows, no full photo /
   video editor; keep it simple. Build G1-G5, G7, G8, G11-G15, G17, G20-G24 (G21 without camera RAW; G12, G23, G24 are

@@ -236,6 +236,7 @@
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <Button x:Name="CopySelectedTextButton" x:Uid="CopySelectedTextButton" Click="OnCopySelectedText" IsEnabled="False" />
                 <Button x:Name="CopyAllTextButton" x:Uid="CopyAllTextButton" Click="OnCopyAllText" IsEnabled="False" />
+                <Button x:Name="CopyTableButton" x:Uid="CopyTableButton" Click="OnCopyTable" IsEnabled="False" />
                 <SplitButton x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False">
                     <SplitButton.Flyout>
                         <MenuFlyout x:Name="QuickRedactMenu" Placement="Bottom" Opening="OnQuickRedactMenuOpening">

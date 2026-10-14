@@ -52,6 +52,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - OCR copy: drag across the recognized text or double-click a word to copy part of it (Ctrl+C, right-click or
   Copy selection), or copy all of it. The built-in offline OCR engine reads Latin-script languages; other languages
   use Windows text recognition
+- Copy as table: a table in the capture goes to the clipboard as a table for Word, Outlook and Excel, and as
+  tab-separated text for everything else
 - Quick redact of email addresses and / or phone numbers; Remove all redactions
 - QR code decoding: Copy and Open link; Call and Send email for phone numbers and email addresses
 
@@ -107,7 +109,7 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | Reopen a capture with editable objects | Yes, editable PNG (Premium to save) | No |
 | OCR copy and quick redact | Yes | Yes |
 | OCR character errors on 60 rendered web pages (our benchmark) | 0.89% | 1.07% |
-| Copy recognized text as a table | No | Yes |
+| Copy recognized text as a table | Yes | Yes |
 | QR code decoding (links, phone numbers, email addresses, plain text) | Yes, with Copy, Open link, Call and Send email | Yes, as a chip on the code |
 | Screen recording | Region, window area or full screen; MP4 with system audio and microphone; pause, mute while recording | Rectangle or window; MP4 with system audio and microphone; pause, mute while recording; edit in Clipchamp |
 | Send the capture to an AI agent | Yes (Premium) | No |

@@ -482,6 +482,9 @@
   <data name="TextCopied" xml:space="preserve">
     <value>텍스트를 복사했습니다.</value>
   </data>
+  <data name="TableCopied" xml:space="preserve">
+    <value>표를 복사했습니다.</value>
+  </data>
   <data name="TextSelectedOne" xml:space="preserve">
     <value>1자를 선택했습니다.</value>
   </data>
@@ -1285,6 +1288,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>모든 텍스트 복사</value>
+  </data>
+  <data name="CopyTableButton.Content" xml:space="preserve">
+    <value>표로 복사</value>
+  </data>
+  <data name="CopyTableButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>표로 복사</value>
   </data>
   <data name="CopySelectedTextButton.Content" xml:space="preserve">
     <value>선택 영역 복사</value>

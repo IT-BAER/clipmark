@@ -1466,6 +1466,7 @@ public sealed partial class MainPage : Page
     private (IReadOnlyList<PixelRect> Redactions, PixelRect? Crop)? _textKey;
     private int _textRun;
     private IReadOnlyList<OcrLine> _lines = [];
+    private IReadOnlyList<IReadOnlyList<string>>? _table;
     private string _textStatus = ""; // recognition result, shown again when the text selection is cleared
 
     /// <summary>True while text recognition runs (test driver).</summary>
@@ -1481,6 +1482,7 @@ public sealed partial class MainPage : Page
             _textKey = null;
             _textRun++;
             _lines = [];
+            _table = null;
             TextActionsBusy = false;
             if (_editor is not null)
             {
@@ -1502,7 +1504,7 @@ public sealed partial class MainPage : Page
         TextActionsBusy = true;
         editor.TextLines = []; // before the status: clearing a selection restores the old status
         TextActionsStatus.Text = Loc.Get("TextReading");
-        CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = false;
+        CopyAllTextButton.IsEnabled = CopyTableButton.IsEnabled = QuickRedactButton.IsEnabled = false;
         QrResults.Children.Clear();
         editor.Highlights = [];
         IReadOnlyList<OcrLine>? lines = [];
@@ -1534,6 +1536,8 @@ public sealed partial class MainPage : Page
             text = Loc.Format("TextWithQr", text, codes.Count == 1 ? Loc.Get("QrOne") : Loc.Format("QrMany", codes.Count));
         TextActionsStatus.Text = _textStatus = failure ?? text;
         CopyAllTextButton.IsEnabled = QuickRedactButton.IsEnabled = _lines.Count > 0;
+        _table = OcrTable.Build(_lines);
+        CopyTableButton.IsEnabled = _table is not null;
         editor.TextLines = _lines;
         for (int i = 0; i < codes.Count; i++)
             QrResults.Children.Add(QrItem(codes[i].Text, codes.Count == 1 ? null : i + 1));
@@ -1589,6 +1593,17 @@ public sealed partial class MainPage : Page
     }
 
     private void OnCopyAllText(object sender, RoutedEventArgs e) => CopyText(OcrText.Join(_lines, AppSettings.Current.OcrRemoveLineBreaks), Loc.Get("TextCopied"));
+
+    private void OnCopyTable(object sender, RoutedEventArgs e)
+    {
+        if (_table is not { } table)
+            return;
+        var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
+        if (CaptureOutput.CopyTableToClipboard(owner, OcrTable.Html(table), OcrTable.Tsv(table)))
+            TextActionsStatus.Text = Loc.Get("TableCopied");
+        else
+            ShowError(Loc.Get("ClipboardBusyText"));
+    }
 
     private void OnCopySelectedText(object sender, RoutedEventArgs e) => CopyText(_editor?.SelectedText ?? "", Loc.Get("TextCopied"));
 

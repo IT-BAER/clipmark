@@ -29,7 +29,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
   - Editor: More menu with zoom (100%, in, out, fit; Ctrl+0, Ctrl+plus, Ctrl+minus), Ruler, Print, Edit in Paint and
     Open screenshots folder; Erase all mark-ups; Opacity slider (10-100 %) for pen, shapes, text and fill. The ruler
     turns with the mouse wheel in 15 degree steps, and pen and highlighter strokes that start at its edge run along it.
-  - Text actions: Quick redact can skip email addresses or phone numbers and has Remove all redactions; QR codes with
+  - Text actions: Copy as table puts a table from the capture on the clipboard as HTML (Word, Outlook, Excel) and
+    tab-separated text; a title or note above or below the table stays out of its columns. Quick redact can skip email addresses or phone numbers and has Remove all redactions; QR codes with
     a phone number or email address offer Call or Send email; the text extractor can remove line breaks.
   - Recording: Pause / Resume on the record bar (the video has no gap), and the microphone or system audio can be
     muted while recording without changing the setting.

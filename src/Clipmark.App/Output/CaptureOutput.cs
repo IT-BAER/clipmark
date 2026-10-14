@@ -150,6 +150,33 @@ internal static class CaptureOutput
         }
     }
 
+    /// <summary>Puts a table on the clipboard: "HTML Format" (CF_HTML payload) for Office, Unicode text for everything else.</summary>
+    public static bool CopyTableToClipboard(nint owner, string cfHtml, string text)
+    {
+        nint htmlMem = ToGlobal(System.Text.Encoding.UTF8.GetBytes(cfHtml + "\0"));
+        nint textMem = ToGlobal(System.Text.Encoding.Unicode.GetBytes(text + "\0"));
+        if (!Open(owner))
+        {
+            GlobalFree(htmlMem);
+            GlobalFree(textMem);
+            return false;
+        }
+        try
+        {
+            EmptyClipboard();
+            if (SetClipboardData(RegisterClipboardFormat("HTML Format"), htmlMem) == 0)
+                GlobalFree(htmlMem);
+            if (SetClipboardData(CF_UNICODETEXT, textMem) != 0)
+                return true;
+            GlobalFree(textMem);
+            return false;
+        }
+        finally
+        {
+            CloseClipboard();
+        }
+    }
+
     /// <summary>Puts the file on the clipboard as CF_HDROP (paste in Explorer, chat and mail apps).</summary>
     public static unsafe bool CopyFileToClipboard(nint owner, string path)
     {

@@ -482,6 +482,9 @@
   <data name="TextCopied" xml:space="preserve">
     <value>Текст скопійовано.</value>
   </data>
+  <data name="TableCopied" xml:space="preserve">
+    <value>Таблицю скопійовано.</value>
+  </data>
   <data name="TextSelectedOne" xml:space="preserve">
     <value>Виділено один символ.</value>
   </data>
@@ -1285,6 +1288,12 @@
   </data>
   <data name="CopyAllTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Копіювати весь текст</value>
+  </data>
+  <data name="CopyTableButton.Content" xml:space="preserve">
+    <value>Копіювати як таблицю</value>
+  </data>
+  <data name="CopyTableButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Копіювати як таблицю</value>
   </data>
   <data name="CopySelectedTextButton.Content" xml:space="preserve">
     <value>Копіювати виділене</value>
