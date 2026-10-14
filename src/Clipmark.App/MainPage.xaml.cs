@@ -923,11 +923,11 @@ public sealed partial class MainPage : Page
         }
     }
 
-    /// <summary>Eyedropper click: copies #RRGGBB, returns to the previous tool and gives it (or its selection) the color.</summary>
+    /// <summary>Eyedropper click: copies the color in the chosen format, returns to the previous tool and gives it (or its selection) the color.</summary>
     private void OnColorPicked(Rgba color)
     {
         var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
-        if (!CaptureOutput.CopyTextToClipboard(owner, ColorSample.Hex(color)))
+        if (!CaptureOutput.CopyTextToClipboard(owner, ColorSample.Format(color, AppSettings.Current.ColorFormat)))
             ShowError(Loc.Get("ClipboardBusyColor"));
         SelectTool(_toolBeforePick);
         SetColor(color);

@@ -37,7 +37,7 @@ internal static unsafe partial class Native
     public const int DWMWA_TRANSITIONS_FORCEDISABLED = 3, DWMWA_EXTENDED_FRAME_BOUNDS = 9, DWMWA_CLOAKED = 14;
     public const uint MONITOR_DEFAULTTONEAREST = 2;
 
-    public const int TRANSPARENT = 1, PS_SOLID = 0, NULL_BRUSH = 5;
+    public const int TRANSPARENT = 1, PS_SOLID = 0, PS_GEOMETRIC = 0x10000, NULL_BRUSH = 5;
     public const uint DT_CENTER = 0x1, DT_VCENTER = 0x4, DT_SINGLELINE = 0x20, DT_NOPREFIX = 0x800, DT_CALCRECT = 0x400;
 
     public const uint CF_DIB = 8, CF_UNICODETEXT = 13, CF_HDROP = 15, GMEM_MOVEABLE = 0x2;
@@ -156,6 +156,14 @@ internal static unsafe partial class Native
     [LibraryImport("gdi32.dll")]
     [return: MarshalAs(UnmanagedType.Bool)]
     public static partial bool Polyline(nint hdc, POINT* points, int count);
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct LOGBRUSH { public uint Style, Color; public nuint Hatch; }
+
+    /// <summary>Geometric pen: with <see cref="PS_GEOMETRIC"/> alone it has round caps and joins.</summary>
+    [LibraryImport("gdi32.dll")] public static partial nint ExtCreatePen(uint style, uint width, LOGBRUSH* brush, uint styleCount, uint* styles);
+
+    [LibraryImport("user32.dll")] public static partial short GetKeyState(int key);
 
     // GDI+ flat API: GDI itself draws curves without anti-aliasing.
     [StructLayout(LayoutKind.Sequential)]

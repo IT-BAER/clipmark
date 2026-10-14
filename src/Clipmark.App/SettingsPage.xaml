@@ -84,6 +84,7 @@
                         <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
                     </Grid>
                     <ToggleSwitch x:Name="OcrLineBreaksSwitch" x:Uid="SettingsOcrRemoveLineBreaks" Toggled="OnTogglesChanged" />
+                    <ComboBox x:Name="ColorFormatBox" x:Uid="SettingsColorFormat" MinWidth="220" SelectionChanged="OnColorFormatChanged" />
                     <ToggleSwitch x:Name="CopyEditsSwitch" x:Uid="SettingsCopyEdits" Toggled="OnTogglesChanged" />
                     <ToggleSwitch x:Name="BorderSwitch" x:Uid="SettingsBorder" Toggled="OnTogglesChanged" />
                     <StackPanel x:Name="BorderOptions" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">

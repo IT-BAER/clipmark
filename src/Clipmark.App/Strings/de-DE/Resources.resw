@@ -606,6 +606,10 @@
     <value>Text in die Zwischenablage kopiert</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>Farbe kopiert: {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>Automatisches Speichern fehlgeschlagen: {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>Textextraktor</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>Farbwähler</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>Schnellmarkierung (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>Foto</value>
@@ -1114,7 +1126,7 @@
     <value>Formen</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pipette (I): kopiert die Farbe als #RRGGBB</value>
+    <value>Pipette (I): kopiert die Farbe als HEX / RGB / HSL</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Pipette</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Textextraktion: Zeilenumbrüche entfernen</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>Farbformat</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Farbformat</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>Darstellung</value>

@@ -6,6 +6,8 @@ namespace Clipmark.Core.Settings;
 
 public enum CaptureMode { Rectangle, Window, FullScreen, AllMonitors, Freeform }
 
+public enum ColorFormat { Hex, Rgb, Hsl }
+
 public sealed record ClipmarkSettings
 {
     public static readonly int[] DelayChoices = [0, 3, 5, 10];
@@ -65,6 +67,9 @@ public sealed record ClipmarkSettings
 
     /// <summary>Edits in the editor are copied to the clipboard after a short pause.</summary>
     public bool CopyEdits { get; init; } = true;
+
+    /// <summary>How a picked color is copied.</summary>
+    public ColorFormat ColorFormat { get; init; }
 
     public static readonly string[] Themes = ["system", "light", "dark"];
 }
@@ -131,6 +136,7 @@ public static class SettingsStore
             w.WriteNumber("borderWidth", s.BorderWidth);
             w.WriteString("theme", s.Theme);
             w.WriteBoolean("copyEdits", s.CopyEdits);
+            w.WriteString("colorFormat", s.ColorFormat.ToString());
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -183,6 +189,7 @@ public static class SettingsStore
                 BorderWidth = root.TryGetProperty("borderWidth", out var bw) && bw.ValueKind == JsonValueKind.Number && bw.TryGetInt32(out int width) ? Math.Clamp(width, 1, 20) : d.BorderWidth,
                 Theme = ClipmarkSettings.Themes.Contains(Str("theme")) ? Str("theme")! : d.Theme,
                 CopyEdits = Bool("copyEdits", d.CopyEdits),
+                ColorFormat = Enum.TryParse<ColorFormat>(Str("colorFormat"), out var colorFormat) && Enum.IsDefined(colorFormat) ? colorFormat : d.ColorFormat,
             };
         }
     }

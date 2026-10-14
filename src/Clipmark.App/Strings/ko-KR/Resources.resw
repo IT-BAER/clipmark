@@ -606,6 +606,10 @@
     <value>텍스트를 클립보드에 복사함</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>색을 복사함: {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>자동 저장하지 못했습니다. {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>텍스트 추출기</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>색 선택기</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>빠른 표시 (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>사진</value>
@@ -1114,7 +1126,7 @@
     <value>도형</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>스포이트(I): 색을 #RRGGBB로 복사</value>
+    <value>스포이트(I): 색을 HEX / RGB / HSL로 복사</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>스포이트</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>텍스트 추출: 줄 바꿈 제거</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>색 형식</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>색 형식</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>모양</value>

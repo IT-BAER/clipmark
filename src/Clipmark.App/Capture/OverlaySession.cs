@@ -1,5 +1,6 @@
 using Clipmark.App.Interop;
 using Clipmark.Core.Capture;
+using Clipmark.Core.Editor;
 using Clipmark.Core.Settings;
 using static Clipmark.App.Interop.Native;
 
@@ -17,7 +18,8 @@ internal sealed unsafe class OverlaySession : IDisposable
         (CaptureMode.FullScreen, '\uE7F4', Loc.Get("ModeFullScreen")), (CaptureMode.AllMonitors, '\uEBC6', Loc.Get("ModeAllMonitors")),
         (CaptureMode.Freeform, '\uF408', Loc.Get("ModeFreeform")),
     ];
-    private const int CloseButton = -1, ExtractButton = -2, PhotoButton = -3, VideoButton = -4;
+    private const int CloseButton = -1, ExtractButton = -2, PhotoButton = -3, VideoButton = -4, PickerButton = -5, MarkupButton = -6;
+    private const int LoupeCells = 11;
 
     private readonly DesktopFrame _frame;
     private readonly TaskCompletionSource<CapturedImage?> _done = new();
@@ -31,10 +33,36 @@ internal sealed unsafe class OverlaySession : IDisposable
     private List<PixelPoint>? _path;
     private PixelRect? _decorated; // desktop area that currently shows highlight, border or label
     private int? _hoverButton;
-    private bool _extract, _video;
+    private bool _extract, _video, _picker, _markup;
     private PixelRect? _picked;
+    private readonly List<List<PixelPoint>> _marks = []; // finished quick-markup strokes, desktop pixels
+    private List<PixelPoint>? _mark; // the stroke being drawn
+    private PixelPoint _cutOrigin;
 
     public CaptureMode Mode => _mode;
+
+#if DEBUG
+    /// <summary>The overlay on screen (test driver only).</summary>
+    internal static OverlaySession? Active { get; private set; }
+
+    internal nint TestHandle => _pillHost.Handle;
+
+    internal PixelRect TestMonitor => _pillHost.Monitor;
+
+    internal Rgba? TestColor(PixelPoint p) => ColorAt(p);
+
+    /// <summary>Desktop center of the pill button with the name (photo, video, rectangle, window, fullscreen, allmonitors, freeform, extract, picker, markup, close).</summary>
+    internal PixelPoint TestButton(string name)
+    {
+        int id = name switch
+        {
+            "photo" => PhotoButton, "video" => VideoButton, "extract" => ExtractButton, "picker" => PickerButton, "markup" => MarkupButton,
+            "close" => CloseButton, _ => (int)Enum.Parse<CaptureMode>(name, ignoreCase: true),
+        };
+        var b = ButtonRect(IndexOf(id));
+        return new PixelPoint(b.X + b.Width / 2, b.Y + b.Height / 2);
+    }
+#endif
 
     /// <summary>Text extractor toggled on in the pill: the picked region goes to OCR and the clipboard, not to the editor.</summary>
     public bool ExtractText => _extract;
@@ -44,6 +72,15 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     /// <summary>The region picked in Video mode (desktop pixels), or null when cancelled.</summary>
     public PixelRect? PickedRegion => _picked;
+
+    /// <summary>The pixel clicked with the color picker, or null when the session ended another way.</summary>
+    public Rgba? PickedColor { get; private set; }
+
+    /// <summary>Quick-markup strokes in desktop pixels.</summary>
+    public IReadOnlyList<IReadOnlyList<PixelPoint>> Marks => _marks;
+
+    /// <summary>Desktop position of the first pixel of the returned image.</summary>
+    public PixelPoint CutOrigin => _cutOrigin;
 
     public OverlaySession(DesktopFrame frame, CaptureMode mode, bool video = false)
     {
@@ -77,6 +114,9 @@ internal sealed unsafe class OverlaySession : IDisposable
                 _pillHost = w;
         }
         _pillHost ??= _windows[0];
+#if DEBUG
+        Active = this;
+#endif
     }
 
     /// <summary>Shows the overlay; completes with the picked image, or null when cancelled.</summary>
@@ -103,6 +143,11 @@ internal sealed unsafe class OverlaySession : IDisposable
         _cursor = p;
         if (_path is not null && _path[^1] != p)
             _path.Add(p);
+        if (_mark is { } mark && mark[^1] != p)
+        {
+            Invalidate(MarkBounds([mark[^1], p]));
+            mark.Add(p);
+        }
         SetHover(PillHit(p));
         Redecorate();
     }
@@ -127,14 +172,33 @@ internal sealed unsafe class OverlaySession : IDisposable
                 _extract = !_extract;
                 InvalidatePill();
             }
+            else if (button is PickerButton or MarkupButton)
+                ToggleTool(button == PickerButton);
             else if ((CaptureMode)button == CaptureMode.AllMonitors)
-                Finish(_frame.Cut(_frame.Screen.Bounds));
+                Finish(_frame.Cut(_frame.Screen.Bounds), _frame.Screen.Bounds);
             else
             {
+                _picker = _markup = false;
                 _mode = (CaptureMode)button;
                 InvalidatePill();
                 Redecorate();
             }
+            return;
+        }
+        if (_picker)
+        {
+            if (ColorAt(p) is { } color)
+            {
+                PickedColor = color;
+                Finish(null);
+            }
+            return;
+        }
+        if (_markup)
+        {
+            _mark = [p];
+            SetCapture(source.Handle);
+            Invalidate(MarkBounds([p]));
             return;
         }
         switch (_mode)
@@ -154,6 +218,20 @@ internal sealed unsafe class OverlaySession : IDisposable
     {
         _cursor = p;
         var bounds = _frame.Screen.Bounds;
+        if (_mark is { } mark)
+        {
+            _mark = null;
+            ReleaseCapture();
+            if (mark[^1] != p)
+            {
+                Invalidate(MarkBounds([mark[^1], p]));
+                mark.Add(p);
+            }
+            _marks.Add(mark);
+            return;
+        }
+        if (_picker || _markup)
+            return;
         switch (_mode)
         {
             case CaptureMode.Rectangle when _dragStart is { } start:
@@ -168,7 +246,7 @@ internal sealed unsafe class OverlaySession : IDisposable
                 _path = null;
                 ReleaseCapture();
                 if (FreeformMask.Create(path, bounds) is { } mask)
-                    Finish(_frame.Cut(mask));
+                    Finish(_frame.Cut(mask), mask.Bounds);
                 else
                     Redecorate();
                 break;
@@ -181,29 +259,56 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     internal void CancelDrag()
     {
-        if (_dragStart is null && _path is null)
+        if (_dragStart is null && _path is null && _mark is null)
             return;
+        if (_mark is { } mark)
+            Invalidate(MarkBounds(mark));
         _dragStart = null;
         _path = null;
+        _mark = null;
         ReleaseCapture();
         Redecorate();
     }
 
     internal void Cancel() => Finish(null);
 
-    /// <summary>Video: freeform, all monitors and the text extractor are photo-only.</summary>
+    /// <summary>Esc cancels; Ctrl+E toggles quick markup (photo only). False when the key is not used.</summary>
+    internal bool OnKey(int key, bool ctrl)
+    {
+        if (key == VK_ESCAPE)
+            Cancel();
+        else if (key == 'E' && ctrl && !_video)
+            ToggleTool(picker: false);
+        else
+            return false;
+        return true;
+    }
+
+    /// <summary>Turns the color picker or quick markup on, or off when it already is; the two exclude each other.</summary>
+    private void ToggleTool(bool picker)
+    {
+        CancelDrag();
+        bool on = !(picker ? _picker : _markup);
+        _picker = picker && on;
+        _markup = !picker && on;
+        InvalidatePill();
+        Redecorate();
+    }
+
+    /// <summary>Video: freeform, all monitors, the text extractor, color picker and quick markup are photo-only.</summary>
     private void SetVideo(bool video)
     {
         _video = video;
         if (video)
         {
-            _extract = false;
+            _extract = _picker = _markup = false;
             if (_mode is CaptureMode.Freeform or CaptureMode.AllMonitors)
                 _mode = CaptureMode.Rectangle;
         }
     }
 
-    private bool Enabled(int button) => !_video || button is not (ExtractButton or (int)CaptureMode.Freeform or (int)CaptureMode.AllMonitors);
+    private bool Enabled(int button) =>
+        !_video || button is not (ExtractButton or PickerButton or MarkupButton or (int)CaptureMode.Freeform or (int)CaptureMode.AllMonitors);
 
     private void Pick(PixelRect rect)
     {
@@ -213,13 +318,14 @@ internal sealed unsafe class OverlaySession : IDisposable
             Finish(null);
         }
         else
-            Finish(_frame.Cut(rect));
+            Finish(_frame.Cut(rect), rect);
     }
 
-    private void Finish(CapturedImage? result)
+    private void Finish(CapturedImage? result, PixelRect cut = default)
     {
         if (_done.Task.IsCompleted)
             return;
+        _cutOrigin = new PixelPoint(cut.X, cut.Y);
         Dispose();
         _done.SetResult(result);
     }
@@ -229,7 +335,7 @@ internal sealed unsafe class OverlaySession : IDisposable
     /// <summary>Area shown undimmed: drag rect, hovered window or hovered monitor.</summary>
     private PixelRect? Highlight()
     {
-        if (PillHit(_cursor) is not null)
+        if (PillHit(_cursor) is not null || _picker || _markup)
             return null;
         var bounds = _frame.Screen.Bounds;
         return _mode switch
@@ -258,6 +364,8 @@ internal sealed unsafe class OverlaySession : IDisposable
             var box = PixelRect.FromCorners(path.Min(q => q.X), path.Min(q => q.Y), path.Max(q => q.X) + 1, path.Max(q => q.Y) + 1);
             area = Union(area, Inflate(box, Dip(4)));
         }
+        if (_picker && !IsOverPill(_cursor))
+            area = Union(area, LoupeRect());
         return area;
     }
 
@@ -290,8 +398,8 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     private int Dip(double v) => (int)Math.Round(v * PillScale);
 
-    // Pill order: Photo, Video, a separator, the modes, a separator, Text extractor, Close.
-    private const int ButtonCount = 9, FirstMode = 2, AfterModes = FirstMode + 5;
+    // Pill order: Photo, Video, a separator, the modes, a separator, Text extractor, Color picker, Quick markup, Close.
+    private const int ButtonCount = 11, FirstMode = 2, AfterModes = FirstMode + 5;
 
     private static int IdAt(int index) => index switch
     {
@@ -299,6 +407,8 @@ internal sealed unsafe class OverlaySession : IDisposable
         1 => VideoButton,
         < AfterModes => (int)PillButtons[index - FirstMode].Mode,
         AfterModes => ExtractButton,
+        AfterModes + 1 => PickerButton,
+        AfterModes + 2 => MarkupButton,
         _ => CloseButton,
     };
 
@@ -307,7 +417,9 @@ internal sealed unsafe class OverlaySession : IDisposable
         PhotoButton => 0,
         VideoButton => 1,
         ExtractButton => AfterModes,
-        CloseButton => AfterModes + 1,
+        PickerButton => AfterModes + 1,
+        MarkupButton => AfterModes + 2,
+        CloseButton => AfterModes + 3,
         _ => FirstMode + Array.FindIndex(PillButtons, p => (int)p.Mode == id),
     };
 
@@ -315,6 +427,8 @@ internal sealed unsafe class OverlaySession : IDisposable
     {
         CloseButton => ('', Loc.Get("PillClose")),
         ExtractButton => ('', Loc.Get("PillTextExtractor")),
+        PickerButton => ('\uEF3C', Loc.Get("PillColorPicker")),
+        MarkupButton => ('\uEDFB', Loc.Get("PillQuickMarkup")),
         PhotoButton => ('\uE722', Loc.Get("PillPhoto")),
         VideoButton => ('\uE714', Loc.Get("PillVideo")),
         _ => (PillButtons[IndexOf(id) - FirstMode].Glyph, PillButtons[IndexOf(id) - FirstMode].Name),
@@ -385,6 +499,8 @@ internal sealed unsafe class OverlaySession : IDisposable
                 DrawLabel(w, dc, LabelRect(h), label);
         }
 
+        PaintMarks(dc, m);
+
         if (_path is { Count: > 1 } path)
         {
             var points = new POINT[path.Count];
@@ -398,8 +514,87 @@ internal sealed unsafe class OverlaySession : IDisposable
             DeleteObject(pen);
         }
 
+        if (_picker && !IsOverPill(_cursor))
+            PaintLoupe(dc, m);
+
         if (w == _pillHost)
             PaintPill(dc, m);
+    }
+
+    private static PixelRect MarkBounds(IEnumerable<PixelPoint> points) =>
+        Inflate(PixelRect.FromCorners(points.Min(q => q.X), points.Min(q => q.Y), points.Max(q => q.X) + 1, points.Max(q => q.Y) + 1), (int)QuickMarkup.PenWidth);
+
+    private void PaintMarks(nint dc, PixelRect m)
+    {
+        if (_marks.Count == 0 && _mark is null)
+            return;
+        var brush = new LOGBRUSH { Style = 0, Color = Rgb(QuickMarkup.Red.R, QuickMarkup.Red.G, QuickMarkup.Red.B) };
+        nint pen = ExtCreatePen(PS_GEOMETRIC, (uint)QuickMarkup.PenWidth, &brush, 0, null); // round caps and joins
+        nint old = SelectObject(dc, pen);
+        foreach (var line in _mark is null ? _marks : [.. _marks, _mark])
+        {
+            var points = new POINT[Math.Max(2, line.Count)]; // one point = a dot
+            for (int i = 0; i < points.Length; i++)
+                points[i] = new POINT { X = line[Math.Min(i, line.Count - 1)].X - m.X, Y = line[Math.Min(i, line.Count - 1)].Y - m.Y };
+            fixed (POINT* pts = points)
+                Polyline(dc, pts, points.Length);
+        }
+        SelectObject(dc, old);
+        DeleteObject(pen);
+    }
+
+    private Rgba? ColorAt(PixelPoint p)
+    {
+        var s = _frame.Screen.Bounds;
+        if (!s.Contains(p))
+            return null;
+        byte* px = _frame.Bits + (long)(p.Y - s.Y) * _frame.Stride + (p.X - s.X) * 4;
+        return new Rgba(px[2], px[1], px[0], 255);
+    }
+
+    /// <summary>Magnifier next to the cursor, kept inside the cursor's monitor.</summary>
+    private PixelRect LoupeRect()
+    {
+        int cell = Dip(11), pad = Dip(6), gap = Dip(20);
+        int w = LoupeCells * cell + 2 * pad, h = LoupeCells * cell + 2 * pad + Dip(28);
+        var m = ScreenPick.MonitorAt(_frame.Monitors, _cursor) ?? _frame.Monitors[0];
+        int x = _cursor.X + gap + w > m.Right ? _cursor.X - gap - w : _cursor.X + gap;
+        int y = _cursor.Y + gap + h > m.Bottom ? _cursor.Y - gap - h : _cursor.Y + gap;
+        return new PixelRect(x, y, w, h);
+    }
+
+    /// <summary>11 x 11 frozen pixels around the cursor with grid lines, the center pixel framed, and its value below.</summary>
+    private void PaintLoupe(nint dc, PixelRect m)
+    {
+        var r = LoupeRect();
+        int cell = Dip(11), pad = Dip(6), grid = LoupeCells * cell, half = LoupeCells / 2;
+        var local = new RECT { Left = r.X - m.X, Top = r.Y - m.Y, Right = r.Right - m.X, Bottom = r.Bottom - m.Y };
+        FillRounded(dc, local, LabelFill, PillBorder, Dip(6));
+        int gx = local.Left + pad, gy = local.Top + pad;
+        for (int j = 0; j < LoupeCells; j++)
+            for (int i = 0; i < LoupeCells; i++)
+            {
+                var c = ColorAt(new PixelPoint(_cursor.X + i - half, _cursor.Y + j - half));
+                nint brush = CreateSolidBrush(c is { } v ? Rgb(v.R, v.G, v.B) : LabelFill);
+                var cr = new RECT { Left = gx + i * cell, Top = gy + j * cell, Right = gx + (i + 1) * cell, Bottom = gy + (j + 1) * cell };
+                FillRect(dc, &cr, brush);
+                DeleteObject(brush);
+            }
+        nint line = CreateSolidBrush(PillBorder);
+        for (int k = 0; k <= LoupeCells; k++)
+        {
+            var v = new RECT { Left = gx + k * cell, Top = gy, Right = gx + k * cell + 1, Bottom = gy + grid };
+            var h = new RECT { Left = gx, Top = gy + k * cell, Right = gx + grid, Bottom = gy + k * cell + 1 };
+            FillRect(dc, &v, line);
+            FillRect(dc, &h, line);
+        }
+        DeleteObject(line);
+        int t = Math.Max(1, Dip(1)), l = gx + half * cell, tp = gy + half * cell;
+        DrawFrame(dc, l - 2 * t, tp - 2 * t, l + cell + 2 * t, tp + cell + 2 * t, Rgb(0, 0, 0), t);
+        DrawFrame(dc, l - t, tp - t, l + cell + t, tp + cell + t, White, t);
+        string text = ColorAt(_cursor) is { } center ? ColorSample.Format(center, AppSettings.Current.ColorFormat) : "";
+        var label = new RECT { Left = local.Left, Top = gy + grid + Dip(4), Right = local.Right, Bottom = local.Bottom - Dip(2) };
+        DrawCenteredText(dc, label, text, "Segoe UI", Dip(12), White);
     }
 
     private PixelRect LabelRect(PixelRect h)
@@ -435,6 +630,8 @@ internal sealed unsafe class OverlaySession : IDisposable
             bool selected = id switch
             {
                 ExtractButton => _extract,
+                PickerButton => _picker,
+                MarkupButton => _markup,
                 PhotoButton => !_video,
                 VideoButton => _video,
                 CloseButton => false,
@@ -522,6 +719,10 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     public void Dispose()
     {
+#if DEBUG
+        if (Active == this)
+            Active = null;
+#endif
         foreach (var w in _windows)
             w.Dispose();
         _windows.Clear();
@@ -539,7 +740,7 @@ internal sealed unsafe class OverlaySession : IDisposable
 /// <summary>Borderless topmost window covering one monitor; paints via a back buffer.</summary>
 internal sealed unsafe class OverlayWindow : Win32Window
 {
-    private const uint TestMove = 0x8001, TestDown = 0x8002, TestUp = 0x8003;
+    private const uint TestMove = 0x8001, TestDown = 0x8002, TestUp = 0x8003, TestKey = 0x8004, TestCancel = 0x8005;
     private readonly OverlaySession _session;
     private nint _backDc, _backBitmap, _backOld;
 
@@ -602,14 +803,20 @@ internal sealed unsafe class OverlayWindow : Win32Window
                 if (lParam != Handle)
                     _session.CancelDrag();
                 return 0;
-            case WM_KEYDOWN when wParam == VK_ESCAPE:
-                _session.Cancel();
+            case WM_KEYDOWN when _session.OnKey((int)wParam, GetKeyState(VK_CONTROL) < 0):
                 return 0;
             case WM_CLOSE:
                 _session.Cancel();
                 return 0;
 #if DEBUG
-            // Test scripts: WM_APP + 1 / 2 / 3 = move / left down / left up at the desktop point in lParam (x low, y high word).
+            // Test scripts: WM_APP + 1 / 2 / 3 = move / left down / left up at the desktop point in lParam (x low, y high word);
+            // WM_APP + 4 = key wParam, lParam bit 0 = Ctrl held; WM_APP + 5 = right click (cancels the drag).
+            case TestCancel:
+                _session.CancelDrag();
+                return 0;
+            case TestKey:
+                _session.OnKey((int)wParam, (lParam & 1) != 0);
+                return 0;
             case >= TestMove and <= TestUp:
                 var at = new PixelPoint((short)(lParam & 0xFFFF), (short)((lParam >> 16) & 0xFFFF));
                 if (msg == TestMove) _session.OnMouseMove(at);

@@ -606,6 +606,10 @@
     <value>Text copied to clipboard</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>Color copied: {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>Auto-save failed: {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>Text extractor</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>Color picker</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>Quick markup (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>Photo</value>
@@ -1114,7 +1126,7 @@
     <value>Shapes</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Eyedropper (I): copies the color as #RRGGBB</value>
+    <value>Eyedropper (I): copies the color as HEX / RGB / HSL</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Eyedropper</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Text extractor: remove line breaks</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>Color format</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Color format</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>Appearance</value>

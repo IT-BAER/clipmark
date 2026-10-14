@@ -40,6 +40,10 @@ namespace Clipmark.App;
 /// | assert answer TEXT (last answer contains) | assert answers N | ready (a capture is shown, up to 15 s)
 /// | deliver W,H #RRGGBB (runs the capture delivery on a W x H image of that color, with the saved settings; the PNG path goes to DIR\delivered.txt)
 /// | settheme system|light|dark | assert theme Light|Dark (window content ActualTheme)
+/// | overlay [video] [MODE] (starts the capture overlay with the saved settings, not awaited; the PNG path goes to DIR\delivered.txt, a failure to DIR\failed.txt)
+/// | omove X,Y | odown X,Y | oup X,Y (desktop px, posted to the overlay) | ocancel (right click) | okey ESC|LETTER [ctrl] | opill NAME (center of a pill button to DIR\pill.txt)
+/// | ocolor X,Y (frozen pixel as #RRGGBB to DIR\ocolor.txt) | oshot FILE (the pill monitor as it is painted) | owait (the overlay run finished, up to 20 s)
+/// | setting colorformat hex|rgb|hsl | clipboard|toast|autosave|border on|off | borderwidth N | savefolder PATH
 /// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
@@ -48,6 +52,7 @@ internal sealed class TestDriver
     private readonly string _dir;
     private readonly DispatcherQueueTimer _timer;
     private bool _busy;
+    private Task? _overlayRun;
 
     public TestDriver(MainPage page, string dir)
     {
@@ -430,6 +435,70 @@ internal sealed class TestDriver
                 controller.Captured += path => File.WriteAllText(Path.Combine(_dir, "delivered.txt"), path);
                 controller.Failed += message => throw new InvalidOperationException(message);
                 await controller.DeliverAsync(new Capture.CapturedImage(size[0], size[1], pixels, false), AppSettings.Current);
+                break;
+            case "overlay":
+                var overlayWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var overlayController = new Capture.CaptureController(Win32Interop.GetWindowFromWindowId(Root.ContentIslandEnvironment.AppWindowId));
+                overlayController.Captured += path => File.WriteAllText(Path.Combine(_dir, "delivered.txt"), path);
+                overlayController.Failed += message => File.WriteAllText(Path.Combine(_dir, "failed.txt"), message);
+                var overlayMode = overlayWords.Where(w => w != "video").Select(w => (Clipmark.Core.Settings.CaptureMode?)Enum.Parse<Clipmark.Core.Settings.CaptureMode>(w, true)).FirstOrDefault();
+                _overlayRun = overlayController.RunAsync(overlayMode, 0, overlayWords.Contains("video"));
+                for (int t = 0; Capture.OverlaySession.Active is null; t += 50)
+                {
+                    if (t > 5000)
+                        throw new InvalidOperationException("the overlay did not open");
+                    await Task.Delay(50);
+                }
+                await Task.Delay(600);
+                break;
+            case "omove" or "odown" or "oup":
+                var overlayAt = arg.Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                Interop.Native.PostMessage((Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay")).TestHandle,
+                    command switch { "omove" => 0x8001u, "odown" => 0x8002u, _ => 0x8003u }, 0, (nint)(((overlayAt[1] & 0xFFFF) << 16) | (overlayAt[0] & 0xFFFF)));
+                await Task.Delay(60);
+                break;
+            case "ocancel":
+                Interop.Native.PostMessage((Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay")).TestHandle, 0x8005, 0, 0);
+                await Task.Delay(100);
+                break;
+            case "okey":
+                var overlayKey = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                Interop.Native.PostMessage((Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay")).TestHandle, 0x8004,
+                    overlayKey[0] == "ESC" ? 0x1B : overlayKey[0][0], overlayKey.Contains("ctrl") ? 1 : 0);
+                await Task.Delay(200);
+                break;
+            case "opill":
+                var pill = (Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay")).TestButton(arg);
+                File.WriteAllText(Path.Combine(_dir, "pill.txt"), $"{pill.X},{pill.Y}");
+                break;
+            case "ocolor":
+                var colorAt = arg.Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                File.WriteAllText(Path.Combine(_dir, "ocolor.txt"), (Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay"))
+                    .TestColor(new Clipmark.Core.Capture.PixelPoint(colorAt[0], colorAt[1])) is { } sampled ? Clipmark.Core.Editor.ColorSample.Hex(sampled) : "outside");
+                break;
+            case "oshot":
+                var shownOverlay = Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay");
+                using (var desktop = Capture.ScreenCapture.CaptureDesktop())
+                    await File.WriteAllBytesAsync(arg, await CaptureOutput.EncodePngAsync(desktop.Cut(shownOverlay.TestMonitor)));
+                break;
+            case "owait":
+                if (_overlayRun is null || await Task.WhenAny(_overlayRun, Task.Delay(20000)) != _overlayRun)
+                    throw new InvalidOperationException("the overlay run did not finish");
+                break;
+            case "setting":
+                var settingWords = arg.Split(' ', 2);
+                bool on = settingWords[1] == "on";
+                AppSettings.Update(s => settingWords[0] switch
+                {
+                    "colorformat" => s with { ColorFormat = Enum.Parse<Clipmark.Core.Settings.ColorFormat>(settingWords[1], true) },
+                    "clipboard" => s with { CopyToClipboard = on },
+                    "toast" => s with { ShowToast = on },
+                    "autosave" => s with { AutoSave = on },
+                    "border" => s with { Border = on },
+                    "borderwidth" => s with { BorderWidth = int.Parse(settingWords[1], CultureInfo.InvariantCulture) },
+                    "savefolder" => s with { SaveFolder = settingWords[1] },
+                    _ => throw new FormatException("unknown setting"),
+                });
                 break;
             case "settheme":
                 AppSettings.Update(s => s with { Theme = arg });

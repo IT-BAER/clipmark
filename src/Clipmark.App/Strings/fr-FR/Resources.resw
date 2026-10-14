@@ -606,6 +606,10 @@
     <value>Texte copié dans le Presse-papiers</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>Couleur copiée : {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>Échec de l'enregistrement automatique : {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>Extracteur de texte</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>Sélecteur de couleur</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>Annotation rapide (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>Photo</value>
@@ -1114,7 +1126,7 @@
     <value>Formes</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pipette (I) : copie la couleur au format #RRGGBB</value>
+    <value>Pipette (I) : copie la couleur au format HEX / RGB / HSL</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Pipette</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Extracteur de texte : supprimer les sauts de ligne</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>Format de couleur</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Format de couleur</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>Apparence</value>

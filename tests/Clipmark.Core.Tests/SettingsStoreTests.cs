@@ -35,7 +35,7 @@ public class SettingsStoreTests
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
             AiModel = "claude-opus-5-5", AiConsent = true,
-            RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true,
+            RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
     }
@@ -47,6 +47,15 @@ public class SettingsStoreTests
         Assert.True(s.RedactEmail);
         Assert.True(s.RedactPhone);
         Assert.False(s.OcrRemoveLineBreaks);
+    }
+
+    [Fact]
+    public void Color_format_defaults_to_hex_and_an_unknown_value_falls_back()
+    {
+        Assert.Equal(ColorFormat.Hex, SettingsStore.Parse("""{ "autoSave": true }""").ColorFormat);
+        Assert.Equal(ColorFormat.Rgb, SettingsStore.Parse("""{ "colorFormat": "Rgb" }""").ColorFormat);
+        Assert.Equal(ColorFormat.Hex, SettingsStore.Parse("""{ "colorFormat": "cmyk" }""").ColorFormat);
+        Assert.Equal(ColorFormat.Hex, SettingsStore.Parse("""{ "colorFormat": "7" }""").ColorFormat);
     }
 
     [Fact]

@@ -47,6 +47,8 @@ public sealed partial class SettingsPage : Page
             AiEffortBox.Items.Add(MainPage.EffortText(effort));
         foreach (string theme in new[] { "ThemeSystem", "ThemeLight", "ThemeDark" })
             ThemeBox.Items.Add(Loc.Get(theme));
+        foreach (string format in new[] { "HEX", "RGB", "HSL" })
+            ColorFormatBox.Items.Add(format);
         LanguageBox.Items.Add(Loc.Get("LanguageWindowsDefault"));
         foreach (var language in UiLanguages.All)
             LanguageBox.Items.Add(language.NativeName);
@@ -63,6 +65,7 @@ public sealed partial class SettingsPage : Page
         ToastSwitch.IsOn = s.ShowToast;
         AutoSaveSwitch.IsOn = s.AutoSave;
         OcrLineBreaksSwitch.IsOn = s.OcrRemoveLineBreaks;
+        ColorFormatBox.SelectedIndex = (int)s.ColorFormat;
         CopyEditsSwitch.IsOn = s.CopyEdits;
         BorderSwitch.IsOn = s.Border;
         BorderOptions.Visibility = s.Border ? Visibility.Visible : Visibility.Collapsed;
@@ -404,6 +407,12 @@ public sealed partial class SettingsPage : Page
             sender.Value = AppSettings.Current.BorderWidth; // cleared box: back to the stored width
         else if (!_loading)
             AppSettings.Update(s => s with { BorderWidth = (int)sender.Value });
+    }
+
+    private void OnColorFormatChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loading && ColorFormatBox.SelectedIndex >= 0)
+            AppSettings.Update(s => s with { ColorFormat = (ColorFormat)ColorFormatBox.SelectedIndex });
     }
 
     private void OnThemeChanged(object sender, SelectionChangedEventArgs e)

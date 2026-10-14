@@ -606,6 +606,10 @@
     <value>Tekst naar klembord gekopieerd</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>Kleur gekopieerd: {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>Automatisch opslaan mislukt: {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>Tekstextractor</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>Kleurkiezer</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>Snel markeren (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>Foto</value>
@@ -1114,7 +1126,7 @@
     <value>Vormen</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pipet (I): kopieert de kleur als #RRGGBB</value>
+    <value>Pipet (I): kopieert de kleur als HEX / RGB / HSL</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Pipet</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Tekstextractie: regeleinden verwijderen</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>Kleurformaat</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kleurformaat</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>Weergave</value>

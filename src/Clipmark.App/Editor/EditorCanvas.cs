@@ -41,7 +41,7 @@ internal sealed class EditorCanvas
 
     private readonly string? _path;
     private readonly byte[]? _file; // set when opened from memory (history item) instead of a path
-    private readonly CanvasStrokeStyle _round = new()
+    private static readonly CanvasStrokeStyle _round = new()
     {
         StartCap = CanvasCapStyle.Round, EndCap = CanvasCapStyle.Round, LineJoin = CanvasLineJoin.Round,
     };
@@ -778,6 +778,12 @@ internal sealed class EditorCanvas
                 foreach (var o in Document!.Objects)
                     DrawObject(ds, o);
         }
+        return Straight(target);
+    }
+
+    /// <summary>The target's pixels as BGRA with straight alpha (Win2D pixels are premultiplied); true when any pixel is not opaque.</summary>
+    internal static (byte[] Bgra, bool Transparent) Straight(CanvasRenderTarget target)
+    {
         var bgra = target.GetPixelBytes();
         bool transparent = false;
         for (int i = 0; i < bgra.Length; i += 4)
@@ -787,7 +793,7 @@ internal sealed class EditorCanvas
                 continue;
             transparent = true;
             for (int c = 0; a > 0 && c < 3; c++)
-                bgra[i + c] = (byte)Math.Min(255, (bgra[i + c] * 255 + a / 2) / a); // Win2D pixels are premultiplied
+                bgra[i + c] = (byte)Math.Min(255, (bgra[i + c] * 255 + a / 2) / a);
         }
         return (bgra, transparent);
     }
@@ -1058,21 +1064,9 @@ internal sealed class EditorCanvas
         var color = ToColor(o.Color);
         switch (o)
         {
-            case Stroke { Points.Length: 1 } s:
-                ds.FillCircle(s.Points[0], s.Width / 2, color);
-                break;
             case Stroke s:
-            {
-                // One geometry per stroke: a translucent stroke does not darken where it crosses itself.
-                using var builder = new CanvasPathBuilder(ds);
-                builder.BeginFigure(s.Points[0]);
-                for (int i = 1; i < s.Points.Length; i++)
-                    builder.AddLine(s.Points[i]);
-                builder.EndFigure(CanvasFigureLoop.Open);
-                using var geometry = CanvasGeometry.CreatePath(builder);
-                ds.DrawGeometry(geometry, color, s.Width, _round);
+                DrawStroke(ds, s);
                 break;
-            }
             case Shape { Kind: ShapeKind.Rectangle } s:
             {
                 var min = Vector2.Min(s.Start, s.End);
@@ -1108,6 +1102,24 @@ internal sealed class EditorCanvas
                 break;
             }
         }
+    }
+
+    internal static void DrawStroke(CanvasDrawingSession ds, Stroke s)
+    {
+        var color = ToColor(s.Color);
+        if (s.Points.Length == 1)
+        {
+            ds.FillCircle(s.Points[0], s.Width / 2, color);
+            return;
+        }
+        // One geometry per stroke: a translucent stroke does not darken where it crosses itself.
+        using var builder = new CanvasPathBuilder(ds);
+        builder.BeginFigure(s.Points[0]);
+        for (int i = 1; i < s.Points.Length; i++)
+            builder.AddLine(s.Points[i]);
+        builder.EndFigure(CanvasFigureLoop.Open);
+        using var geometry = CanvasGeometry.CreatePath(builder);
+        ds.DrawGeometry(geometry, color, s.Width, _round);
     }
 
     /// <summary>Releases the Win2D resources and returns the device's image memory to the system; the control must not be reused.</summary>

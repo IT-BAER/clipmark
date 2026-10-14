@@ -606,6 +606,10 @@
     <value>Texto copiado para a Área de Transferência</value>
     <comment>Notification title</comment>
   </data>
+  <data name="ToastColorCopied" xml:space="preserve">
+    <value>Cor copiada: {0}</value>
+    <comment>Notification title; {0} is the copied color</comment>
+  </data>
   <data name="AutoSaveFailed" xml:space="preserve">
     <value>Falha no salvamento automático: {0}</value>
     <comment>{0} = system error message</comment>
@@ -621,6 +625,14 @@
   <data name="PillTextExtractor" xml:space="preserve">
     <value>Extrator de texto</value>
     <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillColorPicker" xml:space="preserve">
+    <value>Seletor de cores</value>
+    <comment>Capture toolbar tooltip</comment>
+  </data>
+  <data name="PillQuickMarkup" xml:space="preserve">
+    <value>Marcação rápida (Ctrl+E)</value>
+    <comment>Capture toolbar tooltip with the shortcut</comment>
   </data>
   <data name="PillPhoto" xml:space="preserve">
     <value>Foto</value>
@@ -1114,7 +1126,7 @@
     <value>Formas</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Conta-gotas (I): copia a cor como #RRGGBB</value>
+    <value>Conta-gotas (I): copia a cor como HEX / RGB / HSL</value>
   </data>
   <data name="EyedropperButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Conta-gotas</value>
@@ -1386,6 +1398,12 @@
   </data>
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Extrator de texto: remover quebras de linha</value>
+  </data>
+  <data name="SettingsColorFormat.Header" xml:space="preserve">
+    <value>Formato de cor</value>
+  </data>
+  <data name="SettingsColorFormat.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Formato de cor</value>
   </data>
   <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
     <value>Aparência</value>
