@@ -22,6 +22,20 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Text actions: select part of the recognized text by dragging across it (by character, across lines) or by
   double-clicking a word, and copy it with Ctrl+C, the right-click menu or Copy selection; Ctrl+A selects all text.
   A drag that starts on recognized text selects it whatever tool is active; elsewhere the tool works as before.
+- Snipping Tool features (all free):
+  - Capture overlay: Color picker with a loupe that copies HEX, RGB or HSL (Settings > Color format, also used by the
+    eyedropper); Quick markup (Ctrl+E) draws a red pen on the frozen screen, and the strokes stay editable in the
+    editor.
+  - Editor: More menu with zoom (100%, in, out, fit; Ctrl+0, Ctrl+plus, Ctrl+minus), Ruler, Print, Edit in Paint and
+    Open screenshots folder; Erase all mark-ups; Opacity slider (10-100 %) for pen, shapes, text and fill. The ruler
+    turns with the mouse wheel in 15 degree steps, and pen and highlighter strokes that start at its edge run along it.
+  - Text actions: Quick redact can skip email addresses or phone numbers and has Remove all redactions; QR codes with
+    a phone number or email address offer Call or Send email; the text extractor can remove line breaks.
+  - Recording: Pause / Resume on the record bar (the video has no gap), and the microphone or system audio can be
+    muted while recording without changing the setting.
+  - Settings: border on each capture (color, width), app theme (Windows default, Light, Dark), copy every edit to
+    the clipboard, Open folder buttons for screenshots and recordings.
+  - Opens .jfif, .jpe, .dib and .ico files.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
 - 16 interface languages: English, German, French, Italian, Spanish, Portuguese (Brazil), Japanese, Korean, Chinese
   (Simplified and Traditional), Dutch, Polish, Russian, Swedish, Turkish and Ukrainian. Clipmark follows the Windows

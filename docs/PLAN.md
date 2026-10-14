@@ -291,11 +291,18 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
   from the `resources.pri` string table only (recording needs a real drag).
 - [ ] M12.2 Copy as table (Text actions); not in Clipmark (no match in src, 13 October 2026).
 - [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
-- [ ] M12.4 Remaining gaps from M12.1. Owner, 14 October 2026: only gaps Snipping Tool shows, no full photo /
+- [x] M12.4 Remaining gaps from M12.1. Owner, 14 October 2026: only gaps Snipping Tool shows, no full photo /
   video editor; keep it simple. Build G1-G5, G7, G8, G11-G15, G17, G20-G24 (G21 without camera RAW; G12, G23, G24 are
   strings-only, kept by the owner). Out: G16 keyboard snipping, G25 trim, G26 GIF, G28 blur, G29 text formatting,
   G30 scrolling screenshot, G31 draw and hold (strings only); G9 Bing, G27 Clipchamp, G32 Copilot (Microsoft services).
   Deferred: G18 HDR (no HDR test monitor checked), G19 multiple windows.
+  Done 14 October 2026, all free (eyedropper and fill stay Premium), 8 commits 29ad64a..89d06ab; Core 642/642.
+  TestDriver en-US + de-DE per batch: A pass, B 86/86, C 99/99, D 87/87, E 184/184, G 90/90; clipcheck none.
+  Recording (ffprobe): 6 s with a 2 s pause -> 4.033 s, 121 frames, pts strictly increasing, audio 4.011 s, no
+  audio gap; 3 pauses + stop while paused -> 3.033 s, no decode errors; system audio muted 2-4 s -> -90 dB peak from
+  2.1 to 3.8 s, -5 dB around it (1 kHz tone). Not verified (no real input): Print, Call / Send email / Open link,
+  toast texts, real overlay keys and drags, ruler drag / wheel, border on real overlay captures, caption-button theme,
+  opacity slider drag, record bar clicks and tooltip, mic mute contrast (silent mic), lost-device mute path.
 - [x] M12.5 Select and copy part of the recognized text (owner request 13 October 2026). Decisions (owner): a drag that
   starts on text selects, elsewhere the tool acts; character carets estimated by splitting word boxes evenly per text
   element (OCR gives word boxes only); Ctrl+C, right-click "Copy text", "Copy selection" button, Ctrl+A selects all; double-click selects a word

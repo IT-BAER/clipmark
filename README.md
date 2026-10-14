@@ -20,16 +20,24 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - Rectangle, window, full screen (the monitor you click), all monitors and freeform, on every monitor, including
   monitors left of or above the primary one
 - Delay of 3, 5 or 10 seconds; global hotkey (Ctrl+Print Screen by default, or Print Screen itself)
-- Optional copy to clipboard, automatic save and notification after each capture
-- Text extractor: pick a region and its text goes straight to the clipboard
+- Optional copy to clipboard, automatic save, notification and a border (color, width) on each capture
+- Color picker in the capture overlay: a loupe shows the pixels, a click copies the color as HEX, RGB or HSL
+- Quick markup (Ctrl+E): draw with a red pen on the frozen screen before you pick the region; the strokes stay
+  editable in the editor
+- Text extractor: pick a region and its text goes straight to the clipboard, optionally without line breaks
 
 **Editor**
-- Pen, highlighter, object eraser, rectangle, oval, line and arrow (Shift snaps to 45 degrees)
+- Pen, highlighter, object eraser with Erase all mark-ups, rectangle, oval, line and arrow (Shift snaps to 45 degrees)
+- Ruler: drag it, turn it with the mouse wheel in 15 degree steps; pen and highlighter strokes that start at its
+  edge run straight along it
 - Select, move, resize and rotate any object at any time; arrows attach to shapes and follow them **(Premium)**
-- Text labels, eyedropper (copies `#RRGGBB`), fill for shapes and the background **(Premium)**
+- Text labels, eyedropper (copies HEX, RGB or HSL), fill for shapes and the background **(Premium)**
 - Crop with handles or exact X / Y / W / H fields that accept arithmetic (`800+20`)
-- Color ring, width presets, mouse wheel sets width or text size; undo / redo
-- Save as PNG or JPEG, copy, share
+- Color ring, opacity 10-100 %, width presets, mouse wheel sets width or text size; undo / redo
+- Zoom 100%, in, out or fit to window (Ctrl+0, Ctrl+plus, Ctrl+minus)
+- Save as PNG or JPEG, copy (optionally every edit goes to the clipboard at once), share, print, Edit in Paint, open
+  the screenshots folder
+- Opens PNG, JPEG, JFIF, BMP, DIB, GIF, TIFF and ICO files
 - "Save as editable PNG" keeps every object editable when you reopen the file **(Premium)**. Any copy of Clipmark opens
   editable PNGs.
 
@@ -44,7 +52,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - OCR copy: drag across the recognized text or double-click a word to copy part of it (Ctrl+C, right-click or
   Copy selection), or copy all of it. The built-in offline OCR engine reads Latin-script languages; other languages
   use Windows text recognition
-- Quick redact of email addresses and phone numbers, QR code decoding
+- Quick redact of email addresses and / or phone numbers; Remove all redactions
+- QR code decoding: Copy and Open link; Call and Send email for phone numbers and email addresses
 
 **Send to AI (Premium)**
 - Pastes the capture into a running Claude Code or Codex CLI session, the Claude or ChatGPT desktop app, or the Claude
@@ -62,14 +71,15 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 
 **Screen recording**
 - Record a region, a window area or a full screen to MP4 (H.264 + AAC, 30 fps)
-- System audio and microphone, mixed into one track
-- Record bar with a 3 second countdown, kept out of the video
+- System audio and microphone, mixed into one track; mute either one while recording
+- Record bar with a 3 second countdown and Pause / Resume, kept out of the video
 
 ![Record bar](docs/images/record-bar.png)
 
 **System**
 - Lives in the tray (shown on the taskbar the first time it runs), single instance, starts with Windows on request
 - Toast notifications with banners; clicking one opens the capture while Clipmark runs
+- App theme: Windows default, Light or Dark
 - 16 interface languages, see [Languages](#languages)
 
 ## Clipmark vs Snipping Tool
@@ -88,13 +98,18 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | Move, resize, rotate shapes | Any object, any time (Premium) | Only the shape you just drew |
 | Arrows that attach to shapes and follow them | Yes (Premium) | No |
 | Text labels | Yes, editable later (Premium) | No text tool (Edit in Paint) |
-| Color picker | Eyedropper in the editor (Premium) | In the capture toolbar |
+| Opacity | 10-100 % | 1-100 % |
+| Ruler | Yes | Yes |
+| Color picker | In the capture overlay with a loupe, HEX / RGB / HSL; eyedropper in the editor (Premium) | In the capture overlay with a loupe, HEX / RGB / HSL |
+| Quick markup before the capture (Ctrl+E) | Yes | Yes |
+| Zoom, print, Edit in Paint | Yes | Yes |
+| Border on each capture | Yes | Yes |
 | Reopen a capture with editable objects | Yes, editable PNG (Premium to save) | No |
 | OCR copy and quick redact | Yes | Yes |
 | OCR character errors on 60 rendered web pages (our benchmark) | 0.89% | 1.07% |
 | Copy recognized text as a table | No | Yes |
-| QR code decoding (links and plain text) | Yes, with Copy and Open link | Yes, as a chip on the code |
-| Screen recording | Region, window area or full screen; MP4 with system audio and microphone | Rectangle or window; MP4 with system audio and microphone, edit in Clipchamp |
+| QR code decoding (links, phone numbers, email addresses, plain text) | Yes, with Copy, Open link, Call and Send email | Yes, as a chip on the code |
+| Screen recording | Region, window area or full screen; MP4 with system audio and microphone; pause, mute while recording | Rectangle or window; MP4 with system audio and microphone; pause, mute while recording; edit in Clipchamp |
 | Send the capture to an AI agent | Yes (Premium) | No |
 | Perfect screenshot (automatic fit to content) | No | Copilot+ PCs only |
 
