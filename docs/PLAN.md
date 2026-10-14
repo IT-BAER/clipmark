@@ -284,6 +284,15 @@ Goal (owner): own OCR at least as good as Snipping Tool's One OCR, without Micro
   license key check, no hosted service). Chosen over PolyForm Shield 1.0.0 (does not cover patching for own use) and
   FSL-1.1-MIT (turns MIT after 2 years). Published commits up to 31d560a and release 1.0.0 stay MIT.
 
+## Premium audit (14 October 2026)
+- Holds: ECDSA P-256 key check with a fixed public key, no fallback; all 9 Premium features gated where the action
+  runs (shortcuts, menus, save prompt, history); settings.json alone unlocks nothing; no licensing private key in git
+  history; every CLIPMARK_TEST_* hook is DEBUG-only (absent from the AOT exe).
+- Fixed: a trial start later than the clock counts as expired (an edited future start gave 30 days forever); the
+  entitlement is re-checked hourly, so an expiry locks Premium in a running editor (5 s scratch build: Fill -> Pen).
+- Accepted (owner): trial and offline keys stay honest-user gates. Deleting all three trial copies resets the trial;
+  a key works on any PC and cannot be revoked. Revisit with a server (releash relay).
+
 ## M12 Snipping Tool feature parity (planned 13 October 2026, owner)
 Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on steroids" (README tagline) is true.
 - [x] M12.1 Full audit of Snipping Tool 11.2608.41.0 features against Clipmark (UIA walk of every menu, toolbar and setting).

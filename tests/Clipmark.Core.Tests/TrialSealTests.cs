@@ -14,6 +14,16 @@ public class TrialSealTests
         new(null, state, TrialSeal.Sign(state, device ?? Device));
 
     [Fact]
+    public void Future_start_written_into_every_copy_is_expired()
+    {
+        var edited = new TrialState(new DateTime(2099, 1, 1, 0, 0, 0, DateTimeKind.Utc), Start.AddDays(5));
+
+        var (daysLeft, _) = TrialSeal.Check([Sealed(edited), Sealed(edited), Missing], Start.AddDays(6));
+
+        Assert.Equal(0, daysLeft);
+    }
+
+    [Fact]
     public void Signed_state_verifies()
     {
         var state = new TrialState(Start, Start.AddDays(2));

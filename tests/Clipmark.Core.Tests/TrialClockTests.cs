@@ -42,20 +42,32 @@ public class TrialClockTests
     }
 
     [Fact]
-    public void Edited_far_future_start_does_not_crash()
+    public void Edited_far_future_start_is_expired_and_does_not_crash()
     {
         var farFuture = new DateTime(9999, 12, 31, 0, 0, 0, DateTimeKind.Utc);
 
         var (daysLeft, _) = TrialClock.Check(new TrialState(farFuture, farFuture), Start);
 
-        Assert.Equal(30, daysLeft);
+        Assert.Equal(0, daysLeft);
     }
 
     [Fact]
-    public void Clock_before_the_trial_start_gives_no_extra_days()
+    public void Edited_future_start_with_a_real_last_seen_is_expired()
     {
-        var (daysLeft, _) = TrialClock.Check(new TrialState(Start, Start), Start.AddDays(-100));
+        var (daysLeft, _) = TrialClock.Check(new TrialState(new DateTime(2099, 1, 1, 0, 0, 0, DateTimeKind.Utc), Start), Start);
 
-        Assert.Equal(30, daysLeft);
+        Assert.Equal(0, daysLeft);
+    }
+
+    [Fact]
+    public void Clock_before_the_trial_start_locks_until_the_clock_is_right_again()
+    {
+        var stored = new TrialState(Start, Start.AddDays(3));
+
+        var (behind, next) = TrialClock.Check(stored, Start.AddDays(-100));
+        var (corrected, _) = TrialClock.Check(next, Start.AddDays(4));
+
+        Assert.Equal(0, behind);
+        Assert.Equal(26, corrected);
     }
 }

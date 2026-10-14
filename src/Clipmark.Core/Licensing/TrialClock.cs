@@ -17,7 +17,8 @@ public static class TrialClock
         var state = stored ?? new TrialState(nowUtc, nowUtc);
         var seen = nowUtc > state.LastSeenUtc ? nowUtc : state.LastSeenUtc;
         var left = TimeSpan.FromDays(TrialDays) - (seen - state.StartedUtc); // no AddDays: overflows near DateTime.MaxValue
-        int daysLeft = left <= TimeSpan.Zero ? 0 : Math.Min(TrialDays, (int)Math.Ceiling(left.TotalDays));
+        // A start after the current clock is an edited date (or a clock behind the start): no trial until it is past.
+        int daysLeft = left <= TimeSpan.Zero || state.StartedUtc > nowUtc ? 0 : Math.Min(TrialDays, (int)Math.Ceiling(left.TotalDays));
         return (daysLeft, state with { LastSeenUtc = seen });
     }
 

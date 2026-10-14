@@ -39,6 +39,9 @@ public partial class App : Application
     private CaptureController? _controller;
     private DispatcherQueue? _dispatcher;
 
+    /// <summary>Counts the trial on while the app stays open, so an expiry locks Premium without a new capture.</summary>
+    private DispatcherQueueTimer? _licenseTimer;
+
     internal bool HotkeyRegistered { get; private set; }
 
     /// <summary>Product version (Directory.Build.props), e.g. "1.0.0".</summary>
@@ -114,6 +117,10 @@ public partial class App : Application
         CaptureOutput.CleanTempFolder();
 
         AppLicense.Refresh();
+        _licenseTimer = _dispatcher.CreateTimer();
+        _licenseTimer.Interval = TimeSpan.FromHours(1);
+        _licenseTimer.Tick += (_, _) => AppLicense.Refresh();
+        _licenseTimer.Start();
         _window = new MainWindow();
         _tray = new TrayHost { Settings = () => AppSettings.Current };
         if (TestDir is null && marker is null)
