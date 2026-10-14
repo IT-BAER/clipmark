@@ -321,8 +321,9 @@ public sealed partial class MainPage : Page
         }
         _editor = editor;
         _historyId = historyId;
-        _historyRevision = null;
-        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); ScheduleHistoryWrite(); };
+        _historyRevision = _copyRevision = null;
+        _copyTimer?.Stop();
+        _editor.Changed += () => { UpdateHistory(); ApplyTool(); Relayout(); SyncTextActions(); ScheduleHistoryWrite(); ScheduleEditCopy(); };
         _editor.Problem += ShowError;
         _editor.TextSelectionChanged += OnTextSelectionChanged;
         _editor.TextMenuRequested += ShowTextMenu;
@@ -387,6 +388,7 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
                 Title = Loc.Get("SaveChangesTitle"),
                 PrimaryButtonText = Loc.Get("SaveChangesSave"),
                 SecondaryButtonText = Loc.Get("SaveChangesDontSave"),
@@ -601,6 +603,7 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
                 Title = Loc.Get("PremiumTitle"),
                 Content = Loc.Format("PremiumBody", FeatureName(feature), TrialClock.TrialDays),
                 PrimaryButtonText = Loc.Get("PremiumBuy"),
@@ -933,6 +936,37 @@ public sealed partial class MainPage : Page
         _historyTimer.Start();
     }
 
+    private object? _copyRevision;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _copyTimer;
+
+    /// <summary>Copies edits to the clipboard about a second after the last change (setting CopyEdits); the document stays unsaved.</summary>
+    private void ScheduleEditCopy()
+    {
+        if (!AppSettings.Current.CopyEdits || _video is not null || _editor?.Document is not { } doc)
+            return;
+        _copyRevision ??= doc.Revision; // the state as loaded counts as copied
+        if (ReferenceEquals(doc.Revision, _copyRevision))
+            return;
+        if (_copyTimer is null)
+        {
+            _copyTimer = DispatcherQueue.CreateTimer();
+            _copyTimer.Interval = TimeSpan.FromSeconds(1);
+            _copyTimer.IsRepeating = false;
+            _copyTimer.Tick += (_, _) =>
+            {
+                if (_editor is { IsEditingText: true } or { IsCropping: true })
+                    _copyTimer.Start(); // Export would commit the text box or show the crop mid-edit
+                else if (_editor?.Document is { } current && AppSettings.Current.CopyEdits && !ReferenceEquals(current.Revision, _copyRevision))
+                {
+                    _copyRevision = current.Revision;
+                    _ = CopyAsync(background: true);
+                }
+            };
+        }
+        _copyTimer.Stop();
+        _copyTimer.Start();
+    }
+
     /// <summary>Stores the current document as an editable PNG in its history item. Reads the editor before the first await.</summary>
     private async Task WriteHistoryAsync()
     {
@@ -1019,8 +1053,8 @@ public sealed partial class MainPage : Page
 
     private void OnCopy(object sender, RoutedEventArgs e) => _ = CopyAsync();
 
-    /// <summary>Copies the capture (or the recording file); false when nothing was copied.</summary>
-    private async Task<bool> CopyAsync()
+    /// <summary>Copies the capture (or the recording file); false when nothing was copied. Background: no error bar, the document stays unsaved.</summary>
+    private async Task<bool> CopyAsync(bool background = false)
     {
         if (_video is { } video)
         {
@@ -1036,10 +1070,12 @@ public sealed partial class MainPage : Page
         var owner = Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId);
         if (CaptureOutput.CopyToClipboard(owner, image, png))
         {
-            editor.Document?.MarkClean();
+            if (!background)
+                editor.Document?.MarkClean();
             return true;
         }
-        ShowError(Loc.Get("ClipboardBusyCapture"));
+        if (!background)
+            ShowError(Loc.Get("ClipboardBusyCapture"));
         return false;
     }
 
@@ -1372,6 +1408,7 @@ public sealed partial class MainPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
                 Title = Loc.Get("HistoryClearTitle"),
                 PrimaryButtonText = Loc.Get("HistoryDelete"),
                 CloseButtonText = Loc.Get("Cancel"),

@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Tekstextractie: regeleinden verwijderen</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Weergave</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>App-thema</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>App-thema</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Windows-instelling gebruiken</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Licht</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Donker</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Een rand toevoegen aan elk knipsel</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Randkleur</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Randdikte (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Randdikte (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Bewerkingen automatisch naar het klembord kopiëren</value>
+  </data>
 </root>

@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Textextraktion: Zeilenumbrüche entfernen</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Darstellung</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>App-Design</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>App-Design</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Windows-Einstellung verwenden</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Hell</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dunkel</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Jeder Aufnahme einen Rahmen hinzufügen</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rahmenfarbe</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Rahmenbreite (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rahmenbreite (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Bearbeitungen automatisch in die Zwischenablage kopieren</value>
+  </data>
 </root>

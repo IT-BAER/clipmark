@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Wyodrębnianie tekstu: usuń podziały wierszy</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Wygląd</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>Motyw aplikacji</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Motyw aplikacji</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Użyj ustawienia systemu Windows</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Jasny</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Ciemny</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Dodaj obramowanie do każdego zrzutu</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kolor obramowania</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Grubość obramowania (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Grubość obramowania (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Automatycznie kopiuj zmiany do schowka</value>
+  </data>
 </root>

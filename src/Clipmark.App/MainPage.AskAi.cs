@@ -224,6 +224,7 @@ public sealed partial class MainPage
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
                 Title = Loc.Get("AiConsentTitle"),
                 Content = new TextBlock
                 {

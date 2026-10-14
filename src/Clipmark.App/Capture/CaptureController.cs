@@ -1,5 +1,6 @@
 using Clipmark.App.Editor;
 using Clipmark.App.Output;
+using Clipmark.Core.Capture;
 using Clipmark.Core.Recording;
 using Clipmark.Core.Settings;
 using Clipmark.Core.TextActions;
@@ -98,8 +99,13 @@ internal sealed class CaptureController(nint clipboardOwner)
             Failed?.Invoke(Loc.Get("ClipboardBusyText"));
     }
 
-    private async Task DeliverAsync(CapturedImage image, ClipmarkSettings settings)
+    internal async Task DeliverAsync(CapturedImage image, ClipmarkSettings settings)
     {
+        if (settings.Border)
+        {
+            var (bgra, width, height) = Pixels.AddBorder(image.Bgra, image.Width, image.Height, settings.BorderWidth, settings.BorderColor);
+            image = image with { Bgra = bgra, Width = width, Height = height };
+        }
         var png = await CaptureOutput.EncodePngAsync(image);
         bool copied = settings.CopyToClipboard && CaptureOutput.CopyToClipboard(clipboardOwner, image, png);
         if (settings.CopyToClipboard && !copied)

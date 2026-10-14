@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Text extractor: remove line breaks</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>App theme</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Use Windows setting</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Add a border to each capture</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Border color</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Border width (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Border width (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Copy edits to the clipboard automatically</value>
+  </data>
 </root>

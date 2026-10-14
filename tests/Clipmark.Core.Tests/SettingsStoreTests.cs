@@ -1,3 +1,4 @@
+using Clipmark.Core.Editor;
 using Clipmark.Core.Ai;
 using Clipmark.Core.Settings;
 
@@ -167,4 +168,58 @@ public class SettingsStoreTests
         Assert.All(UiLanguages.All, l => Assert.True(UiLanguages.IsValid(l.Tag)));
         Assert.False(UiLanguages.IsValid(null));
     }
+
+    [Fact]
+    public void Border_theme_and_copy_edits_default_and_round_trip()
+    {
+        var d = new ClipmarkSettings();
+        Assert.False(d.Border);
+        Assert.Equal(new Rgba(0, 0, 0, 255), d.BorderColor);
+        Assert.Equal(2, d.BorderWidth);
+        Assert.Equal("system", d.Theme);
+        Assert.True(d.CopyEdits);
+        var back = SettingsStore.Parse(SettingsStore.Serialize(new ClipmarkSettings
+            { Border = true, BorderColor = new Rgba(255, 128, 0, 255), BorderWidth = 7, Theme = "dark", CopyEdits = false }));
+        Assert.True(back.Border);
+        Assert.Equal(new Rgba(255, 128, 0, 255), back.BorderColor);
+        Assert.Equal(7, back.BorderWidth);
+        Assert.Equal("dark", back.Theme);
+        Assert.False(back.CopyEdits);
+        Assert.Equal("light", SettingsStore.Parse("""{ "theme": "light" }""").Theme);
+    }
+
+    [Theory]
+    [InlineData("""{ "borderWidth": 0 }""", 1)]
+    [InlineData("""{ "borderWidth": -4 }""", 1)]
+    [InlineData("""{ "borderWidth": 99 }""", 20)]
+    [InlineData("""{ "borderWidth": 20 }""", 20)]
+    [InlineData("""{ "borderWidth": "x" }""", 2)]
+    [InlineData("""{ "borderWidth": 2.5 }""", 2)]
+    [InlineData("{}", 2)]
+    public void Border_width_clamps_to_1_to_20_and_invalid_reads_as_2(string json, int expected) =>
+        Assert.Equal(expected, SettingsStore.Parse(json).BorderWidth);
+
+    [Theory]
+    [InlineData("""{ "borderColor": "#GG0000" }""")]
+    [InlineData("""{ "borderColor": "red" }""")]
+    [InlineData("""{ "borderColor": "#12345" }""")]
+    [InlineData("""{ "borderColor": 5 }""")]
+    [InlineData("{}")]
+    public void Invalid_border_color_reads_as_black(string json) =>
+        Assert.Equal(new Rgba(0, 0, 0, 255), SettingsStore.Parse(json).BorderColor);
+
+    [Fact]
+    public void Border_color_reads_hex_in_either_case() =>
+        Assert.Equal(new Rgba(0xAB, 0xCD, 0xEF, 255), SettingsStore.Parse("""{ "borderColor": "#abcdef" }""").BorderColor);
+
+    [Theory]
+    [InlineData("""{ "theme": "Dark" }""")]
+    [InlineData("""{ "theme": "blue" }""")]
+    [InlineData("""{ "theme": 1 }""")]
+    [InlineData("{}")]
+    public void Unknown_or_missing_theme_reads_as_system(string json) =>
+        Assert.Equal("system", SettingsStore.Parse(json).Theme);
+
+    [Fact]
+    public void Missing_copy_edits_reads_as_on() => Assert.True(SettingsStore.Parse("""{ "autoSave": true }""").CopyEdits);
 }

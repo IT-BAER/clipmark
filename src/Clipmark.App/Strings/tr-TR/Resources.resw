@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Metin çıkarıcı: satır sonlarını kaldır</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>Uygulama teması</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Uygulama teması</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Windows ayarını kullan</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Açık</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Koyu</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Her alıntıya bir kenarlık ekle</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kenarlık rengi</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Kenarlık kalınlığı (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Kenarlık kalınlığı (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Düzenlemeleri otomatik olarak panoya kopyala</value>
+  </data>
 </root>

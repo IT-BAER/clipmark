@@ -84,6 +84,22 @@
                         <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
                     </Grid>
                     <ToggleSwitch x:Name="OcrLineBreaksSwitch" x:Uid="SettingsOcrRemoveLineBreaks" Toggled="OnTogglesChanged" />
+                    <ToggleSwitch x:Name="CopyEditsSwitch" x:Uid="SettingsCopyEdits" Toggled="OnTogglesChanged" />
+                    <ToggleSwitch x:Name="BorderSwitch" x:Uid="SettingsBorder" Toggled="OnTogglesChanged" />
+                    <StackPanel x:Name="BorderOptions" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+                        <DropDownButton x:Name="BorderColorButton" x:Uid="SettingsBorderColor" VerticalAlignment="Bottom">
+                            <Border x:Name="BorderSwatch" Width="40" Height="16" CornerRadius="2" BorderThickness="1"
+                                    BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}" />
+                            <DropDownButton.Flyout>
+                                <Flyout>
+                                    <ColorPicker x:Name="BorderPicker" ColorSpectrumShape="Ring" IsAlphaEnabled="False" IsMoreButtonVisible="False"
+                                                 IsColorChannelTextInputVisible="False" IsHexInputVisible="True" ColorChanged="OnBorderColorChanged" />
+                                </Flyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
+                        <NumberBox x:Name="BorderWidthBox" x:Uid="SettingsBorderWidth" Minimum="1" Maximum="20" Width="140"
+                                   SpinButtonPlacementMode="Inline" SmallChange="1" ValueChanged="OnBorderWidthChanged" />
+                    </StackPanel>
                     <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
                     <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 </StackPanel>
@@ -132,6 +148,11 @@
                     <ComboBox x:Name="LanguageBox" x:Uid="SettingsLanguage" MinWidth="220" SelectionChanged="OnLanguageChanged" />
                     <TextBlock x:Name="LanguageNote" x:Uid="SettingsLanguageNote" TextWrapping="Wrap" Visibility="Collapsed"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                <StackPanel Spacing="8">
+                    <TextBlock x:Uid="SettingsAppearanceHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ComboBox x:Name="ThemeBox" x:Uid="SettingsTheme" MinWidth="220" SelectionChanged="OnThemeChanged" />
                 </StackPanel>
 
                 <StackPanel Spacing="4">

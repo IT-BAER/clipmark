@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>テキスト抽出: 改行を削除する</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>外観</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>アプリのテーマ</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>アプリのテーマ</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Windows の設定を使う</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>ダーク</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>キャプチャごとに枠線を追加する</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>枠線の色</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>枠線の太さ (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>枠線の太さ (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>編集内容を自動的にクリップボードにコピーする</value>
+  </data>
 </root>

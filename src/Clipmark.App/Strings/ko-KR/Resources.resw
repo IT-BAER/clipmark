@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>텍스트 추출: 줄 바꿈 제거</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>모양</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>앱 테마</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>앱 테마</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Windows 설정 사용</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>밝게</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>어둡게</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>각 캡처에 테두리 추가</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>테두리 색</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>테두리 두께(px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>테두리 두께(px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>편집 내용을 클립보드에 자동으로 복사</value>
+  </data>
 </root>

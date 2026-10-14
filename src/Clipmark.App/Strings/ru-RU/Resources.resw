@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>Извлечение текста: удалять переносы строк</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>Оформление</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>Тема приложения</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Тема приложения</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>Использовать настройку Windows</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>Светлая</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>Тёмная</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>Добавлять рамку к каждому снимку</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Цвет рамки</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>Толщина рамки (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Толщина рамки (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>Автоматически копировать правки в буфер обмена</value>
+  </data>
 </root>

@@ -1,4 +1,6 @@
 using Clipmark.App.Interop;
+using Clipmark.Core.Settings;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 
 namespace Clipmark.App;
@@ -25,7 +27,22 @@ public sealed partial class MainWindow : Window
             Page()?.CloseCapture(); // closing ends the editor session, as in Snipping Tool
             AppWindow.Hide();
         };
+        ApplyTheme(AppSettings.Current);
+        AppSettings.Changed += ApplyTheme;
         RootFrame.Navigate(typeof(MainPage));
+    }
+
+    /// <summary>The Theme setting for the content root (pages, dialogs and flyouts inherit it) and the caption buttons.</summary>
+    private void ApplyTheme(ClipmarkSettings s)
+    {
+        var (element, caption) = s.Theme switch
+        {
+            "light" => (ElementTheme.Light, TitleBarTheme.Light),
+            "dark" => (ElementTheme.Dark, TitleBarTheme.Dark),
+            _ => (ElementTheme.Default, TitleBarTheme.UseDefaultAppMode),
+        };
+        ((FrameworkElement)Content).RequestedTheme = element;
+        AppWindow.TitleBar.PreferredTheme = caption;
     }
 
     public bool IsShown => AppWindow.IsVisible && !_cloaked;

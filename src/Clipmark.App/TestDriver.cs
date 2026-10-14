@@ -37,6 +37,8 @@ namespace Clipmark.App;
 /// | askai (Ask AI button) | aiask TEXT (types the question, clicks Send) | aiwait (answer finished, up to 30 s)
 /// | aikey KEY|none (stores or deletes the API key) | aikeyenv VAR (key from an environment variable)
 /// | assert answer TEXT (last answer contains) | assert answers N | ready (a capture is shown, up to 15 s)
+/// | deliver W,H #RRGGBB (runs the capture delivery on a W x H image of that color, with the saved settings; the PNG path goes to DIR\delivered.txt)
+/// | settheme system|light|dark | assert theme Light|Dark (window content ActualTheme)
 /// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
@@ -313,7 +315,7 @@ internal sealed class TestDriver
                 break;
             case "color":
                 // color #RRGGBB: sets the open style flyout's color ring.
-                var picker = Descendants(VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).First().Child).OfType<ColorPicker>().First();
+                var picker = VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).SelectMany(p => Descendants(p.Child)).OfType<ColorPicker>().First();
                 var hex = Convert.FromHexString(arg.TrimStart('#'));
                 picker.Color = Windows.UI.Color.FromArgb(255, hex[0], hex[1], hex[2]);
                 await Task.Delay(100);
@@ -347,6 +349,11 @@ internal sealed class TestDriver
                 if (_page.Tool.ToString() != arg[5..])
                     throw new InvalidOperationException($"tool is {_page.Tool}");
                 break;
+            case "assert" when arg.StartsWith("theme "):
+                var actualTheme = ((FrameworkElement)Root.Content).ActualTheme;
+                if (actualTheme.ToString() != arg[6..])
+                    throw new InvalidOperationException($"theme is {actualTheme}");
+                break;
             case "assert" when arg.StartsWith("has "):
                 if (Find(arg[4..]) is null)
                     throw new InvalidOperationException("element not found");
@@ -359,7 +366,7 @@ internal sealed class TestDriver
                 await Task.Delay(100);
                 var input = Descendants(box).OfType<TextBox>().First();
                 input.Text = arg[(cut + 1)..];
-                ((Control?)Find("Apply crop") ?? throw new InvalidOperationException("no focus target")).Focus(FocusState.Programmatic);
+                ((Control?)Find("Apply crop") ?? Descendants(Root.Content).OfType<ToggleSwitch>().FirstOrDefault() ?? throw new InvalidOperationException("no focus target")).Focus(FocusState.Programmatic);
                 await Task.Delay(200);
                 break;
             case "assert" when arg.StartsWith("crop "):
@@ -399,6 +406,22 @@ internal sealed class TestDriver
                 await Task.Delay(int.Parse(recordWords[1], CultureInfo.InvariantCulture));
                 await recorder.StopAsync();
                 File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), recorder.Warnings);
+                break;
+            case "deliver":
+                var deliverWords = arg.Split(' ');
+                var size = deliverWords[0].Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                var fill = Convert.FromHexString(deliverWords[1].TrimStart('#'));
+                var pixels = new byte[size[0] * size[1] * 4];
+                for (int i = 0; i < pixels.Length; i += 4)
+                    (pixels[i], pixels[i + 1], pixels[i + 2], pixels[i + 3]) = (fill[2], fill[1], fill[0], 255);
+                var controller = new Capture.CaptureController(Win32Interop.GetWindowFromWindowId(Root.ContentIslandEnvironment.AppWindowId));
+                controller.Captured += path => File.WriteAllText(Path.Combine(_dir, "delivered.txt"), path);
+                controller.Failed += message => throw new InvalidOperationException(message);
+                await controller.DeliverAsync(new Capture.CapturedImage(size[0], size[1], pixels, false), AppSettings.Current);
+                break;
+            case "settheme":
+                AppSettings.Update(s => s with { Theme = arg });
+                await Task.Delay(300);
                 break;
             case "exit":
                 _ = ((App)Application.Current).ExitAsync();

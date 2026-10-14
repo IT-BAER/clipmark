@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Clipmark.Core.Ai;
+using Clipmark.Core.Editor;
 
 namespace Clipmark.Core.Settings;
 
@@ -50,6 +51,22 @@ public sealed record ClipmarkSettings
 
     /// <summary>Text extractor joins lines with spaces instead of line breaks.</summary>
     public bool OcrRemoveLineBreaks { get; init; }
+
+    /// <summary>Every capture gets a border of <see cref="BorderColor"/> and <see cref="BorderWidth"/> px around it.</summary>
+    public bool Border { get; init; }
+
+    public Rgba BorderColor { get; init; } = new(0, 0, 0, 255);
+
+    /// <summary>1 to 20 px.</summary>
+    public int BorderWidth { get; init; } = 2;
+
+    /// <summary>One of <see cref="Themes"/>: "system" follows Windows.</summary>
+    public string Theme { get; init; } = "system";
+
+    /// <summary>Edits in the editor are copied to the clipboard after a short pause.</summary>
+    public bool CopyEdits { get; init; } = true;
+
+    public static readonly string[] Themes = ["system", "light", "dark"];
 }
 
 /// <summary>The languages the UI offers: BCP-47 tag and the language's own name.</summary>
@@ -109,6 +126,11 @@ public static class SettingsStore
             w.WriteBoolean("redactEmail", s.RedactEmail);
             w.WriteBoolean("redactPhone", s.RedactPhone);
             w.WriteBoolean("ocrRemoveLineBreaks", s.OcrRemoveLineBreaks);
+            w.WriteBoolean("border", s.Border);
+            w.WriteString("borderColor", ColorSample.Hex(s.BorderColor));
+            w.WriteNumber("borderWidth", s.BorderWidth);
+            w.WriteString("theme", s.Theme);
+            w.WriteBoolean("copyEdits", s.CopyEdits);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -154,6 +176,13 @@ public static class SettingsStore
                 RedactEmail = Bool("redactEmail", d.RedactEmail),
                 RedactPhone = Bool("redactPhone", d.RedactPhone),
                 OcrRemoveLineBreaks = Bool("ocrRemoveLineBreaks", d.OcrRemoveLineBreaks),
+                Border = Bool("border", d.Border),
+                BorderColor = Str("borderColor") is { Length: 7 } hex && hex[0] == '#'
+                    && int.TryParse(hex.AsSpan(1), System.Globalization.NumberStyles.AllowHexSpecifier, System.Globalization.CultureInfo.InvariantCulture, out int rgb)
+                    ? new Rgba((byte)(rgb >> 16), (byte)(rgb >> 8), (byte)rgb, 255) : d.BorderColor,
+                BorderWidth = root.TryGetProperty("borderWidth", out var bw) && bw.ValueKind == JsonValueKind.Number && bw.TryGetInt32(out int width) ? Math.Clamp(width, 1, 20) : d.BorderWidth,
+                Theme = ClipmarkSettings.Themes.Contains(Str("theme")) ? Str("theme")! : d.Theme,
+                CopyEdits = Bool("copyEdits", d.CopyEdits),
             };
         }
     }

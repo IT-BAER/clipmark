@@ -35,6 +35,17 @@ public static class Pixels
         return (small, w, h);
     }
 
+    /// <summary>Adds an opaque border of the color outside the image (nothing is covered); the pixels are copied unchanged.</summary>
+    public static (byte[] Bgra, int Width, int Height) AddBorder(byte[] bgra, int width, int height, int border, Editor.Rgba color)
+    {
+        int w = width + 2 * border, h = height + 2 * border;
+        var grown = new byte[w * h * 4];
+        Fill(grown, w, new PixelRect(0, 0, w, h), color with { A = 255 });
+        for (int y = 0; y < height; y++)
+            Buffer.BlockCopy(bgra, y * width * 4, grown, ((y + border) * w + border) * 4, width * 4);
+        return (grown, w, h);
+    }
+
     /// <summary>Paints the rect, clipped to the image, with one color in a BGRA buffer of the given width.</summary>
     public static void Fill(byte[] bgra, int width, PixelRect rect, Editor.Rgba color)
     {

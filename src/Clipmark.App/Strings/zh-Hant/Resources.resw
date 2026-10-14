@@ -1381,4 +1381,37 @@
   <data name="SettingsOcrRemoveLineBreaks.Header" xml:space="preserve">
     <value>文字擷取: 移除換行</value>
   </data>
+  <data name="SettingsAppearanceHeader.Text" xml:space="preserve">
+    <value>外觀</value>
+  </data>
+  <data name="SettingsTheme.Header" xml:space="preserve">
+    <value>應用程式主題</value>
+  </data>
+  <data name="SettingsTheme.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>應用程式主題</value>
+  </data>
+  <data name="ThemeSystem" xml:space="preserve">
+    <value>使用 Windows 設定</value>
+  </data>
+  <data name="ThemeLight" xml:space="preserve">
+    <value>淺色</value>
+  </data>
+  <data name="ThemeDark" xml:space="preserve">
+    <value>深色</value>
+  </data>
+  <data name="SettingsBorder.Header" xml:space="preserve">
+    <value>為每張擷取畫面新增框線</value>
+  </data>
+  <data name="SettingsBorderColor.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>框線色彩</value>
+  </data>
+  <data name="SettingsBorderWidth.Header" xml:space="preserve">
+    <value>框線粗細 (px)</value>
+  </data>
+  <data name="SettingsBorderWidth.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>框線粗細 (px)</value>
+  </data>
+  <data name="SettingsCopyEdits.Header" xml:space="preserve">
+    <value>自動將編輯內容複製到剪貼簿</value>
+  </data>
 </root>

@@ -29,7 +29,7 @@ public sealed partial class SettingsPage : Page
     {
         InitializeComponent();
         // Code, not a style: setters cannot use x:Uid, and the WinUI default follows the Windows display language.
-        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, HistorySwitch,
+        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, CopyEditsSwitch, BorderSwitch, HistorySwitch,
                      SystemAudioSwitch, MicrophoneSwitch })
             (toggle.OnContent, toggle.OffContent) = (Loc.Get("ToggleOn"), Loc.Get("ToggleOff"));
         foreach (int key in Keys)
@@ -45,6 +45,8 @@ public sealed partial class SettingsPage : Page
             AiModelBox.Items.Add(model.Name);
         foreach (string effort in AiEfforts.All)
             AiEffortBox.Items.Add(MainPage.EffortText(effort));
+        foreach (string theme in new[] { "ThemeSystem", "ThemeLight", "ThemeDark" })
+            ThemeBox.Items.Add(Loc.Get(theme));
         LanguageBox.Items.Add(Loc.Get("LanguageWindowsDefault"));
         foreach (var language in UiLanguages.All)
             LanguageBox.Items.Add(language.NativeName);
@@ -61,6 +63,13 @@ public sealed partial class SettingsPage : Page
         ToastSwitch.IsOn = s.ShowToast;
         AutoSaveSwitch.IsOn = s.AutoSave;
         OcrLineBreaksSwitch.IsOn = s.OcrRemoveLineBreaks;
+        CopyEditsSwitch.IsOn = s.CopyEdits;
+        BorderSwitch.IsOn = s.Border;
+        BorderOptions.Visibility = s.Border ? Visibility.Visible : Visibility.Collapsed;
+        BorderPicker.Color = Windows.UI.Color.FromArgb(255, s.BorderColor.R, s.BorderColor.G, s.BorderColor.B);
+        BorderSwatch.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(BorderPicker.Color);
+        BorderWidthBox.Value = s.BorderWidth;
+        ThemeBox.SelectedIndex = Math.Max(0, Array.IndexOf(ClipmarkSettings.Themes, s.Theme));
         ShowFolder(s);
         ShowHotkeyStatus();
         RecCtrlBox.IsChecked = s.RecordHotkey.Modifiers.HasFlag(HotkeyModifiers.Control);
@@ -198,6 +207,7 @@ public sealed partial class SettingsPage : Page
             var dialog = new ContentDialog
             {
                 XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
                 Title = count == 1 ? Loc.Get("HistoryOffTitleOne") : Loc.Format("HistoryOffTitle", count),
                 PrimaryButtonText = Loc.Get("HistoryOffConfirm"),
                 CloseButtonText = Loc.Get("Cancel"),
@@ -376,8 +386,30 @@ public sealed partial class SettingsPage : Page
             AppSettings.Update(s => s with
             {
                 CopyToClipboard = ClipboardSwitch.IsOn, ShowToast = ToastSwitch.IsOn, AutoSave = AutoSaveSwitch.IsOn,
-                OcrRemoveLineBreaks = OcrLineBreaksSwitch.IsOn,
+                OcrRemoveLineBreaks = OcrLineBreaksSwitch.IsOn, CopyEdits = CopyEditsSwitch.IsOn, Border = BorderSwitch.IsOn,
             });
+        BorderOptions.Visibility = BorderSwitch.IsOn ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void OnBorderColorChanged(ColorPicker sender, ColorChangedEventArgs e)
+    {
+        BorderSwatch.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(e.NewColor);
+        if (!_loading)
+            AppSettings.Update(s => s with { BorderColor = new Clipmark.Core.Editor.Rgba(e.NewColor.R, e.NewColor.G, e.NewColor.B, 255) });
+    }
+
+    private void OnBorderWidthChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+    {
+        if (double.IsNaN(sender.Value))
+            sender.Value = AppSettings.Current.BorderWidth; // cleared box: back to the stored width
+        else if (!_loading)
+            AppSettings.Update(s => s with { BorderWidth = (int)sender.Value });
+    }
+
+    private void OnThemeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (!_loading && ThemeBox.SelectedIndex >= 0)
+            AppSettings.Update(s => s with { Theme = ClipmarkSettings.Themes[ThemeBox.SelectedIndex] });
     }
 
     private async void OnBrowse(object sender, RoutedEventArgs e)
