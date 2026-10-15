@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Der Schlüssel dieses PCs wurde nicht akzeptiert. Versuchen Sie es erneut; wenn es weiterhin fehlschlägt, wenden Sie sich an den Support.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Das Relay-Limit ist erreicht. Versuchen Sie es in Kürze erneut.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Das Relay-Limit ist erreicht. Versuchen Sie es in {0} s erneut.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Ihr monatliches Premium-KI-Budget ist für diesen Monat aufgebraucht.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Ihr monatliches Premium-KI-Budget ist bis {0} aufgebraucht.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Das Clipmark-Relay hat sein Monatsbudget erreicht. Verwenden Sie Ihren eigenen API-Schlüssel oder versuchen Sie es nächsten Monat erneut.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Das Clipmark-Relay ist vorübergehend nicht verfügbar. Versuchen Sie es in Kürze erneut.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Dieser PC wurde für das Relay gesperrt. Verwenden Sie Ihren eigenen API-Schlüssel oder wenden Sie sich an den Support.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Dieser PC konnte nicht beim Relay registriert werden. Versuchen Sie es erneut.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Die Uhr dieses PCs geht falsch. Prüfen Sie Datum und Uhrzeit in Windows und versuchen Sie es dann erneut.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Das Relay hat die Anfrage abgelehnt ({0}). Versuchen Sie es erneut.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium ist auf diesem PC aktiviert.</value>
   </data>

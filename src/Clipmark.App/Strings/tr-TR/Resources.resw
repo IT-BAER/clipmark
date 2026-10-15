@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Bu bilgisayarın anahtarı kabul edilmedi. Yeniden deneyin; sorun sürerse destek ekibine başvurun.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Aktarıcı sınırına ulaşıldı. Kısa süre sonra yeniden deneyin.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Aktarıcı sınırına ulaşıldı. {0} sn sonra yeniden deneyin.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Aylık Premium yapay zekâ bütçeniz bu ay için tükendi.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Aylık Premium yapay zekâ bütçeniz {0} tarihine kadar tükendi.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Clipmark aktarıcısı aylık bütçesine ulaştı. Kendi API anahtarınızı kullanın veya gelecek ay yeniden deneyin.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Clipmark aktarıcısı geçici olarak kullanılamıyor. Kısa süre sonra yeniden deneyin.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Bu bilgisayar aktarıcıdan engellendi. Kendi API anahtarınızı kullanın veya destek ekibine başvurun.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Bu bilgisayar aktarıcıya kaydedilemedi. Yeniden deneyin.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Bu bilgisayarın saati yanlış. Windows tarih ve saatini kontrol edin, ardından yeniden deneyin.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Aktarıcı isteği reddetti ({0}). Yeniden deneyin.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium bu bilgisayarda etkinleştirildi.</value>
   </data>

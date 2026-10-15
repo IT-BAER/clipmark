@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Klucz tego komputera nie został zaakceptowany. Spróbuj ponownie; jeśli problem się powtarza, skontaktuj się z pomocą techniczną.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Osiągnięto limit przekaźnika. Spróbuj ponownie za chwilę.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Osiągnięto limit przekaźnika. Spróbuj ponownie za {0} s.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Miesięczny budżet AI w Premium został wykorzystany w tym miesiącu.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Miesięczny budżet AI w Premium został wykorzystany do {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Przekaźnik Clipmark osiągnął miesięczny budżet. Użyj własnego klucza API lub spróbuj ponownie w przyszłym miesiącu.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Przekaźnik Clipmark jest tymczasowo niedostępny. Spróbuj ponownie za chwilę.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Ten komputer został zablokowany w przekaźniku. Użyj własnego klucza API lub skontaktuj się z pomocą techniczną.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Nie udało się zarejestrować tego komputera w przekaźniku. Spróbuj ponownie.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Zegar tego komputera jest rozregulowany. Sprawdź datę i godzinę w systemie Windows, a następnie spróbuj ponownie.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Przekaźnik odrzucił żądanie ({0}). Spróbuj ponownie.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium jest aktywowany na tym komputerze.</value>
   </data>

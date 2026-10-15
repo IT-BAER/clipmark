@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Ключ этого компьютера не принят. Повторите попытку; если ошибка повторится, обратитесь в службу поддержки.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Достигнут лимит ретранслятора. Повторите попытку чуть позже.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Достигнут лимит ретранслятора. Повторите попытку через {0} с.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Ваш ежемесячный бюджет ИИ в Premium исчерпан на этот месяц.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Ваш ежемесячный бюджет ИИ в Premium исчерпан до {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Ретранслятор Clipmark достиг месячного бюджета. Используйте собственный API-ключ или повторите попытку в следующем месяце.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Ретранслятор Clipmark временно недоступен. Повторите попытку чуть позже.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Этот компьютер заблокирован в ретрансляторе. Используйте собственный API-ключ или обратитесь в службу поддержки.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Не удалось зарегистрировать этот компьютер в ретрансляторе. Повторите попытку.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Часы этого компьютера показывают неверное время. Проверьте дату и время в Windows и повторите попытку.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Ретранслятор отклонил запрос ({0}). Повторите попытку.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium активирован на этом компьютере.</value>
   </data>

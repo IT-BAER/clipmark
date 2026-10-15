@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>這部電腦的金鑰未被接受。請重試；如果仍然失敗，請連絡支援人員。</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>已達到中繼上限。請稍後重試。</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>已達到中繼上限。請在 {0} 秒後重試。</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>本月的 Premium AI 預算已用完。</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Premium AI 的月度預算在 {0} 之前已用完。</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Clipmark 中繼已達到月度預算。請使用您自己的 API 金鑰，或下個月再試。</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Clipmark 中繼暫時無法使用。請稍後重試。</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>這部電腦已被中繼封鎖。請使用您自己的 API 金鑰，或連絡支援人員。</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>無法將這部電腦註冊到中繼。請重試。</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>這部電腦的時鐘不準確。請檢查 Windows 的日期和時間，然後重試。</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>中繼拒絕了該要求（{0}）。請重試。</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium 已在這部電腦上啟用。</value>
   </data>

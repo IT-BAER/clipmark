@@ -26,11 +26,11 @@ internal static class AppLicense
     private const string PublicKeyText =
         "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEsqGfAZVMYk5fRNlYfZ5rGvxs06wvkeR2AwrgaeTv1TPZBOtoICqQ/hG5F+x/+ak11ULNQb3rtNO9iduxS1d77w==";
 
-    /// <summary>
-    /// Production entitlement keys, kid to base64 SPKI (`releash key show clipmark`). Empty until the key is created at the
-    /// host run, so a Release build verifies no token (fail closed).
-    /// </summary>
-    private static readonly Dictionary<string, string> ReleaseKeys = new(StringComparer.Ordinal);
+    /// <summary>Production entitlement keys, kid to base64 SPKI (`releash key list clipmark`). A kid missing here fails closed.</summary>
+    private static readonly Dictionary<string, string> ReleaseKeys = new(StringComparer.Ordinal)
+    {
+        ["n4tc-QFOew4"] = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEYHmnFiDPZmdSaTtMC62/Z1Fr/+0kWe2CiDhyWYnhXUfdZDVNGKiEw4ROXz5FQGG+SrvHlmNgWfwjjY6rN6/PZg==",
+    };
 
     private const string MirrorKey = @"Software\Clipmark", MirrorValue = "Trial", VaultTarget = "Clipmark/Trial";
 

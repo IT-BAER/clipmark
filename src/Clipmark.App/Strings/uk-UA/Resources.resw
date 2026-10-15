@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Ключ цього комп’ютера не прийнято. Повторіть спробу; якщо помилка не зникне, зверніться до служби підтримки.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Досягнуто ліміт ретранслятора. Повторіть спробу трохи пізніше.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Досягнуто ліміт ретранслятора. Повторіть спробу через {0} с.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Ваш місячний бюджет ШІ в Premium вичерпано на цей місяць.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Ваш місячний бюджет ШІ в Premium вичерпано до {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Ретранслятор Clipmark досяг місячного бюджету. Використайте власний API-ключ або повторіть спробу наступного місяця.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Ретранслятор Clipmark тимчасово недоступний. Повторіть спробу трохи пізніше.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Цей комп’ютер заблоковано в ретрансляторі. Використайте власний API-ключ або зверніться до служби підтримки.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Не вдалося зареєструвати цей комп’ютер у ретрансляторі. Повторіть спробу.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Годинник цього комп’ютера показує неправильний час. Перевірте дату й час у Windows і повторіть спробу.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Ретранслятор відхилив запит ({0}). Повторіть спробу.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium активовано на цьому комп’ютері.</value>
   </data>

@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>この PC のキーは受け付けられませんでした。もう一度お試しください。問題が解決しない場合はサポートにお問い合わせください。</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>リレーの上限に達しました。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>リレーの上限に達しました。{0} 秒後にもう一度お試しください。</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>今月の Premium AI の予算を使い切りました。</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Premium AI の月間予算は {0} まで使い切っています。</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Clipmark リレーが月間予算に達しました。ご自身の API キーを使用するか、来月もう一度お試しください。</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Clipmark リレーは一時的に利用できません。しばらくしてからもう一度お試しください。</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>この PC はリレーからブロックされました。ご自身の API キーを使用するか、サポートにお問い合わせください。</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>この PC をリレーに登録できませんでした。もう一度お試しください。</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>この PC の時計がずれています。Windows の日付と時刻を確認してから、もう一度お試しください。</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>リレーがリクエストを拒否しました ({0})。もう一度お試しください。</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium はこの PC でライセンス認証されています。</value>
   </data>

@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>De sleutel van deze pc is niet geaccepteerd. Probeer het opnieuw; neem contact op met de ondersteuning als het blijft mislukken.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>De relaylimiet is bereikt. Probeer het zo meteen opnieuw.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>De relaylimiet is bereikt. Probeer het over {0} s opnieuw.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Je maandelijkse Premium-AI-budget is voor deze maand op.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Je maandelijkse Premium-AI-budget is op tot {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>De Clipmark-relay heeft het maandbudget bereikt. Gebruik je eigen API-sleutel of probeer het volgende maand opnieuw.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>De Clipmark-relay is tijdelijk niet beschikbaar. Probeer het zo meteen opnieuw.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Deze pc is geblokkeerd voor de relay. Gebruik je eigen API-sleutel of neem contact op met de ondersteuning.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Deze pc kon niet worden geregistreerd bij de relay. Probeer het opnieuw.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>De klok van deze pc loopt niet goed. Controleer de datum en tijd in Windows en probeer het opnieuw.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>De relay heeft het verzoek geweigerd ({0}). Probeer het opnieuw.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium is geactiveerd op deze pc.</value>
   </data>

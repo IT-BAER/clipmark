@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>Den här datorns nyckel godkändes inte. Försök igen. Kontakta supporten om det fortsätter att misslyckas.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Reläets gräns har nåtts. Försök igen om en stund.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Reläets gräns har nåtts. Försök igen om {0} s.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Din månatliga Premium-AI-budget är slut för den här månaden.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Din månatliga Premium-AI-budget är slut till och med {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>Clipmark-reläet har nått sin månadsbudget. Använd din egen API-nyckel eller försök igen nästa månad.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>Clipmark-reläet är tillfälligt otillgängligt. Försök igen om en stund.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Den här datorn har blockerats från reläet. Använd din egen API-nyckel eller kontakta supporten.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>Den här datorn kunde inte registreras hos reläet. Försök igen.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>Datorns klocka går fel. Kontrollera datum och tid i Windows och försök sedan igen.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>Reläet avvisade begäran ({0}). Försök igen.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium är aktiverat på den här datorn.</value>
   </data>

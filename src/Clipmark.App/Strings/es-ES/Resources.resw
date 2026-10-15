@@ -1489,6 +1489,36 @@
   <data name="RelayKeyRejected" xml:space="preserve">
     <value>No se ha aceptado la clave de este PC. Vuelve a intentarlo; si sigue fallando, ponte en contacto con el soporte.</value>
   </data>
+  <data name="RelayLimit" xml:space="preserve">
+    <value>Se ha alcanzado el límite del relay. Vuelve a intentarlo en breve.</value>
+  </data>
+  <data name="RelayLimitWait" xml:space="preserve">
+    <value>Se ha alcanzado el límite del relay. Vuelve a intentarlo en {0} s.</value>
+  </data>
+  <data name="RelayBudget" xml:space="preserve">
+    <value>Has agotado el presupuesto mensual de IA de Premium de este mes.</value>
+  </data>
+  <data name="RelayBudgetUntil" xml:space="preserve">
+    <value>Has agotado el presupuesto mensual de IA de Premium hasta el {0}.</value>
+  </data>
+  <data name="RelayAppBudget" xml:space="preserve">
+    <value>El relay de Clipmark ha alcanzado su presupuesto mensual. Usa tu propia clave de API o vuelve a intentarlo el mes que viene.</value>
+  </data>
+  <data name="RelayUnavailable" xml:space="preserve">
+    <value>El relay de Clipmark no está disponible temporalmente. Vuelve a intentarlo en breve.</value>
+  </data>
+  <data name="RelayInstallRevoked" xml:space="preserve">
+    <value>Este PC se ha bloqueado en el relay. Usa tu propia clave de API o ponte en contacto con el soporte.</value>
+  </data>
+  <data name="RelayNotRegistered" xml:space="preserve">
+    <value>No se ha podido registrar este PC en el relay. Vuelve a intentarlo.</value>
+  </data>
+  <data name="RelayClock" xml:space="preserve">
+    <value>El reloj de este PC no está en hora. Comprueba la fecha y la hora de Windows y vuelve a intentarlo.</value>
+  </data>
+  <data name="RelayRejected" xml:space="preserve">
+    <value>El relay ha rechazado la solicitud ({0}). Vuelve a intentarlo.</value>
+  </data>
   <data name="LicenseActiveHere" xml:space="preserve">
     <value>Clipmark Premium está activado en este PC.</value>
   </data>
