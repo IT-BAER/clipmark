@@ -23,6 +23,7 @@ public class SettingsStoreTests
         Assert.False(s.HistoryEnabled);
         Assert.Equal(AiModels.Default.Id, s.AiModel);
         Assert.False(s.AiConsent);
+        Assert.False(s.AiConsentRelay);
     }
 
     [Fact]
@@ -34,7 +35,7 @@ public class SettingsStoreTests
             Mode = CaptureMode.Freeform, DelaySeconds = 5, CopyToClipboard = true,
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
-            AiModel = "claude-opus-5-5", AiConsent = true,
+            AiModel = "claude-opus-5-5", AiConsent = true, AiConsentRelay = true,
             RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
@@ -64,6 +65,7 @@ public class SettingsStoreTests
         var s = SettingsStore.Parse("""{ "aiModel": "claude-future-9", "aiConsent": true }""");
         Assert.Equal("claude-future-9", s.AiModel);
         Assert.True(s.AiConsent);
+        Assert.False(s.AiConsentRelay);
     }
 
     [Fact]

@@ -508,7 +508,7 @@
     <value>以截图的当前状态重新开始</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>若要就截图提问，请在“设置”中添加您的 Anthropic API 密钥。</value>
+    <value>在这台电脑上激活 Clipmark Premium 后，“询问 AI”无需密钥即可使用。否则，若要就截图提问，请在“设置”中添加您自己的 Anthropic API 密钥。</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>询问 AI 对话</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium 功能。“询问 AI”会使用您自己的 API 密钥，将所显示的截图（包括批注和涂黑内容）以及您的问题发送给 Anthropic ({0})，且仅在您发送问题时才会发送。Anthropic 对该密钥计费。密钥保存在这台电脑的 Windows 凭据管理器中；在您的 Windows 帐户下运行的应用可以读取它。</value>
+    <value>Premium 或您自己的密钥。使用 Premium 时，“询问 AI”通过 IT-BAER 的中继无需密钥即可使用。使用您自己的 API 密钥时，“询问 AI”会将所显示的截图（包括批注和涂黑内容）以及您的问题直接发送给 Anthropic ({0})，且仅在您发送问题时才会发送。Anthropic 对该密钥计费。密钥保存在这台电脑的 Windows 凭据管理器中；在您的 Windows 帐户下运行的应用可以读取它。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>关闭并删除</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>许可证已激活。</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>此许可证密钥无效。请检查是否已粘贴完整。</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>无法更改 Windows 设置：{0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>许可证状态</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>粘贴您的许可证密钥</value>
+    <value>粘贴您的激活码或许可证密钥</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>许可证密钥</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>自动将编辑内容复制到剪贴板</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>尝试次数过多。请在 {0} 秒后重试。</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>尝试次数过多。请在一分钟后重试。</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>此激活码无效。请检查是否已完整粘贴。</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>此许可证密钥无效。</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>此许可证的所有电脑名额均已占用。请先从另一台电脑上删除 Clipmark Premium。</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>此许可证已被吊销。如果这出乎意料，请联系支持人员。</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>此许可证已过期。</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Premium 试用已结束。</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>目前不提供试用。</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>由于许可证已在另一台电脑上激活，这台电脑已被注销。若要在此处使用 Premium，请重新激活。</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>已从这台电脑上删除 Clipmark Premium。若要在此处使用，请重新激活。</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>这台电脑的密钥未被接受。请重试；如果仍然失败，请联系支持人员。</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium 已在这台电脑上激活。</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>已在这台电脑上激活。此许可证最多可用于 {0} 台电脑。</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>另一台电脑已被注销。</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>请连接到 Internet 以开始 30 天 Premium 试用。</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium 未在这台电脑上激活。请使用您的激活码激活，或购买 Premium。</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>正在激活…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>从这台电脑上删除</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>要从这台电脑上删除 Clipmark Premium 吗?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>这会将这台电脑的名额释放给另一台电脑。若要在此处再次使用 Premium，您需要激活码。</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>已从这台电脑上删除 Clipmark Premium。</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark 无法为这台电脑创建密钥: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>“询问 AI”会将所显示的截图（包括批注和涂黑内容）以及您的问题发送到 IT-BAER 的中继 ({0})，由中继使用 IT-BAER 的 API 密钥转发给 Anthropic。费用包含在您的 Premium 许可证中。在您发送问题之前不会发送任何内容，Clipmark 和中继都不会保存对话。</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>本月剩余 {0} USD</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>使用 Premium 时，“询问 AI”无需密钥：所显示的截图（包括批注和涂黑内容）以及您的问题仅在您发送问题时通过 IT-BAER 的中继 ({0}) 发送给 Anthropic。如果您保存了自己的 API 密钥，“询问 AI”会将它们直接发送给 Anthropic ({1})，并由 Anthropic 对该密钥计费；密钥保存在这台电脑的 Windows 凭据管理器中。</value>
   </data>
 </root>

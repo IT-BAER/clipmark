@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="testdata\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\Clipmark.Core\Clipmark.Core.csproj" />
   </ItemGroup>
 

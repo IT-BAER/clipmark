@@ -406,3 +406,37 @@ Tasks
 Risks: machine-translated UI terms that differ from Windows' own words (glossary, community fixes); longer text breaking
 fixed-width toolbars; upstream #6801 if the app ever passes an explicit `ResourceContext`.
 Rollback: en-US stays the neutral fallback; removing a language folder removes that language.
+
+## L4 relay activation (14 October 2026)
+Premium comes from a signed releash entitlement (`rl1.`, spec 18.5) bound to a non-exportable CNG key of the PC; trials
+start on the server per device key (releash `643414f`, spec 18.4-18.6).
+
+Decisions (14 October 2026, owner)
+- Q1: a fresh install offline is Free; no local trial. The trial starts at the first successful `POST /trial`; retried
+  at start, hourly and when a capture opens (at most once per hour, `RefreshPolicy`).
+- Q2: a stored v1 key counts offline only until the first successful `activate` with `licence_key` (automatic at the
+  next online refresh); a 403 `licence_invalid`, `subject_revoked` or `licence_expired` removes it; a network error
+  changes nothing.
+- Q3: one batch (activation, trial, refresh, deactivation, settings, Ask AI over the relay, privacy policy).
+- Q4: `RelayHost = https://releash.it-baer.net`; Debug-only override `CLIPMARK_TEST_RELAY_BASE`.
+- Worker decisions: the v1 key is removed only when the returned entitlement verifies on this PC (a build without the
+  production kid keeps the key as offline fallback); `trial_expired` on first contact stores the install id so
+  Settings says "trial ended"; Release embeds no entitlement key until the host run (`AppLicense.ReleaseKeys`, fail
+  closed); Debug embeds the vector test key `dGVzdGtpZDE`.
+
+Ledger
+- [x] Core: `EntitlementToken` (vector `testdata/entitlement/v1.json`, 12 cases), `Entitlement.Evaluate` by verdict +
+  `EvaluateLegacy`, `LicenseFile` server fields, `RefreshPolicy`, `LicenceRequest`, `LicenceResponse`, `RelayFailure`
+  licence codes + `EndsEntitlement`, `ClipmarkSettings.AiConsentRelay`; `RelayRequest.BuildRegistration` removed.
+  Core 785 / 785 (695 before).
+- [x] App: `Relay\DeviceKey` (Platform Crypto Provider, Software KSP fallback, `Clipmark.releash.install`),
+  `Relay\LicenceClient` (15 s, one clock-skew retry within 5 min), `AppLicense` (offline check, background sync after
+  the window exists, activate, deactivate, drop on 403), Settings (code or key box, seats, Remove from this PC),
+  `Ai\RelayChat` + Ask AI path choice and per-path consent; Debug build 0 warnings.
+- [x] Strings: 27 new, 3 changed, 2 removed keys in all 16 languages (453 keys each; placeholder check 0 errors).
+- [x] Scratch mock run (Debug `--trial-status`): trial 200, 1 h backoff, `trial_expired`, v1 key activation 201,
+  entitlement 403 -> Free; every envelope verified by the mock; key store `tpm` on this PC.
+- [x] Docs: privacy policy (licence server section, relay Ask AI), README Remove steps, CHANGELOG.
+- [ ] Production entitlement key in `AppLicense.ReleaseKeys` (after `releash key new clipmark` at the host run).
+- [ ] L4 done-when end to end (trial, purchase, claim, activation, one relay Ask AI conversation) at the M3 host run.
+- [ ] Settings activation, Remove from this PC and relay Ask AI checked in the UI (TestDriver) against a mock.

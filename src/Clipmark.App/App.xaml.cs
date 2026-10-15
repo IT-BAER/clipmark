@@ -15,7 +15,7 @@ namespace Clipmark.App;
 /// Single-instance tray app. Startup flags: `--tray` (or the packaged StartupTask) starts hidden; `--open FILE` shows an image or MP4;
 /// `--measure-startup FILE` writes the first-frame time (UTC ticks) and exits (used by scripts\measure-m0.ps1);
 /// `--record-test FILE` records a short test MP4 and exits; `--restore-system` undoes the Print Screen and autostart changes and deletes the Ask AI key;
-/// `--trial-status FILE` (Debug) counts the trial, writes its state and exits.
+/// `--trial-status FILE` (Debug) re-checks the licence, makes the due server call, writes the state and exits.
 /// </summary>
 public partial class App : Application
 {
@@ -82,6 +82,7 @@ public partial class App : Application
         if (Arg("--trial-status") is { } trialStatus)
         {
             AppLicense.Refresh();
+            await AppLicense.SyncAsync();
             File.WriteAllText(Path.GetFullPath(trialStatus), AppLicense.Describe());
             Exit();
             return;
@@ -116,6 +117,7 @@ public partial class App : Application
         }
         CaptureOutput.CleanTempFolder();
 
+        // Offline check now; a due server call is queued at low priority, so it starts after the window exists, off the UI thread.
         AppLicense.Refresh();
         _licenseTimer = _dispatcher.CreateTimer();
         _licenseTimer.Interval = TimeSpan.FromHours(1);

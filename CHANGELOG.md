@@ -6,13 +6,20 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
-- Clipmark Premium: 30-day trial, then offline license keys. Premium covers select, attached arrows, text, fill,
+- Clipmark Premium: 30-day trial, then a license. Premium covers select, attached arrows, text, fill,
   eyedropper, editable PNG, Send to AI, Ask AI and the capture history; editable PNGs still open without a license.
-  The trial start is also kept in the registry and in Windows Credential Manager, so reinstalling does not restart it.
-- Ask AI: ask Claude about the capture in a toolbar flyout with your own Anthropic API key (Sonnet 5.5, Opus 5.5 or
-  Haiku 5.5; answer depth low, med, high or xhigh in the chat header or Settings). Answers stream in as formatted
-  text with a collapsed Thinking summary; Stop, follow-up questions and New chat. The key is kept in Windows
-  Credential Manager; the first send asks for consent. This is the only feature that uses the network.
+  The trial starts on IT-BAER's licence server (releash.it-baer.net) at the first start with an internet connection
+  and is bound to a non-exportable key of this PC (TPM when available), so reinstalling does not restart it.
+  Settings > License takes an activation code (or a license key from an earlier version), shows how many PCs the
+  license covers, and "Remove from this PC" frees the seat. The signed entitlement is checked offline and renewed
+  about every two weeks; offline, Premium keeps working until the entitlement and its grace period run out. A
+  license key of an earlier version keeps working offline and is activated automatically at the next online start.
+- Ask AI: ask Claude about the capture in a toolbar flyout (Sonnet 5.5, Opus 5.5 or Haiku 5.5; answer depth low, med,
+  high or xhigh in the chat header or Settings). Answers stream in as formatted text with a collapsed Thinking
+  summary; Stop, follow-up questions and New chat. Premium activated on the PC uses Ask AI without a key through
+  IT-BAER's relay (the flyout shows the monthly budget left); with your own Anthropic API key (kept in Windows
+  Credential Manager) Clipmark sends directly to Anthropic, also during the trial. The first send on each path asks
+  for consent.
 - Send to AI: pastes the capture into a running Claude Code or Codex CLI, the Claude or ChatGPT desktop app, or the
   Claude or Codex VS Code extension, with each agent's own icon in the menu.
 - Capture history (opt-in): the last 25 captures, encrypted for the Windows user, with a thumbnail flyout; edits are

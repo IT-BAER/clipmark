@@ -508,7 +508,7 @@
     <value>Opnieuw beginnen met het knipsel zoals het nu is</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Voeg je Anthropic API-sleutel toe in Instellingen om vragen over je knipsels te stellen.</value>
+    <value>Met Clipmark Premium werkt AI vragen zonder sleutel zodra het op deze pc is geactiveerd. Voeg anders je eigen Anthropic API-sleutel toe in Instellingen om vragen over je knipsels te stellen.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>AI-gesprek</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium-functie. AI vragen verzendt het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag naar Anthropic ({0}) met je eigen API-sleutel, alleen wanneer je een vraag verzendt. Anthropic brengt de sleutel in rekening. De sleutel wordt op deze pc bewaard in Referentiebeheer van Windows; apps die onder je Windows-account worden uitgevoerd, kunnen de sleutel lezen.</value>
+    <value>Premium of je eigen sleutel. Met Premium werkt AI vragen zonder sleutel via de relay van IT-BAER. Met je eigen API-sleutel verzendt AI vragen het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag rechtstreeks naar Anthropic ({0}), alleen wanneer je een vraag verzendt. Anthropic brengt de sleutel in rekening. De sleutel wordt op deze pc bewaard in Referentiebeheer van Windows; apps die onder je Windows-account worden uitgevoerd, kunnen de sleutel lezen.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Uitschakelen en verwijderen</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Licentie geactiveerd.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Deze licentiesleutel is ongeldig. Controleer of je de volledige sleutel hebt geplakt.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>De Windows-instelling kon niet worden gewijzigd: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Licentiestatus</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Plak je licentiesleutel</value>
+    <value>Plak je activeringscode of licentiesleutel</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Licentiesleutel</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Bewerkingen automatisch naar het klembord kopiëren</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Te veel pogingen. Probeer het over {0} s opnieuw.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Te veel pogingen. Probeer het over een minuut opnieuw.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Deze activeringscode is ongeldig. Controleer of je de hele code hebt geplakt.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Deze licentiesleutel is ongeldig.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Alle pc-plaatsen van deze licentie zijn in gebruik. Verwijder Clipmark Premium eerst van een andere pc.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Deze licentie is ingetrokken. Neem contact op met de ondersteuning als dit onverwacht is.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Deze licentie is verlopen.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>De Premium-proefversie is verlopen.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Er wordt op dit moment geen proefversie aangeboden.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Deze pc is afgemeld omdat de licentie op een andere pc is geactiveerd. Activeer opnieuw om Premium hier te gebruiken.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium is van deze pc verwijderd. Activeer opnieuw om het hier te gebruiken.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>De sleutel van deze pc is niet geaccepteerd. Probeer het opnieuw; neem contact op met de ondersteuning als het blijft mislukken.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium is geactiveerd op deze pc.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Geactiveerd op deze pc. De licentie geldt voor maximaal {0} pc's.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Een andere pc is afgemeld.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Maak verbinding met internet om je Premium-proefversie van 30 dagen te starten.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium is niet actief op deze pc. Activeer het met je code of koop Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Activeren…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Verwijderen van deze pc</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Clipmark Premium van deze pc verwijderen?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Hiermee komt de plaats van deze pc vrij voor een andere pc. Om Premium hier opnieuw te gebruiken, heb je je activeringscode nodig.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Verwijderen</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium is van deze pc verwijderd.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark kan de sleutel voor deze pc niet maken: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>AI vragen verzendt het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vragen naar de relay van IT-BAER ({0}), die ze met de API-sleutel van IT-BAER doorstuurt naar Anthropic. De kosten vallen onder je Premium-licentie. Er wordt niets verzonden totdat je een vraag verzendt, en Clipmark en de relay slaan het gesprek niet op.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>Nog {0} USD deze maand</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>Met Premium heeft AI vragen geen sleutel nodig: het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag gaan via de relay van IT-BAER ({0}) naar Anthropic, alleen wanneer je een vraag verzendt. Als je een eigen API-sleutel hebt opgeslagen, verzendt AI vragen ze rechtstreeks naar Anthropic ({1}) en brengt Anthropic de sleutel in rekening; de sleutel wordt op deze pc bewaard in Referentiebeheer van Windows.</value>
   </data>
 </root>

@@ -3,8 +3,12 @@ using System.Text.Json;
 
 namespace Clipmark.Core.Licensing;
 
-/// <summary>Contents of license.json (and of each trial copy): the entered key, the trial timestamps and their <see cref="TrialSeal"/> tag.</summary>
-public sealed record LicenseFile(string? Key, TrialState? Trial, string? TrialTag = null);
+/// <summary>
+/// Contents of license.json (and of each local trial copy): a v1 key awaiting activation, the local trial with its
+/// <see cref="TrialSeal"/> tag, and the server state: entitlement token, install id (device key thumbprint), key store, times.
+/// </summary>
+public sealed record LicenseFile(string? Key, TrialState? Trial, string? TrialTag = null, string? Entitlement = null,
+    string? InstallId = null, string? KeyStore = null, DateTime? ActivatedUtc = null, DateTime? LastRefreshUtc = null);
 
 /// <summary>JSON without reflection (Native AOT). A broken key or trial field reads as missing.</summary>
 public static class LicenseStore
@@ -15,10 +19,17 @@ public static class LicenseStore
         using (var w = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true }))
         {
             w.WriteStartObject();
+            // The local trial is a migration path only; a server entitlement replaces it.
+            var trial = file.Entitlement is null ? file.Trial : null;
             w.WriteString("key", file.Key);
-            w.WriteString("trialStarted", file.Trial?.StartedUtc.ToString("O", CultureInfo.InvariantCulture));
-            w.WriteString("trialLastSeen", file.Trial?.LastSeenUtc.ToString("O", CultureInfo.InvariantCulture));
-            w.WriteString("trialTag", file.TrialTag);
+            w.WriteString("trialStarted", trial?.StartedUtc.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("trialLastSeen", trial?.LastSeenUtc.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("trialTag", file.Entitlement is null ? file.TrialTag : null);
+            w.WriteString("entitlement", file.Entitlement);
+            w.WriteString("installId", file.InstallId);
+            w.WriteString("keyStore", file.KeyStore);
+            w.WriteString("activatedUtc", file.ActivatedUtc?.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("lastRefreshUtc", file.LastRefreshUtc?.ToString("O", CultureInfo.InvariantCulture));
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -44,7 +55,9 @@ public static class LicenseStore
             string? key = string.IsNullOrWhiteSpace(Str("key")) ? null : Str("key");
             var trial = Utc("trialStarted") is { } started && Utc("trialLastSeen") is { } lastSeen
                 ? new TrialState(started, lastSeen) : null;
-            return new LicenseFile(key, trial, Str("trialTag"));
+            string? NonEmpty(string name) => string.IsNullOrWhiteSpace(Str(name)) ? null : Str(name);
+            return new LicenseFile(key, trial, Str("trialTag"), NonEmpty("entitlement"), NonEmpty("installId"), NonEmpty("keyStore"),
+                Utc("activatedUtc"), Utc("lastRefreshUtc"));
         }
     }
 

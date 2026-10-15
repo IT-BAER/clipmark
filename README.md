@@ -148,9 +148,14 @@ The build is not code-signed yet, so SmartScreen may warn on first start ("More 
    Windows starts" in Settings. This puts the Windows Print Screen option back and removes the autostart entry; the
    command line option also removes the Start menu shortcut and deletes the Ask AI key (Credential Manager entry
    `Clipmark/AnthropicKey`, also removed by "Remove key" in Settings > Ask AI).
-2. Delete the program folder and `%LOCALAPPDATA%\Clipmark` (settings, license key, capture history).
-3. Optional: delete the trial record in `HKCU\Software\Clipmark` and in Windows Credential Manager ("Windows
-   Credentials", entry `Clipmark/Trial`). Clipmark keeps it so that a reinstall does not restart the trial.
+2. Delete the program folder and `%LOCALAPPDATA%\Clipmark` (settings, license state `license.json`, capture history).
+3. Optional: free this PC's license seat with "Remove from this PC" in Settings > License before uninstalling.
+4. Optional: delete the installation key `Clipmark.releash.install` (per Windows user; it holds the trial and the seat
+   of this PC; "Remove from this PC" keeps it): `certutil -csp "Microsoft Platform Crypto Provider" -delkey -user
+   Clipmark.releash.install` (TPM) or `certutil -csp "Microsoft Software Key Storage Provider" -delkey -user
+   Clipmark.releash.install`. A new key starts as a new installation.
+5. Optional: older versions left a trial record in `HKCU\Software\Clipmark` and in Windows Credential Manager
+   ("Windows Credentials", entry `Clipmark/Trial`); Clipmark deletes both at its first licence server answer.
 
 Your screenshots and recordings stay where you saved them.
 

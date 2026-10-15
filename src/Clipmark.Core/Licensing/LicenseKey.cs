@@ -22,6 +22,12 @@ public static class LicenseKey
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     private static readonly DateOnly Epoch = new(2026, 1, 1);
 
+    /// <summary>Decoded size of a v1 key: payload plus signature.</summary>
+    public const int KeyLength = PayloadLength + SignatureLength;
+
+    /// <summary>Bytes the text decodes to with the key alphabet (dashes, spaces and case ignored); null when it is not canonical Base32.</summary>
+    public static int? DecodedLength(string? text) => FromBase32(text)?.Length;
+
     public static string Sign(LicensePayload payload, ECDsa privateKey)
     {
         int days = payload.Issued.DayNumber - Epoch.DayNumber;
@@ -41,7 +47,7 @@ public static class LicenseKey
     public static bool TryVerify(string? text, ECDsa publicKey, [NotNullWhen(true)] out LicensePayload? payload)
     {
         payload = null;
-        if (FromBase32(text) is not { Length: PayloadLength + SignatureLength } bytes)
+        if (FromBase32(text) is not { Length: KeyLength } bytes)
             return false;
         var data = bytes.AsSpan(0, PayloadLength);
         if (data[0] != Version || data[1] != ClipmarkProduct)

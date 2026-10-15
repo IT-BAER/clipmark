@@ -47,6 +47,39 @@ public class LicenseStoreTests
     }
 
     [Fact]
+    public void Activation_fields_round_trip()
+    {
+        var file = new LicenseFile(null, null, null, "rl1.a.b", "install-1", "tpm", Start, Start.AddHours(1));
+
+        Assert.Equal(file, LicenseStore.Parse(LicenseStore.Serialize(file)));
+    }
+
+    [Fact]
+    public void Absent_activation_fields_serialize_as_null()
+    {
+        string json = LicenseStore.Serialize(new LicenseFile("K", null));
+
+        foreach (string name in new[] { "entitlement", "installId", "keyStore", "activatedUtc", "lastRefreshUtc" })
+            Assert.Contains($"\"{name}\": null", json);
+    }
+
+    [Fact]
+    public void An_old_file_with_key_and_trial_only_still_parses()
+    {
+        var file = LicenseStore.Parse("""{ "key": "ABCDE", "trialStarted": "2026-10-12T09:00:00Z", "trialLastSeen": "2026-10-12T09:00:00Z", "trialTag": "t" }""");
+
+        Assert.Equal(new LicenseFile("ABCDE", new TrialState(Start, Start), "t"), file);
+    }
+
+    [Fact]
+    public void Trial_fields_are_not_written_once_an_entitlement_is_stored()
+    {
+        var file = new LicenseFile(null, new TrialState(Start, Start), "t", "rl1.a.b", "install-1");
+
+        Assert.Equal(file with { Trial = null, TrialTag = null }, LicenseStore.Parse(LicenseStore.Serialize(file)));
+    }
+
+    [Fact]
     public void Merge_keeps_the_earliest_start_and_the_latest_seen()
     {
         var file = new TrialState(Start.AddDays(3), Start.AddDays(4));

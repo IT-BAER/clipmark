@@ -99,8 +99,14 @@ public sealed partial class SettingsPage : Page
         LanguageBox.SelectedIndex = 1 + UiLanguages.All.ToList().FindIndex(l => l.Tag == s.Language); // -1 + 1 = Windows default
         ShowAiKey();
         ShowLicense();
+        LicenseResultText.Text = AppLicense.LastServerMessage ?? "";
+        // The background trial or refresh can finish while Settings is open.
+        Loaded += (_, _) => AppLicense.Changed += OnLicenseChanged;
+        Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
         _loading = false;
     }
+
+    private void OnLicenseChanged(Entitlement _) => ShowLicense();
 
     /// <summary>Parameter "ai" (from the Ask AI flyout) scrolls to the Ask AI section.</summary>
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -114,14 +120,18 @@ public sealed partial class SettingsPage : Page
         var license = AppLicense.Current;
         LicenseStatusText.Text = license.Status switch
         {
-            LicenseStatus.Licensed => Loc.Get("LicenseActive"),
+            LicenseStatus.Licensed => Loc.Get(AppLicense.LicensedByToken ? "LicenseActiveHere" : "LicenseActive"),
             LicenseStatus.Trial => license.TrialDaysLeft == 1 ? Loc.Get("LicenseTrialOneDay") : Loc.Format("LicenseTrialDays", license.TrialDaysLeft),
+            _ when AppLicense.NeverContacted => Loc.Get("LicenseConnectForTrial"),
+            _ when AppLicense.WasActivated => Loc.Get("LicenseNotActive"),
             _ => Loc.Get("LicenseTrialEnded"),
         };
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
+        RemoveLicenseButton.Visibility = AppLicense.LicensedByToken ? Visibility.Visible : Visibility.Collapsed;
         ShowHistory();
-        AiHint.Text = Loc.Format(license.IsEnabled(PremiumFeature.AiChat) ? "AiHint" : "AiHintPremium", ClaudeChat.Host);
+        AiHint.Text = AppLicense.CanUseRelay ? Loc.Format("AiHintRelay", RelayChat.Host, ClaudeChat.Host)
+            : Loc.Format(license.IsEnabled(PremiumFeature.AiChat) ? "AiHint" : "AiHintPremium", ClaudeChat.Host);
     }
 
     private void ShowAiKey()
@@ -227,15 +237,57 @@ public sealed partial class SettingsPage : Page
         ShowHistory();
     }
 
-    private void OnActivate(object sender, RoutedEventArgs e)
+    /// <summary>One box for an activation code or a v1 key; the server decides. The text is never shown back or logged.</summary>
+    private async void OnActivate(object sender, RoutedEventArgs e)
     {
-        if (AppLicense.Activate(LicenseKeyBox.Text))
+        string text = LicenseKeyBox.Text.Trim();
+        if (text.Length == 0)
+            return;
+        ActivateButton.IsEnabled = false;
+        LicenseResultText.Text = Loc.Get("LicenseActivating");
+        try
         {
-            LicenseKeyBox.Text = "";
-            LicenseResultText.Text = Loc.Get("LicenseActivated");
+            var r = await AppLicense.ActivateAsync(text);
+            if (r.Value is { } a)
+            {
+                LicenseKeyBox.Text = "";
+                string done = Loc.Format("LicenseActivatedSeats", a.Seats);
+                LicenseResultText.Text = a.EvictedInstallId is null ? done : done + " " + Loc.Get("LicenseOtherSignedOut");
+            }
+            else
+                LicenseResultText.Text = r.Message;
         }
-        else
-            LicenseResultText.Text = Loc.Get("LicenseInvalid");
+        finally
+        {
+            ActivateButton.IsEnabled = true;
+        }
+        ShowLicense();
+    }
+
+    private async void OnRemoveLicense(object sender, RoutedEventArgs e)
+    {
+        var dialog = new ContentDialog
+        {
+            XamlRoot = XamlRoot,
+            RequestedTheme = ActualTheme,
+            Title = Loc.Get("LicenseRemoveTitle"),
+            Content = new TextBlock { Text = Loc.Get("LicenseRemoveBody"), TextWrapping = TextWrapping.Wrap },
+            PrimaryButtonText = Loc.Get("LicenseRemoveConfirm"),
+            CloseButtonText = Loc.Get("Cancel"),
+            DefaultButton = ContentDialogButton.Close,
+        };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary)
+            return;
+        RemoveLicenseButton.IsEnabled = false;
+        try
+        {
+            var (removed, r) = await AppLicense.DeactivateAsync();
+            LicenseResultText.Text = removed ? Loc.Get("LicenseRemoved") : r.Message;
+        }
+        finally
+        {
+            RemoveLicenseButton.IsEnabled = true;
+        }
         ShowLicense();
     }
 

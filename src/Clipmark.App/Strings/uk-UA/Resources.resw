@@ -508,7 +508,7 @@
     <value>Почати спочатку з поточним виглядом знімка</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Додайте свій ключ API Anthropic у параметрах, щоб ставити запитання про ваші знімки.</value>
+    <value>З Clipmark Premium функція «Запитати ШІ» працює без ключа після активації на цьому комп’ютері. Інакше додайте власний ключ API Anthropic у параметрах, щоб ставити запитання про ваші знімки.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>Розмова зі ШІ</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Функція Premium. Функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання до Anthropic ({0}) з використанням вашого власного ключа API, лише коли ви надсилаєте запитання. Плату за використання ключа стягує Anthropic. Ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері; програми, запущені під вашим обліковим записом Windows, можуть його прочитати.</value>
+    <value>Premium або власний ключ. З Premium функція «Запитати ШІ» працює без ключа через ретранслятор IT-BAER. З власним ключем API функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання безпосередньо до Anthropic ({0}), лише коли ви надсилаєте запитання. Плату за використання ключа стягує Anthropic. Ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері; програми, запущені під вашим обліковим записом Windows, можуть його прочитати.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Вимкнути й видалити</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Ліцензію активовано.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Цей ліцензійний ключ недійсний. Переконайтеся, що ви вставили його повністю.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>Не вдалося змінити параметр Windows: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Стан ліцензії</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Вставте ліцензійний ключ</value>
+    <value>Вставте код активації або ліцензійний ключ</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Ліцензійний ключ</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Автоматично копіювати зміни в буфер обміну</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Забагато спроб. Повторіть спробу через {0} с.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Забагато спроб. Повторіть спробу через хвилину.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Цей код активації недійсний. Переконайтеся, що ви вставили його повністю.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Цей ліцензійний ключ недійсний.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Усі місця для комп’ютерів за цією ліцензією зайнято. Спочатку видаліть Clipmark Premium з іншого комп’ютера.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Цю ліцензію відкликано. Якщо це неочікувано, зверніться до служби підтримки.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Термін дії цієї ліцензії минув.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Пробна версія Premium закінчилася.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Зараз пробна версія не пропонується.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Цей комп’ютер від’єднано, бо ліцензію активовано на іншому комп’ютері. Активуйте її знову, щоб використовувати Premium тут.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium видалено з цього комп’ютера. Активуйте його знову, щоб використовувати тут.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>Ключ цього комп’ютера не прийнято. Повторіть спробу; якщо помилка не зникне, зверніться до служби підтримки.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium активовано на цьому комп’ютері.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Активовано на цьому комп’ютері. Ліцензія діє щонайбільше на {0} комп’ютерах.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Інший комп’ютер від’єднано.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Підключіться до Інтернету, щоб розпочати 30-денну пробну версію Premium.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium не активний на цьому комп’ютері. Активуйте його за допомогою коду або придбайте Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Активація…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Видалити з цього комп’ютера</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Видалити Clipmark Premium з цього комп’ютера?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Місце цього комп’ютера звільниться для іншого комп’ютера. Щоб знову використовувати Premium тут, знадобиться код активації.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium видалено з цього комп’ютера.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark не вдалося створити ключ для цього комп’ютера: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>Функція «Запитати ШІ» надсилає знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваші запитання на ретранслятор IT-BAER ({0}), який передає їх до Anthropic з використанням ключа API IT-BAER. Вартість покривається вашою ліцензією Premium. Нічого не надсилається, доки ви не надішлете запитання, і ні Clipmark, ні ретранслятор не зберігають розмову.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>Цього місяця залишилося {0} USD</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>З Premium функції «Запитати ШІ» не потрібен ключ: знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання передаються через ретранслятор IT-BAER ({0}) до Anthropic, лише коли ви надсилаєте запитання. Якщо ви зберегли власний ключ API, функція «Запитати ШІ» надсилає їх безпосередньо до Anthropic ({1}), і плату за ключ стягує Anthropic; ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері.</value>
   </data>
 </root>

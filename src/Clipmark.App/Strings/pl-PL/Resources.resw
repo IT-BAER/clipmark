@@ -508,7 +508,7 @@
     <value>Zacznij od nowa ze zrzutem w obecnej postaci</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Dodaj swój klucz interfejsu API Anthropic w Ustawieniach, aby zadawać pytania o zrzuty.</value>
+    <value>Z Clipmark Premium funkcja Zapytaj AI działa bez klucza po aktywacji na tym komputerze. W przeciwnym razie dodaj własny klucz interfejsu API Anthropic w Ustawieniach, aby zadawać pytania o zrzuty.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>Rozmowa z AI</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Funkcja Premium. Funkcja Zapytaj AI wysyła zrzut w takiej postaci, w jakiej jest widoczny (wraz z adnotacjami i zasłoniętymi fragmentami), oraz Twoje pytanie do firmy Anthropic ({0}) przy użyciu Twojego własnego klucza interfejsu API, tylko wtedy, gdy wyślesz pytanie. Opłatą za klucz obciąża Anthropic. Klucz jest przechowywany w Menedżerze poświadczeń systemu Windows na tym komputerze; aplikacje uruchomione na Twoim koncie Windows mogą go odczytać.</value>
+    <value>Premium lub własny klucz. W wersji Premium funkcja Zapytaj AI działa bez klucza przez przekaźnik IT-BAER. Z własnym kluczem interfejsu API funkcja Zapytaj AI wysyła zrzut w takiej postaci, w jakiej jest widoczny (wraz z adnotacjami i zasłoniętymi fragmentami), oraz Twoje pytanie bezpośrednio do firmy Anthropic ({0}), tylko wtedy, gdy wyślesz pytanie. Opłatą za klucz obciąża Anthropic. Klucz jest przechowywany w Menedżerze poświadczeń systemu Windows na tym komputerze; aplikacje uruchomione na Twoim koncie Windows mogą go odczytać.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Wyłącz i usuń</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Licencja została aktywowana.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Ten klucz licencyjny jest nieprawidłowy. Sprawdź, czy został wklejony w całości.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>Nie udało się zmienić ustawienia systemu Windows: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Stan licencji</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Wklej klucz licencyjny</value>
+    <value>Wklej kod aktywacyjny lub klucz licencyjny</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Klucz licencyjny</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Automatycznie kopiuj zmiany do schowka</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Zbyt wiele prób. Spróbuj ponownie za {0} s.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Zbyt wiele prób. Spróbuj ponownie za minutę.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Ten kod aktywacyjny jest nieprawidłowy. Sprawdź, czy wklejono go w całości.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Ten klucz licencyjny jest nieprawidłowy.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Wszystkie miejsca na komputery w tej licencji są zajęte. Najpierw usuń Clipmark Premium z innego komputera.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Ta licencja została unieważniona. Jeśli to nieoczekiwane, skontaktuj się z pomocą techniczną.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Ta licencja wygasła.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Wersja próbna Premium dobiegła końca.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Obecnie nie jest oferowana żadna wersja próbna.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Ten komputer został wylogowany, ponieważ licencję aktywowano na innym komputerze. Aktywuj ponownie, aby korzystać tu z Premium.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium usunięto z tego komputera. Aktywuj ponownie, aby korzystać z niego tutaj.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>Klucz tego komputera nie został zaakceptowany. Spróbuj ponownie; jeśli problem się powtarza, skontaktuj się z pomocą techniczną.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium jest aktywowany na tym komputerze.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Aktywowano na tym komputerze. Licencja obejmuje maksymalnie {0} komputery.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Inny komputer został wylogowany.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Połącz się z Internetem, aby rozpocząć 30-dniową wersję próbną Premium.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium nie jest aktywny na tym komputerze. Aktywuj go swoim kodem lub kup Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Trwa aktywacja…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Usuń z tego komputera</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Usunąć Clipmark Premium z tego komputera?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Zwolni to miejsce tego komputera dla innego komputera. Aby ponownie korzystać tu z Premium, potrzebny będzie kod aktywacyjny.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium usunięto z tego komputera.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark nie może utworzyć klucza dla tego komputera: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>Funkcja Zapytaj AI wysyła zrzut w takiej postaci, w jakiej jest widoczny (wraz z adnotacjami i zasłoniętymi fragmentami), oraz Twoje pytania do przekaźnika IT-BAER ({0}), który przekazuje je do firmy Anthropic przy użyciu klucza interfejsu API firmy IT-BAER. Koszt jest objęty Twoją licencją Premium. Nic nie jest wysyłane, dopóki nie wyślesz pytania, a ani Clipmark, ani przekaźnik nie przechowują rozmowy.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>W tym miesiącu pozostało {0} USD</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>W wersji Premium funkcja Zapytaj AI nie wymaga klucza: zrzut w takiej postaci, w jakiej jest widoczny (wraz z adnotacjami i zasłoniętymi fragmentami), oraz Twoje pytanie trafiają przez przekaźnik IT-BAER ({0}) do firmy Anthropic, tylko wtedy, gdy wyślesz pytanie. Jeśli zapiszesz własny klucz interfejsu API, funkcja Zapytaj AI wysyła je bezpośrednio do firmy Anthropic ({1}), a opłatą za klucz obciąża Anthropic; klucz jest przechowywany w Menedżerze poświadczeń systemu Windows na tym komputerze.</value>
   </data>
 </root>

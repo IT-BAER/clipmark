@@ -508,7 +508,7 @@
     <value>以擷取畫面的目前狀態重新開始</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>若要就擷取畫面提問，請在「設定」中新增您的 Anthropic API 金鑰。</value>
+    <value>在這部電腦上啟用 Clipmark Premium 後，「詢問 AI」不需要金鑰即可使用。否則，若要就擷取畫面提問，請在「設定」中新增您自己的 Anthropic API 金鑰。</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>詢問 AI 對話</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium 功能。「詢問 AI」會使用您自己的 API 金鑰，將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題傳送給 Anthropic ({0})，且僅在您傳送問題時才會傳送。Anthropic 對該金鑰計費。金鑰儲存在這部電腦的 Windows 認證管理員中；在您的 Windows 帳戶下執行的應用程式可以讀取它。</value>
+    <value>Premium 或您自己的金鑰。使用 Premium 時，「詢問 AI」透過 IT-BAER 的中繼不需要金鑰即可使用。使用您自己的 API 金鑰時，「詢問 AI」會將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題直接傳送給 Anthropic ({0})，且僅在您傳送問題時才會傳送。Anthropic 對該金鑰計費。金鑰儲存在這部電腦的 Windows 認證管理員中；在您的 Windows 帳戶下執行的應用程式可以讀取它。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>關閉並刪除</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>授權已啟用。</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>此授權金鑰無效。請檢查是否已貼上完整內容。</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>無法變更 Windows 設定：{0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>授權狀態</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>貼上您的授權金鑰</value>
+    <value>貼上您的啟用碼或授權金鑰</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>授權金鑰</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>自動將編輯內容複製到剪貼簿</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>嘗試次數過多。請在 {0} 秒後重試。</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>嘗試次數過多。請在一分鐘後重試。</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>此啟用碼無效。請檢查是否已完整貼上。</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>此授權金鑰無效。</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>此授權的所有電腦名額都已使用。請先從另一部電腦移除 Clipmark Premium。</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>此授權已被撤銷。如果這出乎意料，請連絡支援人員。</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>此授權已過期。</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Premium 試用已結束。</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>目前未提供試用。</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>由於授權已在另一部電腦上啟用，這部電腦已被登出。若要在此使用 Premium，請重新啟用。</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>已從這部電腦移除 Clipmark Premium。若要在此使用，請重新啟用。</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>這部電腦的金鑰未被接受。請重試；如果仍然失敗，請連絡支援人員。</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium 已在這部電腦上啟用。</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>已在這部電腦上啟用。此授權最多可用於 {0} 部電腦。</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>另一部電腦已被登出。</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>請連線到網際網路以開始 30 天 Premium 試用。</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium 未在這部電腦上啟用。請使用您的啟用碼啟用，或購買 Premium。</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>正在啟用…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>從這部電腦移除</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>要從這部電腦移除 Clipmark Premium 嗎?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>這會將這部電腦的名額釋出給另一部電腦。若要在此再次使用 Premium，您需要啟用碼。</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>移除</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>已從這部電腦移除 Clipmark Premium。</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark 無法為這部電腦建立金鑰: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>「詢問 AI」會將所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題傳送到 IT-BAER 的中繼 ({0})，由中繼使用 IT-BAER 的 API 金鑰轉送給 Anthropic。費用包含在您的 Premium 授權中。在您傳送問題之前不會傳送任何內容，Clipmark 和中繼都不會儲存對話。</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>本月剩餘 {0} USD</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>使用 Premium 時，「詢問 AI」不需要金鑰：所顯示的擷取畫面 (包括註解和遮蔽內容) 以及您的問題僅在您傳送問題時透過 IT-BAER 的中繼 ({0}) 傳送給 Anthropic。如果您儲存了自己的 API 金鑰，「詢問 AI」會將它們直接傳送給 Anthropic ({1})，並由 Anthropic 對該金鑰計費；金鑰儲存在這部電腦的 Windows 認證管理員中。</value>
   </data>
 </root>

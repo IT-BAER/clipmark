@@ -508,7 +508,7 @@
     <value>Börja om med skärmklippet som det ser ut nu</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Lägg till din Anthropic API-nyckel i Inställningar för att ställa frågor om dina skärmklipp.</value>
+    <value>Med Clipmark Premium fungerar Fråga AI utan nyckel när det har aktiverats på den här datorn. Annars lägger du till din egen Anthropic API-nyckel i Inställningar för att ställa frågor om dina skärmklipp.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>Fråga AI-konversation</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium-funktion. Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga till Anthropic ({0}) med din egen API-nyckel, bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
+    <value>Premium eller din egen nyckel. Med Premium fungerar Fråga AI utan nyckel via IT-BAER:s relä. Med din egen API-nyckel skickar Fråga AI skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga direkt till Anthropic ({0}), bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Stäng av och ta bort</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Licensen aktiverades.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Den här licensnyckeln är inte giltig. Kontrollera att du klistrade in hela.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>Windows-inställningen kunde inte ändras: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Licensstatus</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Klistra in din licensnyckel</value>
+    <value>Klistra in din aktiveringskod eller licensnyckel</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Licensnyckel</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Kopiera ändringar till Urklipp automatiskt</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>För många försök. Försök igen om {0} s.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>För många försök. Försök igen om en minut.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Aktiveringskoden är ogiltig. Kontrollera att du klistrade in hela koden.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Licensnyckeln är ogiltig.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Alla datorplatser för den här licensen används. Ta först bort Clipmark Premium från en annan dator.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Den här licensen har återkallats. Kontakta supporten om detta är oväntat.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Den här licensen har gått ut.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Premium-utvärderingen har gått ut.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Ingen utvärdering erbjuds just nu.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Den här datorn loggades ut eftersom licensen aktiverades på en annan dator. Aktivera igen för att använda Premium här.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium har tagits bort från den här datorn. Aktivera igen för att använda det här.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>Den här datorns nyckel godkändes inte. Försök igen. Kontakta supporten om det fortsätter att misslyckas.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium är aktiverat på den här datorn.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Aktiverat på den här datorn. Licensen gäller för upp till {0} datorer.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>En annan dator loggades ut.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Anslut till internet för att starta din 30-dagars Premium-utvärdering.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium är inte aktivt på den här datorn. Aktivera det med din kod eller köp Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Aktiverar…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Ta bort från den här datorn</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Vill du ta bort Clipmark Premium från den här datorn?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Det frigör den här datorns plats för en annan dator. Om du vill använda Premium här igen behöver du din aktiveringskod.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Ta bort</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium har tagits bort från den här datorn.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark kunde inte skapa nyckeln för den här datorn: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och dina frågor till IT-BAER:s relä ({0}), som skickar dem vidare till Anthropic med IT-BAER:s API-nyckel. Kostnaden ingår i din Premium-licens. Inget skickas förrän du skickar en fråga, och varken Clipmark eller reläet sparar konversationen.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>{0} USD kvar den här månaden</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>Med Premium behöver Fråga AI ingen nyckel: skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga går via IT-BAER:s relä ({0}) till Anthropic, bara när du skickar en fråga. Om du har sparat en egen API-nyckel skickar Fråga AI dem direkt till Anthropic ({1}) och Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn.</value>
   </data>
 </root>

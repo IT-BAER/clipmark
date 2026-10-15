@@ -508,7 +508,7 @@
     <value>Start over with the capture as it is now</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Add your Anthropic API key in Settings to ask questions about your captures.</value>
+    <value>Clipmark Premium uses Ask AI without a key once it is activated on this PC. Otherwise add your own Anthropic API key in Settings to ask questions about your captures.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>Ask AI conversation</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium feature. Ask AI sends the capture as shown (annotations and redactions included) and your question to Anthropic ({0}) under your own API key, only when you send a question. Anthropic bills the key. The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.</value>
+    <value>Premium or your own key. With Premium, Ask AI works without a key through IT-BAER's relay. With your own API key, Ask AI sends the capture as shown (annotations and redactions included) and your question directly to Anthropic ({0}), only when you send a question. Anthropic bills the key. The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Turn off and delete</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>License activated.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>This license key is not valid. Check that you pasted all of it.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>The Windows setting could not be changed: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>License status</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Paste your license key</value>
+    <value>Paste your activation code or license key</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>License key</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Copy edits to the clipboard automatically</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Too many attempts. Try again in {0} s.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Too many attempts. Try again in a minute.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>This activation code is not valid. Check that you pasted all of it.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>This license key is not valid.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Every PC seat of this license is in use. Remove Clipmark Premium from another PC first.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>This license has been revoked. Contact support if this is unexpected.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>This license has expired.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>The Premium trial has ended.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>No trial is offered right now.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>This PC was signed out because the license was activated on another PC. Activate again to use Premium here.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium was removed from this PC. Activate again to use it here.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>This PC's key was not accepted. Try again; if it keeps failing, contact support.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium is activated on this PC.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Activated on this PC. The license covers up to {0} PCs.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Another PC was signed out.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Connect to the internet to start your 30-day Premium trial.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium is not active on this PC. Activate it with your code, or buy Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Activating…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Remove from this PC</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Remove Clipmark Premium from this PC?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>This frees the PC's seat for another PC. To use Premium here again, you need your activation code.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium was removed from this PC.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark could not create the key for this PC: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>Ask AI sends the capture as shown (annotations and redactions included) and your questions to IT-BAER's relay ({0}), which passes them to Anthropic under IT-BAER's API key. Your Premium license covers the cost. Nothing is sent until you send a question, and neither Clipmark nor the relay stores the conversation.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>{0} USD left this month</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>With Premium, Ask AI needs no key: the capture as shown (annotations and redactions included) and your question go through IT-BAER's relay ({0}) to Anthropic, only when you send a question. With your own API key saved, Ask AI sends them directly to Anthropic ({1}) and Anthropic bills the key; the key is kept in Windows Credential Manager on this PC.</value>
   </data>
 </root>

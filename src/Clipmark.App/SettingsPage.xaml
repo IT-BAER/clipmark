@@ -27,10 +27,11 @@
                     <TextBlock x:Name="LicenseStatusText" x:Uid="SettingsLicenseStatus" TextWrapping="Wrap" />
                     <StackPanel x:Name="LicenseEntry" Orientation="Horizontal" Spacing="8">
                         <TextBox x:Name="LicenseKeyBox" x:Uid="SettingsLicenseKey" Width="380" />
-                        <Button x:Uid="SettingsLicenseActivate" Click="OnActivate" />
+                        <Button x:Name="ActivateButton" x:Uid="SettingsLicenseActivate" Click="OnActivate" />
                     </StackPanel>
                     <TextBlock x:Name="LicenseResultText" x:Uid="SettingsLicenseResult" TextWrapping="Wrap" />
                     <Button x:Name="BuyButton" x:Uid="SettingsLicenseBuy" Click="OnBuy" />
+                    <Button x:Name="RemoveLicenseButton" x:Uid="SettingsLicenseRemove" Click="OnRemoveLicense" Visibility="Collapsed" />
                 </StackPanel>
 
                 <StackPanel Spacing="8">

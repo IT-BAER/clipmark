@@ -508,7 +508,7 @@
     <value>Alıntının şu anki haliyle baştan başla</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Alıntılarınız hakkında soru sormak için Ayarlar'a Anthropic API anahtarınızı ekleyin.</value>
+    <value>Clipmark Premium bu bilgisayarda etkinleştirildiğinde AI'ya sor anahtarsız çalışır. Aksi takdirde, alıntılarınız hakkında soru sormak için Ayarlar'a kendi Anthropic API anahtarınızı ekleyin.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>AI'ya sor görüşmesi</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium özelliği. AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde kendi API anahtarınızla Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
+    <value>Premium veya kendi anahtarınız. Premium ile AI'ya sor, IT-BAER'in aktarıcısı üzerinden anahtarsız çalışır. Kendi API anahtarınızla AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde doğrudan Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Kapat ve sil</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Lisans etkinleştirildi.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Bu lisans anahtarı geçerli değil. Tamamını yapıştırdığınızdan emin olun.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>Windows ayarı değiştirilemedi: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Lisans durumu</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Lisans anahtarınızı yapıştırın</value>
+    <value>Etkinleştirme kodunuzu veya lisans anahtarınızı yapıştırın</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Lisans anahtarı</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Düzenlemeleri otomatik olarak panoya kopyala</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Çok fazla deneme yapıldı. {0} sn sonra yeniden deneyin.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Çok fazla deneme yapıldı. Bir dakika sonra yeniden deneyin.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Bu etkinleştirme kodu geçerli değil. Kodun tamamını yapıştırdığınızdan emin olun.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Bu lisans anahtarı geçerli değil.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Bu lisansın tüm bilgisayar yerleri kullanımda. Önce Clipmark Premium'u başka bir bilgisayardan kaldırın.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Bu lisans iptal edildi. Bu beklenmedik bir durumsa destek ekibine başvurun.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Bu lisansın süresi doldu.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Premium denemesi sona erdi.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Şu anda deneme sunulmuyor.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Lisans başka bir bilgisayarda etkinleştirildiği için bu bilgisayarın oturumu kapatıldı. Premium'u burada kullanmak için yeniden etkinleştirin.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium bu bilgisayardan kaldırıldı. Burada kullanmak için yeniden etkinleştirin.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>Bu bilgisayarın anahtarı kabul edilmedi. Yeniden deneyin; sorun sürerse destek ekibine başvurun.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium bu bilgisayarda etkinleştirildi.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Bu bilgisayarda etkinleştirildi. Lisans en fazla {0} bilgisayarı kapsar.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Başka bir bilgisayarın oturumu kapatıldı.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>30 günlük Premium denemenizi başlatmak için internete bağlanın.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium bu bilgisayarda etkin değil. Kodunuzla etkinleştirin veya Premium satın alın.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Etkinleştiriliyor…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Bu bilgisayardan kaldır</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>Clipmark Premium bu bilgisayardan kaldırılsın mı?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Bu işlem bu bilgisayarın yerini başka bir bilgisayar için boşaltır. Premium'u burada yeniden kullanmak için etkinleştirme kodunuz gerekir.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium bu bilgisayardan kaldırıldı.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark bu bilgisayar için anahtar oluşturamadı: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorularınızı IT-BAER'in aktarıcısına ({0}) gönderir; aktarıcı bunları IT-BAER'in API anahtarıyla Anthropic'e iletir. Maliyet Premium lisansınıza dahildir. Siz bir soru gönderene kadar hiçbir şey gönderilmez; ne Clipmark ne de aktarıcı konuşmayı saklar.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>Bu ay {0} USD kaldı</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>Premium ile AI'ya sor için anahtar gerekmez: alıntı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuz, yalnızca bir soru gönderdiğinizde IT-BAER'in aktarıcısı ({0}) üzerinden Anthropic'e gider. Kendi API anahtarınızı kaydettiyseniz AI'ya sor bunları doğrudan Anthropic'e ({1}) gönderir ve anahtarın ücretini Anthropic faturalandırır; anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur.</value>
   </data>
 </root>

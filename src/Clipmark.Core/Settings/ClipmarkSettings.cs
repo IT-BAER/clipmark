@@ -39,6 +39,9 @@ public sealed record ClipmarkSettings
     /// <summary>The user accepted sending captures to Anthropic.</summary>
     public bool AiConsent { get; init; }
 
+    /// <summary>The user accepted sending captures through IT-BAER's relay to Anthropic (Premium without an own key).</summary>
+    public bool AiConsentRelay { get; init; }
+
     /// <summary>Set while Clipmark owns Print Screen: the Windows option's value before (see <see cref="PrintScreenToken"/>).</summary>
     public string? PrintScreenRestore { get; init; }
 
@@ -126,6 +129,7 @@ public static class SettingsStore
             w.WriteString("aiModel", s.AiModel);
             w.WriteString("aiEffort", s.AiEffort);
             w.WriteBoolean("aiConsent", s.AiConsent);
+            w.WriteBoolean("aiConsentRelay", s.AiConsentRelay);
             w.WriteString("printScreenRestore", s.PrintScreenRestore);
             w.WriteString("language", s.Language);
             w.WriteBoolean("redactEmail", s.RedactEmail);
@@ -177,6 +181,7 @@ public static class SettingsStore
                 AiModel = string.IsNullOrWhiteSpace(Str("aiModel")) ? d.AiModel : Str("aiModel")!,
                 AiEffort = AiEfforts.All.Contains(Str("aiEffort")) ? Str("aiEffort")! : d.AiEffort,
                 AiConsent = Bool("aiConsent", d.AiConsent),
+                AiConsentRelay = Bool("aiConsentRelay", d.AiConsentRelay),
                 PrintScreenRestore = PrintScreenToken.IsValid(Str("printScreenRestore")) ? Str("printScreenRestore") : null,
                 Language = UiLanguages.IsValid(Str("language")) ? Str("language") : null,
                 RedactEmail = Bool("redactEmail", d.RedactEmail),

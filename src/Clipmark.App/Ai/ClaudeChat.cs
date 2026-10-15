@@ -46,7 +46,7 @@ internal static class ClaudeChat
             using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, limit.Token);
             return response.IsSuccessStatusCode ? null : await FailureAsync(response, limit.Token);
         }
-        catch (Exception e) when (Network(e, ct) is { } message)
+        catch (Exception e) when (Network(e, ct, BaseUri.Host) is { } message)
         {
             return message;
         }
@@ -67,7 +67,7 @@ internal static class ClaudeChat
             using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
             return await ChatStream.ReadAsync(stream, onText, Idle, ct, onThinking).ConfigureAwait(false);
         }
-        catch (Exception e) when (Network(e, ct) is { } message)
+        catch (Exception e) when (Network(e, ct, BaseUri.Host) is { } message)
         {
             throw new AiException(message);
         }
@@ -87,14 +87,14 @@ internal static class ClaudeChat
     }
 
     /// <summary>Message for a connection, proxy, TLS or timeout failure; null for a cancel by the caller or anything else.</summary>
-    private static string? Network(Exception e, CancellationToken ct) => e switch
+    internal static string? Network(Exception e, CancellationToken ct, string host) => e switch
     {
         OperationCanceledException when ct.IsCancellationRequested => null,
-        OperationCanceledException => Loc.Format("AiTimeout", BaseUri.Host),
-        HttpRequestException { InnerException: AuthenticationException } => Loc.Format("AiTlsFailed", BaseUri.Host),
+        OperationCanceledException => Loc.Format("AiTimeout", host),
+        HttpRequestException { InnerException: AuthenticationException } => Loc.Format("AiTlsFailed", host),
         HttpRequestException { StatusCode: HttpStatusCode.ProxyAuthenticationRequired } => Loc.Get("AiProxyAuth"),
-        HttpRequestException h => Loc.Format("AiUnreachable", BaseUri.Host, h.Message),
-        IOException io => Loc.Format("AiConnectionBroke", BaseUri.Host, io.Message),
+        HttpRequestException h => Loc.Format("AiUnreachable", host, h.Message),
+        IOException io => Loc.Format("AiConnectionBroke", host, io.Message),
         _ => null,
     };
 }

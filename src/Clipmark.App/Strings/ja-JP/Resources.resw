@@ -508,7 +508,7 @@
     <value>キャプチャの現在の状態で最初からやり直す</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>キャプチャについて質問するには、[設定] で Anthropic API キーを追加してください。</value>
+    <value>Clipmark Premium をこの PC でライセンス認証すると、[AI に質問] はキーなしで使用できます。それ以外の場合は、キャプチャについて質問するために [設定] でお客様自身の Anthropic API キーを追加してください。</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>AI に質問の会話</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium 機能です。[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を、お客様自身の API キーを使用して Anthropic ({0}) に送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
+    <value>Premium またはお客様自身のキー。Premium では、[AI に質問] は IT-BAER のリレーを経由してキーなしで使用できます。お客様自身の API キーを使用する場合、[AI に質問] は表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を Anthropic ({0}) に直接送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>オフにして削除</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>ライセンス認証が完了しました。</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>このライセンス キーは無効です。すべてを貼り付けたか確認してください。</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>Windows の設定を変更できませんでした: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>ライセンスの状態</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>ライセンス キーを貼り付け</value>
+    <value>ライセンス認証コードまたはライセンス キーを貼り付け</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>ライセンス キー</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>編集内容を自動的にクリップボードにコピーする</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>試行回数が多すぎます。{0} 秒後にもう一度お試しください。</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>試行回数が多すぎます。1 分後にもう一度お試しください。</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>このライセンス認証コードは無効です。すべて貼り付けたか確認してください。</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>このライセンス キーは無効です。</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>このライセンスの PC 枠はすべて使用中です。先に別の PC から Clipmark Premium を削除してください。</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>このライセンスは取り消されました。心当たりがない場合はサポートにお問い合わせください。</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>このライセンスの有効期限が切れました。</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>Premium の試用期間は終了しました。</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>現在、試用版は提供されていません。</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>ライセンスが別の PC でライセンス認証されたため、この PC はサインアウトされました。ここで Premium を使用するには、もう一度ライセンス認証してください。</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium はこの PC から削除されました。ここで使用するには、もう一度ライセンス認証してください。</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>この PC のキーは受け付けられませんでした。もう一度お試しください。問題が解決しない場合はサポートにお問い合わせください。</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium はこの PC でライセンス認証されています。</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>この PC でライセンス認証されました。このライセンスは最大 {0} 台の PC で使用できます。</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>別の PC がサインアウトされました。</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>30 日間の Premium 試用版を開始するには、インターネットに接続してください。</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium はこの PC で有効になっていません。コードでライセンス認証するか、Premium を購入してください。</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>ライセンス認証しています…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>この PC から削除</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>この PC から Clipmark Premium を削除しますか?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>この PC の枠が解放され、別の PC で使用できるようになります。ここで再び Premium を使用するには、ライセンス認証コードが必要です。</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium はこの PC から削除されました。</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark はこの PC のキーを作成できませんでした: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を IT-BAER のリレー ({0}) に送信し、リレーが IT-BAER の API キーを使用して Anthropic に転送します。料金は Premium ライセンスに含まれています。質問を送信するまでは何も送信されません。また、Clipmark もリレーも会話を保存しません。</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>今月の残り {0} USD</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>Premium では、[AI に質問] にキーは不要です。表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問は、質問を送信したときだけ IT-BAER のリレー ({0}) を経由して Anthropic に送信されます。お客様自身の API キーを保存している場合、[AI に質問] はそれらを Anthropic ({1}) に直接送信し、キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存されます。</value>
   </data>
 </root>

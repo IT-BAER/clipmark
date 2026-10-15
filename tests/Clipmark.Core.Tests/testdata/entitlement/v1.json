@@ -1,0 +1,142 @@
+{
+  "cases": [
+    {
+      "name": "valid",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "valid"
+    },
+    {
+      "name": "valid at the end of grace",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1763801600,
+      "verdict": "valid"
+    },
+    {
+      "name": "iat 300 s ahead of the clock",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1759999700,
+      "verdict": "valid"
+    },
+    {
+      "name": "expired past grace",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1763801601,
+      "verdict": "expired"
+    },
+    {
+      "name": "issued in the future",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1759999699,
+      "verdict": "issued_in_future"
+    },
+    {
+      "name": "wrong kid",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "b3RoZXJraWQ": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "unknown_kid"
+    },
+    {
+      "name": "wrong app",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "otherapp",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "wrong_app"
+    },
+    {
+      "name": "wrong dev",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "now": 1760001000,
+      "verdict": "wrong_dev"
+    },
+    {
+      "name": "tampered payload",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjksImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "bad_signature"
+    },
+    {
+      "name": "DER signature",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.MEUCIC1nT0_WQ_SYLY-Fr51NOakanZ_PCtd5xFYvJJyDcyUtAiEAoeDFEnvHzQsSqXHvIo2UEcVu4-x66wcDnmXLspnkwZs",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "bad_signature"
+    },
+    {
+      "name": "padded base64",
+      "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw=",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "malformed"
+    },
+    {
+      "name": "wrong prefix",
+      "entitlement": "rl2.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+      "keys": {
+        "dGVzdGtpZDE": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+      },
+      "app": "clipmark",
+      "dev": "wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM",
+      "now": 1760001000,
+      "verdict": "malformed"
+    }
+  ],
+  "comment": "Generated with Go stdlib (independent of internal/licence) on 2026-10-14 with a TEST key. Never use this key for real entitlements. now is Unix seconds; keys map kid to SPKI base64.",
+  "entitlement": "rl1.eyJ2IjoxLCJraWQiOiJkR1Z6ZEd0cFpERSIsImFwcCI6ImNsaXBtYXJrIiwibGljIjoiQUFFQ0F3UUZCZ2NJQ1FvTCIsInBsYW4iOiJwcmVtaXVtIiwiZmVhdCI6WyJhaSIsImhpc3RvcnkiXSwic2VhdHMiOjMsImRldiI6IndERXF4RGE5UjF2ZjFoOTZvUW55RVF5QWhOcW1SM0EzbXIwdWk0dkNJQ00iLCJpYXQiOjE3NjAwMDAwMDAsImV4cCI6MTc2MjU5MjAwMCwiZ3JhY2UiOjEyMDk2MDB9.LWdPT9ZD9Jgtj4WvnU05qRqdn88K13nEVi8knINzJS2h4MUSe8fNCxKpce8ijZQRxW7j7HrrBwOeZcuymeTBmw",
+  "kid": "dGVzdGtpZDE",
+  "payload": "{\"v\":1,\"kid\":\"dGVzdGtpZDE\",\"app\":\"clipmark\",\"lic\":\"AAECAwQFBgcICQoL\",\"plan\":\"premium\",\"feat\":[\"ai\",\"history\"],\"seats\":3,\"dev\":\"wDEqxDa9R1vf1h96oQnyEQyAhNqmR3A3mr0ui4vCICM\",\"iat\":1760000000,\"exp\":1762592000,\"grace\":1209600}",
+  "private_key_pem": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgPOzKZPayDM+fdFyS\nU3HtICg032egBoX3vUqvINpUWnyhRANCAATZcdPv1jhAsYgDWChPmKtbffhAnS8Y\nLHwaKK2RYICYM+/0k6xVj6QVPVPN17N39jydJhLPA2dr+6TsG+v4KuVs\n-----END PRIVATE KEY-----\n",
+  "public_spki_base64": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2XHT79Y4QLGIA1goT5irW334QJ0vGCx8GiitkWCAmDPv9JOsVY+kFT1Tzdezd/Y8nSYSzwNna/uk7Bvr+CrlbA=="
+}

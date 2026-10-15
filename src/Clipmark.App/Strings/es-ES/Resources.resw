@@ -508,7 +508,7 @@
     <value>Empezar de nuevo con la captura tal como está ahora</value>
   </data>
   <data name="AskAiNoKey" xml:space="preserve">
-    <value>Agrega tu clave de API de Anthropic en Configuración para hacer preguntas sobre tus capturas.</value>
+    <value>Con Clipmark Premium, Preguntar a la IA funciona sin clave una vez activado en este PC. Si no, agrega tu propia clave de API de Anthropic en Configuración para hacer preguntas sobre tus capturas.</value>
   </data>
   <data name="AskAiConversationName" xml:space="preserve">
     <value>Conversación con la IA</value>
@@ -813,7 +813,7 @@
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Función Premium. Preguntar a la IA envía la captura tal como se ve (con anotaciones y tachados) y tu pregunta a Anthropic ({0}) con tu propia clave de API, solo cuando envías una pregunta. Anthropic cobra la clave. La clave se guarda en el Administrador de credenciales de Windows en este equipo; las aplicaciones que se ejecutan con tu cuenta de Windows pueden leerla.</value>
+    <value>Premium o tu propia clave. Con Premium, Preguntar a la IA funciona sin clave a través del relé de IT-BAER. Con tu propia clave de API, Preguntar a la IA envía la captura tal como se ve (con anotaciones y tachados) y tu pregunta directamente a Anthropic ({0}), solo cuando envías una pregunta. Anthropic cobra la clave. La clave se guarda en el Administrador de credenciales de Windows de este PC; las aplicaciones que se ejecutan con tu cuenta de Windows pueden leerla.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -862,12 +862,6 @@
   <data name="HistoryOffConfirm" xml:space="preserve">
     <value>Desactivar y eliminar</value>
   </data>
-  <data name="LicenseActivated" xml:space="preserve">
-    <value>Licencia activada.</value>
-  </data>
-  <data name="LicenseInvalid" xml:space="preserve">
-    <value>Esta clave de licencia no es válida. Comprueba que la has pegado completa.</value>
-  </data>
   <data name="PrintScreenChangeFailed" xml:space="preserve">
     <value>No se pudo cambiar la configuración de Windows: {0}</value>
     <comment>{0} = system error message</comment>
@@ -906,7 +900,7 @@
     <value>Estado de la licencia</value>
   </data>
   <data name="SettingsLicenseKey.PlaceholderText" xml:space="preserve">
-    <value>Pega tu clave de licencia</value>
+    <value>Pega tu código de activación o clave de licencia</value>
   </data>
   <data name="SettingsLicenseKey.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Clave de licencia</value>
@@ -1458,5 +1452,86 @@
   </data>
   <data name="SettingsCopyEdits.Header" xml:space="preserve">
     <value>Copiar las ediciones al Portapapeles automáticamente</value>
+  </data>
+  <data name="LicenceTooManyWait" xml:space="preserve">
+    <value>Demasiados intentos. Vuelve a intentarlo en {0} s.</value>
+  </data>
+  <data name="LicenceTooMany" xml:space="preserve">
+    <value>Demasiados intentos. Vuelve a intentarlo en un minuto.</value>
+  </data>
+  <data name="LicenceCodeInvalid" xml:space="preserve">
+    <value>Este código de activación no es válido. Comprueba que lo has pegado completo.</value>
+  </data>
+  <data name="LicenceKeyInvalid" xml:space="preserve">
+    <value>Esta clave de licencia no es válida.</value>
+  </data>
+  <data name="LicenceSeatsExhausted" xml:space="preserve">
+    <value>Todos los puestos de PC de esta licencia están en uso. Quita primero Clipmark Premium de otro PC.</value>
+  </data>
+  <data name="LicenceRevoked" xml:space="preserve">
+    <value>Esta licencia se ha revocado. Ponte en contacto con el soporte si no lo esperabas.</value>
+  </data>
+  <data name="LicenceExpired" xml:space="preserve">
+    <value>Esta licencia ha caducado.</value>
+  </data>
+  <data name="LicenceTrialExpired" xml:space="preserve">
+    <value>La prueba de Premium ha terminado.</value>
+  </data>
+  <data name="LicenceTrialNotOffered" xml:space="preserve">
+    <value>Ahora mismo no se ofrece ninguna prueba.</value>
+  </data>
+  <data name="LicenceInstallEvicted" xml:space="preserve">
+    <value>Se ha cerrado la sesión de este PC porque la licencia se activó en otro PC. Vuelve a activarla para usar Premium aquí.</value>
+  </data>
+  <data name="LicenceInstallDeactivated" xml:space="preserve">
+    <value>Clipmark Premium se ha quitado de este PC. Vuelve a activarlo para usarlo aquí.</value>
+  </data>
+  <data name="RelayKeyRejected" xml:space="preserve">
+    <value>No se ha aceptado la clave de este PC. Vuelve a intentarlo; si sigue fallando, ponte en contacto con el soporte.</value>
+  </data>
+  <data name="LicenseActiveHere" xml:space="preserve">
+    <value>Clipmark Premium está activado en este PC.</value>
+  </data>
+  <data name="LicenseActivatedSeats" xml:space="preserve">
+    <value>Activado en este PC. La licencia cubre hasta {0} PC.</value>
+  </data>
+  <data name="LicenseOtherSignedOut" xml:space="preserve">
+    <value>Se ha cerrado la sesión de otro PC.</value>
+  </data>
+  <data name="LicenseConnectForTrial" xml:space="preserve">
+    <value>Conéctate a Internet para empezar tu prueba de Premium de 30 días.</value>
+  </data>
+  <data name="LicenseNotActive" xml:space="preserve">
+    <value>Clipmark Premium no está activo en este PC. Actívalo con tu código o compra Premium.</value>
+  </data>
+  <data name="LicenseActivating" xml:space="preserve">
+    <value>Activando…</value>
+  </data>
+  <data name="SettingsLicenseRemove.Content" xml:space="preserve">
+    <value>Quitar de este PC</value>
+  </data>
+  <data name="LicenseRemoveTitle" xml:space="preserve">
+    <value>¿Quitar Clipmark Premium de este PC?</value>
+  </data>
+  <data name="LicenseRemoveBody" xml:space="preserve">
+    <value>Así se libera el puesto de este PC para otro PC. Para volver a usar Premium aquí, necesitas tu código de activación.</value>
+  </data>
+  <data name="LicenseRemoveConfirm" xml:space="preserve">
+    <value>Quitar</value>
+  </data>
+  <data name="LicenseRemoved" xml:space="preserve">
+    <value>Clipmark Premium se ha quitado de este PC.</value>
+  </data>
+  <data name="LicenceKeyFailed" xml:space="preserve">
+    <value>Clipmark no pudo crear la clave para este PC: {0}</value>
+  </data>
+  <data name="AiConsentBodyRelay" xml:space="preserve">
+    <value>Preguntar a la IA envía la captura tal como se ve (con anotaciones y tachados) y tus preguntas al relé de IT-BAER ({0}), que las pasa a Anthropic con la clave de API de IT-BAER. Tu licencia Premium cubre el coste. No se envía nada hasta que envías una pregunta, y ni Clipmark ni el relé guardan la conversación.</value>
+  </data>
+  <data name="AskAiRemaining" xml:space="preserve">
+    <value>Quedan {0} USD este mes</value>
+  </data>
+  <data name="AiHintRelay" xml:space="preserve">
+    <value>Con Premium, Preguntar a la IA no necesita clave: la captura tal como se ve (con anotaciones y tachados) y tu pregunta pasan por el relé de IT-BAER ({0}) hasta Anthropic, solo cuando envías una pregunta. Si guardas tu propia clave de API, Preguntar a la IA las envía directamente a Anthropic ({1}) y Anthropic cobra la clave; la clave se guarda en el Administrador de credenciales de Windows de este PC.</value>
   </data>
 </root>

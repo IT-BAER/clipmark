@@ -42,29 +42,4 @@ public static class RelayRequest
         }
         return buffer.ToArray();
     }
-
-    /// <summary>Windows registration: the licence is the anchor, the JWK is the install key; no device label in v1.</summary>
-    public static byte[] BuildRegistration(string licenceKey, string x, string y, string keyStore, string appVersion)
-    {
-        using var buffer = new MemoryStream();
-        using (var w = new Utf8JsonWriter(buffer))
-        {
-            w.WriteStartObject();
-            w.WriteString("platform", "windows");
-            w.WriteStartObject("anchor");
-            w.WriteString("type", "licence");
-            w.WriteString("licence_key", licenceKey);
-            w.WriteEndObject();
-            w.WriteStartObject("public_key");
-            w.WriteString("kty", "EC");
-            w.WriteString("crv", "P-256");
-            w.WriteString("x", x);
-            w.WriteString("y", y);
-            w.WriteEndObject();
-            w.WriteString("key_store", keyStore);
-            w.WriteString("app_version", appVersion);
-            w.WriteEndObject();
-        }
-        return buffer.ToArray();
-    }
 }

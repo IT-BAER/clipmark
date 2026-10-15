@@ -46,24 +46,6 @@ public sealed class RelayRequestTests
     }
 
     [Fact]
-    public void Registration_body_has_the_licence_anchor_the_jwk_and_the_key_store_but_no_device_label()
-    {
-        var r = Root(RelayRequest.BuildRegistration("ABCDE-FGHIJ", "xx", "yy", "tpm", "1.1.0"));
-
-        Assert.Equal("windows", r.GetProperty("platform").GetString());
-        Assert.Equal("licence", r.GetProperty("anchor").GetProperty("type").GetString());
-        Assert.Equal("ABCDE-FGHIJ", r.GetProperty("anchor").GetProperty("licence_key").GetString());
-        var jwk = r.GetProperty("public_key");
-        Assert.Equal("EC", jwk.GetProperty("kty").GetString());
-        Assert.Equal("P-256", jwk.GetProperty("crv").GetString());
-        Assert.Equal("xx", jwk.GetProperty("x").GetString());
-        Assert.Equal("yy", jwk.GetProperty("y").GetString());
-        Assert.Equal("tpm", r.GetProperty("key_store").GetString());
-        Assert.Equal("1.1.0", r.GetProperty("app_version").GetString());
-        Assert.False(r.TryGetProperty("device_label", out _));
-    }
-
-    [Fact]
     public void Paths_name_the_clipmark_app_and_the_ask_task()
     {
         Assert.Equal("/v1/apps/clipmark/installs", RelayRequest.RegisterPath);

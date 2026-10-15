@@ -4,6 +4,7 @@ using Clipmark.App.Capture;
 using Clipmark.App.Output;
 using Clipmark.Core.Ai;
 using Clipmark.Core.Licensing;
+using Clipmark.Core.Relay;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -15,7 +16,8 @@ using Windows.System;
 namespace Clipmark.App;
 
 /// <summary>
-/// Ask AI: a chat about the current capture in a toolbar flyout, sent to the Messages API with the user's own key.
+/// Ask AI: a chat about the current capture in a toolbar flyout, sent to the Messages API with the user's own key, or for
+/// Premium without an own key through IT-BAER's relay (<see cref="RelayChat"/>).
 /// One conversation per editor session, only in memory; it ends with the capture. Closing the flyout does not cancel.
 /// </summary>
 public sealed partial class MainPage
@@ -188,7 +190,7 @@ public sealed partial class MainPage
     /// <summary>Key hint or chat, model name and answer depth; a key saved or removed in Settings shows on the next open.</summary>
     private void SyncAiFlyout()
     {
-        bool hasKey = AnthropicKeyStore.HasKey;
+        bool hasKey = AnthropicKeyStore.HasKey || AppLicense.CanUseRelay;
         _aiNoKeyPanel.Visibility = hasKey ? Visibility.Collapsed : Visibility.Visible;
         _aiChatPanel.Visibility = hasKey ? Visibility.Visible : Visibility.Collapsed;
         _aiModelText.Text = AiModels.Find(AppSettings.Current.AiModel).Name;
@@ -211,10 +213,12 @@ public sealed partial class MainPage
         _aiStatus.Visibility = string.IsNullOrEmpty(text) ? Visibility.Collapsed : Visibility.Visible;
     }
 
-    /// <summary>Consent once: what is sent where. False keeps the question unsent.</summary>
-    private async Task<bool> ConfirmAiConsentAsync()
+    private static bool HasAiConsent(bool relay) => relay ? AppSettings.Current.AiConsentRelay : AppSettings.Current.AiConsent;
+
+    /// <summary>Consent once per path (direct or relay): what is sent where. False keeps the question unsent.</summary>
+    private async Task<bool> ConfirmAiConsentAsync(bool relay)
     {
-        if (AppSettings.Current.AiConsent)
+        if (HasAiConsent(relay))
             return true;
         if (_confirming)
             return false;
@@ -229,7 +233,7 @@ public sealed partial class MainPage
                 Content = new TextBlock
                 {
                     TextWrapping = TextWrapping.Wrap,
-                    Text = Loc.Format("AiConsentBody", ClaudeChat.Host),
+                    Text = relay ? Loc.Format("AiConsentBodyRelay", RelayChat.Host) : Loc.Format("AiConsentBody", ClaudeChat.Host),
                 },
                 PrimaryButtonText = Loc.Get("AiConsentSend"),
                 CloseButtonText = Loc.Get("Cancel"),
@@ -237,7 +241,7 @@ public sealed partial class MainPage
             };
             if (await dialog.ShowAsync() != ContentDialogResult.Primary)
                 return false;
-            AppSettings.Update(s => s with { AiConsent = true });
+            AppSettings.Update(s => relay ? s with { AiConsentRelay = true } : s with { AiConsent = true });
             return true;
         }
         finally
@@ -257,7 +261,10 @@ public sealed partial class MainPage
             _ = ShowPremiumAsync(PremiumFeature.AiChat);
             return;
         }
-        if (AnthropicKeyStore.Read() is not { } key)
+        // An own key always goes direct; Premium by entitlement without one uses the relay.
+        string? key = AnthropicKeyStore.Read();
+        bool relay = key is null && AppLicense.CanUseRelay;
+        if (key is null && !relay)
         {
             SyncAiFlyout();
             return;
@@ -265,7 +272,7 @@ public sealed partial class MainPage
         _aiPreparing = true;
         try
         {
-            if (!await PrepareAiAsync(editor))
+            if (!await PrepareAiAsync(editor, relay))
                 return;
         }
         finally
@@ -276,7 +283,7 @@ public sealed partial class MainPage
         _chat.Ask(question);
         _aiInput.Text = "";
         var model = AiModels.Find(AppSettings.Current.AiModel);
-        byte[] body = ChatRequest.Build(_chat, model.Id, AppSettings.Current.AiEffort);
+        byte[] body = relay ? RelayRequest.BuildAsk(_chat, model.Id, AppSettings.Current.AiEffort) : ChatRequest.Build(_chat, model.Id, AppSettings.Current.AiEffort);
         var cts = _aiCts = new CancellationTokenSource();
         SyncAiTurns();
         ShowAiBusy();
@@ -287,21 +294,25 @@ public sealed partial class MainPage
         bool cancelled = false;
         try
         {
-            stop = await ClaudeChat.SendAsync(key, body, text =>
+            void OnText(string text)
             {
                 lock (_aiPending)
                 {
                     if (run == _aiRun)
                         _aiPending.Append(text);
                 }
-            }, cts.Token, thinking =>
+            }
+            void OnThinking(string thinking)
             {
                 lock (_aiPending)
                 {
                     if (run == _aiRun)
                         _aiPendingThinking.Append(thinking);
                 }
-            });
+            }
+            stop = relay
+                ? await RelayChat.SendAsync(body, OnText, cts.Token, OnThinking)
+                : await ClaudeChat.SendAsync(key!, body, OnText, cts.Token, OnThinking);
         }
         catch (AiException e)
         {
@@ -326,16 +337,19 @@ public sealed partial class MainPage
             _aiInput.Text = unanswered; // no text came back: the question returns to the box
         SyncAiTurns();
         ShowAiBusy();
-        ShowAiStatus(error ?? (cancelled ? Loc.Get("AskAiStopped") : ApiError.StopMessage(stop) ?? _aiSentAt), error is not null);
+        string? sent = relay && RelayChat.RemainingMonthlyUsd is { } usd
+            ? string.Join(" · ", new[] { _aiSentAt, Loc.Format("AskAiRemaining", usd.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture)) }.Where(s => !string.IsNullOrEmpty(s)))
+            : _aiSentAt;
+        ShowAiStatus(error ?? (cancelled ? Loc.Get("AskAiStopped") : ApiError.StopMessage(stop) ?? sent), error is not null);
     }
 
     /// <summary>Consent (once), then the image for a new conversation; false when nothing should be sent.</summary>
-    private async Task<bool> PrepareAiAsync(Editor.EditorCanvas editor)
+    private async Task<bool> PrepareAiAsync(Editor.EditorCanvas editor, bool relay)
     {
-        if (!AppSettings.Current.AiConsent)
+        if (!HasAiConsent(relay))
         {
             HideAiFlyout(); // one popup at a time: the dialog, then the chat again
-            bool agreed = await ConfirmAiConsentAsync();
+            bool agreed = await ConfirmAiConsentAsync(relay);
             _aiFlyout!.ShowAt(Anchor(AskAiButton));
             if (!agreed)
                 return false;
