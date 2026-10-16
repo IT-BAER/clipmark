@@ -1588,4 +1588,64 @@
   <data name="AiHintRelay" xml:space="preserve">
     <value>Met Premium heeft AI vragen geen sleutel nodig: het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag gaan via de relay van IT-BAER ({0}) naar Anthropic, alleen wanneer je een vraag verzendt. Als je een eigen API-sleutel hebt opgeslagen, verzendt AI vragen ze rechtstreeks naar Anthropic ({1}) en brengt Anthropic de sleutel in rekening; de sleutel wordt op deze pc bewaard in Referentiebeheer van Windows.</value>
   </data>
+  <data name="ShapeEmoji" xml:space="preserve">
+    <value>Emoji</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="EmojiSearch" xml:space="preserve">
+    <value>Emoji zoeken</value>
+    <comment>Placeholder and name of the emoji search box</comment>
+  </data>
+  <data name="EmojiNone" xml:space="preserve">
+    <value>Geen emoji gevonden</value>
+    <comment>Emoji search without hits</comment>
+  </data>
+  <data name="EmojiPicker" xml:space="preserve">
+    <value>Emoji-kiezer</value>
+    <comment>Accessible name of the emoji picker flyout</comment>
+  </data>
+  <data name="EmojiGroupRecent" xml:space="preserve">
+    <value>Recent gebruikt</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSmileys" xml:space="preserve">
+    <value>Smileys en emoties</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupPeople" xml:space="preserve">
+    <value>Mensen en lichaam</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupAnimals" xml:space="preserve">
+    <value>Dieren en natuur</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFood" xml:space="preserve">
+    <value>Eten en drinken</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupTravel" xml:space="preserve">
+    <value>Reizen en plaatsen</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupActivities" xml:space="preserve">
+    <value>Activiteiten</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupObjects" xml:space="preserve">
+    <value>Objecten</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSymbols" xml:space="preserve">
+    <value>Symbolen</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFlags" xml:space="preserve">
+    <value>Vlaggen</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiLanguage" xml:space="preserve">
+    <value>nl-NL</value>
+    <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
+  </data>
 </root>

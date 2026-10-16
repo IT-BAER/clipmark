@@ -81,6 +81,7 @@ public static class ObjectTransform
             Position = f(t.Position), Width = t.Width * Vector2.Distance(f(t.Position), f(t.Position + new Vector2(0, t.Size.Y))) / t.Size.Y,
         },
         TextObject t => t with { Position = f(t.Position) },
+        EmojiObject e => e with { Position = f(e.Position), Width = Vector2.Distance(f(e.Position), f(e.Position + new Vector2(0, e.Width))) },
         _ => o,
     };
 

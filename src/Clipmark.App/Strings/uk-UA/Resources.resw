@@ -1588,4 +1588,64 @@
   <data name="AiHintRelay" xml:space="preserve">
     <value>З Premium функції «Запитати ШІ» не потрібен ключ: знімок у тому вигляді, в якому він показаний (з позначками й прихованими ділянками), та ваше запитання передаються через ретранслятор IT-BAER ({0}) до Anthropic, лише коли ви надсилаєте запитання. Якщо ви зберегли власний ключ API, функція «Запитати ШІ» надсилає їх безпосередньо до Anthropic ({1}), і плату за ключ стягує Anthropic; ключ зберігається в диспетчері облікових даних Windows на цьому комп’ютері.</value>
   </data>
+  <data name="ShapeEmoji" xml:space="preserve">
+    <value>Емодзі</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="EmojiSearch" xml:space="preserve">
+    <value>Пошук емодзі</value>
+    <comment>Placeholder and name of the emoji search box</comment>
+  </data>
+  <data name="EmojiNone" xml:space="preserve">
+    <value>Емодзі не знайдено</value>
+    <comment>Emoji search without hits</comment>
+  </data>
+  <data name="EmojiPicker" xml:space="preserve">
+    <value>Вибір емодзі</value>
+    <comment>Accessible name of the emoji picker flyout</comment>
+  </data>
+  <data name="EmojiGroupRecent" xml:space="preserve">
+    <value>Нещодавно використані</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSmileys" xml:space="preserve">
+    <value>Смайлики та емоції</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupPeople" xml:space="preserve">
+    <value>Люди й тіло</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupAnimals" xml:space="preserve">
+    <value>Тварини та природа</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFood" xml:space="preserve">
+    <value>Їжа та напої</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupTravel" xml:space="preserve">
+    <value>Подорожі та місця</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupActivities" xml:space="preserve">
+    <value>Заняття</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupObjects" xml:space="preserve">
+    <value>Предмети</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSymbols" xml:space="preserve">
+    <value>Символи</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFlags" xml:space="preserve">
+    <value>Прапори</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiLanguage" xml:space="preserve">
+    <value>uk-UA</value>
+    <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
+  </data>
 </root>

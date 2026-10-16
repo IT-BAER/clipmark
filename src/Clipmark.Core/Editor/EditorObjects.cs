@@ -55,6 +55,13 @@ public sealed record TextObject(int Id, Rgba Color, float Width, Vector2 Positio
     public override EditorObject Offset(Vector2 delta) => this with { Position = Position + delta };
 }
 
+/// <summary>Color emoji in a square box Width px wide with its top-left at Position; Color is unused and stays default.</summary>
+public sealed record EmojiObject(int Id, float Width, Vector2 Position, string Emoji)
+    : EditorObject(Id, default, Width)
+{
+    public override EditorObject Offset(Vector2 delta) => this with { Position = Position + delta };
+}
+
 /// <summary>Line / arrow end fixed to an object; Anchor is normalized in the target's LocalBox (0..1 inside, may lie outside).</summary>
 public readonly record struct Attachment(int Target, Vector2 Anchor);
 

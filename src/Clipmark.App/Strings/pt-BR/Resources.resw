@@ -1588,4 +1588,64 @@
   <data name="AiHintRelay" xml:space="preserve">
     <value>Com o Premium, Perguntar à IA não precisa de chave: a captura como exibida (com anotações e partes ocultas) e sua pergunta passam pelo relay da IT-BAER ({0}) até a Anthropic, somente quando você envia uma pergunta. Se você salvar sua própria chave de API, Perguntar à IA as envia diretamente para a Anthropic ({1}) e a Anthropic cobra pela chave; a chave fica no Gerenciador de Credenciais do Windows neste PC.</value>
   </data>
+  <data name="ShapeEmoji" xml:space="preserve">
+    <value>Emoji</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="EmojiSearch" xml:space="preserve">
+    <value>Pesquisar emoji</value>
+    <comment>Placeholder and name of the emoji search box</comment>
+  </data>
+  <data name="EmojiNone" xml:space="preserve">
+    <value>Nenhum emoji encontrado</value>
+    <comment>Emoji search without hits</comment>
+  </data>
+  <data name="EmojiPicker" xml:space="preserve">
+    <value>Seletor de emoji</value>
+    <comment>Accessible name of the emoji picker flyout</comment>
+  </data>
+  <data name="EmojiGroupRecent" xml:space="preserve">
+    <value>Usados recentemente</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSmileys" xml:space="preserve">
+    <value>Smileys e emoções</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupPeople" xml:space="preserve">
+    <value>Pessoas e corpo</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupAnimals" xml:space="preserve">
+    <value>Animais e natureza</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFood" xml:space="preserve">
+    <value>Comida e bebida</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupTravel" xml:space="preserve">
+    <value>Viagens e lugares</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupActivities" xml:space="preserve">
+    <value>Atividades</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupObjects" xml:space="preserve">
+    <value>Objetos</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSymbols" xml:space="preserve">
+    <value>Símbolos</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFlags" xml:space="preserve">
+    <value>Bandeiras</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiLanguage" xml:space="preserve">
+    <value>pt-BR</value>
+    <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
+  </data>
 </root>

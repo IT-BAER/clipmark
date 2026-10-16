@@ -80,13 +80,44 @@ public class DocumentJsonTests
 
     private const string Head = """{"format":"clipmark","version":1,"width":10,"height":10,""";
     private const string Pen = """{"type":"stroke","id":1,"color":[1,2,3,255],"width":2,"rotation":0,"kind":"pen","points":[1,1,2,2]}""";
+    private const string Head2 = """{"format":"clipmark","version":2,"width":10,"height":10,""";
+    private const string Emoji = """{"type":"emoji","id":1,"color":[0,0,0,0],"width":80,"rotation":0.5,"position":[1,2],"emoji":"❤️"}""";
+
+    [Fact]
+    public void A_document_without_emoji_stays_version_1_and_one_with_emoji_is_version_2()
+    {
+        var doc = Full();
+        Assert.Contains("\"version\":1,", DocumentJson.Serialize(doc));
+        doc.Add(new EmojiObject(doc.NewId(), 80, new(30, 40), "👍🏽") { Rotation = 0.25f });
+        string json = DocumentJson.Serialize(doc);
+        Assert.Contains("\"version\":2,", json);
+
+        var back = DocumentJson.Parse(json);
+        Assert.Equal(doc.Objects, back.Objects);
+        Assert.Equal(doc.Bounds, back.Bounds);
+    }
+
+    [Fact]
+    public void A_version_2_emoji_loads_and_ignores_its_stored_color()
+    {
+        var doc = DocumentJson.Parse(Head2 + "\"objects\":[" + Emoji.Replace("[0,0,0,0]", "[9,9,9,9]") + "]}");
+        var e = Assert.IsType<EmojiObject>(Assert.Single(doc.Objects));
+        Assert.Equal(new EmojiObject(1, 80, new(1, 2), "❤️") { Rotation = 0.5f }, e);
+    }
 
     [Theory]
     [InlineData("not json")]
     [InlineData("[]")]
     [InlineData("""{"format":"other","version":1,"width":10,"height":10,"objects":[]}""")]
-    [InlineData("""{"format":"clipmark","version":2,"width":10,"height":10,"objects":[]}""")]
+    [InlineData("""{"format":"clipmark","version":3,"width":10,"height":10,"objects":[]}""")]
     [InlineData("""{"format":"clipmark","version":1,"width":0,"height":10,"objects":[]}""")]
+    [InlineData(Head + "\"objects\":[" + Emoji + "]}")] // emoji needs version 2
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"position\":[0,0],\"emoji\":\"\"}]}")]
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"position\":[0,0]}]}")]
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"position\":[0,0],\"emoji\":5}]}")]
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"emoji\":\"x\"}]}")]
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"position\":[1e30,0],\"emoji\":\"x\"}]}")]
+    [InlineData(Head2 + "\"objects\":[{\"type\":\"emoji\",\"id\":1,\"color\":[0,0,0,0],\"width\":80,\"rotation\":0,\"position\":[0,0],\"emoji\":\"" + "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" + "\"}]}")] // 65 units
     [InlineData(Head + "\"objects\":[" + Pen + "," + Pen + "]}")] // duplicate id
     [InlineData(Head + "\"objects\":[" + """{"type":"blob","id":1,"color":[1,2,3,255],"width":2,"rotation":0}""" + "]}")]
     [InlineData(Head + "\"objects\":[" + """{"type":"stroke","id":1,"color":[1,2,3,256],"width":2,"rotation":0,"kind":"pen","points":[1,1]}""" + "]}")]

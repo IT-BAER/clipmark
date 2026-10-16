@@ -38,9 +38,29 @@ public class SettingsStoreTests
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
             AiModel = "claude-opus-5-5", AiConsent = true, AiConsentRelay = true,
             RedactEmail = false, RedactPhone = false, RedactIp = false, RedactBank = false, RedactSecrets = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
-            CloseAfterCopy = true,
+            CloseAfterCopy = true, RecentEmoji = "🔥 👍🏽 🏳️‍🌈",
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
+    }
+
+    [Fact]
+    public void Recent_emoji_start_with_the_Snipping_Tool_set_and_a_pick_moves_to_the_front()
+    {
+        var d = new ClipmarkSettings();
+        Assert.Equal(18, d.Recent.Count);
+        Assert.Equal(["❤️", "⭐", "❓"], d.Recent.Take(3));
+        var s = d.WithRecent("😭").WithRecent("🦄");
+        Assert.Equal(["🦄", "😭", "❤️"], s.Recent.Take(3));
+        Assert.Equal(18, s.Recent.Count);
+        Assert.Single(s.Recent, "😭");
+    }
+
+    [Fact]
+    public void Recent_emoji_from_a_file_drop_empty_and_overlong_entries()
+    {
+        var s = SettingsStore.Parse("{ \"recentEmoji\": \"🔥  " + new string('x', 65) + " ⭐\" }");
+        Assert.Equal(["🔥", "⭐"], s.Recent);
+        Assert.Equal(new ClipmarkSettings().RecentEmoji, SettingsStore.Parse("""{ "recentEmoji": 5 }""").RecentEmoji);
     }
 
     [Fact]

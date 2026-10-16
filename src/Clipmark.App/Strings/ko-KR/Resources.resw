@@ -1588,4 +1588,64 @@
   <data name="AiHintRelay" xml:space="preserve">
     <value>Premium에서는 AI에게 묻기에 키가 필요하지 않습니다. 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문은 질문을 보낼 때에만 IT-BAER의 릴레이({0})를 거쳐 Anthropic으로 전송됩니다. 사용자의 API 키를 저장한 경우 AI에게 묻기는 이를 Anthropic({1})에 직접 보내며 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관됩니다.</value>
   </data>
+  <data name="ShapeEmoji" xml:space="preserve">
+    <value>이모지</value>
+    <comment>Shape tool</comment>
+  </data>
+  <data name="EmojiSearch" xml:space="preserve">
+    <value>이모지 검색</value>
+    <comment>Placeholder and name of the emoji search box</comment>
+  </data>
+  <data name="EmojiNone" xml:space="preserve">
+    <value>이모지를 찾을 수 없음</value>
+    <comment>Emoji search without hits</comment>
+  </data>
+  <data name="EmojiPicker" xml:space="preserve">
+    <value>이모지 선택기</value>
+    <comment>Accessible name of the emoji picker flyout</comment>
+  </data>
+  <data name="EmojiGroupRecent" xml:space="preserve">
+    <value>최근 사용</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSmileys" xml:space="preserve">
+    <value>스마일리 및 감정</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupPeople" xml:space="preserve">
+    <value>사람 및 신체</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupAnimals" xml:space="preserve">
+    <value>동물 및 자연</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFood" xml:space="preserve">
+    <value>음식 및 음료</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupTravel" xml:space="preserve">
+    <value>여행 및 장소</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupActivities" xml:space="preserve">
+    <value>활동</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupObjects" xml:space="preserve">
+    <value>사물</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupSymbols" xml:space="preserve">
+    <value>기호</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiGroupFlags" xml:space="preserve">
+    <value>깃발</value>
+    <comment>Emoji picker tab</comment>
+  </data>
+  <data name="EmojiLanguage" xml:space="preserve">
+    <value>ko-KR</value>
+    <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
+  </data>
 </root>

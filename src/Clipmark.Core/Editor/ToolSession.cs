@@ -2,8 +2,8 @@ using System.Numerics;
 
 namespace Clipmark.Core.Editor;
 
-/// <summary>Shape tools come last (Rectangle and up); Text, Eyedropper and Bucket act on a click in the app, not in a drag session.</summary>
-public enum EditorTool { Select, Pen, Highlighter, Eraser, Text, Eyedropper, Bucket, Rectangle, Ellipse, Line, Arrow }
+/// <summary>Shapes menu tools come last (Rectangle to Arrow, then Emoji); Text, Eyedropper and Bucket act on a click in the app, not in a drag session.</summary>
+public enum EditorTool { Select, Pen, Highlighter, Eraser, Text, Eyedropper, Bucket, Rectangle, Ellipse, Line, Arrow, Emoji }
 
 /// <summary>One pointer drag with the current tool; commits to the document on <see cref="End"/> as one undo step.</summary>
 public sealed class ToolSession(EditorDocument document)
@@ -24,6 +24,10 @@ public sealed class ToolSession(EditorDocument document)
     /// <summary>Ruler on the canvas, if shown: a Pen / Highlighter stroke starting within <see cref="RulerTolerance"/> of a long edge runs straight on it.</summary>
     public Ruler? ActiveRuler { get; set; }
     public float RulerTolerance { get; set; } = 16;
+    /// <summary>Emoji the Emoji tool places; empty places nothing.</summary>
+    public string Emoji { get; set; } = "";
+    /// <summary>Box size in image px of an emoji placed by a click; the app scales it with the zoom.</summary>
+    public float EmojiSize { get; set; } = 80;
     public bool IsActive { get; private set; }
 
     /// <summary>In-progress stroke or shape (Id 0), drawn on top until the drag ends.</summary>
@@ -70,6 +74,9 @@ public sealed class ToolSession(EditorDocument document)
             case Shape s when s.Start != s.End:
                 document.Add(s with { Id = document.NewId() });
                 break;
+            case EmojiObject e:
+                document.Add(e with { Id = document.NewId() });
+                break;
             case null when erased.Length > 0:
                 document.Remove(erased);
                 break;
@@ -91,6 +98,14 @@ public sealed class ToolSession(EditorDocument document)
                 var color = kind == StrokeKind.Highlighter ? Color with { A = HighlighterAlpha } : Color;
                 Live = new Stroke(0, kind, color, Width, ActiveRuler is { } ruler && ruler.EdgeNear(start, RulerTolerance) is { } edge
                     ? [.. Ruler.Project(_points, edge)] : [.. _points]);
+                break;
+            case EditorTool.Emoji:
+                // A drag spans a square from the press point; a click (under 1 px) centers the default size on it.
+                var d = end - start;
+                float side = MathF.Max(MathF.Abs(d.X), MathF.Abs(d.Y));
+                var at = side < 1 ? start - new Vector2(EmojiSize / 2)
+                    : start + new Vector2(d.X < 0 ? -side : 0, d.Y < 0 ? -side : 0);
+                Live = Emoji.Length is 0 or > DocumentJson.MaxEmojiLength ? null : new EmojiObject(0, side < 1 ? MathF.Max(1, EmojiSize) : side, at, Emoji);
                 break;
             default:
                 var shape = Tool switch

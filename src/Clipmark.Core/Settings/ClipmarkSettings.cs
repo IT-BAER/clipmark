@@ -87,6 +87,17 @@ public sealed record ClipmarkSettings
     public ColorFormat ColorFormat { get; init; }
 
     public static readonly string[] Themes = ["system", "light", "dark"];
+
+    /// <summary>Last picked emoji, newest first, separated by spaces; starts with Snipping Tool's 18.</summary>
+    public string RecentEmoji { get; init; } = "❤️ ⭐ ❓ ✔️ ❌ 🔥 👍 👎 👏 🙌 👀 💯 🙂 🙁 😮 😍 😂 😭";
+
+    public const int RecentCount = 18;
+
+    public IReadOnlyList<string> Recent => [.. RecentEmoji.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+        .Where(e => e.Length <= DocumentJson.MaxEmojiLength).Distinct().Take(RecentCount)];
+
+    public ClipmarkSettings WithRecent(string emoji) =>
+        this with { RecentEmoji = string.Join(' ', Recent.Where(e => e != emoji).Prepend(emoji).Take(RecentCount)) };
 }
 
 /// <summary>The languages the UI offers: BCP-47 tag and the language's own name.</summary>
@@ -157,6 +168,7 @@ public static class SettingsStore
             w.WriteBoolean("copyEdits", s.CopyEdits);
             w.WriteBoolean("closeAfterCopy", s.CloseAfterCopy);
             w.WriteString("colorFormat", s.ColorFormat.ToString());
+            w.WriteString("recentEmoji", s.RecentEmoji);
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -215,6 +227,7 @@ public static class SettingsStore
                 CopyEdits = Bool("copyEdits", d.CopyEdits),
                 CloseAfterCopy = Bool("closeAfterCopy", d.CloseAfterCopy),
                 ColorFormat = Enum.TryParse<ColorFormat>(Str("colorFormat"), out var colorFormat) && Enum.IsDefined(colorFormat) ? colorFormat : d.ColorFormat,
+                RecentEmoji = Str("recentEmoji") is { } recent ? string.Join(' ', (d with { RecentEmoji = recent }).Recent) : d.RecentEmoji,
             };
         }
     }

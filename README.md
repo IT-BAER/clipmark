@@ -28,6 +28,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 
 **Editor**
 - Pen, highlighter, object eraser with Erase all mark-ups, rectangle, oval, line and arrow (Shift snaps to 45 degrees)
+- Emoji stamps: every emoji Windows can draw, with a search in the UI language, Recent and group tabs; click to
+  place, drag to size
 - Ruler: drag it, turn it with Ctrl+mouse wheel in 15 degree steps; pen and highlighter strokes that start at its
   edge run straight along it
 - Select, move, resize and rotate any object at any time; arrows attach to shapes and follow them **(Premium)**
@@ -99,7 +101,7 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | Capture delay | 3, 5 or 10 seconds | 3, 5 or 10 seconds |
 | Text extractor (region text straight to the clipboard) | Yes | Yes |
 | Pen, highlighter, eraser | Yes | Yes |
-| Shapes | Rectangle, oval, line, arrow | Rectangle, oval, line, arrow, emoji |
+| Shapes | Rectangle, oval, line, arrow, emoji (every emoji Windows can draw, with search) | Rectangle, oval, line, arrow, emoji (18) |
 | Shape fill | Yes, also fills the background (Premium) | Yes, fill and outline color |
 | Move, resize, rotate shapes | Any object, any time (Premium) | Only the shape you just drew |
 | Arrows that attach to shapes and follow them | Yes (Premium) | No |
@@ -169,7 +171,7 @@ Your screenshots and recordings stay where you saved them.
 |---|---|
 | New capture | Ctrl+Print Screen, tray icon click, or New; Ctrl+E in the capture overlay toggles Quick markup |
 | New recording | Ctrl+Shift+Print Screen, tray menu, or the camera button; the same hotkey or a tray icon click stops it |
-| Tools | V select, P pen, H highlighter, E eraser, R / C / L / A shapes, T text, I eyedropper, G fill |
+| Tools | V select, P pen, H highlighter, E eraser, R / C / L / A shapes, M emoji, T text, I eyedropper, G fill |
 | Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new |
 | Zoom | Mouse wheel, Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out |
 | Width, text size, ruler angle | Ctrl+mouse wheel (Shift+mouse wheel scrolls) |

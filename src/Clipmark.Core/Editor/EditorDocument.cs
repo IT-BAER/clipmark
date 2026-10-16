@@ -282,7 +282,7 @@ public sealed class EditorDocument
         Shape { Kind: ShapeKind.Arrow } s => ArrowDistance(p, s),
         Shape { Kind: ShapeKind.Rectangle } s => DistanceToPolyline(p, RectangleOutline(s)),
         Shape { Kind: ShapeKind.Ellipse } s => DistanceToPolyline(p, EllipseOutline(s)),
-        TextObject t => DistanceToBox(p, EditorGeometry.LocalBox(t)),
+        TextObject or EmojiObject => DistanceToBox(p, EditorGeometry.LocalBox(o)),
         _ => float.PositiveInfinity,
     };
 

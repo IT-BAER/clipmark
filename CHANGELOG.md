@@ -6,6 +6,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Emoji stamps (Shapes > Emoji, M): a picker with every emoji the Windows emoji font can draw, a search over names
+  and keywords in the UI language and English, Recent (starts with Snipping Tool's 18) and group tabs. Click places
+  an emoji, drag sets its size; Select moves, resizes and rotates it. Editable PNGs with emoji use format version 2,
+  which earlier Clipmark versions cannot open; files without emoji stay version 1.
 - Clipmark Premium: 30-day trial, then a license. Premium covers select, attached arrows, text, fill,
   eyedropper, editable PNG, Send to AI, Ask AI and the capture history; editable PNGs still open without a license.
   The trial starts on IT-BAER's licence server (releash.it-baer.net) at the first start with an internet connection

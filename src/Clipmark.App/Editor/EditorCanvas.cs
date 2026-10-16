@@ -36,6 +36,8 @@ internal sealed class EditorCanvas
     private const float RulerDips = 96;
     private const float RulerSnapDips = 16;
     private const string TextFont = "Segoe UI";
+    // Screen size of a clicked emoji: 80 px at 125 % display scaling, as Snipping Tool places one (measured 15 October 2026).
+    private const float EmojiDips = 64;
 
     // Native AOT cannot unbox the "SystemAccentColor" resource (InvalidCastException on the first draw); UISettings returns the struct.
     private static readonly Windows.UI.ViewManagement.UISettings UiSettings = new();
@@ -173,6 +175,8 @@ internal sealed class EditorCanvas
     public SelectionSession? Selection => _selection;
     public Rgba Color { get; set; }
     public float StrokeWidth { get; set; }
+    /// <summary>Emoji the Emoji tool places.</summary>
+    public string Emoji { get; set; } = "";
     /// <summary>False = new line / arrow ends do not attach to objects (premium feature locked).</summary>
     public bool AttachEnabled { get; set; } = true;
     public bool IsCropping => _cropFrame is not null;
@@ -703,6 +707,8 @@ internal sealed class EditorCanvas
         _session.AttachEnabled = AttachEnabled;
         _session.ActiveRuler = _rulerShown ? CurrentRuler : null;
         _session.RulerTolerance = RulerSnapDips * Scale / _zoom;
+        _session.Emoji = Emoji;
+        _session.EmojiSize = EmojiDips * Scale / _zoom;
         _session.Begin(point, shift);
         Control.Invalidate();
     }
@@ -1206,6 +1212,9 @@ internal sealed class EditorCanvas
                 ds.DrawTextLayout(layout, t.Position, color);
                 break;
             }
+            case EmojiObject e:
+                EmojiFont.Draw(ds, e.Emoji, new Windows.Foundation.Rect(e.Position.X, e.Position.Y, e.Width, e.Width));
+                break;
             case Shape s:
             {
                 var (left, right) = EditorGeometry.ArrowHead(s.Start, s.End, s.Width);

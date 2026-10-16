@@ -34,6 +34,7 @@ public sealed partial class MainPage : Page
 
     private static readonly (EditorTool Tool, string Text, string Glyph, VirtualKey Key)[] Shapes =
     [
+        (EditorTool.Emoji, Loc.Get("ShapeEmoji"), "\uE76E", VirtualKey.M),
         (EditorTool.Rectangle, Loc.Get("ShapeRectangle"), "\uE739", VirtualKey.R), (EditorTool.Ellipse, Loc.Get("ShapeOval"), "\uEA3A", VirtualKey.C),
         (EditorTool.Line, Loc.Get("ShapeLine"), "\uE738", VirtualKey.L), (EditorTool.Arrow, Loc.Get("ShapeArrow"), "\uE72A", VirtualKey.A),
     ];
@@ -94,9 +95,11 @@ public sealed partial class MainPage : Page
         foreach (var (tool, text, glyph, key) in Shapes)
         {
             var item = new MenuFlyoutItem { Text = Loc.Format("ToolWithShortcut", text, key), Icon = new FontIcon { Glyph = glyph } };
-            item.Click += (_, _) => SelectTool(tool);
+            // Emoji opens the picker; the tool then places the picked emoji.
+            Action choose = tool == EditorTool.Emoji ? () => { SelectTool(tool); OpenEmojiPicker(); } : () => SelectTool(tool);
+            item.Click += (_, _) => choose();
             ShapeMenu.Items.Add(item);
-            Shortcut(key, VirtualKeyModifiers.None, () => SelectTool(tool));
+            Shortcut(key, VirtualKeyModifiers.None, choose);
         }
         StyleFlyout.Opening += (_, _) =>
         {
@@ -752,6 +755,7 @@ public sealed partial class MainPage : Page
             _editor.Tool = _tool;
             _editor.Color = _color[group];
             _editor.StrokeWidth = _width[group];
+            _editor.Emoji = CurrentEmoji;
             _editor.AttachEnabled = AppLicense.Current.IsEnabled(PremiumFeature.AttachedArrows);
         }
     }

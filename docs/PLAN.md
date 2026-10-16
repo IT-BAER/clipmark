@@ -306,7 +306,36 @@ Goal (owner): Clipmark misses nothing Snipping Tool can do, so "Snipping Tool on
   Snipping Tool 11.2608.41.0 measured off-screen: same cells on grid / borderless / right-aligned tables; with a title
   and note it merges 3 columns into one cell, Clipmark keeps them. Core 687/687; TestDriver en-US + de-DE 9/9 each
   (6 tables exact, kv list, single column and prose disabled); Excel paste: 7x4 with borders.
-- [ ] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026).
+- [x] M12.3 Emoji shapes; not in Clipmark (no match in src, 13 October 2026). Snipping Tool 11.2608.41.0 (15 October
+  2026): Shapes > Emoji, 18 Fluent SVG emoji placed at the view center, 80 x 80 px box at zoom 1, corner + rotate
+  handles, square resize. Owner, 15 October 2026: many more emoji with a search field. D1 Segoe UI Emoji font (no
+  bundled images); D2 CLDR names + keywords in all 16 languages, English always; D3 Emoji tool, Free: click = 80 px,
+  drag = box, later edits need Select; D4 every emoji the font draws, default tone only.
+  - [x] B1 Spike (TestDriver export): Win2D draws Segoe UI Emoji COLR glyphs in color; list sequences the font lacks.
+    Done 15 October 2026 (this PC): color only with `CanvasTextLayout.Options = EnableColorFont` (the format's Options
+    alone draws monochrome). Of 1,923 fully-qualified Emoji 18.0 emoji without skin tones: 1,652 drawable, 259
+    regional-indicator flags (drawn as letters), 12 with a code point the font lacks (9 newer emoji, 3 subdivision
+    flags). ZWJ sequences draw as one glyph (max layout width 1.37 em). Cloaked TestDriver never held the foreground
+    (50 ms samples).
+  - [x] B2 Core `EmojiObject` (square, rotation), geometry / transform, `DocumentJson` v2 (v1 still loads); risk review.
+    Done 15 October 2026: version 2 is written only with an emoji in the document; `EditorTool.Emoji` (drag = square,
+    click = `EmojiSize` centered); color / opacity / width controls skip emoji. Opus risk review: no Critical / Important;
+    minors fixed (rejection tests, tool guard against strings the reader refuses). App: `tool >= EditorTool.Rectangle`
+    in MainPage.xaml.cs now includes Emoji (handle in B4).
+  - [x] B3 Core emoji index (pinned generator from `emoji-test.txt` + CLDR annotations) and `EmojiSearch` tests.
+    Done 15 October 2026: `scripts\gen-emoji.ps1` (Unicode 18.0, CLDR JSON 48.2.3) -> `src\Clipmark.Core\Emoji\Data`,
+    17 files, 2,097,842 bytes, embedded; `EmojiIndex.Load(language)` / `Search` (word prefix, accent-free, CJK
+    substring, exact name > name > keyword). Core 821 / 821; accent mutation turns its test red.
+  - [x] B4 App: Emoji tool, flyout (search, Recent row seeded with Snipping Tool's 18, grouped grid), render, strings x16.
+    Done 15 October 2026: Shapes > Emoji (M) opens a picker (search box, Recent + 9 group tabs instead of group headers:
+    no ItemsSource under AOT, one group per view keeps the button count low; search shows at most 200 hits);
+    `EmojiFont` draws into the box (ink box scaled to fit, about 87 % of the side for the fire emoji) and filters by font
+    coverage; click size 64 DIP; Recent in settings (`recentEmoji`); 15 keys x 16 languages (478 each).
+    Debug build 0 warnings; Native AOT publish 0 warnings (needs the VS Installer folder on PATH, as
+    `scripts\publish-release.ps1` sets); AOT exe not started (it would take the desktop focus).
+  - [x] B5 TestDriver en-US + de-DE: search, place, resize, rotate, undo, export pixels, editable PNG, clipcheck, shots.
+    Done 15 October 2026: `.claude\m1-harness\m123-emoji.ps1`, 14/14 per language; clipcheck none; shots reviewed.
+  - [x] B6 Docs: README, CHANGELOG, third-party notice (Unicode License v3).
 - [x] M12.4 Remaining gaps from M12.1. Owner, 14 October 2026: only gaps Snipping Tool shows, no full photo /
   video editor; keep it simple. Build G1-G5, G7, G8, G11-G15, G17, G20-G24 (G21 without camera RAW; G12, G23, G24 are
   strings-only, kept by the owner). Out: G16 keyboard snipping, G25 trim, G26 GIF, G28 blur, G29 text formatting,

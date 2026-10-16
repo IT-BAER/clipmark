@@ -85,8 +85,8 @@ public sealed class SelectionSession(EditorDocument document)
 
     public Vector2? RotateHandle => Frame?.RotateHandle(RotateOffset);
 
-    /// <summary>Edge handles exist for a single selected object that can stretch (not text); else only corners.</summary>
-    public bool HasEdgeHandles => Current() is [var o] && o is not TextObject;
+    /// <summary>Edge handles exist for a single selected object that can stretch (not text or emoji); else only corners.</summary>
+    public bool HasEdgeHandles => Current() is [var o] && o is not (TextObject or EmojiObject);
 
     /// <summary>End points of a single selected line / arrow, else null.</summary>
     public (Vector2 Start, Vector2 End)? EndpointHandles =>
@@ -169,7 +169,7 @@ public sealed class SelectionSession(EditorDocument document)
                 live = Rotated(point, shift);
                 break;
             case Drag.Resize when _originals.Length == 1:
-                live = [ObjectTransform.Resize(_originals[0], _handle, point, keepAspect: shift || _originals[0] is TextObject)];
+                live = [ObjectTransform.Resize(_originals[0], _handle, point, keepAspect: shift || _originals[0] is TextObject or EmojiObject)];
                 break;
             case Drag.Resize:
                 live = Scaled(point);
@@ -223,18 +223,21 @@ public sealed class SelectionSession(EditorDocument document)
     public void Reorder(ZOrder move) => document.Reorder([.. Selected], move);
 
     /// <summary>New RGB for the selection; every object keeps its own opacity (highlighter strokes stay at their fixed one).</summary>
-    public void Recolor(Rgba color) => Change(o => o with
+    public void Recolor(Rgba color) => Restyle(o => o with
     {
         Color = color with { A = o is Stroke { Kind: StrokeKind.Highlighter } ? ToolSession.HighlighterAlpha : o.Color.A },
     });
 
     /// <summary>New opacity for the selection, RGB kept; highlighter strokes stay at their fixed one.</summary>
-    public void Reopacity(byte alpha) => Change(o => o with
+    public void Reopacity(byte alpha) => Restyle(o => o with
     {
         Color = o.Color with { A = o is Stroke { Kind: StrokeKind.Highlighter } ? ToolSession.HighlighterAlpha : alpha },
     });
 
-    public void Rewidth(Func<EditorObject, float> width) => Change(o => o with { Width = width(o) });
+    public void Rewidth(Func<EditorObject, float> width) => Restyle(o => o with { Width = width(o) });
+
+    // Color, opacity and width controls do not apply to emoji.
+    private void Restyle(Func<EditorObject, EditorObject> change) => Change(o => o is EmojiObject ? o : change(o));
 
     // Rotate handle first, then endpoints, corners, and (single selection only) edges.
     private bool GrabHandle(Vector2 point)

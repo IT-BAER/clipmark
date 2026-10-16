@@ -52,11 +52,12 @@ public static class EditorGeometry
             s.Points.Aggregate(Vector2.Min), s.Points.Aggregate(Vector2.Max)),
         Shape s => FloatRect.FromCorners(s.Start, s.End),
         TextObject t => new FloatRect(t.Position, t.Position + t.Size),
+        EmojiObject e => new FloatRect(e.Position, e.Position + new Vector2(e.Width)),
         _ => default,
     };
 
-    /// <summary>How far paint reaches past the geometry: half the stroke width; 0 for text, whose Width is its font size.</summary>
-    public static float HalfStroke(EditorObject o) => o is TextObject ? 0 : o.Width / 2;
+    /// <summary>How far paint reaches past the geometry: half the stroke width; 0 for text and emoji, whose Width is their size.</summary>
+    public static float HalfStroke(EditorObject o) => o is TextObject or EmojiObject ? 0 : o.Width / 2;
 
     /// <summary>World point of a normalized anchor in the target's LocalBox.</summary>
     public static Vector2 AnchorPoint(EditorObject target, Vector2 anchor)
@@ -97,9 +98,9 @@ public static class EditorGeometry
                 return [s.Start, s.End, left, right];
             case Shape s:
                 return [s.Start, s.End, new(s.Start.X, s.End.Y), new(s.End.X, s.Start.Y)];
-            case TextObject t:
-                var max = t.Position + t.Size;
-                return [t.Position, max, new(t.Position.X, max.Y), new(max.X, t.Position.Y)];
+            case TextObject or EmojiObject:
+                var box = LocalBox(o);
+                return [box.Min, box.Max, new(box.Min.X, box.Max.Y), new(box.Max.X, box.Min.Y)];
             default:
                 return [];
         }

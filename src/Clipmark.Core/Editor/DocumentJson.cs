@@ -10,10 +10,11 @@ namespace Clipmark.Core.Editor;
 /// <summary>
 /// Versioned JSON of a document's current state (objects, crop, background; no undo history), without reflection (Native AOT).
 /// Parse accepts a whole valid document or throws <see cref="InvalidDataException"/>, never returns a partial one.
+/// Version 2 adds emoji; a document without emoji is still written as version 1, so older Clipmark builds can open it.
 /// </summary>
 public static class DocumentJson
 {
-    public const int Version = 1;
+    public const int Version = 2;
     private const string Format = "clipmark";
     private const int Limit = 1 << 20;
     private const int MaxCanvas = 16384; // usual Direct2D bitmap limit: larger canvases cannot be rendered or exported
@@ -25,7 +26,7 @@ public static class DocumentJson
         {
             w.WriteStartObject();
             w.WriteString("format", Format);
-            w.WriteNumber("version", Version);
+            w.WriteNumber("version", doc.Objects.Any(o => o is EmojiObject) ? 2 : 1);
             w.WriteNumber("width", doc.Width);
             w.WriteNumber("height", doc.Height);
             if (doc.Crop is { } c)
@@ -69,7 +70,7 @@ public static class DocumentJson
             if (Required(root, "format", JsonValueKind.String).GetString() != Format)
                 throw Bad("not Clipmark data");
             int version = Int(Required(root, "version", JsonValueKind.Number));
-            if (version != Version)
+            if (version is < 1 or > Version)
                 throw Bad(version > Version ? $"made by a newer Clipmark (format version {version})" : $"unknown format version {version}");
             int width = Int(Required(root, "width", JsonValueKind.Number));
             int height = Int(Required(root, "height", JsonValueKind.Number));
@@ -90,6 +91,7 @@ public static class DocumentJson
             {
                 var o = ReadObject(oe);
                 if (o.Id <= 0 || !ids.Add(o.Id)) throw Bad($"object id {o.Id} is not positive or not unique");
+                if (o is EmojiObject && version < 2) throw Bad($"object {o.Id}: emoji need format version 2");
                 objects.Add(o);
             }
             foreach (var o in objects)
@@ -107,7 +109,10 @@ public static class DocumentJson
     private static void WriteObject(Utf8JsonWriter w, EditorObject o)
     {
         w.WriteStartObject();
-        w.WriteString("type", o switch { Stroke => "stroke", Shape => "shape", TextObject => "text", _ => throw new ArgumentException(o.GetType().Name) });
+        w.WriteString("type", o switch
+        {
+            Stroke => "stroke", Shape => "shape", TextObject => "text", EmojiObject => "emoji", _ => throw new ArgumentException(o.GetType().Name),
+        });
         w.WriteNumber("id", o.Id);
         WriteColor(w, "color", o.Color);
         w.WriteNumber("width", o.Width);
@@ -137,6 +142,10 @@ public static class DocumentJson
                 w.WriteString("text", t.Text);
                 WriteVector(w, "unitSize", t.UnitSize);
                 break;
+            case EmojiObject e:
+                WriteVector(w, "position", e.Position);
+                w.WriteString("emoji", e.Emoji);
+                break;
         }
         w.WriteEndObject();
     }
@@ -153,9 +162,19 @@ public static class DocumentJson
             "stroke" => ReadStroke(e, id, color, width),
             "shape" => ReadShape(e, id, color, width),
             "text" => ReadText(e, id, color, width),
+            "emoji" => ReadEmoji(e, id, width),
             var type => throw Bad($"unknown object type '{type}'"),
         };
         return o with { Rotation = rotation };
+    }
+
+    public const int MaxEmojiLength = 64; // longest RGI sequences are 15 UTF-16 units
+
+    private static EmojiObject ReadEmoji(JsonElement e, int id, float width)
+    {
+        string emoji = Required(e, "emoji", JsonValueKind.String).GetString()!;
+        if (emoji.Length is 0 or > MaxEmojiLength) throw Bad($"object {id} emoji must be 1-{MaxEmojiLength} characters");
+        return new EmojiObject(id, width, ReadVector(Required(e, "position", JsonValueKind.Array)), emoji);
     }
 
     private static TextObject ReadText(JsonElement e, int id, Rgba color, float width)
