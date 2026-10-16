@@ -19,7 +19,7 @@ public static class LicenceResponse
         return new ActivateResult(token, ChatStreamEvent.Str(root, "install_id") ?? "",
             lic.ValueKind == JsonValueKind.Object ? ChatStreamEvent.Str(lic, "id") ?? "" : "",
             lic.ValueKind == JsonValueKind.Object ? ChatStreamEvent.Str(lic, "plan") ?? "" : "",
-            RelayRegistration.Int(lic, "seats"),
+            RelayJson.Int(lic, "seats"),
             lic.ValueKind == JsonValueKind.Object ? Time(lic, "expires_at") : null,
             ChatStreamEvent.Str(root, "evicted_install_id") is { Length: > 0 } evicted ? evicted : null);
     });

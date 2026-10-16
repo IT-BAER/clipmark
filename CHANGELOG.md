@@ -82,6 +82,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Share no longer crashes the release (Native AOT) build for a capture or a recording; if the file cannot be handed
   to Windows, the share window shows why.
 - A recording shows a plain Save button, as in Snipping Tool; before, its arrow opened an empty menu.
+- Licence server and relay errors: Clipmark tries once more when the server is busy, says when a long wait for too
+  many attempts ends (minutes, or the date and time), says when the license plan lacks a feature, and asks to
+  activate again when the server no longer knows this PC; Premium keeps working offline meanwhile, and Ask AI stops
+  using the relay until then.
 - Recordings no longer start with a black frame.
 - The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.

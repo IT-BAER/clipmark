@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>Trop de tentatives. Réessayez dans {0} s.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>Trop de tentatives. Réessayez dans {0} min.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>Trop de tentatives. Réessayez après {0}.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium n&apos;est plus activé sur ce PC. Activez-le à nouveau dans les paramètres.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Votre formule de licence n&apos;inclut pas cette fonctionnalité.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>Trop de tentatives. Réessayez dans une minute.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Ce PC a été bloqué par le relais. Utilisez votre propre clé API ou contactez le support.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Ce PC n'a pas pu être enregistré auprès du relais. Réessayez.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>L'horloge de ce PC n'est pas à l'heure. Vérifiez la date et l'heure de Windows, puis réessayez.</value>

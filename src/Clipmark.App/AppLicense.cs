@@ -43,8 +43,14 @@ internal static class AppLicense
     /// <summary>Premium from a verified, non-trial entitlement (Remove from this PC applies).</summary>
     public static bool LicensedByToken => Current.Status == LicenseStatus.Licensed && _verdict == TokenVerdict.Valid && _claims is { Plan: not "trial" };
 
-    /// <summary>Ask AI may use IT-BAER's relay: Premium by entitlement and an install on the server.</summary>
-    public static bool CanUseRelay => LicensedByToken && State.InstallId is not null;
+    /// <summary>Ask AI may use IT-BAER's relay: Premium by entitlement, an install on the server, and the task offered there.</summary>
+    public static bool CanUseRelay => LicensedByToken && State.InstallId is not null && !_relayTaskMissing;
+
+    /// <summary>Premium still verifies offline, but the server has no install for this PC (unknown_install): Settings asks for the code again.</summary>
+    public static bool NeedsActivation => LicensedByToken && State.InstallId is null;
+
+    /// <summary>task_not_found in this session: the host does not offer Ask AI, so the relay path is hidden until restart.</summary>
+    private static bool _relayTaskMissing;
 
     /// <summary>No server contact yet: no install id and never activated.</summary>
     public static bool NeverContacted => State.InstallId is null && State.ActivatedUtc is null && State.Key is null;
@@ -95,6 +101,8 @@ internal static class AppLicense
                     Store(fresh, null, activated: false);
                 else if (r.Failure is { Status: 403 } or { EndsEntitlement: true })
                     DropEntitlement(r.Failure);
+                else if (r.Failure is { NeedsActivation: true })
+                    InstallMissing(r.Failure);
             }
             else if (call == LicenceCall.Activate)
             {
@@ -150,6 +158,23 @@ internal static class AppLicense
         }
         Update(s => s with { Entitlement = null, InstallId = s.InstallId ?? DeviceKey.TryOpen()?.Thumbprint }, failure.Message());
     }
+
+    /// <summary>
+    /// unknown_install: the server has no row for this key (a database reset or delete). The signed entitlement stays for
+    /// offline Premium until exp + grace; clearing the install id stops relay calls and shows the activation field.
+    /// </summary>
+    internal static void InstallMissing(RelayFailure failure)
+    {
+        if (_ui is { HasThreadAccess: false } ui)
+        {
+            ui.TryEnqueue(() => InstallMissing(failure));
+            return;
+        }
+        Update(s => s with { InstallId = null }, failure.Message());
+        Changed?.Invoke(Current); // Current is unchanged (still Licensed), but the Settings view and Ask AI change
+    }
+
+    internal static void RelayTaskMissing() => _relayTaskMissing = true;
 
     /// <summary>Stores a fresh entitlement; a v1 key is removed once the entitlement verifies here.</summary>
     private static void Store(string token, string? installId, bool activated)

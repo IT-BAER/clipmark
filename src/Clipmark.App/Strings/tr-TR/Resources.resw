@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>Çok fazla deneme yapıldı. {0} sn sonra yeniden deneyin.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>Çok fazla deneme yapıldı. {0} dk sonra yeniden deneyin.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>Çok fazla deneme yapıldı. {0} sonrasında yeniden deneyin.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium artık bu bilgisayarda etkin değil. Ayarlar&apos;dan yeniden etkinleştirin.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Lisans planınız bu özelliği içermiyor.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>Çok fazla deneme yapıldı. Bir dakika sonra yeniden deneyin.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Bu bilgisayar aktarıcıdan engellendi. Kendi API anahtarınızı kullanın veya destek ekibine başvurun.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Bu bilgisayar aktarıcıya kaydedilemedi. Yeniden deneyin.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>Bu bilgisayarın saati yanlış. Windows tarih ve saatini kontrol edin, ardından yeniden deneyin.</value>

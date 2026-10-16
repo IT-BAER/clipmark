@@ -46,9 +46,8 @@ public sealed class RelayRequestTests
     }
 
     [Fact]
-    public void Paths_name_the_clipmark_app_and_the_ask_task()
+    public void Path_names_the_clipmark_app_and_the_ask_task()
     {
-        Assert.Equal("/v1/apps/clipmark/installs", RelayRequest.RegisterPath);
         Assert.Equal("/v1/tasks/clipmark/ask", RelayRequest.AskPath);
     }
 }

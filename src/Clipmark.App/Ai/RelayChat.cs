@@ -32,13 +32,13 @@ internal static class RelayChat
         if (DeviceKey.TryOpen() is not { } key)
             throw new AiException(Loc.Format("LicenceKeyFailed", "-"));
         string path = RelayRequest.AskPath;
-        long offset = 0;
+        var retries = new LicenceClient.Retries();
         try
         {
-            for (int attempt = 0; ; attempt++)
+            while (true)
             {
                 using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(LicenceClient.BaseUri, path));
-                LicenceClient.Sign(request, path, body, key, offset);
+                LicenceClient.Sign(request, path, body, key, retries.Offset);
                 using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
                 ReadRemainingHeader(response);
                 if (!response.IsSuccessStatusCode)
@@ -47,13 +47,14 @@ internal static class RelayChat
                     try { text = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false); }
                     catch (HttpRequestException) { } // the status alone still explains it
                     var failure = RelayFailure.Parse((int)response.StatusCode, text);
-                    if (attempt == 0 && LicenceClient.SkewOffset(failure) is { } skew)
-                    {
-                        offset = skew;
+                    if (await LicenceClient.RetryAsync(failure, retries, ct).ConfigureAwait(false))
                         continue;
-                    }
                     if (failure.EndsEntitlement)
                         AppLicense.DropEntitlement(failure);
+                    else if (failure.NeedsActivation)
+                        AppLicense.InstallMissing(failure);
+                    else if (failure.Code == "task_not_found")
+                        AppLicense.RelayTaskMissing();
                     throw new AiException(failure.Message());
                 }
                 using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);

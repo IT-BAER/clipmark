@@ -121,6 +121,7 @@ public sealed partial class SettingsPage : Page
         var license = AppLicense.Current;
         LicenseStatusText.Text = license.Status switch
         {
+            LicenseStatus.Licensed when AppLicense.NeedsActivation => Loc.Get("LicenceNotActivated"),
             LicenseStatus.Licensed => Loc.Get(AppLicense.LicensedByToken ? "LicenseActiveHere" : "LicenseActive"),
             LicenseStatus.Trial => license.TrialDaysLeft == 1 ? Loc.Get("LicenseTrialOneDay") : Loc.Format("LicenseTrialDays", license.TrialDaysLeft),
             _ when AppLicense.NeverContacted => Loc.Get("LicenseConnectForTrial"),
@@ -129,7 +130,9 @@ public sealed partial class SettingsPage : Page
         };
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
-        RemoveLicenseButton.Visibility = AppLicense.LicensedByToken ? Visibility.Visible : Visibility.Collapsed;
+        if (AppLicense.NeedsActivation)
+            LicenseEntry.Visibility = Visibility.Visible;
+        RemoveLicenseButton.Visibility = AppLicense.LicensedByToken && !AppLicense.NeedsActivation ? Visibility.Visible : Visibility.Collapsed;
         ShowHistory();
         AiHint.Text = AppLicense.CanUseRelay ? Loc.Format("AiHintRelay", RelayChat.Host, ClaudeChat.Host)
             : Loc.Format(license.IsEnabled(PremiumFeature.AiChat) ? "AiHint" : "AiHintPremium", ClaudeChat.Host);

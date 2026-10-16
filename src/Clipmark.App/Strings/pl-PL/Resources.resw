@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>Zbyt wiele prób. Spróbuj ponownie za {0} s.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>Zbyt wiele prób. Spróbuj ponownie za {0} min.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>Zbyt wiele prób. Spróbuj ponownie po {0}.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium nie jest już aktywowany na tym komputerze. Aktywuj go ponownie w Ustawieniach.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Twój plan licencji nie obejmuje tej funkcji.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>Zbyt wiele prób. Spróbuj ponownie za minutę.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Ten komputer został zablokowany w przekaźniku. Użyj własnego klucza API lub skontaktuj się z pomocą techniczną.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Nie udało się zarejestrować tego komputera w przekaźniku. Spróbuj ponownie.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>Zegar tego komputera jest rozregulowany. Sprawdź datę i godzinę w systemie Windows, a następnie spróbuj ponownie.</value>

@@ -3,11 +3,10 @@ using Clipmark.Core.Ai;
 
 namespace Clipmark.Core.Relay;
 
-/// <summary>Bodies for the two relay calls Clipmark makes (releash spec 5.2 and 5.4; task file clipmark/ask).</summary>
+/// <summary>Body of the Ask AI task call (releash spec 5.4; task file clipmark/ask).</summary>
 public static class RelayRequest
 {
     public const string App = "clipmark", Task = "ask";
-    public const string RegisterPath = "/v1/apps/" + App + "/installs";
     public const string AskPath = "/v1/tasks/" + App + "/" + Task;
 
     /// <summary>The typed task input: image, alternating turns ending with the user, model and effort from the server allowlist. A pending answer is left out.</summary>

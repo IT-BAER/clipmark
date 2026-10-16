@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>尝试次数过多。请在 {0} 秒后重试。</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>尝试次数过多。请在 {0} 分钟后重试。</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>尝试次数过多。请在 {0} 之后重试。</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium 已不再在这台电脑上激活。请在设置中重新激活。</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>你的许可证计划不包含此功能。</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>尝试次数过多。请在一分钟后重试。</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>这台电脑已被中继屏蔽。请使用你自己的 API 密钥，或联系支持人员。</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>无法将这台电脑注册到中继。请重试。</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>这台电脑的时钟不准确。请检查 Windows 的日期和时间，然后重试。</value>

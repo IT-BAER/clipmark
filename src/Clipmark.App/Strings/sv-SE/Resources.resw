@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>För många försök. Försök igen om {0} s.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>För många försök. Försök igen om {0} min.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>För många försök. Försök igen efter {0}.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium är inte längre aktiverat på den här datorn. Aktivera det igen i Inställningar.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Din licensplan innehåller inte den här funktionen.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>För många försök. Försök igen om en minut.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Den här datorn har blockerats från reläet. Använd din egen API-nyckel eller kontakta supporten.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Den här datorn kunde inte registreras hos reläet. Försök igen.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>Datorns klocka går fel. Kontrollera datum och tid i Windows och försök sedan igen.</value>

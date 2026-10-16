@@ -13,7 +13,8 @@ internal sealed record LicenceResult<T>(T? Value, RelayFailure? Failure = null, 
 
 /// <summary>
 /// The releash licence endpoints (spec 18.6), signed with <see cref="DeviceKey"/>. One client, 15 s timeout, system proxy;
-/// one retry with the server's clock offset after clock_skew, never more than 5 minutes and never stored.
+/// one retry with the server's clock offset after clock_skew, never more than 5 minutes and never stored; one retry
+/// after 1 s on server_busy. Every attempt is signed again (new nonce).
 /// </summary>
 internal static class LicenceClient
 {
@@ -57,6 +58,32 @@ internal static class LicenceClient
         request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
     }
 
+    /// <summary>
+    /// Whether to send again: once after clock_skew (with <paramref name="offset"/> set) and once after server_busy (after 1 s).
+    /// </summary>
+    internal static async Task<bool> RetryAsync(RelayFailure failure, Retries retries, CancellationToken ct)
+    {
+        if (!retries.Skew && SkewOffset(failure) is { } skew)
+        {
+            retries.Skew = true;
+            retries.Offset = skew;
+            return true;
+        }
+        if (!retries.Busy && failure.IsServerBusy)
+        {
+            retries.Busy = true;
+            await Task.Delay(TimeSpan.FromSeconds(1), ct).ConfigureAwait(false);
+            return true;
+        }
+        return false;
+    }
+
+    internal sealed class Retries
+    {
+        public bool Skew, Busy;
+        public long Offset;
+    }
+
     /// <summary>The offset for one retry after clock_skew, or null when the server time is missing or more than 5 minutes off.</summary>
     internal static long? SkewOffset(RelayFailure failure)
     {
@@ -78,23 +105,20 @@ internal static class LicenceClient
             return new(null, NetworkError: Loc.Format("LicenceKeyFailed", e.Message));
         }
         byte[] body = build(key);
-        long offset = 0;
+        var retries = new Retries();
         try
         {
-            for (int attempt = 0; ; attempt++)
+            while (true)
             {
                 using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(BaseUri, path));
-                Sign(request, path, body, key, offset);
+                Sign(request, path, body, key, retries.Offset);
                 using var response = await Http.SendAsync(request, ct).ConfigureAwait(false);
                 string text = await response.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                     return parse(text) is { } value ? new(value) : new(null, RelayFailure.Parse((int)response.StatusCode, null));
                 var failure = RelayFailure.Parse((int)response.StatusCode, text);
-                if (attempt == 0 && SkewOffset(failure) is { } skew)
-                {
-                    offset = skew;
+                if (await RetryAsync(failure, retries, ct).ConfigureAwait(false))
                     continue;
-                }
                 return new(null, failure);
             }
         }

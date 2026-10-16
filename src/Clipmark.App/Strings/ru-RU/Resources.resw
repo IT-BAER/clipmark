@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>Слишком много попыток. Повторите попытку через {0} с.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>Слишком много попыток. Повторите попытку через {0} мин.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>Слишком много попыток. Повторите попытку после {0}.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium больше не активирован на этом компьютере. Активируйте его снова в настройках.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Ваш лицензионный план не включает эту функцию.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>Слишком много попыток. Повторите попытку через минуту.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Этот компьютер заблокирован в ретрансляторе. Используйте собственный API-ключ или обратитесь в службу поддержки.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Не удалось зарегистрировать этот компьютер в ретрансляторе. Повторите попытку.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>Часы этого компьютера показывают неверное время. Проверьте дату и время в Windows и повторите попытку.</value>

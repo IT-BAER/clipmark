@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>Muitas tentativas. Tente novamente em {0} s.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>Muitas tentativas. Tente novamente em {0} min.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>Muitas tentativas. Tente novamente depois de {0}.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>O Clipmark Premium não está mais ativado neste PC. Ative-o novamente em Configurações.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>Seu plano de licença não inclui este recurso.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>Muitas tentativas. Tente novamente em um minuto.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>Este PC foi bloqueado no relay. Use sua própria chave de API ou entre em contato com o suporte.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>Não foi possível registrar este PC no relay. Tente novamente.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>O relógio deste PC está incorreto. Verifique a data e a hora do Windows e tente novamente.</value>

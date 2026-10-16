@@ -34,19 +34,6 @@ public sealed class RelayFailureTests
         Assert.Contains("2026", f.Message());
     }
 
-    [Theory]
-    [InlineData(401, "unknown_install", true)]
-    [InlineData(403, "install_evicted", true)]
-    [InlineData(403, "install_revoked", false)]
-    [InlineData(403, "subject_revoked", false)]
-    [InlineData(401, "signature_invalid", false)]
-    public void Only_a_missing_or_evicted_install_asks_for_a_new_registration(int status, string code, bool expected)
-    {
-        var f = RelayFailure.Parse(status, $"{{\"error\":{{\"code\":\"{code}\",\"message\":\"m\"}}}}");
-
-        Assert.Equal(expected, f.NeedsRegistration);
-    }
-
     [Fact]
     public void Clock_skew_carries_the_server_time()
     {
@@ -96,6 +83,48 @@ public sealed class RelayFailureTests
     {
         Assert.Contains("30 s", RelayFailure.Parse(429, "{\"error\":{\"code\":\"rate_limited\",\"message\":\"m\",\"retry_after\":30}}").Message());
         Assert.Contains("Too many attempts", RelayFailure.Parse(429, "{\"error\":{\"code\":\"rate_limited\",\"message\":\"m\"}}").Message());
+    }
+
+    [Fact]
+    public void A_long_rate_limit_names_minutes_or_the_local_time_it_ends()
+    {
+        static RelayFailure Limited(int seconds) =>
+            RelayFailure.Parse(429, $"{{\"error\":{{\"code\":\"rate_limited\",\"message\":\"m\",\"retry_after\":{seconds}}}}}");
+        var now = new DateTimeOffset(2026, 10, 16, 18, 0, 0, TimeSpan.Zero);
+
+        Assert.Contains("10 min", Limited(600).Message(now));
+        Assert.Contains("2 min", Limited(120).Message(now));
+        Assert.Contains("3 min", Limited(121).Message(now));
+        string days = Limited(2 * 86400).Message(now);
+        Assert.Contains(now.AddDays(2).ToLocalTime().ToString("d", System.Globalization.CultureInfo.CurrentCulture), days);
+        Assert.DoesNotContain("172800", days);
+    }
+
+    [Fact]
+    public void A_busy_server_is_retried_once_and_otherwise_reads_as_temporarily_unavailable()
+    {
+        var f = RelayFailure.Parse(503, "{\"error\":{\"code\":\"server_busy\",\"message\":\"m\",\"retry_after\":1}}");
+
+        Assert.True(f.IsServerBusy);
+        Assert.Contains("temporarily unavailable", f.Message());
+        Assert.False(RelayFailure.Parse(503, "{\"error\":{\"code\":\"storage_unavailable\",\"message\":\"m\"}}").IsServerBusy);
+    }
+
+    [Fact]
+    public void A_plan_without_the_feature_says_so()
+    {
+        Assert.Contains("plan does not include",
+            RelayFailure.Parse(403, "{\"error\":{\"code\":\"feature_not_licensed\",\"message\":\"m\"}}").Message());
+    }
+
+    [Fact]
+    public void An_unknown_install_asks_to_activate_again()
+    {
+        var f = RelayFailure.Parse(401, "{\"error\":{\"code\":\"unknown_install\",\"message\":\"m\"}}");
+
+        Assert.True(f.NeedsActivation);
+        Assert.Contains("Activate it again", f.Message());
+        Assert.False(RelayFailure.Parse(403, "{\"error\":{\"code\":\"install_deactivated\",\"message\":\"m\"}}").NeedsActivation);
     }
 
     [Theory]

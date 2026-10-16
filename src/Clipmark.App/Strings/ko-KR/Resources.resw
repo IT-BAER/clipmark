@@ -1480,6 +1480,18 @@
   <data name="LicenceTooManyWait" xml:space="preserve">
     <value>시도 횟수가 너무 많습니다. {0}초 후에 다시 시도하세요.</value>
   </data>
+  <data name="LicenceTooManyMinutes" xml:space="preserve">
+    <value>시도 횟수가 너무 많습니다. {0}분 후에 다시 시도하세요.</value>
+  </data>
+  <data name="LicenceTooManyUntil" xml:space="preserve">
+    <value>시도 횟수가 너무 많습니다. {0} 이후에 다시 시도하세요.</value>
+  </data>
+  <data name="LicenceNotActivated" xml:space="preserve">
+    <value>Clipmark Premium이 이 PC에서 더 이상 정품 인증되어 있지 않습니다. 설정에서 다시 정품 인증하세요.</value>
+  </data>
+  <data name="LicenceFeatureNotLicensed" xml:space="preserve">
+    <value>라이선스 플랜에 이 기능이 포함되어 있지 않습니다.</value>
+  </data>
   <data name="LicenceTooMany" xml:space="preserve">
     <value>시도 횟수가 너무 많습니다. 1분 후에 다시 시도하세요.</value>
   </data>
@@ -1533,9 +1545,6 @@
   </data>
   <data name="RelayInstallRevoked" xml:space="preserve">
     <value>이 PC가 릴레이에서 차단되었습니다. 직접 API 키를 사용하거나 지원팀에 문의하세요.</value>
-  </data>
-  <data name="RelayNotRegistered" xml:space="preserve">
-    <value>이 PC를 릴레이에 등록할 수 없었습니다. 다시 시도하세요.</value>
   </data>
   <data name="RelayClock" xml:space="preserve">
     <value>이 PC의 시계가 맞지 않습니다. Windows의 날짜와 시간을 확인한 후 다시 시도하세요.</value>
