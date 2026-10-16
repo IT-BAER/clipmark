@@ -134,10 +134,11 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 The source code is public under the [Elastic License 2.0](LICENSE): you may read, build and change it, but not remove or
 work around the license key check. Clipmark 1.0.0 was MIT licensed and has no license check: every feature is free.
 
-From the next release on, a new install starts a 30-day Premium trial. After the trial, these features need a license
-key: select / move / resize / rotate, attached arrows, text labels, fill, eyedropper, saving editable PNGs, Send to AI,
-Ask AI and the capture history. Everything else, including capture, recording, OCR, crop and saving PNG or JPEG, stays free.
-You enter the key in Settings. The key works offline and contains no name and no email address.
+From the next release on, a new install starts a 30-day Premium trial at its first connection to the license server.
+After the trial, these features need a license: select / move / resize / rotate, attached arrows, text labels, fill,
+eyedropper, saving editable PNGs, Send to AI, Ask AI and the capture history. Everything else, including capture,
+recording, OCR, crop and saving PNG or JPEG, stays free. You enter the activation code in Settings; activation needs the
+internet once, after that Premium also works offline for a while and is renewed when the PC is online.
 
 ## Install
 
@@ -160,8 +161,6 @@ The build is not code-signed yet, so SmartScreen may warn on first start ("More 
    of this PC; "Remove from this PC" keeps it): `certutil -csp "Microsoft Platform Crypto Provider" -delkey -user
    Clipmark.releash.install` (TPM) or `certutil -csp "Microsoft Software Key Storage Provider" -delkey -user
    Clipmark.releash.install`. A new key starts as a new installation.
-5. Optional: older versions left a trial record in `HKCU\Software\Clipmark` and in Windows Credential Manager
-   ("Windows Credentials", entry `Clipmark/Trial`); Clipmark deletes both at its first licence server answer.
 
 Your screenshots and recordings stay where you saved them.
 

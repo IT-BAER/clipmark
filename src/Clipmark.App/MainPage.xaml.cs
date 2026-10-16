@@ -619,7 +619,7 @@ public sealed partial class MainPage : Page
                 XamlRoot = XamlRoot,
                 RequestedTheme = ActualTheme,
                 Title = Loc.Get("PremiumTitle"),
-                Content = Loc.Format("PremiumBody", FeatureName(feature), TrialClock.TrialDays),
+                Content = Loc.Format("PremiumBody", FeatureName(feature), Entitlement.TrialDays),
                 PrimaryButtonText = Loc.Get("PremiumBuy"),
                 SecondaryButtonText = Loc.Get("PremiumEnterKey"),
                 CloseButtonText = Loc.Get("Cancel"),

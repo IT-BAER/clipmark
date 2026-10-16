@@ -124,7 +124,7 @@ public sealed partial class SettingsPage : Page
             LicenseStatus.Licensed => Loc.Get(AppLicense.LicensedByToken ? "LicenseActiveHere" : "LicenseActive"),
             LicenseStatus.Trial => license.TrialDaysLeft == 1 ? Loc.Get("LicenseTrialOneDay") : Loc.Format("LicenseTrialDays", license.TrialDaysLeft),
             _ when AppLicense.NeverContacted => Loc.Get("LicenseConnectForTrial"),
-            _ when AppLicense.WasActivated => Loc.Get("LicenseNotActive"),
+            _ when AppLicense.WasActivated || AppLicense.State.Key is not null => Loc.Get("LicenseNotActive"),
             _ => Loc.Get("LicenseTrialEnded"),
         };
         var unlicensed = license.Status == LicenseStatus.Licensed ? Visibility.Collapsed : Visibility.Visible;

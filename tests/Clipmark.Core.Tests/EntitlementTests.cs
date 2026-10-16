@@ -23,11 +23,12 @@ public class EntitlementTests
     }
 
     [Theory]
+    [InlineData(86400L * 30 + 1, 30)]
     [InlineData(86400L * 12, 12)]
-    [InlineData(86400L * 12 - 1, 12)]
-    [InlineData(86400L * 11 + 1, 12)]
+    [InlineData(86400L * 12 - 1, 11)]
+    [InlineData(86400L * 11 + 1, 11)]
     [InlineData(1L, 1)]
-    public void A_valid_trial_token_counts_the_days_left_rounded_up(long secondsLeft, int days)
+    public void A_valid_trial_token_counts_the_days_left_rounded_down(long secondsLeft, int days)
     {
         var e = Entitlement.Evaluate(TokenVerdict.Valid, Claims("trial", NowUnix + secondsLeft), Now);
 
@@ -63,17 +64,38 @@ public class EntitlementTests
         Assert.Equal(LicenseStatus.Free, Entitlement.Evaluate(TokenVerdict.Valid, null, Now).Status);
     }
 
+    private static readonly ECDsa Vector = EntitlementTokenTests.VectorKey();
+
+    private static string Token(string plan) => EntitlementTokenTests.Sign(
+        $$"""{"v":1,"kid":"dGVzdGtpZDE","app":"clipmark","lic":"1","plan":"{{plan}}","feat":[],"seats":1,"dev":"dev","iat":{{NowUnix - 3600}},"exp":{{NowUnix + 30 * 86400}},"grace":0}""",
+        Vector);
+
+    private static Entitlement ForFile(LicenseFile file) =>
+        Entitlement.Evaluate(file, EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now, out _, out _);
+
     [Fact]
-    public void A_valid_v1_key_unlocks_premium_offline()
+    public void A_verified_entitlement_in_the_file_unlocks_premium()
     {
-        Assert.Equal(new Entitlement(LicenseStatus.Licensed), Entitlement.EvaluateLegacy(ValidKey, Issuer));
+        Assert.Equal(new Entitlement(LicenseStatus.Licensed), ForFile(new LicenseFile(null, Token("premium"))));
     }
 
-    [Theory]
-    [InlineData(null)]
-    [InlineData("AAAAA-BBBBB")]
-    public void A_missing_or_invalid_v1_key_is_free(string? key)
+    [Fact]
+    public void Forged_local_trial_fields_without_an_install_id_are_free()
     {
-        Assert.Equal(LicenseStatus.Free, Entitlement.EvaluateLegacy(key, Issuer).Status);
+        var file = LicenseStore.Parse("""{ "trialStarted": "2026-10-13T12:00:00Z", "trialLastSeen": "2026-10-13T12:00:00Z", "trialTag": "forged" }""");
+
+        Assert.Equal(new Entitlement(LicenseStatus.Free), ForFile(file));
+    }
+
+    [Fact]
+    public void A_valid_v1_key_alone_is_free()
+    {
+        Assert.Equal(new Entitlement(LicenseStatus.Free), ForFile(new LicenseFile(ValidKey)));
+    }
+
+    [Fact]
+    public void A_garbage_entitlement_next_to_a_valid_v1_key_is_free()
+    {
+        Assert.Equal(new Entitlement(LicenseStatus.Free), ForFile(new LicenseFile(ValidKey, "garbage")));
     }
 }

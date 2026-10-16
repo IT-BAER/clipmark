@@ -16,8 +16,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
   and is bound to a non-exportable key of this PC (TPM when available), so reinstalling does not restart it.
   Settings > License takes an activation code (or a license key from an earlier version), shows how many PCs the
   license covers, and "Remove from this PC" frees the seat. The signed entitlement is checked offline and renewed
-  about every two weeks; offline, Premium keeps working until the entitlement and its grace period run out. A
-  license key of an earlier version keeps working offline and is activated automatically at the next online start.
+  once a day while online (a trial about every two weeks), so a removed or revoked seat locks within about a day;
+  offline, Premium keeps working until the entitlement and its grace period run out. Premium comes only from the
+  server's signed entitlement: there is no local trial, and a license key of an earlier version unlocks nothing
+  until it is activated, which happens automatically at the next online start.
 - Ask AI: ask Claude about the capture in a toolbar flyout (Sonnet 5.5, Opus 5.5 or Haiku 5.5; answer depth low, med,
   high or xhigh in the chat header or Settings). Answers stream in as formatted text with a collapsed Thinking
   summary; Stop, follow-up questions and New chat. Premium activated on the PC uses Ask AI without a key through
