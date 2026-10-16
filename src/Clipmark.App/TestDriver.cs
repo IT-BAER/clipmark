@@ -34,6 +34,7 @@ namespace Clipmark.App;
 /// | barshot X,Y,W,H idle|recording|paused|micmuted FILE (record bar for that region in that state, grabbed from the screen: needs CLIPMARK_TEST_SHOWBAR=1;
 /// the Pause / Resume tooltip text goes to DIR\bartip.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
+/// | sharedata FILE [image] (share sheet data for FILE, without the sheet)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
 /// | assert zoom F|fit (scroll viewer zoom factor within 0.02 of F or of the fit-to-window factor) | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
@@ -298,7 +299,12 @@ internal sealed class TestDriver
                 if (!await _page.SaveVideoToAsync(Path.GetFullPath(arg)))
                     throw new InvalidOperationException("not saved");
                 break;
-            case "assert" when arg == "editable":
+            case "sharedata":
+                // sharedata FILE [image]: fills a DataPackage as the share sheet does, without opening the sheet.
+                var shareWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                ShareSheet.Fill(new Windows.ApplicationModel.DataTransfer.DataPackage(),
+                    await Windows.Storage.StorageFile.GetFileFromPathAsync(Path.GetFullPath(shareWords[0])), shareWords.Contains("image"));
+                break;            case "assert" when arg == "editable":
                 if (_page.Editor?.FromEditable != true)
                     throw new InvalidOperationException("not opened as editable");
                 break;

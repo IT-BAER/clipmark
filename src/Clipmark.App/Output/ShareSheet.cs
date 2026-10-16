@@ -4,6 +4,10 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using static Clipmark.App.Interop.Native;
 
+// Native AOT: CsWinRT generates no CCW for a collection passed to a WinRT API unless the type is listed
+// (an array or a collection expression fails with E_NOINTERFACE; microsoft/CsWinRT#2378).
+[assembly: WinRT.GeneratedWinRTExposedExternalType(typeof(List<IStorageItem>))]
+
 namespace Clipmark.App.Output;
 
 /// <summary>Windows share sheet for a desktop window via IDataTransferManagerInterop (no CoreWindow).</summary>
@@ -78,11 +82,25 @@ internal static class ShareSheet
     {
         if (s_file is null)
             return;
-        var data = e.Request.Data;
-        data.Properties.Title = s_file.Name;
-        data.SetStorageItems([s_file]);
-        if (s_isImage)
-            data.SetBitmap(RandomAccessStreamReference.CreateFromFile(s_file));
+        // An exception leaving a WinRT event handler ends the process (WinUI fail-fast).
+        try
+        {
+            Fill(e.Request.Data, s_file, s_isImage);
+        }
+        catch (Exception ex)
+        {
+            e.Request.FailWithDisplayText(Loc.Format("ShareFailed", ex.Message));
+            return;
+        }
         DataRequested?.Invoke();
+    }
+
+    /// <summary>The shared data: the file, plus the bitmap for an image.</summary>
+    internal static void Fill(DataPackage data, StorageFile file, bool isImage)
+    {
+        data.Properties.Title = file.Name;
+        data.SetStorageItems(new List<IStorageItem> { file });
+        if (isImage)
+            data.SetBitmap(RandomAccessStreamReference.CreateFromFile(file));
     }
 }

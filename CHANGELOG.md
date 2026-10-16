@@ -79,6 +79,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Send to AI into Windows Terminal: the menu names the agent's own tab, and Clipmark asks to switch tabs instead of
   typing into another tab when the agent's tab is not active.
 - The editor no longer crashes on opening an image in the release (Native AOT) build.
+- Share no longer crashes the release (Native AOT) build for a capture or a recording; if the file cannot be handed
+  to Windows, the share window shows why.
 - Recordings no longer start with a black frame.
 - The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.
