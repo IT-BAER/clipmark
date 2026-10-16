@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Kalınlık (fare tekerleği)</value>
+    <value>Kalınlık (Ctrl+fare tekerleği)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Kalınlık</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Panoya kopyala</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Kopyaladıktan sonra pencereyi kapat</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Bildirim göster</value>

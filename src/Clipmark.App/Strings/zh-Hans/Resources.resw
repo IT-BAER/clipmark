@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>粗细（鼠标滚轮）</value>
+    <value>粗细（Ctrl+鼠标滚轮）</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>粗细</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>复制到剪贴板</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>复制后关闭窗口</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>显示通知</value>

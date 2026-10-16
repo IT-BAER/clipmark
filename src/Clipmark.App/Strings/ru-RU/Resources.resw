@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Толщина (колесо мыши)</value>
+    <value>Толщина (Ctrl+колесо мыши)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Толщина</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Копировать в буфер обмена</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Закрывать окно после копирования</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Показывать уведомление</value>

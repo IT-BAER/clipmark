@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Breite (Mausrad)</value>
+    <value>Breite (Ctrl+Mausrad)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Breite</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>In die Zwischenablage kopieren</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Fenster nach dem Kopieren schließen</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Benachrichtigung anzeigen</value>

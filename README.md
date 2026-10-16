@@ -28,14 +28,14 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 
 **Editor**
 - Pen, highlighter, object eraser with Erase all mark-ups, rectangle, oval, line and arrow (Shift snaps to 45 degrees)
-- Ruler: drag it, turn it with the mouse wheel in 15 degree steps; pen and highlighter strokes that start at its
+- Ruler: drag it, turn it with Ctrl+mouse wheel in 15 degree steps; pen and highlighter strokes that start at its
   edge run straight along it
 - Select, move, resize and rotate any object at any time; arrows attach to shapes and follow them **(Premium)**
 - Text labels, eyedropper (copies HEX, RGB or HSL), fill for shapes and the background **(Premium)**
 - Crop with handles or exact X / Y / W / H fields that accept arithmetic (`800+20`)
-- Color ring, opacity 10-100 %, width presets, mouse wheel sets width or text size; undo / redo
-- Zoom 100%, in, out or fit to window (Ctrl+0, Ctrl+plus, Ctrl+minus)
-- Save as PNG or JPEG, copy (optionally every edit goes to the clipboard at once), share, print, Edit in Paint, open
+- Color ring, opacity 10-100 %, width presets, Ctrl+mouse wheel sets width or text size; undo / redo
+- Zoom with the mouse wheel, 100%, in, out or fit to window (Ctrl+0, Ctrl+plus, Ctrl+minus)
+- Save as PNG or JPEG, copy (optionally every edit goes to the clipboard at once, or the window closes after a copy), share, print, Edit in Paint, open
   the screenshots folder
 - Opens PNG, JPEG, JFIF, BMP, DIB, GIF, TIFF and ICO files
 - "Save as editable PNG" keeps every object editable when you reopen the file **(Premium)**. Any copy of Clipmark opens
@@ -167,7 +167,8 @@ Your screenshots and recordings stay where you saved them.
 | New recording | Ctrl+Shift+Print Screen, tray menu, or the camera button; the same hotkey or a tray icon click stops it |
 | Tools | V select, P pen, H highlighter, E eraser, R / C / L / A shapes, T text, I eyedropper, G fill |
 | Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new |
-| Zoom | Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out, Ctrl+mouse wheel |
+| Zoom | Mouse wheel, Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out |
+| Width, text size, ruler angle | Ctrl+mouse wheel (Shift+mouse wheel scrolls) |
 | Selection | Ctrl+A select all, arrow keys nudge (Shift = 10 px), Page Up / Down z-order (Shift = to front / back), Del delete, Esc deselect |
 
 Recordings are saved to `Videos\Screen Recordings`. Screenshots go to `Pictures\Screenshots` (configurable) when

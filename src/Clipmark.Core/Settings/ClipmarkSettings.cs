@@ -71,6 +71,9 @@ public sealed record ClipmarkSettings
     /// <summary>Edits in the editor are copied to the clipboard after a short pause.</summary>
     public bool CopyEdits { get; init; } = true;
 
+    /// <summary>The window closes to the tray after the capture is copied (Copy, Ctrl+C, or the copy after a capture).</summary>
+    public bool CloseAfterCopy { get; init; }
+
     /// <summary>How a picked color is copied.</summary>
     public ColorFormat ColorFormat { get; init; }
 
@@ -140,6 +143,7 @@ public static class SettingsStore
             w.WriteNumber("borderWidth", s.BorderWidth);
             w.WriteString("theme", s.Theme);
             w.WriteBoolean("copyEdits", s.CopyEdits);
+            w.WriteBoolean("closeAfterCopy", s.CloseAfterCopy);
             w.WriteString("colorFormat", s.ColorFormat.ToString());
             w.WriteEndObject();
         }
@@ -194,6 +198,7 @@ public static class SettingsStore
                 BorderWidth = root.TryGetProperty("borderWidth", out var bw) && bw.ValueKind == JsonValueKind.Number && bw.TryGetInt32(out int width) ? Math.Clamp(width, 1, 20) : d.BorderWidth,
                 Theme = ClipmarkSettings.Themes.Contains(Str("theme")) ? Str("theme")! : d.Theme,
                 CopyEdits = Bool("copyEdits", d.CopyEdits),
+                CloseAfterCopy = Bool("closeAfterCopy", d.CloseAfterCopy),
                 ColorFormat = Enum.TryParse<ColorFormat>(Str("colorFormat"), out var colorFormat) && Enum.IsDefined(colorFormat) ? colorFormat : d.ColorFormat,
             };
         }

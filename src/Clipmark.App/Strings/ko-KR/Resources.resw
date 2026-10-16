@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>두께(마우스 휠)</value>
+    <value>두께(Ctrl+마우스 휠)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>두께</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>클립보드에 복사</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>복사 후 창 닫기</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>알림 표시</value>

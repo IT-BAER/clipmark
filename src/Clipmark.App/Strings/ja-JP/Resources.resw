@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>太さ (マウス ホイール)</value>
+    <value>太さ (Ctrl+マウス ホイール)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>太さ</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>クリップボードにコピー</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>コピー後にウィンドウを閉じる</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>通知を表示する</value>

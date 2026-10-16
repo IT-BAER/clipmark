@@ -35,14 +35,15 @@ and the project uses [Semantic Versioning](https://semver.org/).
     editor.
   - Editor: More menu with zoom (100%, in, out, fit; Ctrl+0, Ctrl+plus, Ctrl+minus), Ruler, Print, Edit in Paint and
     Open screenshots folder; Erase all mark-ups; Opacity slider (10-100 %) for pen, shapes, text and fill. The ruler
-    turns with the mouse wheel in 15 degree steps, and pen and highlighter strokes that start at its edge run along it.
+    turns with Ctrl+mouse wheel in 15 degree steps, and pen and highlighter strokes that start at its edge run along it.
   - Text actions: Copy as table puts a table from the capture on the clipboard as HTML (Word, Outlook, Excel) and
     tab-separated text; a title or note above or below the table stays out of its columns. Quick redact can skip email addresses or phone numbers and has Remove all redactions; QR codes with
     a phone number or email address offer Call or Send email; the text extractor can remove line breaks.
   - Recording: Pause / Resume on the record bar (the video has no gap), and the microphone or system audio can be
     muted while recording without changing the setting.
   - Settings: border on each capture (color, width), app theme (Windows default, Light, Dark), copy every edit to
-    the clipboard, Open folder buttons for screenshots and recordings.
+    the clipboard, close the window after copying (Copy, Ctrl+C, or the copy after a capture), Open folder buttons
+    for screenshots and recordings.
   - Opens .jfif, .jpe, .dib and .ico files.
 - MSIX readiness: "Start with Windows" through a startup task, toast activation, capture capabilities.
 - 16 interface languages: English, German, French, Italian, Spanish, Portuguese (Brazil), Japanese, Korean, Chinese
@@ -50,6 +51,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
   display language, or pick one in Settings > Language. German is reviewed; the others are machine-translated.
 
 ### Changed
+- Mouse wheel in the editor zooms around the cursor; Ctrl+mouse wheel sets the width, text size or ruler angle
+  (before: the plain wheel did, and Ctrl+mouse wheel zoomed).
 - Output toolbar order: Copy, Save, Share, then Send to AI and Ask AI after a separator.
 - The Delay button is highlighted while a delay is set and shows the timer icon with the seconds; it no
   longer grows taller than the other toolbar buttons, and neither does New.

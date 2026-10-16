@@ -29,7 +29,7 @@ public sealed partial class SettingsPage : Page
     {
         InitializeComponent();
         // Code, not a style: setters cannot use x:Uid, and the WinUI default follows the Windows display language.
-        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, CopyEditsSwitch, BorderSwitch, HistorySwitch,
+        foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, CloseAfterCopySwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, CopyEditsSwitch, BorderSwitch, HistorySwitch,
                      SystemAudioSwitch, MicrophoneSwitch })
             (toggle.OnContent, toggle.OffContent) = (Loc.Get("ToggleOn"), Loc.Get("ToggleOff"));
         foreach (int key in Keys)
@@ -62,6 +62,7 @@ public sealed partial class SettingsPage : Page
         ModeBox.SelectedIndex = Array.FindIndex(MainPage.Modes, m => m.Mode == s.Mode);
         DelayBox.SelectedIndex = Array.IndexOf(ClipmarkSettings.DelayChoices, s.DelaySeconds);
         ClipboardSwitch.IsOn = s.CopyToClipboard;
+        CloseAfterCopySwitch.IsOn = s.CloseAfterCopy;
         ToastSwitch.IsOn = s.ShowToast;
         AutoSaveSwitch.IsOn = s.AutoSave;
         OcrLineBreaksSwitch.IsOn = s.OcrRemoveLineBreaks;
@@ -440,7 +441,7 @@ public sealed partial class SettingsPage : Page
         if (!_loading)
             AppSettings.Update(s => s with
             {
-                CopyToClipboard = ClipboardSwitch.IsOn, ShowToast = ToastSwitch.IsOn, AutoSave = AutoSaveSwitch.IsOn,
+                CopyToClipboard = ClipboardSwitch.IsOn, CloseAfterCopy = CloseAfterCopySwitch.IsOn, ShowToast = ToastSwitch.IsOn, AutoSave = AutoSaveSwitch.IsOn,
                 OcrRemoveLineBreaks = OcrLineBreaksSwitch.IsOn, CopyEdits = CopyEditsSwitch.IsOn, Border = BorderSwitch.IsOn,
             });
         BorderOptions.Visibility = BorderSwitch.IsOn ? Visibility.Visible : Visibility.Collapsed;

@@ -69,6 +69,7 @@
                 <StackPanel Spacing="4">
                     <TextBlock x:Uid="SettingsAfterCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ToggleSwitch x:Name="ClipboardSwitch" x:Uid="SettingsClipboard" Toggled="OnTogglesChanged" />
+                    <ToggleSwitch x:Name="CloseAfterCopySwitch" x:Uid="SettingsCloseAfterCopy" Toggled="OnTogglesChanged" />
                     <ToggleSwitch x:Name="ToastSwitch" x:Uid="SettingsToast" Toggled="OnTogglesChanged" />
                     <ToggleSwitch x:Name="AutoSaveSwitch" x:Uid="SettingsAutoSave" Toggled="OnTogglesChanged" />
                     <!-- The path takes what the buttons leave, so long button texts never push a button out of view. -->

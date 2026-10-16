@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Grosor (rueda del ratón)</value>
+    <value>Grosor (Ctrl+rueda del ratón)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Grosor</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Copiar en el Portapapeles</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Cerrar la ventana después de copiar</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Mostrar una notificación</value>

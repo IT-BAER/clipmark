@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Bredd (mushjul)</value>
+    <value>Bredd (Ctrl+mushjul)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Bredd</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Kopiera till Urklipp</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Stäng fönstret efter kopiering</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Visa en avisering</value>

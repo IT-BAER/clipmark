@@ -234,6 +234,8 @@ public partial class App : Application
             _window?.ShowAndActivate();
     }
 
+    internal void CloseWindow() => _window?.CloseToTray();
+
     private static string? OpenArgument(AppNotificationActivatedEventArgs e) =>
         e.Arguments.TryGetValue("open", out var path) ? path : null;
 
@@ -270,10 +272,13 @@ public partial class App : Application
         };
         string? captured = null;
         RecordingArea? record = null;
+        bool failed = false;
         void OnCaptured(string path) => captured = path;
         void OnRecord(RecordingArea area) => record = area;
+        void OnFailed(string _) => failed = true;
         _controller.Captured += OnCaptured;
         _controller.RecordRequested += OnRecord;
+        _controller.Failed += OnFailed;
         try
         {
             await _controller.RunAsync(video: video);
@@ -287,12 +292,20 @@ public partial class App : Application
         {
             _controller.Captured -= OnCaptured;
             _controller.RecordRequested -= OnRecord;
+            _controller.Failed -= OnFailed;
+            // A failure (clipboard busy, save failed) keeps the window: it shows the error.
+            bool closeAfterCopy = captured is not null && !failed && AppSettings.Current is { CopyToClipboard: true, CloseAfterCopy: true };
             // Without a toast the editor is the only way to reach the capture.
-            bool showEditor = captured is not null && (windowWasShown || !AppSettings.Current.ShowToast);
-            if (showEditor)
-                _window.ShowImage(captured!);
-            if (showEditor || windowWasShown)
-                _window.ShowAndActivate();
+            bool showEditor = captured is not null && !closeAfterCopy && (windowWasShown || !AppSettings.Current.ShowToast);
+            if (closeAfterCopy && windowWasShown)
+                _window.CloseToTray();
+            else
+            {
+                if (showEditor)
+                    _window.ShowImage(captured!);
+                if (showEditor || windowWasShown)
+                    _window.ShowAndActivate();
+            }
         }
     }
 

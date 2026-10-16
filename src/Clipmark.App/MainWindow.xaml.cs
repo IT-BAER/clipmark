@@ -24,10 +24,8 @@ public sealed partial class MainWindow : Window
         AppWindow.Closing += async (_, e) =>
         {
             e.Cancel = true;
-            if (!await ConfirmDiscardAsync())
-                return;
-            Page()?.CloseCapture(); // closing ends the editor session, as in Snipping Tool
-            AppWindow.Hide();
+            if (await ConfirmDiscardAsync())
+                CloseToTray();
         };
         ApplyTheme(AppSettings.Current);
         AppSettings.Changed += ApplyTheme;
@@ -97,6 +95,13 @@ public sealed partial class MainWindow : Window
                 RootFrame.GoBack();
         }
         return RootFrame.Content as MainPage;
+    }
+
+    /// <summary>Hides the window without asking; closing ends the editor session, as in Snipping Tool.</summary>
+    public void CloseToTray()
+    {
+        Page()?.CloseCapture();
+        AppWindow.Hide();
     }
 
     public void ShowImage(string path) => Page()?.ShowImage(path);

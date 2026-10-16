@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Spessore (rotellina del mouse)</value>
+    <value>Spessore (Ctrl+rotellina del mouse)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Spessore</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Copia negli Appunti</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Chiudi la finestra dopo la copia</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Mostra una notifica</value>

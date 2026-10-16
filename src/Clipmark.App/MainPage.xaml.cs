@@ -131,7 +131,7 @@ public sealed partial class MainPage : Page
             if (_editor?.SelectedText is { Length: > 0 } selected)
                 CopyText(selected, Loc.Get("TextCopied"));
             else
-                _ = CopyAsync();
+                _ = CopyByUserAsync();
         });
         Shortcut(VirtualKey.Number0, VirtualKeyModifiers.Control, () => ZoomTo(1));
         foreach (var key in new[] { VirtualKey.Add, (VirtualKey)0xBB }) // numpad and main-row plus
@@ -334,10 +334,15 @@ public sealed partial class MainPage : Page
         _editor.ColorPicked += OnColorPicked;
         _editor.Control.PointerWheelChanged += (_, e) =>
         {
-            if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0 || _editor is not { } editor)
-                return; // Ctrl+wheel zooms in OnScrollerWheel
+            if (_editor is not { } editor)
+                return;
             e.Handled = true; // keeps the scroll viewer from scrolling
-            Wheel(e.GetCurrentPoint(editor.Control).Properties.MouseWheelDelta, (e.KeyModifiers & VirtualKeyModifiers.Shift) != 0, editor.PointOf(e));
+            var point = e.GetCurrentPoint(ImageScroller);
+            _canvasWheel = point.Timestamp;
+            if ((e.KeyModifiers & (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift)) == 0)
+                ZoomAt(point);
+            else
+                Wheel(point.Properties.MouseWheelDelta, (e.KeyModifiers & VirtualKeyModifiers.Control) == 0, editor.PointOf(e));
         };
         ApplyTool();
         UpdateHistory();
@@ -901,7 +906,7 @@ public sealed partial class MainPage : Page
 
     private int _wheelRest;
 
-    /// <summary>Plain wheel over the canvas = width of the tool or the selection (with a short size hint); Shift+wheel scrolls vertically.</summary>
+    /// <summary>Ctrl+wheel over the canvas = ruler angle, or width of the tool or the selection (with a short size hint); Shift+wheel scrolls vertically.</summary>
     internal void Wheel(int delta, bool shift, System.Numerics.Vector2 imagePoint)
     {
         if (_editor is null)
@@ -1099,7 +1104,14 @@ public sealed partial class MainPage : Page
 
     private void OnRedo(object sender, RoutedEventArgs e) => _editor?.Redo();
 
-    private void OnCopy(object sender, RoutedEventArgs e) => _ = CopyAsync();
+    private void OnCopy(object sender, RoutedEventArgs e) => _ = CopyByUserAsync();
+
+    /// <summary>Copy button and Ctrl+C: the window closes to the tray afterwards when the setting CloseAfterCopy is on.</summary>
+    private async Task CopyByUserAsync()
+    {
+        if (await CopyAsync() && AppSettings.Current.CloseAfterCopy)
+            ((App)Application.Current).CloseWindow();
+    }
 
     /// <summary>Copies the capture (or the recording file); false when nothing was copied. Background: no error bar, the document stays unsaved.</summary>
     private async Task<bool> CopyAsync(bool background = false)
@@ -1755,12 +1767,22 @@ public sealed partial class MainPage : Page
             ShowError(Loc.Format("OpenFolderFailed", folder));
     }
 
-    /// <summary>Ctrl+wheel zooms around the cursor; plain wheel scrolls.</summary>
+    /// <summary>Timestamp of the last wheel event the canvas handled; the scroll viewer sees it again (handledEventsToo).</summary>
+    private ulong _canvasWheel;
+
+    /// <summary>Plain wheel beside the image zooms like over it; Ctrl / Shift there leave the scroll viewer alone.</summary>
     private void OnScrollerWheel(object sender, PointerRoutedEventArgs e)
     {
-        if ((e.KeyModifiers & VirtualKeyModifiers.Control) == 0)
-            return;
         var point = e.GetCurrentPoint(ImageScroller);
+        if (point.Timestamp == _canvasWheel || (e.KeyModifiers & (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift)) != 0)
+            return;
+        ZoomAt(point);
+        e.Handled = true;
+    }
+
+    /// <summary>One wheel step zooms by 1.25 around the cursor.</summary>
+    private void ZoomAt(Microsoft.UI.Input.PointerPoint point)
+    {
         float old = ImageScroller.ZoomFactor;
         float zoom = Math.Clamp(old * MathF.Pow(1.25f, point.Properties.MouseWheelDelta / 120f),
             ImageScroller.MinZoomFactor, ImageScroller.MaxZoomFactor);
@@ -1768,7 +1790,6 @@ public sealed partial class MainPage : Page
         var p = point.Position;
         ImageScroller.ChangeView((ImageScroller.HorizontalOffset + p.X) * ratio - p.X,
             (ImageScroller.VerticalOffset + p.Y) * ratio - p.Y, zoom, true);
-        e.Handled = true;
     }
 
     internal void ShowError(string text)

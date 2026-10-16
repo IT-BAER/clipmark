@@ -24,6 +24,7 @@ public class SettingsStoreTests
         Assert.Equal(AiModels.Default.Id, s.AiModel);
         Assert.False(s.AiConsent);
         Assert.False(s.AiConsentRelay);
+        Assert.False(s.CloseAfterCopy);
     }
 
     [Fact]
@@ -37,6 +38,7 @@ public class SettingsStoreTests
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
             AiModel = "claude-opus-5-5", AiConsent = true, AiConsentRelay = true,
             RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
+            CloseAfterCopy = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
     }
@@ -48,6 +50,7 @@ public class SettingsStoreTests
         Assert.True(s.RedactEmail);
         Assert.True(s.RedactPhone);
         Assert.False(s.OcrRemoveLineBreaks);
+        Assert.False(s.CloseAfterCopy);
     }
 
     [Fact]

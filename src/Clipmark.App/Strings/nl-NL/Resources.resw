@@ -323,7 +323,7 @@
     <comment>Screen reader item status</comment>
   </data>
   <data name="WidthSliderHeader" xml:space="preserve">
-    <value>Dikte (muiswiel)</value>
+    <value>Dikte (Ctrl+muiswiel)</value>
   </data>
   <data name="WidthSliderName" xml:space="preserve">
     <value>Dikte</value>
@@ -955,6 +955,9 @@
   </data>
   <data name="SettingsClipboard.Header" xml:space="preserve">
     <value>Naar klembord kopiëren</value>
+  </data>
+  <data name="SettingsCloseAfterCopy.Header" xml:space="preserve">
+    <value>Venster sluiten na kopiëren</value>
   </data>
   <data name="SettingsToast.Header" xml:space="preserve">
     <value>Een melding weergeven</value>
