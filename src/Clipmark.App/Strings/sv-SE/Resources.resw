@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Kopiera text</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Maskera</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Inga e-postadresser eller telefonnummer hittades.</value>
+    <value>Inget att maskera hittades.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Fråga AI</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Kopiera markering</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Maskera markering</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Svärtar över den markerade texten (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Maskera markering</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Snabbmaskering</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Svärtar över e-postadresser och telefonnummer i bilden</value>
+    <value>Svärtar över känsliga uppgifter i bilden. Kontrollera resultatet innan du delar</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Snabbmaskering</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Telefonnummer</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP-adresser</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Bankuppgifter</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Lösenord och nycklar</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Ta bort all maskering</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Aktivera e-postadresser eller telefonnummer i menyn</value>
+    <value>Aktivera en datatyp i menyn</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Ring</value>

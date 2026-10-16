@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Copiar texto</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Tachar</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>No se encontraron direcciones de correo ni números de teléfono.</value>
+    <value>No se encontró nada que tachar.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Preguntar a la IA</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Copiar selección</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Tachar selección</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tacha en negro el texto seleccionado (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Tachar selección</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Tachado rápido</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Tacha en negro las direcciones de correo y los números de teléfono de la imagen</value>
+    <value>Tacha en negro los datos sensibles de la imagen. Revisa el resultado antes de compartir</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Tachado rápido</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Números de teléfono</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>Direcciones IP</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Datos bancarios</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Contraseñas y claves</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Quitar todos los tachados</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Activa las direcciones de correo o los números de teléfono en el menú</value>
+    <value>Activa un tipo de datos en el menú</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Llamar</value>

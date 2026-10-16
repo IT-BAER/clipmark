@@ -54,7 +54,11 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
   use Windows text recognition
 - Copy as table: a table in the capture goes to the clipboard as a table for Word, Outlook and Excel, and as
   tab-separated text for everything else
-- Quick redact of email addresses and / or phone numbers; Remove all redactions
+- Quick redact of email addresses, phone numbers, IP and MAC addresses, bank data (IBAN, card numbers, BIC after its
+  label) and passwords or keys (known token shapes, and the value after a label such as "Password:"), each kind
+  switchable in the menu; Remove all redactions. Detection is best effort: review the result before sharing
+- Redact selection: black out the selected recognized text with the right-click menu, the Redact selection button or
+  Ctrl+Shift+R
 - QR code decoding: Copy and Open link; Call and Send email for phone numbers and email addresses
 
 **Send to AI (Premium)**
@@ -169,6 +173,7 @@ Your screenshots and recordings stay where you saved them.
 | Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new |
 | Zoom | Mouse wheel, Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out |
 | Width, text size, ruler angle | Ctrl+mouse wheel (Shift+mouse wheel scrolls) |
+| Text actions | Ctrl+Shift+R redact the selected text |
 | Selection | Ctrl+A select all, arrow keys nudge (Shift = 10 px), Page Up / Down z-order (Shift = to front / back), Del delete, Esc deselect |
 
 Recordings are saved to `Videos\Screen Recordings`. Screenshots go to `Pictures\Screenshots` (configurable) when

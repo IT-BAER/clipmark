@@ -54,6 +54,15 @@ public sealed record ClipmarkSettings
     /// <summary>Quick redact covers phone numbers.</summary>
     public bool RedactPhone { get; init; } = true;
 
+    /// <summary>Quick redact covers IP and MAC addresses.</summary>
+    public bool RedactIp { get; init; } = true;
+
+    /// <summary>Quick redact covers IBANs, card numbers and BICs.</summary>
+    public bool RedactBank { get; init; } = true;
+
+    /// <summary>Quick redact covers passwords, tokens and keys.</summary>
+    public bool RedactSecrets { get; init; } = true;
+
     /// <summary>Text extractor joins lines with spaces instead of line breaks.</summary>
     public bool OcrRemoveLineBreaks { get; init; }
 
@@ -137,6 +146,9 @@ public static class SettingsStore
             w.WriteString("language", s.Language);
             w.WriteBoolean("redactEmail", s.RedactEmail);
             w.WriteBoolean("redactPhone", s.RedactPhone);
+            w.WriteBoolean("redactIp", s.RedactIp);
+            w.WriteBoolean("redactBank", s.RedactBank);
+            w.WriteBoolean("redactSecrets", s.RedactSecrets);
             w.WriteBoolean("ocrRemoveLineBreaks", s.OcrRemoveLineBreaks);
             w.WriteBoolean("border", s.Border);
             w.WriteString("borderColor", ColorSample.Hex(s.BorderColor));
@@ -190,6 +202,9 @@ public static class SettingsStore
                 Language = UiLanguages.IsValid(Str("language")) ? Str("language") : null,
                 RedactEmail = Bool("redactEmail", d.RedactEmail),
                 RedactPhone = Bool("redactPhone", d.RedactPhone),
+                RedactIp = Bool("redactIp", d.RedactIp),
+                RedactBank = Bool("redactBank", d.RedactBank),
+                RedactSecrets = Bool("redactSecrets", d.RedactSecrets),
                 OcrRemoveLineBreaks = Bool("ocrRemoveLineBreaks", d.OcrRemoveLineBreaks),
                 Border = Bool("border", d.Border),
                 BorderColor = Str("borderColor") is { Length: 7 } hex && hex[0] == '#'

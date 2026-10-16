@@ -263,6 +263,7 @@
                 <TextBlock x:Name="TextActionsStatus" x:Uid="TextActionsStatus" VerticalAlignment="Center"
                            Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                 <Button x:Name="CopySelectedTextButton" x:Uid="CopySelectedTextButton" Click="OnCopySelectedText" IsEnabled="False" />
+                <Button x:Name="RedactSelectedTextButton" x:Uid="RedactSelectedTextButton" Click="OnRedactSelectedText" IsEnabled="False" />
                 <Button x:Name="CopyAllTextButton" x:Uid="CopyAllTextButton" Click="OnCopyAllText" IsEnabled="False" />
                 <Button x:Name="CopyTableButton" x:Uid="CopyTableButton" Click="OnCopyTable" IsEnabled="False" />
                 <SplitButton x:Name="QuickRedactButton" x:Uid="QuickRedactButton" Click="OnQuickRedact" IsEnabled="False">
@@ -270,6 +271,9 @@
                         <MenuFlyout x:Name="QuickRedactMenu" Placement="Bottom" Opening="OnQuickRedactMenuOpening">
                             <ToggleMenuFlyoutItem x:Name="RedactEmailItem" x:Uid="RedactEmailItem" Click="OnRedactKindToggled" />
                             <ToggleMenuFlyoutItem x:Name="RedactPhoneItem" x:Uid="RedactPhoneItem" Click="OnRedactKindToggled" />
+                            <ToggleMenuFlyoutItem x:Name="RedactIpItem" x:Uid="RedactIpItem" Click="OnRedactKindToggled" />
+                            <ToggleMenuFlyoutItem x:Name="RedactBankItem" x:Uid="RedactBankItem" Click="OnRedactKindToggled" />
+                            <ToggleMenuFlyoutItem x:Name="RedactSecretsItem" x:Uid="RedactSecretsItem" Click="OnRedactKindToggled" />
                             <MenuFlyoutSeparator />
                             <MenuFlyoutItem x:Name="RedactClearItem" x:Uid="RedactClearItem" Click="OnRedactClear" />
                         </MenuFlyout>

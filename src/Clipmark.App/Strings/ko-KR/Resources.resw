@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>텍스트 복사</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>가리기</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>이메일 주소나 전화번호를 찾을 수 없습니다.</value>
+    <value>가릴 항목을 찾을 수 없습니다.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>AI에게 묻기</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>선택 영역 복사</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>선택 영역 가리기</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>선택한 텍스트를 검은색으로 가립니다 (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>선택 영역 가리기</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>빠른 가리기</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>이미지의 이메일 주소와 전화번호를 검은색으로 가립니다</value>
+    <value>이미지의 민감한 데이터를 검은색으로 가립니다. 공유하기 전에 결과를 확인하세요</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>빠른 가리기</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>전화번호</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP 주소</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>은행 정보</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>암호 및 키</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>모든 가리기 제거</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>메뉴에서 이메일 주소 또는 전화번호를 켜세요</value>
+    <value>메뉴에서 데이터 종류를 켜세요</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>전화 걸기</value>

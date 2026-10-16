@@ -37,7 +37,7 @@ public class SettingsStoreTests
             AutoSave = true, SaveFolder = @"D:\Shots", ShowToast = true,
             RecordHotkey = new Hotkey(HotkeyModifiers.Alt, 0x52), RecordSystemAudio = false, RecordMicrophone = true, HistoryEnabled = true,
             AiModel = "claude-opus-5-5", AiConsent = true, AiConsentRelay = true,
-            RedactEmail = false, RedactPhone = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
+            RedactEmail = false, RedactPhone = false, RedactIp = false, RedactBank = false, RedactSecrets = false, OcrRemoveLineBreaks = true, ColorFormat = ColorFormat.Hsl,
             CloseAfterCopy = true,
         };
         Assert.Equal(s, SettingsStore.Parse(SettingsStore.Serialize(s)));
@@ -49,6 +49,9 @@ public class SettingsStoreTests
         var s = SettingsStore.Parse("""{ "autoSave": true }""");
         Assert.True(s.RedactEmail);
         Assert.True(s.RedactPhone);
+        Assert.True(s.RedactIp);
+        Assert.True(s.RedactBank);
+        Assert.True(s.RedactSecrets);
         Assert.False(s.OcrRemoveLineBreaks);
         Assert.False(s.CloseAfterCopy);
     }

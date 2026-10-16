@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Копировать текст</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Скрыть</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Адреса электронной почты и номера телефонов не найдены.</value>
+    <value>Ничего для скрытия не найдено.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Спросить ИИ</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Копировать выделенное</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Скрыть выделенное</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Закрашивает чёрным выделенный текст (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Скрыть выделенное</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Быстрое скрытие</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Закрашивает чёрным адреса электронной почты и номера телефонов на изображении</value>
+    <value>Закрашивает чёрным конфиденциальные данные на изображении. Проверьте результат перед отправкой</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Быстрое скрытие</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Номера телефонов</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP-адреса</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Банковские данные</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Пароли и ключи</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Удалить все скрытия</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Включите в меню адреса электронной почты или номера телефонов</value>
+    <value>Включите в меню тип данных</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Позвонить</value>

@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Copy text</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Redact</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>No email addresses or phone numbers found.</value>
+    <value>Nothing to redact found.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Ask AI</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Copy selection</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Redact selection</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Blacks out the selected text (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Redact selection</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Quick redact</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Blacks out email addresses and phone numbers in the image</value>
+    <value>Blacks out sensitive data in the image. Check the result before sharing</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Quick redact</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Phone numbers</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP addresses</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Bank data</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Passwords and keys</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Remove all redactions</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Turn on email addresses or phone numbers in the menu</value>
+    <value>Turn on a data type in the menu</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Call</value>

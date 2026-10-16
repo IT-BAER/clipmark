@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Copiar texto</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Rasurar</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Nenhum endereço de email ou número de telefone encontrado.</value>
+    <value>Nada para rasurar encontrado.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Perguntar à IA</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Copiar seleção</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Rasurar seleção</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cobre de preto o texto selecionado (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Rasurar seleção</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Rasurar rápido</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Cobre de preto os endereços de email e números de telefone na imagem</value>
+    <value>Cobre de preto os dados sensíveis na imagem. Confira o resultado antes de compartilhar</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Rasurar rápido</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Números de telefone</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>Endereços IP</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Dados bancários</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Senhas e chaves</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Remover todas as rasuras</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Ative endereços de email ou números de telefone no menu</value>
+    <value>Ative um tipo de dado no menu</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Ligar</value>

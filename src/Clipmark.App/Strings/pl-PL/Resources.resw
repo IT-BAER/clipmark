@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Kopiuj tekst</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Zasłoń</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Nie znaleziono adresów e-mail ani numerów telefonów.</value>
+    <value>Nie znaleziono nic do zasłonięcia.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>Zapytaj AI</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Kopiuj zaznaczenie</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Zasłoń zaznaczenie</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zakrywa czernią zaznaczony tekst (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Zasłoń zaznaczenie</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Szybkie zasłanianie</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Zakrywa czernią adresy e-mail i numery telefonów na obrazie</value>
+    <value>Zakrywa czernią poufne dane na obrazie. Sprawdź wynik przed udostępnieniem</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Szybkie zasłanianie</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Numery telefonów</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>Adresy IP</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Dane bankowe</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Hasła i klucze</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Usuń wszystkie zasłonięcia</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Włącz adresy e-mail lub numery telefonów w menu</value>
+    <value>Włącz w menu rodzaj danych</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Zadzwoń</value>

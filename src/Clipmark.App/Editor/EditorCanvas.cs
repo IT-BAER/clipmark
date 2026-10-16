@@ -101,6 +101,12 @@ internal sealed class EditorCanvas
     /// <summary>Selected recognized text; empty without a selection.</summary>
     public string SelectedText => _textSelection is { } s ? OcrSelection.Text(_textLines, s.Anchor, s.Focus, AppSettings.Current.OcrRemoveLineBreaks) : "";
 
+    /// <summary>Boxes of the selected text in image px, grown outward by pad px; empty without a selection.</summary>
+    public IReadOnlyList<PixelRect> SelectedTextBoxes(int pad) => _textSelection is not { } s ? [] : [.. OcrSelection.Boxes(_textLines, s.Anchor, s.Focus)
+        .Select(b => PixelRect.FromCorners((int)MathF.Floor(b.Min.X) - pad, (int)MathF.Floor(b.Min.Y) - pad, (int)MathF.Ceiling(b.Max.X) + pad, (int)MathF.Ceiling(b.Max.Y) + pad))];
+
+    public void ClearTextSelection() => SetTextSelection(null);
+
     /// <summary>Raised when the text selection changes.</summary>
     public event Action? TextSelectionChanged;
 

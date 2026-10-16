@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Metni kopyala</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Karart</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>E-posta adresi veya telefon numarası bulunamadı.</value>
+    <value>Karartılacak bir şey bulunamadı.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>AI'ya sor</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Seçimi kopyala</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Seçimi karart</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Seçili metni karartır (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Seçimi karart</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Hızlı karartma</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Görüntüdeki e-posta adreslerini ve telefon numaralarını karartır</value>
+    <value>Görüntüdeki hassas verileri karartır. Paylaşmadan önce sonucu kontrol edin</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Hızlı karartma</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Telefon numaraları</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP adresleri</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Banka bilgileri</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Parolalar ve anahtarlar</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Tüm karartmaları kaldır</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Menüden e-posta adreslerini veya telefon numaralarını açın</value>
+    <value>Menüden bir veri türünü açın</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Ara</value>

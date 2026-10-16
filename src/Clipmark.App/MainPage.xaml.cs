@@ -133,6 +133,7 @@ public sealed partial class MainPage : Page
             else
                 _ = CopyByUserAsync();
         });
+        Shortcut(VirtualKey.R, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, RedactSelection);
         Shortcut(VirtualKey.Number0, VirtualKeyModifiers.Control, () => ZoomTo(1));
         foreach (var key in new[] { VirtualKey.Add, (VirtualKey)0xBB }) // numpad and main-row plus
             Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.In(ImageScroller.ZoomFactor)));
@@ -1632,11 +1633,11 @@ public sealed partial class MainPage : Page
 
     private void OnCopySelectedText(object sender, RoutedEventArgs e) => CopyText(_editor?.SelectedText ?? "", Loc.Get("TextCopied"));
 
-    /// <summary>Enables Copy selection and shows the selected character count, or the recognition result without a selection.</summary>
+    /// <summary>Enables Copy and Redact selection and shows the selected character count, or the recognition result without a selection.</summary>
     private void OnTextSelectionChanged()
     {
         string selected = _editor?.SelectedText ?? "";
-        CopySelectedTextButton.IsEnabled = selected.Length > 0;
+        CopySelectedTextButton.IsEnabled = RedactSelectedTextButton.IsEnabled = selected.Length > 0;
         int count = new StringInfo(selected.Replace(Environment.NewLine, "")).LengthInTextElements;
         TextActionsStatus.Text = selected.Length == 0 ? _textStatus : count == 1 ? Loc.Get("TextSelectedOne") : Loc.Format("TextSelected", count);
     }
@@ -1647,7 +1648,9 @@ public sealed partial class MainPage : Page
             return;
         var copy = new MenuFlyoutItem { Text = Loc.Get("CopyTextMenu"), Icon = new FontIcon { Glyph = "\uE8C8" } };
         copy.Click += (_, _) => CopyText(editor.SelectedText, Loc.Get("TextCopied"));
-        new MenuFlyout { Items = { copy } }.ShowAt(editor.Control, new Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowOptions { Position = at });
+        var redact = new MenuFlyoutItem { Text = Loc.Get("RedactTextMenu"), Icon = new FontIcon { Glyph = "\uE72E" } };
+        redact.Click += (_, _) => RedactSelection();
+        new MenuFlyout { Items = { copy, redact } }.ShowAt(editor.Control, new Microsoft.UI.Xaml.Controls.Primitives.FlyoutShowOptions { Position = at });
     }
 
     private void CopyText(string text, string done)
@@ -1659,13 +1662,30 @@ public sealed partial class MainPage : Page
             ShowError(Loc.Get("ClipboardBusyText"));
     }
 
-    /// <summary>Blacks out the enabled kinds (email addresses, phone numbers) in the image pixels as one undo step.</summary>
+    private void OnRedactSelectedText(object sender, RoutedEventArgs e) => RedactSelection();
+
+    /// <summary>Blacks out the selected recognized text (padded 2 px) as one undo step and clears the selection.</summary>
+    private void RedactSelection()
+    {
+        if (_editor is not { } editor || editor.SelectedTextBoxes(2) is not { Count: > 0 } boxes)
+            return;
+        editor.Document?.Redact(boxes);
+        editor.ClearTextSelection();
+    }
+
+    /// <summary>Blacks out the enabled kinds (secrets, email addresses, bank data, IP/MAC addresses, phone numbers) in the image pixels as one undo step.</summary>
     private void OnQuickRedact(SplitButton sender, SplitButtonClickEventArgs e)
     {
         var s = AppSettings.Current;
-        var boxes = OcrText.Sensitive(_lines, 2)
-            .Where(m => m.Kind == SensitiveKind.Email ? s.RedactEmail : s.RedactPhone).Select(m => m.Box).ToList();
-        if (!s.RedactEmail && !s.RedactPhone)
+        var boxes = OcrText.Sensitive(_lines, 2).Where(m => m.Kind switch
+        {
+            SensitiveKind.Email => s.RedactEmail,
+            SensitiveKind.Phone => s.RedactPhone,
+            SensitiveKind.IpAddress => s.RedactIp,
+            SensitiveKind.Bank => s.RedactBank,
+            _ => s.RedactSecrets,
+        }).Select(m => m.Box).ToList();
+        if (!(s.RedactEmail || s.RedactPhone || s.RedactIp || s.RedactBank || s.RedactSecrets))
             TextActionsStatus.Text = Loc.Get("RedactNoKinds");
         else if (boxes.Count == 0)
             TextActionsStatus.Text = Loc.Get("RedactNoneFound");
@@ -1677,11 +1697,18 @@ public sealed partial class MainPage : Page
     {
         RedactEmailItem.IsChecked = AppSettings.Current.RedactEmail;
         RedactPhoneItem.IsChecked = AppSettings.Current.RedactPhone;
+        RedactIpItem.IsChecked = AppSettings.Current.RedactIp;
+        RedactBankItem.IsChecked = AppSettings.Current.RedactBank;
+        RedactSecretsItem.IsChecked = AppSettings.Current.RedactSecrets;
         RedactClearItem.IsEnabled = _editor?.Document is { Redactions.Count: > 0 };
     }
 
     private void OnRedactKindToggled(object sender, RoutedEventArgs e) =>
-        AppSettings.Update(s => s with { RedactEmail = RedactEmailItem.IsChecked, RedactPhone = RedactPhoneItem.IsChecked });
+        AppSettings.Update(s => s with
+        {
+            RedactEmail = RedactEmailItem.IsChecked, RedactPhone = RedactPhoneItem.IsChecked,
+            RedactIp = RedactIpItem.IsChecked, RedactBank = RedactBankItem.IsChecked, RedactSecrets = RedactSecretsItem.IsChecked,
+        });
 
     private void OnRedactClear(object sender, RoutedEventArgs e) => _editor?.Document?.ClearRedactions();
 

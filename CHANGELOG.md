@@ -29,6 +29,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Text actions: select part of the recognized text by dragging across it (by character, across lines) or by
   double-clicking a word, and copy it with Ctrl+C, the right-click menu or Copy selection; Ctrl+A selects all text.
   A drag that starts on recognized text selects it whatever tool is active; elsewhere the tool works as before.
+- Text actions: Quick redact also covers IP and MAC addresses, bank data (IBAN, card numbers, BIC after a BIC / SWIFT
+  label) and passwords or keys (known token shapes, and the value after a label such as "Password:"), each kind
+  switchable in the menu. Redact selection blacks out the selected text from the right-click menu, the Redact
+  selection button or Ctrl+Shift+R, as one undo step.
 - Snipping Tool features (all free):
   - Capture overlay: Color picker with a loupe that copies HEX, RGB or HSL (Settings > Color format, also used by the
     eyedropper); Quick markup (Ctrl+E) draws a red pen on the frozen screen, and the strokes stay editable in the

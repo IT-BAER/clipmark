@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>複製文字</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>遮蔽</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>找不到電子郵件地址或電話號碼。</value>
+    <value>找不到需要遮蔽的內容。</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>詢問 AI</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>複製選取範圍</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>遮蔽選取範圍</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>將選取的文字塗黑 (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>遮蔽選取範圍</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>快速遮蔽</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>將影像中的電子郵件地址和電話號碼塗黑</value>
+    <value>將影像中的敏感資料塗黑。分享前請檢查結果</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>快速遮蔽</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>電話號碼</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP 位址</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>銀行資料</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>密碼和金鑰</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>移除所有遮蔽</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>請在功能表中開啟電子郵件地址或電話號碼</value>
+    <value>請在功能表中開啟一種資料類型</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>撥打電話</value>

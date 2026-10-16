@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Tekst kopiëren</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Afdekken</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Geen e-mailadressen of telefoonnummers gevonden.</value>
+    <value>Niets gevonden om af te dekken.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>AI vragen</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Selectie kopiëren</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Selectie afdekken</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dekt de geselecteerde tekst af met zwart (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Selectie afdekken</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Snel afdekken</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Dekt e-mailadressen en telefoonnummers in de afbeelding af met zwart</value>
+    <value>Dekt gevoelige gegevens in de afbeelding af met zwart. Controleer het resultaat voor het delen</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Snel afdekken</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Telefoonnummers</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP-adressen</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Bankgegevens</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Wachtwoorden en sleutels</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Alle afdekkingen verwijderen</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Schakel e-mailadressen of telefoonnummers in via het menu</value>
+    <value>Schakel een gegevenstype in via het menu</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Bellen</value>

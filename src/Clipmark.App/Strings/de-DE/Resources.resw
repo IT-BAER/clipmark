@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>Text kopieren</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>Schwärzen</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>Keine E-Mail-Adressen oder Telefonnummern gefunden.</value>
+    <value>Nichts zum Schwärzen gefunden.</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>KI fragen</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Auswahl kopieren</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>Auswahl schwärzen</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Schwärzt den ausgewählten Text (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Auswahl schwärzen</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>Schnell schwärzen</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>Schwärzt E-Mail-Adressen und Telefonnummern im Bild</value>
+    <value>Schwärzt sensible Daten im Bild. Ergebnis vor dem Teilen prüfen</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Schnell schwärzen</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>Telefonnummern</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP-Adressen</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>Bankdaten</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>Kennwörter und Schlüssel</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>Alle Schwärzungen entfernen</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>Aktivieren Sie im Menü E-Mail-Adressen oder Telefonnummern</value>
+    <value>Aktivieren Sie im Menü eine Datenart</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>Anrufen</value>

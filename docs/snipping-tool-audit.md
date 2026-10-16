@@ -21,7 +21,7 @@ Clipmark: source at `337d689` (XAML, `Strings\en-US\Resources.resw`, C#).
 | G8 | Erase all mark-ups | Eraser flyout | Select all + Delete (Select tool is Premium) | UIA |
 | G9 | Visual Search with Bing | More menu | None (Ask AI covers the use case) | UIA |
 | G10 | Copy as table | Text actions | None (M12.2) | UIA |
-| G11 | Quick redact options | Choose emails / phone numbers; remove all redactions | Both always; Undo removes | UIA |
+| G11 | Quick redact options | Choose emails / phone numbers; remove all redactions | Toggles for emails, phone numbers, IP / MAC addresses, bank data, passwords and keys; Redact selection (right-click, button, Ctrl+Shift+R); Undo removes | UIA |
 | G12 | QR phone / email actions | Call / copy phone, send / copy email, copy text | Copy, Open link (http / https only) | strings |
 | G13 | Text extractor options | Options button: automatically copy text, remove line breaks; select all, copy | Copies all text at once, no options | UIA + strings |
 | G14 | Color picker | Capture overlay, zoom loupe, HEX / RGB / HSL | Editor eyedropper, #RRGGBB only (Premium) | UIA |

@@ -495,8 +495,11 @@
   <data name="CopyTextMenu" xml:space="preserve">
     <value>テキストをコピー</value>
   </data>
+  <data name="RedactTextMenu" xml:space="preserve">
+    <value>黒塗り</value>
+  </data>
   <data name="RedactNoneFound" xml:space="preserve">
-    <value>メール アドレスも電話番号も見つかりません。</value>
+    <value>黒塗りする対象は見つかりません。</value>
   </data>
   <data name="AskAiTitle" xml:space="preserve">
     <value>AI に質問</value>
@@ -1298,11 +1301,20 @@
   <data name="CopySelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>選択範囲をコピー</value>
   </data>
+  <data name="RedactSelectedTextButton.Content" xml:space="preserve">
+    <value>選択範囲を黒塗り</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>選択したテキストを黒く塗りつぶします (Ctrl+Shift+R)</value>
+  </data>
+  <data name="RedactSelectedTextButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>選択範囲を黒塗り</value>
+  </data>
   <data name="QuickRedactButton.Content" xml:space="preserve">
     <value>簡易黒塗り</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
-    <value>画像内のメール アドレスと電話番号を黒く塗りつぶします</value>
+    <value>画像内の機密データを黒く塗りつぶします。共有前に結果を確認してください</value>
   </data>
   <data name="QuickRedactButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>簡易黒塗り</value>
@@ -1374,11 +1386,20 @@
   <data name="RedactPhoneItem.Text" xml:space="preserve">
     <value>電話番号</value>
   </data>
+  <data name="RedactIpItem.Text" xml:space="preserve">
+    <value>IP アドレス</value>
+  </data>
+  <data name="RedactBankItem.Text" xml:space="preserve">
+    <value>銀行情報</value>
+  </data>
+  <data name="RedactSecretsItem.Text" xml:space="preserve">
+    <value>パスワードとキー</value>
+  </data>
   <data name="RedactClearItem.Text" xml:space="preserve">
     <value>すべての黒塗りを削除</value>
   </data>
   <data name="RedactNoKinds" xml:space="preserve">
-    <value>メニューでメール アドレスまたは電話番号をオンにしてください</value>
+    <value>メニューでデータの種類をオンにしてください</value>
   </data>
   <data name="QrCall" xml:space="preserve">
     <value>電話をかける</value>
