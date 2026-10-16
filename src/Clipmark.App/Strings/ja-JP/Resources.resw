@@ -1657,4 +1657,62 @@
     <value>ja-JP</value>
     <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
   </data>
+  <data name="GifButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>GIF を作成</value>
+  </data>
+  <data name="GifButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>GIF を作成</value>
+  </data>
+  <data name="GifTitle" xml:space="preserve">
+    <value>GIF を作成</value>
+  </data>
+  <data name="GifQuality" xml:space="preserve">
+    <value>品質</value>
+  </data>
+  <data name="GifLow" xml:space="preserve">
+    <value>低</value>
+  </data>
+  <data name="GifLowDescription" xml:space="preserve">
+    <value>ファイル サイズが小さく、すばやくエクスポートしてコピーできます</value>
+  </data>
+  <data name="GifHigh" xml:space="preserve">
+    <value>高</value>
+  </data>
+  <data name="GifHighDescription" xml:space="preserve">
+    <value>ファイル サイズが大きく、画像がより鮮明です</value>
+  </data>
+  <data name="GifSizeInfo" xml:space="preserve">
+    <value>サイズ情報</value>
+  </data>
+  <data name="GifSeconds" xml:space="preserve">
+    <value>{0} 秒</value>
+    <comment>{0} = whole seconds, Create GIF size info</comment>
+  </data>
+  <data name="GifPixels" xml:space="preserve">
+    <value>{0} x {1} px</value>
+    <comment>{0} = width, {1} = height</comment>
+  </data>
+  <data name="GifFps" xml:space="preserve">
+    <value>{0} フレーム/秒</value>
+    <comment>{0} = frames per second</comment>
+  </data>
+  <data name="GifExport" xml:space="preserve">
+    <value>エクスポート</value>
+    <comment>Create GIF dialog button</comment>
+  </data>
+  <data name="GifCopy" xml:space="preserve">
+    <value>コピー</value>
+    <comment>Create GIF dialog button</comment>
+  </data>
+  <data name="FileTypeGif" xml:space="preserve">
+    <value>GIF アニメーション</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="GifNotCreated" xml:space="preserve">
+    <value>GIF を作成できませんでした: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ClipboardBusyGif" xml:space="preserve">
+    <value>クリップボードが別のアプリで使用中のため、GIF をコピーできませんでした。</value>
+  </data>
 </root>

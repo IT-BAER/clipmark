@@ -23,6 +23,8 @@ internal sealed class RecordingSession
     private readonly DispatcherQueueTimer _timer;
     private readonly TaskCompletionSource<RecordingResult> _done = new();
     private ScreenRecorder? _recorder;
+    private Task<ScreenRecorder>? _preparing; // started with the countdown, so the recording starts when it ends
+    private Task _cancelling = Task.CompletedTask; // a cancelled countdown's recorder may still hold the file name
     private long _countdownStart;
 
     /// <summary>The running session, if any (hotkey and tray route to it).</summary>
@@ -68,6 +70,7 @@ internal sealed class RecordingSession
             case (RecordBarButton.Record, RecordBarState.Idle):
                 _countdownStart = Stopwatch.GetTimestamp();
                 _bar.State = RecordBarState.Countdown;
+                Prepare();
                 OnTick();
                 _timer.Start();
                 break;
@@ -75,6 +78,7 @@ internal sealed class RecordingSession
                 _timer.Stop();
                 _bar.Timer = "00:00";
                 _bar.State = RecordBarState.Idle;
+                _cancelling = CancelPreparedAsync(TakePrepared());
                 break;
             case (RecordBarButton.Record, RecordBarState.Recording):
                 _ = StopAsync(keep: true);
@@ -101,17 +105,58 @@ internal sealed class RecordingSession
                 _ = StopAsync(keep: false);
                 break;
             case (RecordBarButton.Discard, RecordBarState.Idle or RecordBarState.Countdown):
+                _ = CancelPreparedAsync(TakePrepared());
                 _done.TrySetResult(new RecordingResult(null, null, []));
                 break;
             case (RecordBarButton.Microphone, RecordBarState.Idle or RecordBarState.Countdown):
                 AppSettings.Update(s => s with { RecordMicrophone = !s.RecordMicrophone });
                 _bar.Microphone = AppSettings.Current.RecordMicrophone;
+                if (_bar.State == RecordBarState.Countdown)
+                    Prepare();
                 break;
             case (RecordBarButton.SystemAudio, RecordBarState.Idle or RecordBarState.Countdown):
                 AppSettings.Update(s => s with { RecordSystemAudio = !s.RecordSystemAudio });
                 _bar.SystemAudio = AppSettings.Current.RecordSystemAudio;
+                if (_bar.State == RecordBarState.Countdown)
+                    Prepare();
                 break;
         }
+    }
+
+    /// <summary>Prepares the recorder with the current audio settings during the countdown, replacing an earlier one.</summary>
+    private void Prepare()
+    {
+        var s = AppSettings.Current;
+        _preparing = PrepareAsync(TakePrepared(), s.RecordSystemAudio, s.RecordMicrophone);
+    }
+
+    private async Task<ScreenRecorder> PrepareAsync(Task<ScreenRecorder>? previous, bool systemAudio, bool microphone)
+    {
+        // The earlier recorder is gone first: it holds the capture session and possibly the same file name.
+        await _cancelling;
+        await CancelPreparedAsync(previous);
+        string folder = CaptureOutput.RecordingsFolder;
+        Directory.CreateDirectory(folder);
+        string path = Path.Combine(folder, CaptureFileName.Next(DateTime.Now, name => File.Exists(Path.Combine(folder, name)), ".mp4"));
+        return await ScreenRecorder.PrepareAsync(_area, path, systemAudio, microphone);
+    }
+
+    private Task<ScreenRecorder>? TakePrepared()
+    {
+        var preparing = _preparing;
+        _preparing = null;
+        return preparing;
+    }
+
+    private static async Task CancelPreparedAsync(Task<ScreenRecorder>? preparing)
+    {
+        if (preparing is null)
+            return;
+        try
+        {
+            await (await preparing).CancelAsync();
+        }
+        catch (Exception) { } // a failed preparation has released itself
     }
 
     private void OnTick()
@@ -141,13 +186,11 @@ internal sealed class RecordingSession
     {
         _bar.State = RecordBarState.Starting;
         _bar.Timer = "00:00";
-        string folder = CaptureOutput.RecordingsFolder;
         try
         {
-            Directory.CreateDirectory(folder);
-            string path = Path.Combine(folder, CaptureFileName.Next(DateTime.Now, name => File.Exists(Path.Combine(folder, name)), ".mp4"));
-            var s = AppSettings.Current;
-            _recorder = await ScreenRecorder.StartAsync(_area, path, s.RecordSystemAudio, s.RecordMicrophone);
+            var recorder = await TakePrepared()!;
+            await recorder.BeginAsync();
+            _recorder = recorder;
             // A source that is off or could not be opened shows off and cannot be unmuted.
             _bar.Microphone = _bar.MicrophoneLive = _recorder.SetMuted(loopback: false, false);
             _bar.SystemAudio = _bar.SystemAudioLive = _recorder.SetMuted(loopback: true, false);

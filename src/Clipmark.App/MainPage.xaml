@@ -185,6 +185,9 @@
                     <Button x:Uid="ShareButton" Click="OnShare">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
+                    <Button x:Name="GifButton" x:Uid="GifButton" Click="OnGif" Visibility="Collapsed">
+                        <FontIcon FontSize="16" Glyph="&#xF4A9;" />
+                    </Button>
                     <Border x:Name="AiSeparator" Width="1" Margin="4,6" Background="{ThemeResource DividerStrokeColorDefaultBrush}" />
                     <SplitButton x:Name="AgentButton" x:Uid="AgentButton" Padding="11,6.5,11,6.5" Click="OnSendToAgent">
                         <FontIcon FontSize="16" Glyph="&#xE724;" />

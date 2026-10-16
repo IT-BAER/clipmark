@@ -1657,4 +1657,62 @@
     <value>it-IT</value>
     <comment>Do not translate: the language tag of this file, used for the emoji names and search words</comment>
   </data>
+  <data name="GifButton.[using:Microsoft.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+    <value>Crea GIF</value>
+  </data>
+  <data name="GifButton.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Crea GIF</value>
+  </data>
+  <data name="GifTitle" xml:space="preserve">
+    <value>Crea GIF</value>
+  </data>
+  <data name="GifQuality" xml:space="preserve">
+    <value>Qualità</value>
+  </data>
+  <data name="GifLow" xml:space="preserve">
+    <value>Bassa</value>
+  </data>
+  <data name="GifLowDescription" xml:space="preserve">
+    <value>File più piccolo, più veloce da esportare e copiare</value>
+  </data>
+  <data name="GifHigh" xml:space="preserve">
+    <value>Alta</value>
+  </data>
+  <data name="GifHighDescription" xml:space="preserve">
+    <value>File più grande con un'immagine più nitida</value>
+  </data>
+  <data name="GifSizeInfo" xml:space="preserve">
+    <value>Informazioni sulle dimensioni</value>
+  </data>
+  <data name="GifSeconds" xml:space="preserve">
+    <value>{0} secondi</value>
+    <comment>{0} = whole seconds, Create GIF size info</comment>
+  </data>
+  <data name="GifPixels" xml:space="preserve">
+    <value>{0} x {1} px</value>
+    <comment>{0} = width, {1} = height</comment>
+  </data>
+  <data name="GifFps" xml:space="preserve">
+    <value>{0} fotogrammi al secondo</value>
+    <comment>{0} = frames per second</comment>
+  </data>
+  <data name="GifExport" xml:space="preserve">
+    <value>Esporta</value>
+    <comment>Create GIF dialog button</comment>
+  </data>
+  <data name="GifCopy" xml:space="preserve">
+    <value>Copia</value>
+    <comment>Create GIF dialog button</comment>
+  </data>
+  <data name="FileTypeGif" xml:space="preserve">
+    <value>Animazione GIF</value>
+    <comment>Save dialog file type</comment>
+  </data>
+  <data name="GifNotCreated" xml:space="preserve">
+    <value>La GIF non è stata creata: {0}</value>
+    <comment>{0} = system error message</comment>
+  </data>
+  <data name="ClipboardBusyGif" xml:space="preserve">
+    <value>Gli Appunti sono in uso da un'altra app; la GIF non è stata copiata.</value>
+  </data>
 </root>

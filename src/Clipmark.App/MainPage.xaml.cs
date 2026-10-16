@@ -292,7 +292,7 @@ public sealed partial class MainPage : Page
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
         SaveSplitButton.Visibility = Visibility.Collapsed;
-        SaveVideoButton.Visibility = Visibility.Visible;
+        SaveVideoButton.Visibility = GifButton.Visibility = Visibility.Visible;
         _aiTools = false; // the agents take images, not video
         FitToolbar();
     }
@@ -306,7 +306,7 @@ public sealed partial class MainPage : Page
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
         SaveSplitButton.Visibility = Visibility.Visible;
-        SaveVideoButton.Visibility = Visibility.Collapsed;
+        SaveVideoButton.Visibility = GifButton.Visibility = Visibility.Collapsed;
         _aiTools = true;
     }
 

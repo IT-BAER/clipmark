@@ -6,6 +6,9 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Create GIF from a recording (GIF button after Share, as in Snipping Tool): Low (12 fps) or High (24 fps), long edge
+  up to 1280 px, the first 30 seconds, Export or Copy, with progress and Cancel. A Low GIF stays under 7.5 MB so it
+  fits a Claude upload; when it would be larger, Clipmark writes it again at a smaller size. Free.
 - Emoji stamps (Shapes > Emoji, M): a picker with every emoji the Windows emoji font can draw, a search over names
   and keywords in the UI language and English, Recent (starts with Snipping Tool's 18) and group tabs. Click places
   an emoji, drag sets its size; Select moves, resizes and rotates it. Editable PNGs with emoji use format version 2,
@@ -75,6 +78,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - Text actions dim the image with Snipping Tool's gray veil and show each recognized line as a rounded cutout.
 
 ### Fixed
+- Screen recording starts when the 3-second countdown ends. Before, the encoder and capture setup ran after the
+  countdown, so the recording started up to 2.4 seconds late.
 - Exiting from the tray right after an edit no longer loses that edit in the capture history.
 - Send to AI into Windows Terminal: the menu names the agent's own tab, and Clipmark asks to switch tabs instead of
   typing into another tab when the agent's tab is not active.

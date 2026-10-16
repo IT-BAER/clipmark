@@ -35,12 +35,14 @@ internal static class CaptureOutput
         }
     }
 
-    /// <summary>Removes temp captures older than a day; toasts in the notification center may still point at newer ones.</summary>
+    /// <summary>
+    /// Removes temp captures and GIFs older than a day; toasts in the notification center and the clipboard may still point at newer ones.
+    /// </summary>
     public static void CleanTempFolder()
     {
         if (!Directory.Exists(TempFolder))
             return;
-        foreach (var file in Directory.EnumerateFiles(TempFolder, "*.png"))
+        foreach (var file in Directory.EnumerateFiles(TempFolder, "*.png").Concat(Directory.EnumerateFiles(TempFolder, "*.gif")))
         {
             try
             {

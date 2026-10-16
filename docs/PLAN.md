@@ -479,17 +479,40 @@ Goal, as in Snipping Tool (reference shots 16 October 2026): a GIF button in the
 while a recording is shown) opens a "Create GIF" ContentDialog: Quality radio Low ("smaller file, faster to export and
 copy") / High ("larger file, clearer image"), a size info row (seconds | W x H px | fps), buttons Export / Copy / Cancel.
 Share keeps sharing the MP4.
-- [ ] B1 Spike, measure and pick: frames from the saved MP4 by `MediaComposition.GetThumbnailsAsync` (takes
-  `IEnumerable<TimeSpan>`: needs a listed CCW type under AOT) vs Media Foundation `IMFSourceReader`; encoder WIC
-  (`BitmapEncoder` GifEncoderId, `/grctlext/Delay`, NETSCAPE2.0 loop) vs own Core encoder (palette + LZW). Report time,
-  memory, file size and a review shot for a 10 s 1080p recording.
-- [ ] B2 Core: encoder (if own) or frame timing / scaling, tests (delays sum to duration, loop block, <= 256 colors,
-  decode round-trip).
-- [ ] B3 App: GIF button + Create GIF dialog (above); pipeline off the UI thread with progress and Cancel, long edge
-  capped, max 30 s, low / high fps; Export = Save picker with the GIF type, Copy = temp GIF (CF_HDROP); strings x16.
-- [ ] B4 TestDriver `gifexport` on a fixture recording (frames, delays, size, loop, ffprobe clean); Native AOT publish
-  0 warnings; collection-to-WinRT calls checked in a Debug AOT build (as `sharedata`); dialog shot vs the reference.
-- [ ] B5 Docs: README, CHANGELOG.
+- [x] B1 Spike (16 October 2026, 10 s 1920x1080 screen recording, 12 fps, 1280 long edge). Picked: `IMFSourceReader`
+  with advanced video processing (RGB32 + scaling in one step, vtable calls, no WinRT collections) + own Core encoder
+  (per-frame local palette over changed pixels only, unchanged pixels transparent, exact palette when <= 255 colors else
+  median cut; change tolerance 2). Decode: MF 1.5-3 s vs `GetThumbnailsAsync` 18 s (seeks per frame, JPEG
+  intermediates). Encode: own 2-4 s, 552 KB, 47.6 dB PSNR vs its input; WIC 27 s, 35.6 MB (full frames), 31.4 dB with
+  fixed-palette dither noise; ffmpeg palettegen reference 7.8 s, 1.0 MB. k-means palette refinement: no gain. 24 fps
+  1280: 7.7 s, 842 KB. Memory: about 175 MB private is the MF H.264 decoder itself, the video processor adds 60-100 MB,
+  the encoder about 80 MB; peak 300-390 MB, released after export. MF emits one frame past the end (121 for 10 s):
+  B2 caps the count at duration x fps.
+  Owner, 16 October 2026: High = 24 fps, long edge <= 1280; Low = 12 fps, long edge <= 1280, and Low must always fit a
+  claude.ai upload (10 MB per image, docs.claude.com vision; Claude reads only the first GIF frame): when the Low file
+  exceeds the budget, re-encode at a smaller scale. Snipping Tool's own High output was not measured.
+- [x] B2 Core: `GifEncoder` (stream writer, delta frames, delay merging) and `GifPlan` (size, fps, frame count and
+  times, carried delays, Low budget 7.5 MB raw = 10 MB base64 for the Claude API, `SmallerEdge`); 21 tests with a
+  test-side GIF reader; output checked independently with ffmpeg (fixture frame 60: 47.6 dB vs its input).
+- [x] B3 App (16 October 2026): GIF button (Segoe Fluent U+F4A9) after Share while a recording is shown; Create GIF
+  `ContentDialog` built in code (`MainPage.Gif.cs`); `Recording\GifExport` = `IMFSourceReader` (RGB32, scaled) on one
+  thread, `GifEncoder` on another, 4 streamed frame buffers; Low over budget writes again at `SmallerEdge`. Export =
+  Save picker, Copy = `%TEMP%\Clipmark\<name>.gif` as CF_HDROP; temp GIFs older than a day are cleaned; strings x16.
+  Probe = ffprobe size and duration on all fixtures (546x646 and 852x596 have heights that are not a multiple of 16:
+  bottom rows clean). Untagged BT.601 clips from ffmpeg decode with BT.709 colors in Media Foundation (green 254 ->
+  216); Clipmark recordings are encoded and played through Media Foundation too (colors not measured). Owner check
+  open: Export through the real Save picker (TestDriver cannot drive it).
+- [x] B4 (16 October 2026): TestDriver `gifprobe` / `gifexport` / `dialogclick`. ffprobe: 3.17 / 3.00 / 10.00 s, a 35 s
+  clip capped at 30.00 s, loop flag, trailer, no decode errors; 1080p 10 s Low 5.3 s / 550 KB, High 9.6 s / 841 KB;
+  peak working set 586 MB. Low budget: 30 s 1280x720 noise clip -> 578x324, 6.84 MB in 104 s (each pass runs to the
+  end). Dialog: hidden for images, Copy on the clipboard, Cancel during export leaves no file, a second run works.
+  Release Native AOT publish exit 0, 0 warnings. Debug AOT must publish with `-p:Optimize=true`: unoptimized Native AOT
+  deadlocks in the first gen 2 GC (dotnet/runtime#121538, not fixed in .NET 10; Release unaffected; also the cause of
+  `shot` hanging on popups there). Optimized Debug AOT: all dialog steps pass, GIFs byte-identical to the JIT build.
+  Dialog shot vs `st-ref-3.png` reviewed (layout, texts, button order match). Independent review: 1 Important fixed
+  (`ThrowExceptionForHR` also throws ArgumentException and others: the dialog now catches every non-cancel exception);
+  a corrupt .mp4 shows "The GIF was not created" and opens no dialog.
+- [x] B5 Docs: README, CHANGELOG (16 October 2026).
 Risks: every C# collection passed to a WinRT API needs `GeneratedWinRTExposedExternalType` under AOT (Share crash,
 16 October 2026); 30 s x 24 fps at 1280x720 RGBA is about 2.6 GB if held at once, so frames stream; GIF size vs chat
 upload limits.

@@ -81,6 +81,8 @@ Items marked **(Premium)** need a license key after the 30-day trial. See [Free 
 - Record a region, a window area or a full screen to MP4 (H.264 + AAC, 30 fps)
 - System audio and microphone, mixed into one track; mute either one while recording
 - Record bar with a 3 second countdown and Pause / Resume, kept out of the video
+- Create GIF from a recording, as in Snipping Tool: Low (12 fps) or High (24 fps), long edge up to 1280 px, the first
+  30 seconds; export or copy. A Low GIF stays under 7.5 MB, so it fits a Claude upload
 
 ![Record bar](docs/images/record-bar.png)
 
@@ -117,7 +119,7 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 | OCR character errors on 60 rendered web pages (our benchmark) | 0.89% | 1.07% |
 | Copy recognized text as a table | Yes | Yes |
 | QR code decoding (links, phone numbers, email addresses, plain text) | Yes, with Copy, Open link, Call and Send email | Yes, as a chip on the code |
-| Screen recording | Region, window area or full screen; MP4 with system audio and microphone; pause, mute while recording | Rectangle or window; MP4 with system audio and microphone; pause, mute while recording; edit in Clipchamp |
+| Screen recording | Region, window area or full screen; MP4 with system audio and microphone; pause, mute while recording; GIF export | Rectangle or window; MP4 with system audio and microphone; pause, mute while recording; GIF export; edit in Clipchamp |
 | Send the capture to an AI agent | Yes (Premium) | No |
 | Perfect screenshot (automatic fit to content) | No | Copilot+ PCs only |
 

@@ -45,7 +45,11 @@ internal sealed class ScreenRecorder
     private Direct3D11CaptureFramePool? _pool;
     private GraphicsCaptureSession? _session;
     private IRandomAccessStream? _stream;
+    private PrepareTranscodeResult? _prepared;
     private Task? _transcode;
+    private readonly ManualResetEventSlim _go = new();
+    private readonly object _frameLock = new();
+    private bool _begun; // under _frameLock: frames are taken by the video loop, no longer by FrameArrived
     private Thread? _videoThread, _audioThread;
     private CanvasRenderTarget? _latest;
     private long _start, _stopAt = long.MaxValue;
@@ -94,25 +98,36 @@ internal sealed class ScreenRecorder
             _audio = new BlockingCollection<MediaStreamSample>();
     }
 
-    /// <summary>Opens the file and the encoder and starts capturing; throws with a readable message when that fails.</summary>
+    /// <summary>Prepares and begins at once.</summary>
     public static async Task<ScreenRecorder> StartAsync(RecordingArea area, string path, bool systemAudio, bool microphone)
+    {
+        var recorder = await PrepareAsync(area, path, systemAudio, microphone);
+        await recorder.BeginAsync();
+        return recorder;
+    }
+
+    /// <summary>
+    /// Opens the file, the encoder and the audio devices and starts capturing without recording, so that
+    /// <see cref="BeginAsync"/> starts at once (the encoder setup alone takes 0.3 to 1.7 s); throws with a readable message.
+    /// </summary>
+    public static async Task<ScreenRecorder> PrepareAsync(RecordingArea area, string path, bool systemAudio, bool microphone)
     {
         if (!GraphicsCaptureSession.IsSupported())
             throw new InvalidOperationException(Loc.Get("RecordingUnsupported"));
         var recorder = new ScreenRecorder(area, path, systemAudio, microphone);
         try
         {
-            await recorder.StartCoreAsync();
+            await recorder.PrepareCoreAsync();
             return recorder;
         }
         catch
         {
-            recorder.Release();
+            await recorder.CancelAsync();
             throw;
         }
     }
 
-    private async Task StartCoreAsync()
+    private async Task PrepareCoreAsync()
     {
         try
         {
@@ -146,22 +161,22 @@ internal sealed class ScreenRecorder
 
         _stream = await FileRandomAccessStream.OpenAsync(Path, FileAccessMode.ReadWrite, StorageOpenOptions.None, FileOpenDisposition.CreateAlways);
         var transcoder = new MediaTranscoder { HardwareAccelerationEnabled = true };
-        var prepared = await transcoder.PrepareMediaStreamSourceTranscodeAsync(source, _stream, profile);
-        if (!prepared.CanTranscode)
-            throw new InvalidOperationException(Loc.Format("RecordingNoEncoder", prepared.FailureReason));
+        _prepared = await transcoder.PrepareMediaStreamSourceTranscodeAsync(source, _stream, profile);
+        if (!_prepared.CanTranscode)
+            throw new InvalidOperationException(Loc.Format("RecordingNoEncoder", _prepared.FailureReason));
 
-        _session.StartCapture();
-        // The clock starts with the first captured frame; otherwise frame 0 is the black clear (black preview and thumbnail).
-        for (long deadline = Stopwatch.GetTimestamp() + Stopwatch.Frequency / 2; _latest is null && Stopwatch.GetTimestamp() < deadline;)
+        // Until BeginAsync, every arriving frame becomes _latest: the pool never holds stale frames and frame 0 is current.
+        _pool.FrameArrived += (_, _) =>
         {
-            TakeNewestFrame();
-            if (_latest is null)
-                await Task.Delay(5);
-        }
-        _start = Stopwatch.GetTimestamp();
-        _clock.Start(_start);
-        _videoThread = new Thread(VideoLoop) { IsBackground = true, Name = "Clipmark video", Priority = ThreadPriority.AboveNormal };
-        _videoThread.Start();
+            lock (_frameLock)
+            {
+                if (_begun)
+                    return;
+                try { TakeNewestFrame(); }
+                catch (Exception) { } // a pool thread must not throw; BeginAsync takes frames again
+            }
+        };
+        _session.StartCapture();
         if (_audio is not null)
         {
             var opened = new TaskCompletionSource();
@@ -169,7 +184,57 @@ internal sealed class ScreenRecorder
             _audioThread.Start();
             await opened.Task;
         }
-        _transcode = prepared.TranscodeAsync().AsTask();
+    }
+
+    /// <summary>Starts the recording clock, the audio sources and the encoder of a prepared recorder.</summary>
+    public async Task BeginAsync()
+    {
+        try
+        {
+            // The clock starts with the first captured frame; otherwise frame 0 is the black clear (black preview and thumbnail).
+            for (long deadline = Stopwatch.GetTimestamp() + Stopwatch.Frequency / 2; ;)
+            {
+                lock (_frameLock)
+                {
+                    TakeNewestFrame();
+                    if (_latest is not null || Stopwatch.GetTimestamp() >= deadline)
+                    {
+                        _begun = true;
+                        break;
+                    }
+                }
+                await Task.Delay(5);
+            }
+            _start = Stopwatch.GetTimestamp();
+            _clock.Start(_start);
+            _videoThread = new Thread(VideoLoop) { IsBackground = true, Name = "Clipmark video", Priority = ThreadPriority.AboveNormal };
+            _videoThread.Start();
+            _go.Set();
+            _transcode = _prepared!.TranscodeAsync().AsTask();
+        }
+        catch
+        {
+            await CancelAsync();
+            throw;
+        }
+    }
+
+    /// <summary>Drops a recorder that was prepared but not begun (countdown cancelled), with its file.</summary>
+    public async Task CancelAsync()
+    {
+        _stopping = true;
+        _go.Set();
+        await Task.Run(() =>
+        {
+            _videoThread?.Join();
+            _audioThread?.Join();
+        });
+        Release();
+        try
+        {
+            File.Delete(Path);
+        }
+        catch (IOException) { }
     }
 
     private void OnSampleRequested(MediaStreamSource sender, MediaStreamSourceSampleRequestedEventArgs e)
@@ -266,8 +331,6 @@ internal sealed class ScreenRecorder
                 else
                     lock (_warnings) _warnings.Add(error!);
             }
-            foreach (var s in sources)
-                s.Start();
         }
         catch (Exception e)
         {
@@ -279,6 +342,18 @@ internal sealed class ScreenRecorder
         var lost = new bool[sources.Count];
         try
         {
+            _go.Wait();
+            if (_start == 0)
+                return; // cancelled before BeginAsync
+            try
+            {
+                foreach (var s in sources)
+                    s.Start();
+            }
+            catch (Exception e)
+            {
+                lock (_warnings) _warnings.Add(Loc.Format("AudioFailed", e.Message));
+            }
             while (true)
             {
                 bool last = _stopping;
@@ -390,11 +465,14 @@ internal sealed class ScreenRecorder
 
     private void Release()
     {
+        lock (_frameLock)
+            _begun = true;
         _session?.Dispose();
         _pool?.Dispose();
         _stream?.Dispose();
         _latest?.Dispose();
         _session = null;
+        _prepared = null;
         _item = null;
         _pool = null;
         _stream = null;

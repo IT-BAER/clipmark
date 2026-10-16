@@ -31,10 +31,13 @@ namespace Clipmark.App;
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] [pause=AT:LEN]... [mute=system|mic:AT:LEN]... (records that desktop region straight to FILE,
 /// pausing / muting at AT ms after the start for LEN ms; warnings go to DIR\warnings.txt)
+/// | recordsession X,Y,W,H MS [cancel|fastcancel] [system] [mic] (the record bar flow with its countdown, saved to Videos\Screen Recordings; path to DIR\recorded.txt)
 /// | barshot X,Y,W,H idle|recording|paused|micmuted FILE (record bar for that region in that state, grabbed from the screen: needs CLIPMARK_TEST_SHOWBAR=1;
 /// the Pause / Resume tooltip text goes to DIR\bartip.txt)
 /// | openvideo FILE | assert video [FILE] (a recording is shown) | savevideo FILE (Save as without the picker)
 /// | sharedata FILE [image] (share sheet data for FILE, without the sheet)
+/// | dialogclick TEXT (button text or radio button name in an open popup, e.g. the Create GIF dialog)
+/// | gifprobe (shown recording "W H TICKS" to DIR\gif.txt) | gifexport FILE low|high (GIF of the shown recording, ms to DIR\gif.txt)
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
 /// | assert zoom F|fit (scroll viewer zoom factor within 0.02 of F or of the fit-to-window factor) | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
@@ -304,7 +307,31 @@ internal sealed class TestDriver
                 var shareWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 ShareSheet.Fill(new Windows.ApplicationModel.DataTransfer.DataPackage(),
                     await Windows.Storage.StorageFile.GetFileFromPathAsync(Path.GetFullPath(shareWords[0])), shareWords.Contains("image"));
-                break;            case "assert" when arg == "editable":
+                break;
+            case "gifprobe":
+                var gifInfo = await Task.Run(() => Recording.GifExport.Probe(_page.VideoPath ?? throw new InvalidOperationException("no video shown")));
+                File.WriteAllText(Path.Combine(_dir, "gif.txt"), $"{gifInfo.Width} {gifInfo.Height} {gifInfo.Duration.Ticks}");
+                break;
+            case "gifexport":
+                // gifexport FILE low|high: the GIF of the shown recording, without the dialog; milliseconds go to DIR\gif.txt.
+                var gifWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var gifWatch = System.Diagnostics.Stopwatch.StartNew();
+                await Recording.GifExport.WriteAsync(_page.VideoPath ?? throw new InvalidOperationException("no video shown"), Path.GetFullPath(gifWords[0]),
+                    gifWords[1] == "high" ? Core.Recording.GifQuality.High : Core.Recording.GifQuality.Low, null, default);
+                File.WriteAllText(Path.Combine(_dir, "gif.txt"), gifWatch.ElapsedMilliseconds.ToString(CultureInfo.InvariantCulture));
+                break;
+            case "dialogclick":
+                // dialogclick TEXT: button text or radio button name in an open popup (dialog buttons share names with toolbar buttons).
+                var dialogElement = VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).SelectMany(p => Descendants(p.Child)).OfType<FrameworkElement>()
+                    .FirstOrDefault(f => f.Visibility == Visibility.Visible && ((f is Button { Content: string text } && text == arg) || (f is RadioButton && AutomationProperties.GetName(f) == arg)))
+                    ?? throw new InvalidOperationException("element not found");
+                if (dialogElement is RadioButton radio)
+                    radio.IsChecked = true;
+                else
+                    Click(dialogElement, open: false);
+                await Task.Delay(300);
+                break;
+            case "assert" when arg == "editable":
                 if (_page.Editor?.FromEditable != true)
                     throw new InvalidOperationException("not opened as editable");
                 break;
@@ -478,6 +505,40 @@ internal sealed class TestDriver
                 }
                 await recorder.StopAsync();
                 File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), recorder.Warnings);
+                break;
+            case "recordsession":
+                // recordsession X,Y,W,H MS [cancel|fastcancel] [system] [mic]: Record on the record bar (with its countdown), Stop MS ms after the
+                // countdown; cancel = Record again 1 s into a first countdown first, fastcancel = Record and cancel at once first.
+                // The saved MP4 path goes to DIR\recorded.txt.
+                var sessionWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var sessionXywh = sessionWords[0].Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                var sessionArea = Clipmark.Core.Recording.RecordingRegion.Fit(new Clipmark.Core.Capture.PixelRect(sessionXywh[0], sessionXywh[1], sessionXywh[2], sessionXywh[3]),
+                    Capture.ScreenCapture.EnumerateMonitors()) ?? throw new InvalidOperationException("region is on no monitor");
+                AppSettings.Update(s => s with { RecordSystemAudio = sessionWords.Contains("system"), RecordMicrophone = sessionWords.Contains("mic") });
+                var sessionRun = Recording.RecordingSession.RunAsync(sessionArea);
+                var session = Recording.RecordingSession.Current ?? throw new InvalidOperationException("no recording session");
+                if (sessionWords.Contains("cancel"))
+                {
+                    session.Toggle();
+                    await Task.Delay(1000);
+                    session.Toggle();
+                    await Task.Delay(1500);
+                }
+                if (sessionWords.Contains("fastcancel"))
+                {
+                    session.Toggle();
+                    session.Toggle();
+                }
+                session.Toggle();
+                await Task.Delay(3000 + int.Parse(sessionWords[1], CultureInfo.InvariantCulture));
+                session.Toggle();
+                if (await Task.WhenAny(sessionRun, Task.Delay(20000)) != sessionRun)
+                    throw new InvalidOperationException("the recording did not stop (not started in time?)");
+                var sessionResult = await sessionRun;
+                if (sessionResult.Path is null)
+                    throw new InvalidOperationException(sessionResult.Error ?? "no recording saved");
+                File.WriteAllText(Path.Combine(_dir, "recorded.txt"), sessionResult.Path);
+                File.WriteAllLines(Path.Combine(_dir, "warnings.txt"), sessionResult.Warnings);
                 break;
             case "barshot":
                 var barWords = arg.Split(' ', 3);
