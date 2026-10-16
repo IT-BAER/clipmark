@@ -81,6 +81,7 @@ and the project uses [Semantic Versioning](https://semver.org/).
 - The editor no longer crashes on opening an image in the release (Native AOT) build.
 - Share no longer crashes the release (Native AOT) build for a capture or a recording; if the file cannot be handed
   to Windows, the share window shows why.
+- A recording shows a plain Save button, as in Snipping Tool; before, its arrow opened an empty menu.
 - Recordings no longer start with a black frame.
 - The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.

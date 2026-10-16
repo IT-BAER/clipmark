@@ -291,7 +291,8 @@ public sealed partial class MainPage : Page
         VideoPlayer.Visibility = Visibility.Visible;
         Hint.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Visible;
-        SaveEditableItem.Visibility = Visibility.Collapsed;
+        SaveSplitButton.Visibility = Visibility.Collapsed;
+        SaveVideoButton.Visibility = Visibility.Visible;
         _aiTools = false; // the agents take images, not video
         FitToolbar();
     }
@@ -304,7 +305,8 @@ public sealed partial class MainPage : Page
         VideoPlayer.MediaPlayer?.Pause();
         VideoPlayer.Source = null;
         VideoPlayer.Visibility = Visibility.Collapsed;
-        SaveEditableItem.Visibility = Visibility.Visible;
+        SaveSplitButton.Visibility = Visibility.Visible;
+        SaveVideoButton.Visibility = Visibility.Collapsed;
         _aiTools = true;
     }
 
@@ -1189,6 +1191,8 @@ public sealed partial class MainPage : Page
     }
 
     private void OnSave(SplitButton sender, SplitButtonClickEventArgs e) => _ = SaveAsync();
+
+    private void OnSaveVideo(object sender, RoutedEventArgs e) => _ = SaveAsync();
 
     private void OnSaveEditable(object sender, RoutedEventArgs e) => _ = SaveAsync(editable: true);
 

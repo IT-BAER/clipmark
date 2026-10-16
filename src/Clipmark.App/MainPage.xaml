@@ -166,7 +166,7 @@
                     <Button x:Uid="CopyButton" Click="OnCopy">
                         <FontIcon FontSize="16" Glyph="&#xE8C8;" />
                     </Button>
-                    <SplitButton x:Uid="SaveButton" Click="OnSave" Padding="11,6.5,11,6.5">
+                    <SplitButton x:Name="SaveSplitButton" x:Uid="SaveButton" Click="OnSave" Padding="11,6.5,11,6.5">
                         <FontIcon FontSize="16" Glyph="&#xE74E;" />
                         <SplitButton.Flyout>
                             <MenuFlyout x:Name="SaveMenu" Placement="Bottom">
@@ -178,6 +178,10 @@
                             </MenuFlyout>
                         </SplitButton.Flyout>
                     </SplitButton>
+                    <!-- A recording has no Save menu (as in Snipping Tool): plain Save as instead of the split button. -->
+                    <Button x:Name="SaveVideoButton" x:Uid="SaveButton" Click="OnSaveVideo" Visibility="Collapsed">
+                        <FontIcon FontSize="16" Glyph="&#xE74E;" />
+                    </Button>
                     <Button x:Uid="ShareButton" Click="OnShare">
                         <FontIcon FontSize="16" Glyph="&#xE72D;" />
                     </Button>
