@@ -471,3 +471,25 @@ Ledger
 - [ ] Production entitlement key in `AppLicense.ReleaseKeys` (after `releash key new clipmark` at the host run).
 - [ ] L4 done-when end to end (trial, purchase, claim, activation, one relay Ask AI conversation) at the M3 host run.
 - [ ] Settings activation, Remove from this PC and relay Ask AI checked in the UI (TestDriver) against a mock.
+
+## M14 GIF export for recordings (planned 16 October 2026, owner)
+Reopens G26 (out of M12.4 on 14 October). Snipping Tool: "Create GIF", low 12 fps / high 24 fps, max 30 s, copy or
+export. Owner, 16 October 2026: free; start with B1 in a fresh session; Export and Copy only (no Share as GIF).
+Goal, as in Snipping Tool (reference shots 16 October 2026): a GIF button in the recording toolbar (after Share, only
+while a recording is shown) opens a "Create GIF" ContentDialog: Quality radio Low ("smaller file, faster to export and
+copy") / High ("larger file, clearer image"), a size info row (seconds | W x H px | fps), buttons Export / Copy / Cancel.
+Share keeps sharing the MP4.
+- [ ] B1 Spike, measure and pick: frames from the saved MP4 by `MediaComposition.GetThumbnailsAsync` (takes
+  `IEnumerable<TimeSpan>`: needs a listed CCW type under AOT) vs Media Foundation `IMFSourceReader`; encoder WIC
+  (`BitmapEncoder` GifEncoderId, `/grctlext/Delay`, NETSCAPE2.0 loop) vs own Core encoder (palette + LZW). Report time,
+  memory, file size and a review shot for a 10 s 1080p recording.
+- [ ] B2 Core: encoder (if own) or frame timing / scaling, tests (delays sum to duration, loop block, <= 256 colors,
+  decode round-trip).
+- [ ] B3 App: GIF button + Create GIF dialog (above); pipeline off the UI thread with progress and Cancel, long edge
+  capped, max 30 s, low / high fps; Export = Save picker with the GIF type, Copy = temp GIF (CF_HDROP); strings x16.
+- [ ] B4 TestDriver `gifexport` on a fixture recording (frames, delays, size, loop, ffprobe clean); Native AOT publish
+  0 warnings; collection-to-WinRT calls checked in a Debug AOT build (as `sharedata`); dialog shot vs the reference.
+- [ ] B5 Docs: README, CHANGELOG.
+Risks: every C# collection passed to a WinRT API needs `GeneratedWinRTExposedExternalType` under AOT (Share crash,
+16 October 2026); 30 s x 24 fps at 1280x720 RGBA is about 2.6 GB if held at once, so frames stream; GIF size vs chat
+upload limits.
