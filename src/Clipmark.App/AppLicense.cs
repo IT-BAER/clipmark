@@ -99,7 +99,8 @@ internal static class AppLicense
                 var r = await Task.Run(() => LicenceClient.EntitlementAsync(CancellationToken.None));
                 if (r.Value is { } fresh)
                     Store(fresh, null, activated: false);
-                else if (r.Failure is { Status: 403 } or { EndsEntitlement: true })
+                // Only the codes that end the licence or install drop it; 403 app_disabled keeps it until exp + grace.
+                else if (r.Failure is { EndsEntitlement: true })
                     DropEntitlement(r.Failure);
                 else if (r.Failure is { NeedsActivation: true })
                     InstallMissing(r.Failure);
