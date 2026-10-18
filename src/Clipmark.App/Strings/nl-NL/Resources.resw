@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Antwoord kopiëren</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Antwoord melden per e-mail</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Het klembord wordt gebruikt door een andere app; het antwoord is niet gekopieerd.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Je knipsel (met aantekeningen en afgedekte delen) en je vragen gaan via de relay van IT-BAER naar Anthropic. Clipmark en de relay slaan het gesprek niet op.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>Nog {0} USD deze maand</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Met Premium heeft AI vragen geen sleutel nodig: het loopt via de relay van IT-BAER ({0}). Een opgeslagen API-sleutel stuurt in plaats daarvan rechtstreeks naar Anthropic ({1}).</value>

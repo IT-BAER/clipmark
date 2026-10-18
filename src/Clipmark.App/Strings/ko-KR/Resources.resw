@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>답변 복사</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>이메일로 답변 신고</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>클립보드를 다른 앱에서 사용 중이어서 답변을 복사하지 못했습니다.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>캡처(주석 및 가림 처리 포함)와 질문은 IT-BAER의 릴레이를 거쳐 Anthropic으로 전송됩니다. Clipmark와 릴레이 모두 대화를 저장하지 않습니다.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>이번 달 남은 금액 {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Premium에서는 AI에게 묻기에 키가 필요 없으며 IT-BAER 릴레이({0})를 통해 실행됩니다. API 키를 저장하면 대신 Anthropic({1})으로 직접 전송됩니다.</value>

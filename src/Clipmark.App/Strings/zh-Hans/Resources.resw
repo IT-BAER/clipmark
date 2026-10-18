@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>复制回答</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>通过电子邮件举报回答</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>剪贴板正被其他应用使用，未能复制回答。</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>截图（包括批注和涂黑内容）和您的问题会通过 IT-BAER 的中继发送给 Anthropic。Clipmark 和中继都不会保存对话。</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>本月剩余 {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>使用 Premium 时，“询问 AI”无需密钥，通过 IT-BAER 中继 ({0}) 运行。若已保存 API 密钥，则改为直接发送给 Anthropic ({1})。</value>

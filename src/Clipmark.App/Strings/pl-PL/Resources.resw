@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Kopiuj odpowiedź</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Zgłoś odpowiedź e-mailem</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Schowek jest używany przez inną aplikację; odpowiedź nie została skopiowana.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Zrzut (wraz z adnotacjami i zasłoniętymi fragmentami) i Twoje pytania trafiają do firmy Anthropic przez przekaźnik IT-BAER. Ani Clipmark, ani przekaźnik nie przechowują rozmowy.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>W tym miesiącu pozostało {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Z Premium Zapytaj AI nie potrzebuje klucza: działa przez przekaźnik IT-BAER ({0}). Zapisany klucz API wysyła zamiast tego bezpośrednio do Anthropic ({1}).</value>

@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Copy answer</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Report answer by email</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>The clipboard is in use by another app; the answer was not copied.</value>
   </data>
@@ -1599,9 +1602,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Your capture (with annotations and redactions) and your questions go to Anthropic through the IT-BAER relay. Clipmark and the relay do not store the conversation.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>{0} USD left this month</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>With Premium, Ask AI needs no key: it runs through IT-BAER's relay ({0}). A saved API key sends directly to Anthropic ({1}) instead.</value>

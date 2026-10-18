@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Yanıtı kopyala</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Yanıtı e-postayla bildir</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Pano başka bir uygulama tarafından kullanılıyor; yanıt kopyalanmadı.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Alıntınız (ek açıklamalar ve karartmalar dahil) ve sorularınız IT-BAER'in aktarıcısı üzerinden Anthropic'e gönderilir. Ne Clipmark ne de aktarıcı konuşmayı saklar.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>Bu ay {0} USD kaldı</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Premium ile AI'ya sor anahtar gerektirmez: IT-BAER aktarıcısı ({0}) üzerinden çalışır. Kayıtlı bir API anahtarı bunun yerine doğrudan Anthropic'e ({1}) gönderir.</value>

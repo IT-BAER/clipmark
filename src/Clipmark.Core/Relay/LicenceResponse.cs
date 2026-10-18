@@ -19,7 +19,7 @@ public static class LicenceResponse
         return new ActivateResult(token, ChatStreamEvent.Str(root, "install_id") ?? "",
             lic.ValueKind == JsonValueKind.Object ? ChatStreamEvent.Str(lic, "id") ?? "" : "",
             lic.ValueKind == JsonValueKind.Object ? ChatStreamEvent.Str(lic, "plan") ?? "" : "",
-            RelayJson.Int(lic, "seats"),
+            Int(lic, "seats"),
             lic.ValueKind == JsonValueKind.Object ? Time(lic, "expires_at") : null,
             ChatStreamEvent.Str(root, "evicted_install_id") is { Length: > 0 } evicted ? evicted : null);
     });
@@ -40,6 +40,10 @@ public static class LicenceResponse
                 ? map(root, token) : null;
         }
     }
+
+    /// <summary>A missing or mistyped field reads as 0.</summary>
+    private static int Int(JsonElement e, string name) =>
+        e.ValueKind == JsonValueKind.Object && e.TryGetProperty(name, out var v) && v.ValueKind == JsonValueKind.Number && v.TryGetInt32(out int i) ? i : 0;
 
     private static DateTimeOffset? Time(JsonElement e, string name) =>
         DateTimeOffset.TryParse(ChatStreamEvent.Str(e, name), CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var t) ? t : null;

@@ -23,7 +23,7 @@ namespace Clipmark.App;
 /// | drag [shift] [ctrl] [hold] X,Y X,Y... (image px; a point may be @rotate, @start, @end or @CropHandleName of the selection, plus an optional +DX,DY;
 /// hold = no release, to screenshot the drag) | release | hover X,Y (eyedropper loupe) | dblclick X,Y | type TEXT | nokey NAME [ctrl] (must not be handled)
 /// | assert count N | assert editing | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
-/// | shot FILE (window, plus FILE-popupN.png per open popup) | save FILE (export PNG) | wait MS
+/// | shot FILE (window, plus FILE-popupN.png per open popup) | shotall FILE (window with the open popups drawn in place) | save FILE (export PNG) | wait MS
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
 /// | assert enabled|disabled NAME
@@ -48,7 +48,8 @@ namespace Clipmark.App;
 /// | deliver W,H #RRGGBB (runs the capture delivery on a W x H image of that color, with the saved settings; the PNG path goes to DIR\delivered.txt)
 /// | settheme system|light|dark | assert theme Light|Dark (window content ActualTheme)
 /// | updatecheck (one update check against CLIPMARK_TEST_UPDATE_URL) | updateprompt (opens the update popup; dialogclick answers it)
-/// | overlay [video] [MODE] (starts the capture overlay with the saved settings, not awaited; the PNG path goes to DIR\delivered.txt, a failure to DIR\failed.txt)
+/// | overlay [video] [MODE] (starts the capture overlay with the saved settings, not awaited; the PNG path goes to DIR\delivered.txt, a failure to DIR\failed.txt;
+/// CLIPMARK_TEST_FRAME = raw BGRA file of the virtual screen size replaces the frozen desktop)
 /// | omove X,Y | odown X,Y | oup X,Y (desktop px, posted to the overlay) | ocancel (right click) | okey ESC|LETTER [ctrl] | opill NAME (center of a pill button to DIR\pill.txt)
 /// | ocolor X,Y (frozen pixel as #RRGGBB to DIR\ocolor.txt) | oshot FILE (the pill monitor as it is painted) | owait (the overlay run finished, up to 20 s)
 /// | setting colorformat hex|rgb|hsl | clipboard|toast|autosave|border on|off | borderwidth N | savefolder PATH
@@ -251,6 +252,9 @@ internal sealed class TestDriver
                     if (failure is not null)
                         File.WriteAllText(Path.ChangeExtension(popupPath, ".txt"), failure);
                 }
+                break;
+            case "shotall":
+                await ShotAllAsync(arg);
                 break;
             case "save":
                 var image = _page.Editor?.Export() ?? throw new InvalidOperationException("no capture shown");
@@ -614,8 +618,18 @@ internal sealed class TestDriver
                 break;
             case "oshot":
                 var shownOverlay = Capture.OverlaySession.Active ?? throw new InvalidOperationException("no overlay");
-                using (var desktop = Capture.ScreenCapture.CaptureDesktop())
+                // The real screen with the overlay on it, not the CLIPMARK_TEST_FRAME stand-in.
+                var testFrame = Environment.GetEnvironmentVariable("CLIPMARK_TEST_FRAME");
+                Environment.SetEnvironmentVariable("CLIPMARK_TEST_FRAME", null);
+                try
+                {
+                    using var desktop = Capture.ScreenCapture.CaptureDesktop();
                     await File.WriteAllBytesAsync(arg, await CaptureOutput.EncodePngAsync(desktop.Cut(shownOverlay.TestMonitor)));
+                }
+                finally
+                {
+                    Environment.SetEnvironmentVariable("CLIPMARK_TEST_FRAME", testFrame);
+                }
                 break;
             case "owait":
                 if (_overlayRun is null || await Task.WhenAny(_overlayRun, Task.Delay(20000)) != _overlayRun)
@@ -847,10 +861,77 @@ internal sealed class TestDriver
     /// <summary>Renders the element over the theme background; the window backdrop is not part of the XAML tree.</summary>
     private static async Task RenderAsync(UIElement element, string path)
     {
+        var (width, height, pixels) = await RenderPixelsAsync(element);
+        await WritePngAsync(path, width, height, pixels, ((FrameworkElement)element).ActualTheme);
+    }
+
+    /// <summary>Premultiplied BGRA of the element at the window's scale.</summary>
+    private static async Task<(int Width, int Height, byte[] Pixels)> RenderPixelsAsync(UIElement element)
+    {
         var bitmap = new RenderTargetBitmap();
         await bitmap.RenderAsync(element);
-        var pixels = (await bitmap.GetPixelsAsync()).ToArray();
-        byte background = ((FrameworkElement)element).ActualTheme == ElementTheme.Dark ? (byte)0x20 : (byte)0xF3;
+        return (bitmap.PixelWidth, bitmap.PixelHeight, (await bitmap.GetPixelsAsync()).ToArray());
+    }
+
+    /// <summary>The window with every open popup drawn "over" it at its place (Store screenshots of flyouts and menus).</summary>
+    private async Task ShotAllAsync(string path)
+    {
+        var content = (UIElement)Root.Content;
+        var (width, height, canvas) = await RenderPixelsAsync(content);
+        double scale = Root.RasterizationScale;
+        foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
+        {
+            if (popup.Child is null)
+                continue;
+            // A menu's acrylic is the popup's SystemBackdrop, which RenderTargetBitmap leaves out: the presenter gets the acrylic
+            // fallback color (AcrylicBackgroundFillColorDefaultBrush), as Windows shows it with transparency effects off.
+            var presenter = popup.SystemBackdrop is not null ? popup.Child as Control : null;
+            var presenterBackground = presenter?.ReadLocalValue(Control.BackgroundProperty);
+            if (presenter is not null)
+            {
+                presenter.Background = new SolidColorBrush(presenter.ActualTheme == ElementTheme.Light
+                    ? Windows.UI.Color.FromArgb(255, 0xF9, 0xF9, 0xF9) : Windows.UI.Color.FromArgb(255, 0x2C, 0x2C, 0x2C));
+                await Task.Delay(100);
+            }
+            // As in "shot": a Flyout's popup root cannot be rendered, its first renderable descendant can.
+            foreach (var candidate in new[] { popup.Child }.Concat(Descendants(popup.Child).OfType<FrameworkElement>().Where(f => f.ActualWidth > 0)))
+            {
+                (int Width, int Height, byte[] Pixels) layer;
+                try
+                {
+                    layer = await RenderPixelsAsync(candidate);
+                }
+                catch (ArgumentException)
+                {
+                    continue;
+                }
+                if (layer.Width == 0) // a Flyout's presenter renders empty
+                    continue;
+                // Kept inside the window, as Windows keeps a menu on a maximized window's screen.
+                var at = candidate.TransformToVisual(content).TransformPoint(default);
+                int margin = (int)Math.Round(8 * scale);
+                int ox = Math.Max(0, Math.Min((int)Math.Round(at.X * scale), width - layer.Width - margin));
+                int oy = Math.Max(0, Math.Min((int)Math.Round(at.Y * scale), height - layer.Height - margin));
+                for (int y = Math.Max(0, -oy); y < layer.Height && oy + y < height; y++)
+                    for (int x = Math.Max(0, -ox); x < layer.Width && ox + x < width; x++)
+                    {
+                        int s = (y * layer.Width + x) * 4, d = ((oy + y) * width + ox + x) * 4, inverse = 255 - layer.Pixels[s + 3];
+                        for (int c = 0; c < 4; c++)
+                            canvas[d + c] = (byte)(layer.Pixels[s + c] + canvas[d + c] * inverse / 255);
+                    }
+                break;
+            }
+            if (presenterBackground == DependencyProperty.UnsetValue)
+                presenter!.ClearValue(Control.BackgroundProperty);
+            else
+                presenter?.SetValue(Control.BackgroundProperty, presenterBackground);
+        }
+        await WritePngAsync(path, width, height, canvas, ((FrameworkElement)content).ActualTheme);
+    }
+
+    private static async Task WritePngAsync(string path, int width, int height, byte[] pixels, ElementTheme theme)
+    {
+        byte background = theme == ElementTheme.Dark ? (byte)0x20 : (byte)0xF3;
         for (int i = 0; i < pixels.Length; i += 4)
         {
             int inverse = 255 - pixels[i + 3];
@@ -861,7 +942,7 @@ internal sealed class TestDriver
         using var stream = new InMemoryRandomAccessStream();
         var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
         encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied,
-            (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96, 96, pixels);
+            (uint)width, (uint)height, 96, 96, pixels);
         await encoder.FlushAsync();
         stream.Seek(0);
         using var file = File.Create(path);

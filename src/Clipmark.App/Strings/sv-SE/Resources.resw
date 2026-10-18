@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Kopiera svar</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Rapportera svaret via e-post</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Urklipp används av en annan app. Svaret kopierades inte.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Skärmklippet (med markeringar och maskeringar) och dina frågor skickas till Anthropic via IT-BAER:s relä. Varken Clipmark eller reläet sparar konversationen.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>{0} USD kvar den här månaden</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Med Premium behöver Fråga AI ingen nyckel: den går via IT-BAER:s relä ({0}). En sparad API-nyckel skickar i stället direkt till Anthropic ({1}).</value>

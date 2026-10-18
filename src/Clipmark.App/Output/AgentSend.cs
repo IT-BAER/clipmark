@@ -16,6 +16,12 @@ internal static class AgentSend
     public static List<AgentTarget> FindTargets(out List<ProcessEntry> processes)
     {
         processes = Processes();
+#if DEBUG
+        // Store screenshots: "Agent|Host|Title;..." stands in for the sessions on this desktop (icons still come from running apps).
+        if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_AGENTS") is { Length: > 0 } testAgents)
+            return testAgents.Split(';').Select(t => t.Split('|'))
+                .Select(f => new AgentTarget(0, 0, Enum.Parse<Agent>(f[0]), Enum.Parse<AgentHost>(f[1]), f[2])).ToList();
+#endif
         return AgentTargets.Find(processes, Windows()).Select(WithConsoleTitle).ToList();
     }
 

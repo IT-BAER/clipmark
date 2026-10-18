@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Copia risposta</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Segnala la risposta via email</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Gli Appunti sono in uso da un'altra app; la risposta non è stata copiata.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>L'acquisizione (con annotazioni e oscuramenti) e le tue domande vengono inviate ad Anthropic tramite il relay di IT-BAER. Né Clipmark né il relay salvano la conversazione.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>{0} USD rimanenti questo mese</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Con Premium, Chiedi all'IA non richiede una chiave: passa dal relay di IT-BAER ({0}). Una chiave API salvata invia direttamente ad Anthropic ({1}).</value>

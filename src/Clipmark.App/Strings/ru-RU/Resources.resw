@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Копировать ответ</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Сообщить об ответе по эл. почте</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Буфер обмена занят другим приложением; ответ не скопирован.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Снимок (с пометками и скрытыми областями) и ваши вопросы передаются в Anthropic через ретранслятор IT-BAER. Ни Clipmark, ни ретранслятор не хранят разговор.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>В этом месяце осталось {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>С Premium «Спросить ИИ» не требует ключа: он работает через ретранслятор IT-BAER ({0}). Сохранённый API-ключ отправляет данные напрямую в Anthropic ({1}).</value>

@@ -1,4 +1,3 @@
-using System.Globalization;
 using Clipmark.App.Relay;
 using Clipmark.Core.Ai;
 using Clipmark.Core.Relay;
@@ -22,9 +21,6 @@ internal static class RelayChat
 
     public static string Host => LicenceClient.Host;
 
-    /// <summary>Monthly budget left after the last answer (usage event, else the response header); null until known.</summary>
-    public static double? RemainingMonthlyUsd { get; private set; }
-
     /// <summary>Streams one answer like <see cref="ClaudeChat.SendAsync"/>. A lost licence or install also drops the entitlement.</summary>
     /// <exception cref="AiException">The message to show.</exception>
     public static async Task<string> SendAsync(byte[] body, Action<string> onText, CancellationToken ct, Action<string>? onThinking = null)
@@ -40,7 +36,6 @@ internal static class RelayChat
                 using var request = new HttpRequestMessage(HttpMethod.Post, new Uri(LicenceClient.BaseUri, path));
                 LicenceClient.Sign(request, path, body, key, retries.Offset);
                 using var response = await Http.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, ct).ConfigureAwait(false);
-                ReadRemainingHeader(response);
                 if (!response.IsSuccessStatusCode)
                 {
                     string? text = null;
@@ -58,7 +53,7 @@ internal static class RelayChat
                     throw new AiException(failure.Message());
                 }
                 using var stream = await response.Content.ReadAsStreamAsync(ct).ConfigureAwait(false);
-                return await ChatStream.ReadAsync(stream, onText, Idle, ct, onThinking, OnRelayEvent).ConfigureAwait(false);
+                return await ChatStream.ReadAsync(stream, onText, Idle, ct, onThinking).ConfigureAwait(false);
             }
         }
         catch (Exception e) when (ClaudeChat.Network(e, ct, Host) is { } message)
@@ -69,18 +64,5 @@ internal static class RelayChat
         {
             throw new AiException(Loc.Format("LicenceKeyFailed", e.Message));
         }
-    }
-
-    private static void OnRelayEvent(string data)
-    {
-        if (RelayUsage.Parse(data)?.RemainingMonthlyUsd is { } remaining)
-            RemainingMonthlyUsd = remaining;
-    }
-
-    private static void ReadRemainingHeader(HttpResponseMessage response)
-    {
-        if (response.Headers.TryGetValues("X-releash-Remaining-Monthly-USD", out var values)
-            && double.TryParse(values.FirstOrDefault(), NumberStyles.Float, CultureInfo.InvariantCulture, out double usd))
-            RemainingMonthlyUsd = usd;
     }
 }

@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Copier la réponse</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Signaler la réponse par e-mail</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Le Presse-papiers est utilisé par une autre application ; la réponse n'a pas été copiée.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Votre capture (annotations et masquages compris) et vos questions sont envoyées à Anthropic via le relais d'IT-BAER. Ni Clipmark ni le relais ne conservent la conversation.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>Encore {0} USD ce mois-ci</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Avec Premium, Interroger l'IA n'a pas besoin de clé : elle passe par le relais d'IT-BAER ({0}). Une clé API enregistrée envoie directement à Anthropic ({1}).</value>

@@ -5,22 +5,21 @@
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
   xmlns:uap11="http://schemas.microsoft.com/appx/manifest/uap/windows10/11"
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
-  IgnorableNamespaces="uap rescap systemai uap5 uap11 com desktop">
+  IgnorableNamespaces="uap rescap uap5 uap11 com desktop">
 
   <Identity
-    Name="B1A4BD56-7F62-4DFB-B1B7-558FD8903F06"
-    Publisher="CN=IT-BAER"
+    Name="IT-BAER.Clipmark-ScreenshotRecorder"
+    Publisher="CN=EA9F6DA0-A9BD-42B5-97C5-9D09DEB1535F"
     Version="1.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="B1A4BD56-7F62-4DFB-B1B7-558FD8903F06" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Clipmark</DisplayName>
+    <DisplayName>Clipmark - Screenshot &amp; Recorder</DisplayName>
     <PublisherDisplayName>IT-BAER</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -72,7 +71,6 @@
     <!-- Ask AI: api.anthropic.com. Full trust is not network-isolated; declared so the Store listing shows it. -->
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
-    <systemai:Capability Name="systemAIModels"/>
     <!-- Monitor capture without the picker (CaptureItems.ForMonitor) and without the yellow border (ScreenRecorder). -->
     <uap11:Capability Name="graphicsCaptureProgrammatic" />
     <uap11:Capability Name="graphicsCaptureWithoutBorder" />

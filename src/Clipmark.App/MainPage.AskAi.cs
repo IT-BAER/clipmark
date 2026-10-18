@@ -337,10 +337,7 @@ public sealed partial class MainPage
             _aiInput.Text = unanswered; // no text came back: the question returns to the box
         SyncAiTurns();
         ShowAiBusy();
-        string? sent = relay && RelayChat.RemainingMonthlyUsd is { } usd
-            ? string.Join(" · ", new[] { _aiSentAt, Loc.Format("AskAiRemaining", usd.ToString("0.00", System.Globalization.CultureInfo.CurrentCulture)) }.Where(s => !string.IsNullOrEmpty(s)))
-            : _aiSentAt;
-        ShowAiStatus(error ?? (cancelled ? Loc.Get("AskAiStopped") : ApiError.StopMessage(stop) ?? sent), error is not null);
+        ShowAiStatus(error ?? (cancelled ? Loc.Get("AskAiStopped") : ApiError.StopMessage(stop) ?? _aiSentAt), error is not null);
     }
 
     /// <summary>Consent (once), then the image for a new conversation; false when nothing should be sent.</summary>
@@ -504,6 +501,21 @@ public sealed partial class MainPage
                     Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), _chat.Turns[index].Text))
                 ShowAiStatus(Loc.Get("ClipboardBusyAnswer"), error: true);
         };
+        var report = new Button
+        {
+            Content = new FontIcon { Glyph = "", FontSize = 12 }, Padding = new Thickness(6, 4, 6, 4),
+            Background = new SolidColorBrush(Colors.Transparent), BorderThickness = new Thickness(0),
+        };
+        AutomationProperties.SetName(report, Loc.Get("AskAiReportAnswer"));
+        ToolTipService.SetToolTip(report, Loc.Get("AskAiReportAnswer"));
+        report.Click += async (_, _) =>
+        {
+            if (index >= _chat.Turns.Count)
+                return;
+            string question = index > 0 && _chat.Turns[index - 1].Role == ChatRole.User ? _chat.Turns[index - 1].Text : "";
+            await Launcher.LaunchUriAsync(AiReport.MailUri(App.Version, AiModels.Find(AppSettings.Current.AiModel).Id, question, _chat.Turns[index].Text));
+        };
+        var actions = new StackPanel { Orientation = Orientation.Horizontal, Children = { copy, report } };
         var thinking = new TextBlock
         {
             TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true, Foreground = SecondaryBrush,
@@ -523,12 +535,12 @@ public sealed partial class MainPage
         expander.Resources["ExpanderHeaderPadding"] = new Thickness(0, 0, 8, 0);
         expander.Resources["ExpanderContentPadding"] = new Thickness(0, 4, 0, 4);
         AutomationProperties.SetName(expander, Loc.Get("AskAiThinking"));
-        var panel = new StackPanel { Spacing = 2, Children = { expander, answer, copy } };
+        var panel = new StackPanel { Spacing = 2, Children = { expander, answer, actions } };
         ShowAnswerParts(panel, thinking, new ChatTurn(ChatRole.Assistant, "", ""));
         return (ChatRole.Assistant, "", panel, answer, "", thinking);
     }
 
-    /// <summary>The panel holds the thinking expander, the answer and the copy button; a part without content is hidden.</summary>
+    /// <summary>The panel holds the thinking expander, the answer and the copy and report buttons; a part without content is hidden.</summary>
     private static void ShowAnswerParts(StackPanel panel, TextBlock thinking, ChatTurn turn)
     {
         thinking.Text = turn.Thinking;

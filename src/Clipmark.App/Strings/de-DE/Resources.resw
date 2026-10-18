@@ -572,6 +572,9 @@
   <data name="AskAiCopyAnswer" xml:space="preserve">
     <value>Antwort kopieren</value>
   </data>
+  <data name="AskAiReportAnswer" xml:space="preserve">
+    <value>Antwort per E-Mail melden</value>
+  </data>
   <data name="ClipboardBusyAnswer" xml:space="preserve">
     <value>Die Zwischenablage wird von einer anderen App verwendet. Die Antwort wurde nicht kopiert.</value>
   </data>
@@ -1596,9 +1599,6 @@
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
     <value>Ihre Aufnahme (mit Anmerkungen und Schwärzungen) und Ihre Fragen gehen über das Relay von IT-BAER an Anthropic. Clipmark und das Relay speichern die Unterhaltung nicht.</value>
-  </data>
-  <data name="AskAiRemaining" xml:space="preserve">
-    <value>Diesen Monat noch {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
     <value>Mit Premium braucht KI fragen keinen Schlüssel: Es läuft über das Relay von IT-BAER ({0}). Ein gespeicherter API-Schlüssel sendet stattdessen direkt an Anthropic ({1}).</value>

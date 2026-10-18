@@ -213,9 +213,11 @@ Windows.Graphics.Capture recorder, WASAPI).
 
 ## Privacy
 
-Clipmark has no telemetry. It connects to the network only for Ask AI: when you send a question, the capture and the
-question go to api.anthropic.com under your own API key. Send to AI pastes into an app you already run, and that app
-decides what it uploads. See the [privacy policy](docs/privacy-policy.md).
+Clipmark has no telemetry. It connects to the network for three things only: the licence server (releash.it-baer.net)
+for the trial and license activation and renewal, with an installation key and never your captures; a daily update check
+against api.github.com, which you can turn off (not in the Store build); and Ask AI, which sends the capture and your
+question to api.anthropic.com under your own API key, or through IT-BAER's relay for Premium without an own key. Send to
+AI pastes into an app you already run, and that app decides what it uploads. See the [privacy policy](docs/privacy-policy.md).
 
 ## Disclaimer
 
