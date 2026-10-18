@@ -102,7 +102,7 @@ public sealed partial class SettingsPage : Page
         LanguageBox.SelectedIndex = 1 + UiLanguages.All.ToList().FindIndex(l => l.Tag == s.Language); // -1 + 1 = Windows default
         ShowAiKey();
         ShowLicense();
-        LicenseResultText.Text = AppLicense.LastServerMessage ?? "";
+        LicenseResultText.Text = AppLicense.ClockBehind ? Loc.Get("RelayClock") : AppLicense.LastServerMessage ?? "";
         // The background trial or refresh can finish while Settings is open.
         Loaded += (_, _) =>
         {

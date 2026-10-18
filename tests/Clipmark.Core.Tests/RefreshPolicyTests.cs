@@ -1,4 +1,5 @@
 using Clipmark.Core.Licensing;
+using Clipmark.Core.Relay;
 
 namespace Clipmark.Core.Tests;
 
@@ -121,5 +122,41 @@ public sealed class RefreshPolicyTests
     public void An_unreadable_token_is_refreshed()
     {
         Assert.True(RefreshPolicy.ShouldCall(Activated with { Entitlement = "garbage" }, Iat));
+    }
+
+    [Fact]
+    public void A_token_locked_by_a_clock_behind_the_high_water_mark_is_refreshed()
+    {
+        var now = Iat.AddDays(1);
+        var state = Activated with { LastRefreshUtc = now.AddHours(-2), HighWaterUtc = now.AddHours(3) };
+
+        Assert.True(RefreshPolicy.ShouldCall(state, now));
+        Assert.False(RefreshPolicy.ShouldCall(state with { LastRefreshUtc = now.AddMinutes(-10) }, now));
+        Assert.False(RefreshPolicy.ShouldCall(state with { Entitlement = null }, now));
+    }
+
+    [Theory]
+    [InlineData(-1, false)]
+    [InlineData(0, true)]
+    public void No_call_is_made_before_a_stored_rate_limit_ends(int secondsAfterEnd, bool expected)
+    {
+        var state = new LicenseFile(null, RetryAfterUtc: Iat);
+
+        Assert.Equal(expected, RefreshPolicy.ShouldCall(state, Iat.AddSeconds(secondsAfterEnd)));
+    }
+
+    [Theory]
+    [InlineData(429, "rate_limited", 30 * 86400, 30 * 86400)]
+    [InlineData(429, "rate_limited", 3601, 3601)]
+    [InlineData(429, "rate_limited", 90 * 86400, 31 * 86400)]
+    [InlineData(429, "rate_limited", 3600, null)]
+    [InlineData(429, "rate_limited", null, null)]
+    [InlineData(429, "quota_rpd", 7200, null)]
+    [InlineData(403, "seats_exhausted", 7200, null)]
+    public void Only_a_rate_limit_over_an_hour_is_stored(int status, string code, int? retryAfter, int? storedSeconds)
+    {
+        var failure = new RelayFailure(status, code, null, retryAfter, null, null);
+
+        Assert.Equal(storedSeconds is { } s ? Iat.AddSeconds(s) : null, RefreshPolicy.WaitUntil(failure, Iat));
     }
 }

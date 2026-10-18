@@ -1510,6 +1510,9 @@
   <data name="LicenceExpired" xml:space="preserve">
     <value>Bu lisansın süresi doldu.</value>
   </data>
+  <data name="LicenceUpdateRequired" xml:space="preserve">
+    <value>Bu lisans Clipmark&apos;ın daha yeni bir sürümünü gerektirir. Clipmark&apos;ı güncelleyin, ardından yeniden etkinleştirin.</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>Premium denemesi sona erdi.</value>
   </data>

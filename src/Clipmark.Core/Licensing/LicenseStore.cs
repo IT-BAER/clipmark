@@ -5,10 +5,10 @@ namespace Clipmark.Core.Licensing;
 
 /// <summary>
 /// Contents of license.json: a v1 key awaiting activation and the server state: entitlement token, install id
-/// (device key thumbprint), key store, times.
+/// (device key thumbprint), key store, times; the highest time seen (clock rollback guard) and the end of a stored server rate limit.
 /// </summary>
 public sealed record LicenseFile(string? Key, string? Entitlement = null, string? InstallId = null, string? KeyStore = null,
-    DateTime? ActivatedUtc = null, DateTime? LastRefreshUtc = null);
+    DateTime? ActivatedUtc = null, DateTime? LastRefreshUtc = null, DateTime? HighWaterUtc = null, DateTime? RetryAfterUtc = null);
 
 /// <summary>JSON without reflection (Native AOT). A broken field reads as missing; unknown fields are ignored.</summary>
 public static class LicenseStore
@@ -25,6 +25,8 @@ public static class LicenseStore
             w.WriteString("keyStore", file.KeyStore);
             w.WriteString("activatedUtc", file.ActivatedUtc?.ToString("O", CultureInfo.InvariantCulture));
             w.WriteString("lastRefreshUtc", file.LastRefreshUtc?.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("highWaterUtc", file.HighWaterUtc?.ToString("O", CultureInfo.InvariantCulture));
+            w.WriteString("retryAfterUtc", file.RetryAfterUtc?.ToString("O", CultureInfo.InvariantCulture));
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -49,7 +51,7 @@ public static class LicenseStore
 
             string? NonEmpty(string name) => string.IsNullOrWhiteSpace(Str(name)) ? null : Str(name);
             return new LicenseFile(NonEmpty("key"), NonEmpty("entitlement"), NonEmpty("installId"), NonEmpty("keyStore"),
-                Utc("activatedUtc"), Utc("lastRefreshUtc"));
+                Utc("activatedUtc"), Utc("lastRefreshUtc"), Utc("highWaterUtc"), Utc("retryAfterUtc"));
         }
     }
 

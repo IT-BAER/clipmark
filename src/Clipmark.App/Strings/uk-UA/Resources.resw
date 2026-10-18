@@ -1510,6 +1510,9 @@
   <data name="LicenceExpired" xml:space="preserve">
     <value>Термін дії цієї ліцензії минув.</value>
   </data>
+  <data name="LicenceUpdateRequired" xml:space="preserve">
+    <value>Для цієї ліцензії потрібна новіша версія Clipmark. Оновіть Clipmark, потім активуйте його знову.</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>Пробна версія Premium закінчилася.</value>
   </data>

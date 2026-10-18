@@ -1510,6 +1510,9 @@
   <data name="LicenceExpired" xml:space="preserve">
     <value>이 라이선스가 만료되었습니다.</value>
   </data>
+  <data name="LicenceUpdateRequired" xml:space="preserve">
+    <value>이 라이선스에는 최신 버전의 Clipmark가 필요합니다. Clipmark를 업데이트한 후 다시 정품 인증하세요.</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>Premium 평가판이 종료되었습니다.</value>
   </data>

@@ -1510,6 +1510,9 @@
   <data name="LicenceExpired" xml:space="preserve">
     <value>Esta licencia ha caducado.</value>
   </data>
+  <data name="LicenceUpdateRequired" xml:space="preserve">
+    <value>Esta licencia necesita una versión más reciente de Clipmark. Actualiza Clipmark y vuelve a activarlo.</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>La prueba de Premium ha terminado.</value>
   </data>

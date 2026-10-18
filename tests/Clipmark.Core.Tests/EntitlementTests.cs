@@ -98,4 +98,72 @@ public class EntitlementTests
     {
         Assert.Equal(new Entitlement(LicenseStatus.Free), ForFile(new LicenseFile(ValidKey, "garbage")));
     }
+
+    [Fact]
+    public void A_clock_set_back_past_the_high_water_mark_locks_premium()
+    {
+        var file = new LicenseFile(null, Token("premium"), HighWaterUtc: Now.AddHours(1).AddSeconds(1));
+
+        var e = Entitlement.Evaluate(file, EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now, out var verdict, out var claims);
+
+        Assert.Equal(new Entitlement(LicenseStatus.Free), e);
+        Assert.Equal(TokenVerdict.ClockBehind, verdict);
+        Assert.Null(claims);
+    }
+
+    [Fact]
+    public void A_clock_within_the_tolerance_of_the_high_water_mark_stays_licensed()
+    {
+        Assert.Equal(new Entitlement(LicenseStatus.Licensed), ForFile(new LicenseFile(null, Token("premium"), HighWaterUtc: Now.AddHours(1))));
+    }
+
+    [Theory]
+    [InlineData(null, true)]
+    [InlineData(-61, true)]
+    [InlineData(-59, false)]
+    [InlineData(30, false)]
+    public void The_high_water_mark_rises_to_now_once_it_is_an_hour_old(int? markMinutesFromNow, bool raised)
+    {
+        var file = new LicenseFile(null, HighWaterUtc: markMinutesFromNow is { } m ? Now.AddMinutes(m) : null);
+
+        var next = Entitlement.RaiseHighWater(file, Now);
+
+        if (raised)
+            Assert.Equal(file with { HighWaterUtc = Now }, next);
+        else
+            Assert.Null(next);
+    }
+
+    [Fact]
+    public void A_verified_token_is_stored_and_resets_the_high_water_mark_to_its_iat()
+    {
+        var old = new LicenseFile(ValidKey, "old", "inst", HighWaterUtc: Now.AddDays(400), RetryAfterUtc: Now.AddDays(20));
+        string token = Token("premium");
+
+        var next = Entitlement.Accept(old, token, EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now);
+
+        Assert.Equal(old with { Key = null, Entitlement = token, HighWaterUtc = Now.AddHours(-1), RetryAfterUtc = null }, next);
+    }
+
+    [Fact]
+    public void A_token_that_fails_verification_is_not_stored()
+    {
+        var old = new LicenseFile(ValidKey, Token("premium"), "inst");
+
+        Assert.Null(Entitlement.Accept(old, Token("premium"), EntitlementTokenTests.KeysFor(Vector), "clipmark", "other-dev", Now));
+        Assert.Null(Entitlement.Accept(old, "garbage", EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now));
+    }
+
+    private static EntitlementClaims WithFeat(string plan, params string[] feat) =>
+        new("kid", "clipmark", "1", plan, feat, 1, "dev", NowUnix - 3600, NowUnix + 86400, 0);
+
+    [Fact]
+    public void The_relay_needs_a_verified_licence_with_the_ai_feature()
+    {
+        Assert.True(Entitlement.AllowsRelay(TokenVerdict.Valid, WithFeat("premium", "ai")));
+        Assert.False(Entitlement.AllowsRelay(TokenVerdict.Valid, WithFeat("premium")));
+        Assert.False(Entitlement.AllowsRelay(TokenVerdict.Valid, WithFeat("trial", "ai")));
+        Assert.False(Entitlement.AllowsRelay(TokenVerdict.ClockBehind, WithFeat("premium", "ai")));
+        Assert.False(Entitlement.AllowsRelay(TokenVerdict.Valid, null));
+    }
 }

@@ -47,8 +47,11 @@ internal static class AppLicense
     /// <summary>Premium from a verified, non-trial entitlement (Remove from this PC applies).</summary>
     public static bool LicensedByToken => Current.Status == LicenseStatus.Licensed && _verdict == TokenVerdict.Valid && _claims is { Plan: not "trial" };
 
-    /// <summary>Ask AI may use IT-BAER's relay: Premium by entitlement, an install on the server, and the task offered there.</summary>
-    public static bool CanUseRelay => LicensedByToken && State.InstallId is not null && !_relayTaskMissing;
+    /// <summary>Ask AI may use IT-BAER's relay: Premium by entitlement with the relay feature, an install on the server, and the task offered there.</summary>
+    public static bool CanUseRelay => LicensedByToken && Entitlement.AllowsRelay(_verdict, _claims) && State.InstallId is not null && !_relayTaskMissing;
+
+    /// <summary>The PC clock is behind the highest time seen, so Premium is locked until it is correct.</summary>
+    public static bool ClockBehind => _verdict == TokenVerdict.ClockBehind;
 
     /// <summary>Premium still verifies offline, but the server has no install for this PC (unknown_install): Settings asks for the code again.</summary>
     public static bool NeedsActivation => LicensedByToken && State.InstallId is null;
@@ -77,6 +80,11 @@ internal static class AppLicense
     {
         _ui ??= DispatcherQueue.GetForCurrentThread();
         var loaded = TryLoad();
+        if (loaded?.Entitlement is not null && Entitlement.RaiseHighWater(loaded, DateTime.UtcNow) is { } raised)
+        {
+            TrySave(raised);
+            loaded = raised;
+        }
         Evaluate(loaded);
         if (loaded is not null && RefreshPolicy.ShouldCall(loaded, DateTime.UtcNow))
         {
@@ -116,6 +124,8 @@ internal static class AppLicense
                     Store(a.Entitlement, a.InstallId, activated: true);
                 else if (r.Failure is { Status: 403, Code: "licence_invalid" or "subject_revoked" or "licence_expired" } f)
                     Update(s => s with { Key = null }, f.Message());
+                else if (r.Failure is { } limited && RefreshPolicy.WaitUntil(limited, now) is { } until)
+                    Update(s => s with { RetryAfterUtc = until }, limited.Message());
             }
             else
             {
@@ -126,6 +136,8 @@ internal static class AppLicense
                     DropEntitlement(r.Failure);
                 else if (r.Failure is { Code: "trial_not_offered" } f)
                     LastServerMessage = f.Message();
+                else if (r.Failure is { } limited && RefreshPolicy.WaitUntil(limited, now) is { } until)
+                    Update(s => s with { RetryAfterUtc = until }, limited.Message());
             }
         }
         finally
@@ -138,8 +150,8 @@ internal static class AppLicense
     public static async Task<LicenceResult<ActivateResult>> ActivateAsync(string text)
     {
         var r = await Task.Run(() => LicenceClient.ActivateAsync(text.Trim(), CancellationToken.None));
-        if (r.Value is { } a)
-            Store(a.Entitlement, a.InstallId, activated: true);
+        if (r.Value is { } a && !Store(a.Entitlement, a.InstallId, activated: true))
+            return new(null, NetworkError: LastServerMessage); // message only, shown like a network failure
         return r;
     }
 
@@ -181,26 +193,31 @@ internal static class AppLicense
 
     internal static void RelayTaskMissing() => _relayTaskMissing = true;
 
-    /// <summary>Stores a fresh entitlement; a v1 key is removed once the entitlement verifies here.</summary>
-    private static void Store(string token, string? installId, bool activated)
+    /// <summary>Stores a fresh entitlement if it verifies here (see <see cref="Entitlement.Accept"/>); false keeps the stored state and sets the update message.</summary>
+    private static bool Store(string token, string? installId, bool activated)
     {
         var key = DeviceKey.TryOpen();
         string dev = key?.Thumbprint ?? "";
-        bool verifies = EntitlementToken.Verify(token, EntitlementKeys, RelayRequest.App, dev, DateTimeOffset.UtcNow.ToUnixTimeSeconds(), out _) == TokenVerdict.Valid;
-        Update(s => s with
+        var now = DateTime.UtcNow;
+        bool stored = false;
+        Update(s =>
         {
-            Entitlement = token, InstallId = installId ?? dev, KeyStore = key?.KeyStore ?? s.KeyStore,
-            ActivatedUtc = activated ? DateTime.UtcNow : s.ActivatedUtc, Key = verifies ? null : s.Key,
+            if (Entitlement.Accept(s, token, EntitlementKeys, RelayRequest.App, dev, now) is not { } next)
+                return null;
+            stored = true;
+            return next with { InstallId = installId ?? dev, KeyStore = key?.KeyStore ?? s.KeyStore, ActivatedUtc = activated ? now : s.ActivatedUtc };
         }, null);
+        if (!stored)
+            LastServerMessage = Loc.Get("LicenceUpdateRequired");
+        return stored;
     }
 
-    /// <summary>Read, change, write, re-evaluate. An unreadable file is left alone.</summary>
-    private static void Update(Func<LicenseFile, LicenseFile> change, string? serverMessage)
+    /// <summary>Read, change, write, re-evaluate. An unreadable file, or a change that returns null, is left alone.</summary>
+    private static void Update(Func<LicenseFile, LicenseFile?> change, string? serverMessage)
     {
         LastServerMessage = serverMessage;
-        if (TryLoad() is not { } file)
+        if (TryLoad() is not { } file || change(file) is not { } next)
             return;
-        var next = change(file);
         TrySave(next);
         Evaluate(next);
     }

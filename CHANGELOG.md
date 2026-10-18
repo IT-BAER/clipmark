@@ -98,6 +98,11 @@ and the project uses [Semantic Versioning](https://semver.org/).
   many attempts ends (minutes, or the date and time), says when the license plan lacks a feature, and asks to
   activate again when the server no longer knows this PC; Premium keeps working offline meanwhile, and Ask AI stops
   using the relay until then.
+- License checks: Premium locks while the PC clock is set more than an hour behind the latest time Clipmark has
+  seen, and Settings asks to correct the clock. A license from the server that this version cannot verify no longer
+  replaces the working one; activation then asks to update Clipmark. After a 30-day limit on trials or activations,
+  Clipmark waits for the date the server named instead of asking again every hour. Ask AI uses the relay only when
+  the license plan includes it.
 - Recordings no longer start with a black frame.
 - The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.

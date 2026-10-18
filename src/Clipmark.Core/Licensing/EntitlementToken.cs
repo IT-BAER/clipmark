@@ -4,7 +4,7 @@ using System.Text.Json;
 namespace Clipmark.Core.Licensing;
 
 /// <summary>Result of an offline entitlement check; anything but <see cref="Valid"/> means not licensed.</summary>
-public enum TokenVerdict { Valid, Expired, IssuedInFuture, UnknownKid, WrongApp, WrongDev, BadSignature, Malformed }
+public enum TokenVerdict { Valid, Expired, IssuedInFuture, UnknownKid, WrongApp, WrongDev, BadSignature, Malformed, ClockBehind }
 
 /// <summary>The signed payload of an entitlement (releash spec 18.5). Times are Unix seconds; <see cref="Grace"/> is seconds.</summary>
 public sealed record EntitlementClaims(string Kid, string App, string Lic, string Plan, string[] Feat, int Seats, string Dev, long Iat, long Exp, long Grace);
@@ -55,6 +55,7 @@ public static class EntitlementToken
         TokenVerdict.WrongApp => "wrong_app",
         TokenVerdict.WrongDev => "wrong_dev",
         TokenVerdict.BadSignature => "bad_signature",
+        TokenVerdict.ClockBehind => "clock_behind",
         _ => "malformed",
     };
 

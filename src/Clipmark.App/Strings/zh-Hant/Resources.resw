@@ -1510,6 +1510,9 @@
   <data name="LicenceExpired" xml:space="preserve">
     <value>此授權已過期。</value>
   </data>
+  <data name="LicenceUpdateRequired" xml:space="preserve">
+    <value>此授權需要較新版本的 Clipmark。請更新 Clipmark，然後重新啟用。</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>Premium 試用已結束。</value>
   </data>

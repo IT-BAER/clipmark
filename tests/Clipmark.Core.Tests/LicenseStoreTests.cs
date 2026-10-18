@@ -41,7 +41,7 @@ public class LicenseStoreTests
     [Fact]
     public void Activation_fields_round_trip()
     {
-        var file = new LicenseFile(null, "rl1.a.b", "install-1", "tpm", Start, Start.AddHours(1));
+        var file = new LicenseFile(null, "rl1.a.b", "install-1", "tpm", Start, Start.AddHours(1), Start.AddHours(2), Start.AddDays(30));
 
         Assert.Equal(file, LicenseStore.Parse(LicenseStore.Serialize(file)));
     }
@@ -51,7 +51,7 @@ public class LicenseStoreTests
     {
         string json = LicenseStore.Serialize(new LicenseFile("K"));
 
-        foreach (string name in new[] { "entitlement", "installId", "keyStore", "activatedUtc", "lastRefreshUtc" })
+        foreach (string name in new[] { "entitlement", "installId", "keyStore", "activatedUtc", "lastRefreshUtc", "highWaterUtc", "retryAfterUtc" })
             Assert.Contains($"\"{name}\": null", json);
     }
 
