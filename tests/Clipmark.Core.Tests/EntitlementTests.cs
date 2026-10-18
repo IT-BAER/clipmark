@@ -140,7 +140,7 @@ public class EntitlementTests
         var old = new LicenseFile(ValidKey, "old", "inst", HighWaterUtc: Now.AddDays(400), RetryAfterUtc: Now.AddDays(20));
         string token = Token("premium");
 
-        var next = Entitlement.Accept(old, token, EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now);
+        var next = Entitlement.Accept(old, token, EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now, out _);
 
         Assert.Equal(old with { Key = null, Entitlement = token, HighWaterUtc = Now.AddHours(-1), RetryAfterUtc = null }, next);
     }
@@ -150,8 +150,33 @@ public class EntitlementTests
     {
         var old = new LicenseFile(ValidKey, Token("premium"), "inst");
 
-        Assert.Null(Entitlement.Accept(old, Token("premium"), EntitlementTokenTests.KeysFor(Vector), "clipmark", "other-dev", Now));
-        Assert.Null(Entitlement.Accept(old, "garbage", EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now));
+        Assert.Null(Entitlement.Accept(old, Token("premium"), EntitlementTokenTests.KeysFor(Vector), "clipmark", "other-dev", Now, out _));
+        Assert.Null(Entitlement.Accept(old, "garbage", EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now, out _));
+    }
+
+    private const string ClockText = "The clock of this PC is off. Check the Windows date and time, then try again.";
+    private const string KeyText = "This PC's key was not accepted. Try again; if it keeps failing, contact support.";
+    private const string UpdateText = "This license needs a newer version of Clipmark. Update Clipmark, then activate it again.";
+
+    [Theory]
+    [InlineData("dev", -2, ClockText)]
+    [InlineData("dev", 31 * 24, ClockText)]
+    [InlineData("other-dev", 0, KeyText)]
+    [InlineData("", 0, KeyText)]
+    public void A_rejected_server_token_names_the_reason(string dev, int nowHours, string text)
+    {
+        var next = Entitlement.Accept(new LicenseFile(null), Token("premium"), EntitlementTokenTests.KeysFor(Vector), "clipmark", dev, Now.AddHours(nowHours), out var verdict);
+
+        Assert.Null(next);
+        Assert.Equal(text, Entitlement.RejectedText(verdict));
+    }
+
+    [Fact]
+    public void A_server_token_this_build_cannot_read_asks_for_an_update()
+    {
+        Assert.Null(Entitlement.Accept(new LicenseFile(null), "garbage", EntitlementTokenTests.KeysFor(Vector), "clipmark", "dev", Now, out var verdict));
+        Assert.Equal(UpdateText, Entitlement.RejectedText(verdict));
+        Assert.Equal(UpdateText, Entitlement.RejectedText(TokenVerdict.UnknownKid));
     }
 
     private static EntitlementClaims WithFeat(string plan, params string[] feat) =>

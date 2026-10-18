@@ -1513,6 +1513,9 @@
   <data name="LicenceUpdateRequired" xml:space="preserve">
     <value>此授權需要較新版本的 Clipmark。請更新 Clipmark，然後重新啟用。</value>
   </data>
+  <data name="LicenceFileUnreadable" xml:space="preserve">
+    <value>Clipmark 無法讀取其授權檔案。請稍後再試。</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>Premium 試用已結束。</value>
   </data>
