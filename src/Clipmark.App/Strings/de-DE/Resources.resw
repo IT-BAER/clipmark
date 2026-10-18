@@ -812,11 +812,11 @@
     <value>Die Premium-Testversion ist abgelaufen. Premium-Werkzeuge sind gesperrt; alles andere funktioniert weiterhin.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>KI fragen sendet die Aufnahme wie angezeigt (einschließlich Anmerkungen und Schwärzungen) und Ihre Frage mit Ihrem eigenen API-Schlüssel an Anthropic ({0}), nur wenn Sie eine Frage senden. Anthropic berechnet die Kosten für den Schlüssel. Der Schlüssel wird in der Anmeldeinformationsverwaltung von Windows auf diesem PC gespeichert; Apps, die unter Ihrem Windows-Konto ausgeführt werden, können ihn lesen.</value>
+    <value>KI fragen sendet die Aufnahme und Ihre Frage mit Ihrem API-Schlüssel an Anthropic ({0}), nur wenn Sie eine Frage senden.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium oder eigener Schlüssel. Mit Premium funktioniert KI fragen ohne Schlüssel über das Relay von IT-BAER. Mit Ihrem eigenen API-Schlüssel sendet KI fragen die Aufnahme wie angezeigt (einschließlich Anmerkungen und Schwärzungen) und Ihre Frage direkt an Anthropic ({0}), nur wenn Sie eine Frage senden. Anthropic berechnet die Kosten für den Schlüssel. Der Schlüssel wird in der Windows-Anmeldeinformationsverwaltung auf diesem PC gespeichert; Apps, die unter Ihrem Windows-Konto ausgeführt werden, können ihn lesen.</value>
+    <value>KI fragen benötigt Premium oder Ihren eigenen API-Schlüssel. An Anthropic ({0}) geht erst etwas, wenn Sie eine Frage senden.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Einstellungen</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Lizenz</value>
+    <value>Lizenz und Abrechnung</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Lizenzstatus</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark konnte den Schlüssel für diesen PC nicht erstellen: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>KI fragen sendet die Aufnahme wie angezeigt (einschließlich Anmerkungen und Schwärzungen) und Ihre Fragen an das Relay von IT-BAER ({0}), das sie mit dem API-Schlüssel von IT-BAER an Anthropic weitergibt. Die Kosten sind in Ihrer Premium-Lizenz enthalten. Es wird nichts gesendet, bevor Sie eine Frage senden, und weder Clipmark noch das Relay speichert die Unterhaltung.</value>
+    <value>Ihre Aufnahme (mit Anmerkungen und Schwärzungen) und Ihre Fragen gehen über das Relay von IT-BAER an Anthropic. Clipmark und das Relay speichern die Unterhaltung nicht.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>Diesen Monat noch {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Mit Premium benötigt KI fragen keinen Schlüssel: Die Aufnahme wie angezeigt (einschließlich Anmerkungen und Schwärzungen) und Ihre Frage gehen über das Relay von IT-BAER ({0}) an Anthropic, nur wenn Sie eine Frage senden. Wenn Sie einen eigenen API-Schlüssel gespeichert haben, sendet KI fragen sie direkt an Anthropic ({1}), und Anthropic berechnet die Kosten für den Schlüssel; der Schlüssel wird in der Windows-Anmeldeinformationsverwaltung auf diesem PC gespeichert.</value>
+    <value>Mit Premium braucht KI fragen keinen Schlüssel: Es läuft über das Relay von IT-BAER ({0}). Ein gespeicherter API-Schlüssel sendet stattdessen direkt an Anthropic ({1}).</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>Die Zwischenablage wird von einer anderen App verwendet. Das GIF wurde nicht kopiert.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Aufnahme</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Ausgabe</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Abonnement</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Abonnement verwalten</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Rückerstattung anfordern</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>Eine Kündigung lässt Premium bis zum Ende des bezahlten Zeitraums aktiv.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Dieser PC</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Entfernen gibt den Platz dieses PCs für einen anderen PC frei. Die Abrechnung wird dadurch nicht gekündigt.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Melden Sie sich mit der E-Mail-Adresse an, die Sie beim Kauf verwendet haben. Stripe schickt Ihnen einen Anmeldelink.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} ist verfügbar</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>Sie verwenden Clipmark {0}. Laden Sie die neue Version von der Releases-Seite herunter. „Nie“ beendet die Prüfung; Sie können sie unter Einstellungen &gt; Info wieder einschalten.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Später</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Automatisch nach Updates suchen</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Automatisch nach Updates suchen</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Jetzt prüfen</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Suche nach Updates …</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} ist aktuell.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} ist verfügbar.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Der Update-Server ist nicht erreichbar. Versuchen Sie es später erneut.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Die automatische Update-Prüfung ist aus.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Zuletzt geprüft: {0}</value>
   </data>
 </root>

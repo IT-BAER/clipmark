@@ -15,6 +15,10 @@ internal static class AppLicense
 {
     public const string BuyUrl = "https://it-baer.net/clipmark";
 
+    /// <summary>Clipmark is sold through Stripe Managed Payments: buyers cancel in the Stripe customer portal (email login link) and ask Link for refunds.</summary>
+    public const string ManageSubscriptionUrl = "https://billing.stripe.com/p/login/00w00c1fegPq49d5rMgA800";
+    public const string RefundUrl = "https://support.link.com/questions/requesting-a-refund-for-a-sold-through-link-payment";
+
     /// <summary>Production entitlement keys, kid to base64 SPKI (`releash key list clipmark`). A kid missing here fails closed.</summary>
     private static readonly Dictionary<string, string> ReleaseKeys = new(StringComparer.Ordinal)
     {

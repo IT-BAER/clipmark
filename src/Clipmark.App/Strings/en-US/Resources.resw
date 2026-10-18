@@ -812,11 +812,11 @@
     <value>The Premium trial has ended. Premium tools are locked; everything else keeps working.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>Ask AI sends the capture as shown (annotations and redactions included) and your question to Anthropic ({0}) under your own API key, only when you send a question. Anthropic bills the key. The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.</value>
+    <value>Ask AI sends the capture and your question to Anthropic ({0}) with your API key, only when you send a question.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium or your own key. With Premium, Ask AI works without a key through IT-BAER's relay. With your own API key, Ask AI sends the capture as shown (annotations and redactions included) and your question directly to Anthropic ({0}), only when you send a question. Anthropic bills the key. The key is kept in Windows Credential Manager on this PC; apps running under your Windows account can read it.</value>
+    <value>Ask AI needs Premium or your own API key. Nothing is sent to Anthropic ({0}) until you send a question.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Settings</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>License</value>
+    <value>License and billing</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>License status</value>
@@ -1592,13 +1592,13 @@
     <value>Clipmark could not create the key for this PC: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>Ask AI sends the capture as shown (annotations and redactions included) and your questions to IT-BAER's relay ({0}), which passes them to Anthropic under IT-BAER's API key. Your Premium license covers the cost. Nothing is sent until you send a question, and neither Clipmark nor the relay stores the conversation.</value>
+    <value>Your capture (with annotations and redactions) and your questions go to Anthropic through the IT-BAER relay. Clipmark and the relay do not store the conversation.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>{0} USD left this month</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>With Premium, Ask AI needs no key: the capture as shown (annotations and redactions included) and your question go through IT-BAER's relay ({0}) to Anthropic, only when you send a question. With your own API key saved, Ask AI sends them directly to Anthropic ({1}) and Anthropic bills the key; the key is kept in Windows Credential Manager on this PC.</value>
+    <value>With Premium, Ask AI needs no key: it runs through IT-BAER's relay ({0}). A saved API key sends directly to Anthropic ({1}) instead.</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1717,5 +1717,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>The clipboard is in use by another app; the GIF was not copied.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Capture</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Subscription</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Manage subscription</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Request a refund</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>Cancelling keeps Premium until the paid period ends.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>This PC</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Removing frees this PC's seat for another PC. It does not cancel billing.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Sign in with the email you used for the purchase. Stripe sends you a login link.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} is available</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>You are using Clipmark {0}. Download the new version from the releases page. Choose Never to stop checking; you can turn it on again in Settings &gt; About.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Never</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Check for updates automatically</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Check for updates automatically</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Check now</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Checking for updates…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} is up to date.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} is available.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Could not reach the update server. Try again later.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Automatic update checks are off.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Last checked: {0}</value>
   </data>
 </root>

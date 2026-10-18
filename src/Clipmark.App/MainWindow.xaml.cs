@@ -119,6 +119,13 @@ public sealed partial class MainWindow : Window
 
     public void ShowError(string text) => Page()?.ShowError(text);
 
+    /// <summary>The update popup, only while the window is open on the empty editor: never over a capture or on top of Settings.</summary>
+    public void ShowUpdatePromptIfIdle()
+    {
+        if (IsShown && RootFrame.Content is MainPage page)
+            _ = page.ShowUpdatePromptAsync(onlyIfIdle: true);
+    }
+
     public Task FlushHistoryAsync() => Page()?.FlushHistoryAsync() ?? Task.CompletedTask;
 
     public void ShowSettings()

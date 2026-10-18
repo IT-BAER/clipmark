@@ -812,11 +812,11 @@
     <value>A avaliação do Premium terminou. As ferramentas Premium estão bloqueadas; todo o resto continua funcionando.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>Perguntar à IA envia a captura como exibida (com anotações e partes ocultas) e sua pergunta para a Anthropic ({0}) com sua própria chave de API, somente quando você envia uma pergunta. A Anthropic cobra pela chave. A chave fica no Gerenciador de Credenciais do Windows neste PC; aplicativos executados na sua conta do Windows podem lê-la.</value>
+    <value>Perguntar à IA envia a captura e sua pergunta à Anthropic ({0}) com sua chave de API, somente quando você envia uma pergunta.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium ou sua própria chave. Com o Premium, Perguntar à IA funciona sem chave pelo relay da IT-BAER. Com sua própria chave de API, Perguntar à IA envia a captura como exibida (com anotações e partes ocultas) e sua pergunta diretamente para a Anthropic ({0}), somente quando você envia uma pergunta. A Anthropic cobra pela chave. A chave fica no Gerenciador de Credenciais do Windows neste PC; aplicativos executados na sua conta do Windows podem lê-la.</value>
+    <value>Perguntar à IA exige Premium ou sua própria chave de API. Nada é enviado à Anthropic ({0}) até você enviar uma pergunta.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Configurações</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Licença</value>
+    <value>Licença e cobrança</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Status da licença</value>
@@ -1589,13 +1589,13 @@
     <value>O Clipmark não conseguiu criar a chave para este PC: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>Perguntar à IA envia a captura como exibida (com anotações e partes ocultas) e suas perguntas para o relay da IT-BAER ({0}), que as repassa à Anthropic com a chave de API da IT-BAER. Sua licença Premium cobre o custo. Nada é enviado até que você envie uma pergunta, e nem o Clipmark nem o relay armazenam a conversa.</value>
+    <value>Sua captura (com anotações e partes ocultas) e suas perguntas são enviadas à Anthropic pelo relay da IT-BAER. Nem o Clipmark nem o relay armazenam a conversa.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>Restam {0} USD este mês</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Com o Premium, Perguntar à IA não precisa de chave: a captura como exibida (com anotações e partes ocultas) e sua pergunta passam pelo relay da IT-BAER ({0}) até a Anthropic, somente quando você envia uma pergunta. Se você salvar sua própria chave de API, Perguntar à IA as envia diretamente para a Anthropic ({1}) e a Anthropic cobra pela chave; a chave fica no Gerenciador de Credenciais do Windows neste PC.</value>
+    <value>Com Premium, Perguntar à IA não precisa de chave: passa pelo relay da IT-BAER ({0}). Uma chave de API salva envia direto à Anthropic ({1}).</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>A Área de Transferência está em uso por outro aplicativo; o GIF não foi copiado.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Geral</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Captura</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Saída</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Assinatura</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Gerenciar assinatura</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Solicitar reembolso</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>Ao cancelar, o Premium continua ativo até o fim do período pago.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Este PC</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Remover libera a vaga deste PC para outro PC. Isso não cancela a cobrança.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Entre com o e-mail usado na compra. A Stripe envia um link de acesso para você.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>O Clipmark {0} está disponível</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>Você está usando o Clipmark {0}. Baixe a nova versão na página de versões. Escolha Nunca para parar de verificar; você pode ativar de novo em Configurações &gt; Sobre.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Baixar</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Mais tarde</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Nunca</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Atualizações</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Verificar atualizações automaticamente</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Verificar atualizações automaticamente</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Verificar agora</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Baixar</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Verificando atualizações…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>O Clipmark {0} está atualizado.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>O Clipmark {0} está disponível.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Não foi possível acessar o servidor de atualizações. Tente novamente mais tarde.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>A verificação automática de atualizações está desativada.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Última verificação: {0}</value>
   </data>
 </root>

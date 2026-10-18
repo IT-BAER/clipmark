@@ -812,11 +812,11 @@
     <value>Пробная версия Premium закончилась. Инструменты Premium заблокированы; всё остальное продолжает работать.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>Функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваш вопрос в Anthropic ({0}) с использованием вашего собственного ключа API, только когда вы отправляете вопрос. Плата за использование ключа взимается Anthropic. Ключ хранится в диспетчере учётных данных Windows на этом компьютере; приложения, запущенные под вашей учётной записью Windows, могут его прочитать.</value>
+    <value>«Спросить ИИ» отправляет снимок и ваш вопрос в Anthropic ({0}) с вашим API-ключом, только когда вы отправляете вопрос.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium или собственный ключ. С Premium функция «Спросить ИИ» работает без ключа через ретранслятор IT-BAER. С собственным ключом API функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваш вопрос напрямую в Anthropic ({0}), только когда вы отправляете вопрос. Плата за использование ключа взимается Anthropic. Ключ хранится в диспетчере учётных данных Windows на этом компьютере; приложения, запущенные под вашей учётной записью Windows, могут его прочитать.</value>
+    <value>Для «Спросить ИИ» нужен Premium или собственный API-ключ. В Anthropic ({0}) ничего не отправляется, пока вы не отправите вопрос.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Параметры</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Лицензия</value>
+    <value>Лицензия и оплата</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Состояние лицензии</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark не удалось создать ключ для этого компьютера: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>Функция «Спросить ИИ» отправляет снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваши вопросы на ретранслятор IT-BAER ({0}), который передаёт их в Anthropic с использованием ключа API IT-BAER. Стоимость покрывается вашей лицензией Premium. Ничего не отправляется, пока вы не отправите вопрос, и ни Clipmark, ни ретранслятор не хранят разговор.</value>
+    <value>Снимок (с пометками и скрытыми областями) и ваши вопросы передаются в Anthropic через ретранслятор IT-BAER. Ни Clipmark, ни ретранслятор не хранят разговор.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>В этом месяце осталось {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>С Premium функции «Спросить ИИ» не нужен ключ: снимок в том виде, в каком он показан (с пометками и скрытыми областями), и ваш вопрос передаются через ретранслятор IT-BAER ({0}) в Anthropic, только когда вы отправляете вопрос. Если вы сохранили собственный ключ API, функция «Спросить ИИ» отправляет их напрямую в Anthropic ({1}), и плата за ключ взимается Anthropic; ключ хранится в диспетчере учётных данных Windows на этом компьютере.</value>
+    <value>С Premium «Спросить ИИ» не требует ключа: он работает через ретранслятор IT-BAER ({0}). Сохранённый API-ключ отправляет данные напрямую в Anthropic ({1}).</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Эмодзи</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>Буфер обмена занят другим приложением; GIF не скопирован.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Общие</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Съёмка</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Вывод</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Подписка</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Управление подпиской</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Запросить возврат средств</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>После отмены Premium работает до конца оплаченного периода.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Этот компьютер</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Удаление освобождает место этого компьютера для другого. Оплата при этом не отменяется.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Войдите с адресом электронной почты, который вы указали при покупке. Stripe пришлёт вам ссылку для входа.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Доступен Clipmark {0}</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>Вы используете Clipmark {0}. Скачайте новую версию на странице выпусков. Выберите «Никогда», чтобы отключить проверку; включить её снова можно в разделе Параметры &gt; О программе.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Позже</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Никогда</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Обновления</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Автоматически проверять обновления</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Автоматически проверять обновления</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Проверить сейчас</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Скачать</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Проверка обновлений…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Установлена актуальная версия Clipmark {0}.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Доступен Clipmark {0}.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Не удалось связаться с сервером обновлений. Повторите попытку позже.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Автоматическая проверка обновлений отключена.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Последняя проверка: {0}</value>
   </data>
 </root>

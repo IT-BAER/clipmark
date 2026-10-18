@@ -812,11 +812,11 @@
     <value>De Premium-proefversie is verlopen. Premium-hulpmiddelen zijn vergrendeld; al het andere blijft werken.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>AI vragen verzendt het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag naar Anthropic ({0}) met je eigen API-sleutel, alleen wanneer je een vraag verzendt. Anthropic brengt de sleutel in rekening. De sleutel wordt op deze pc bewaard in Referentiebeheer van Windows; apps die onder je Windows-account worden uitgevoerd, kunnen de sleutel lezen.</value>
+    <value>AI vragen stuurt de opname en uw vraag met uw API-sleutel naar Anthropic ({0}), alleen wanneer u een vraag verstuurt.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium of je eigen sleutel. Met Premium werkt AI vragen zonder sleutel via de relay van IT-BAER. Met je eigen API-sleutel verzendt AI vragen het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag rechtstreeks naar Anthropic ({0}), alleen wanneer je een vraag verzendt. Anthropic brengt de sleutel in rekening. De sleutel wordt op deze pc bewaard in Referentiebeheer van Windows; apps die onder je Windows-account worden uitgevoerd, kunnen de sleutel lezen.</value>
+    <value>AI vragen vereist Premium of uw eigen API-sleutel. Er wordt niets naar Anthropic ({0}) gestuurd voordat u een vraag verstuurt.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Instellingen</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Licentie</value>
+    <value>Licentie en facturering</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Licentiestatus</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark kan de sleutel voor deze pc niet maken: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>AI vragen verzendt het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vragen naar de relay van IT-BAER ({0}), die ze met de API-sleutel van IT-BAER doorstuurt naar Anthropic. De kosten vallen onder je Premium-licentie. Er wordt niets verzonden totdat je een vraag verzendt, en Clipmark en de relay slaan het gesprek niet op.</value>
+    <value>Je knipsel (met aantekeningen en afgedekte delen) en je vragen gaan via de relay van IT-BAER naar Anthropic. Clipmark en de relay slaan het gesprek niet op.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>Nog {0} USD deze maand</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Met Premium heeft AI vragen geen sleutel nodig: het knipsel zoals het wordt weergegeven (inclusief aantekeningen en afgedekte delen) en je vraag gaan via de relay van IT-BAER ({0}) naar Anthropic, alleen wanneer je een vraag verzendt. Als je een eigen API-sleutel hebt opgeslagen, verzendt AI vragen ze rechtstreeks naar Anthropic ({1}) en brengt Anthropic de sleutel in rekening; de sleutel wordt op deze pc bewaard in Referentiebeheer van Windows.</value>
+    <value>Met Premium heeft AI vragen geen sleutel nodig: het loopt via de relay van IT-BAER ({0}). Een opgeslagen API-sleutel stuurt in plaats daarvan rechtstreeks naar Anthropic ({1}).</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>Het klembord wordt gebruikt door een andere app; de GIF is niet gekopieerd.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Algemeen</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Vastleggen</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Uitvoer</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Abonnement</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Abonnement beheren</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Terugbetaling aanvragen</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>Na opzeggen blijft Premium actief tot het einde van de betaalde periode.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Deze pc</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Verwijderen maakt de plaats van deze pc vrij voor een andere pc. De facturering wordt niet opgezegd.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Meld u aan met het e-mailadres van uw aankoop. Stripe stuurt u een inloglink.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} is beschikbaar</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>U gebruikt Clipmark {0}. Download de nieuwe versie van de releasepagina. Kies Nooit om niet meer te controleren; u kunt dit weer inschakelen via Instellingen &gt; Info.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Downloaden</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Later</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Nooit</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Updates</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Automatisch op updates controleren</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Automatisch op updates controleren</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Nu controleren</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Downloaden</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Controleren op updates…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} is up-to-date.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} is beschikbaar.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>De updateserver is niet bereikbaar. Probeer het later opnieuw.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Automatisch controleren op updates staat uit.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Laatst gecontroleerd: {0}</value>
   </data>
 </root>

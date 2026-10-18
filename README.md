@@ -152,6 +152,9 @@ Requirements: Windows 11 x64 (build 22000 or later). No runtime installation is 
 
 The build is not code-signed yet, so SmartScreen may warn on first start ("More info" > "Run anyway").
 
+**Updates.** Once a day Clipmark asks GitHub whether a newer release exists and offers Download, Never or Later; Download opens
+the release page. Settings > About turns the check off and has Check now. Nothing is installed automatically.
+
 **Remove**
 1. Run `Clipmark.App.exe --restore-system` once, or turn off "Use the Print Screen key" and "Start Clipmark when
    Windows starts" in Settings. This puts the Windows Print Screen option back and removes the autostart entry; the

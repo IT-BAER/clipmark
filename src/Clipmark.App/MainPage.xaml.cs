@@ -1,5 +1,6 @@
 using Clipmark.App.Editor;
 using Clipmark.App.Output;
+using Clipmark.App.Update;
 using Clipmark.Core.Capture;
 using Clipmark.Core.Editor;
 using Clipmark.Core.History;
@@ -7,6 +8,7 @@ using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
 using Clipmark.Core.Sharing;
 using Clipmark.Core.TextActions;
+using Clipmark.Core.Update;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
@@ -636,6 +638,42 @@ public sealed partial class MainPage : Page
                     Frame.Navigate(typeof(SettingsPage));
                     break;
             }
+        }
+        finally
+        {
+            _confirming = false;
+        }
+    }
+
+    /// <summary>
+    /// The update popup: Download opens the release page, Later (also Esc) and Download stay quiet for three days, Never turns
+    /// the check off (Settings > About turns it on again). Nothing when no newer release is known or the user already said Later.
+    /// </summary>
+    internal async Task ShowUpdatePromptAsync(bool onlyIfIdle)
+    {
+        if (_confirming || (onlyIfIdle && _editor is not null) || UpdateService.ForPrompt() is not { } release)
+            return;
+        _confirming = true;
+        try
+        {
+            var dialog = new ContentDialog
+            {
+                XamlRoot = XamlRoot,
+                RequestedTheme = ActualTheme,
+                Title = Loc.Format("UpdateTitle", release.VersionText),
+                Content = new TextBlock { Text = Loc.Format("UpdateBody", App.Version), TextWrapping = TextWrapping.Wrap },
+                PrimaryButtonText = Loc.Get("UpdateDownload"),
+                SecondaryButtonText = Loc.Get("UpdateNever"),
+                CloseButtonText = Loc.Get("UpdateLater"),
+                DefaultButton = ContentDialogButton.Primary,
+            };
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Secondary)
+                AppSettings.Update(s => s with { UpdateCheck = false });
+            else
+                AppSettings.Update(s => UpdatePolicy.Postpone(s, release, DateTime.UtcNow));
+            if (result == ContentDialogResult.Primary)
+                await Launcher.LaunchUriAsync(new Uri(release.PageUrl));
         }
         finally
         {

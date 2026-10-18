@@ -88,6 +88,17 @@ public sealed record ClipmarkSettings
 
     public static readonly string[] Themes = ["system", "light", "dark"];
 
+    /// <summary>The daily check for a newer release; off after "Never" in the update popup or in Settings.</summary>
+    public bool UpdateCheck { get; init; } = true;
+
+    /// <summary>UTC time of the last check that reached GitHub.</summary>
+    public DateTime? UpdateLastCheckUtc { get; init; }
+
+    /// <summary>The version the user postponed with "Later" (x.y.z) and when the popup may come again.</summary>
+    public string? UpdateLaterVersion { get; init; }
+
+    public DateTime? UpdateRemindAfterUtc { get; init; }
+
     /// <summary>Last picked emoji, newest first, separated by spaces; starts with Snipping Tool's 18.</summary>
     public string RecentEmoji { get; init; } = "❤️ ⭐ ❓ ✔️ ❌ 🔥 👍 👎 👏 🙌 👀 💯 🙂 🙁 😮 😍 😂 😭";
 
@@ -169,6 +180,10 @@ public static class SettingsStore
             w.WriteBoolean("closeAfterCopy", s.CloseAfterCopy);
             w.WriteString("colorFormat", s.ColorFormat.ToString());
             w.WriteString("recentEmoji", s.RecentEmoji);
+            w.WriteBoolean("updateCheck", s.UpdateCheck);
+            w.WriteString("updateLastCheckUtc", s.UpdateLastCheckUtc?.ToString("O", System.Globalization.CultureInfo.InvariantCulture));
+            w.WriteString("updateLaterVersion", s.UpdateLaterVersion);
+            w.WriteString("updateRemindAfterUtc", s.UpdateRemindAfterUtc?.ToString("O", System.Globalization.CultureInfo.InvariantCulture));
             w.WriteEndObject();
         }
         return System.Text.Encoding.UTF8.GetString(buffer.ToArray());
@@ -228,9 +243,17 @@ public static class SettingsStore
                 CloseAfterCopy = Bool("closeAfterCopy", d.CloseAfterCopy),
                 ColorFormat = Enum.TryParse<ColorFormat>(Str("colorFormat"), out var colorFormat) && Enum.IsDefined(colorFormat) ? colorFormat : d.ColorFormat,
                 RecentEmoji = Str("recentEmoji") is { } recent ? string.Join(' ', (d with { RecentEmoji = recent }).Recent) : d.RecentEmoji,
+                UpdateCheck = Bool("updateCheck", d.UpdateCheck),
+                UpdateLastCheckUtc = Utc(Str("updateLastCheckUtc")),
+                UpdateLaterVersion = Update.UpdateRelease.IsVersionText(Str("updateLaterVersion")) ? Str("updateLaterVersion") : null,
+                UpdateRemindAfterUtc = Utc(Str("updateRemindAfterUtc")),
             };
         }
     }
+
+    private static DateTime? Utc(string? text) =>
+        DateTime.TryParse(text, System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.AssumeUniversal | System.Globalization.DateTimeStyles.AdjustToUniversal, out var t) ? t : null;
 
     public static ClipmarkSettings Load(string path) =>
         File.Exists(path) ? Parse(File.ReadAllText(path)) : new ClipmarkSettings();

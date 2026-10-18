@@ -121,7 +121,11 @@ public partial class App : Application
         AppLicense.Refresh();
         _licenseTimer = _dispatcher.CreateTimer();
         _licenseTimer.Interval = TimeSpan.FromHours(1);
-        _licenseTimer.Tick += (_, _) => AppLicense.Refresh();
+        _licenseTimer.Tick += (_, _) =>
+        {
+            AppLicense.Refresh();
+            Update.UpdateService.Refresh();
+        };
         _licenseTimer.Start();
         _window = new MainWindow();
         _tray = new TrayHost { Settings = () => AppSettings.Current };
@@ -136,9 +140,20 @@ public partial class App : Application
             else
                 _ = CaptureAsync();
         };
-        _tray.OpenRequested += () => _window.ShowAndActivate();
+        _tray.OpenRequested += () =>
+        {
+            _window.ShowAndActivate();
+            _window.ShowUpdatePromptIfIdle();
+        };
         _tray.SettingsRequested += () => { _window.ShowSettings(); _window.ShowAndActivate(); };
         _tray.ExitRequested += () => _ = ExitAsync();
+        // A due check starts after the window exists; its result may open the popup if the window is up and idle.
+        Update.UpdateService.Changed += () =>
+        {
+            if (!Update.UpdateService.Checking)
+                _window.ShowUpdatePromptIfIdle();
+        };
+        _dispatcher.TryEnqueue(DispatcherQueuePriority.Low, Update.UpdateService.Refresh);
         _tray.ModeChosen += mode => AppSettings.Update(s => s with { Mode = mode });
         _tray.DelayChosen += delay => AppSettings.Update(s => s with { DelaySeconds = delay });
 

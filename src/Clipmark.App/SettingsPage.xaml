@@ -7,6 +7,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <Page.Resources>
+        <Style x:Key="SettingsCard" TargetType="Border">
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+            <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="16" />
+        </Style>
+        <Style x:Key="SettingsDivider" TargetType="Rectangle">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Fill" Value="{ThemeResource DividerStrokeColorDefaultBrush}" />
+        </Style>
+    </Page.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,147 +35,218 @@
         </StackPanel>
 
         <ScrollViewer Grid.Row="1">
-            <StackPanel Spacing="20" Padding="24,8,24,24" MaxWidth="640" HorizontalAlignment="Left">
+            <StackPanel Spacing="24" Padding="24,8,24,24" MaxWidth="640" HorizontalAlignment="Left">
+
                 <StackPanel Spacing="8">
                     <TextBlock x:Uid="SettingsLicenseHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="LicenseStatusText" x:Uid="SettingsLicenseStatus" TextWrapping="Wrap" />
-                    <StackPanel x:Name="LicenseEntry" Orientation="Horizontal" Spacing="8">
-                        <TextBox x:Name="LicenseKeyBox" x:Uid="SettingsLicenseKey" Width="380" />
-                        <Button x:Name="ActivateButton" x:Uid="SettingsLicenseActivate" Click="OnActivate" />
-                    </StackPanel>
-                    <TextBlock x:Name="LicenseResultText" x:Uid="SettingsLicenseResult" TextWrapping="Wrap" />
-                    <Button x:Name="BuyButton" x:Uid="SettingsLicenseBuy" Click="OnBuy" />
-                    <Button x:Name="RemoveLicenseButton" x:Uid="SettingsLicenseRemove" Click="OnRemoveLicense" Visibility="Collapsed" />
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="8">
+                            <TextBlock x:Name="LicenseStatusText" x:Uid="SettingsLicenseStatus" TextWrapping="Wrap" />
+                            <StackPanel x:Name="LicenseEntry" Orientation="Horizontal" Spacing="8">
+                                <TextBox x:Name="LicenseKeyBox" x:Uid="SettingsLicenseKey" Width="380" />
+                                <Button x:Name="ActivateButton" x:Uid="SettingsLicenseActivate" Click="OnActivate" />
+                            </StackPanel>
+                            <TextBlock x:Name="LicenseResultText" x:Uid="SettingsLicenseResult" TextWrapping="Wrap" />
+                            <Button x:Name="BuyButton" x:Uid="SettingsLicenseBuy" Click="OnBuy" />
+                            <StackPanel x:Name="BillingPanel" Spacing="16" Visibility="Collapsed">
+                                <Rectangle Style="{StaticResource SettingsDivider}" />
+                                <StackPanel Spacing="8">
+                                    <TextBlock x:Uid="SettingsSubscriptionHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button x:Uid="SettingsLicenseManage" Click="OnManageSubscription" />
+                                        <Button x:Uid="SettingsLicenseRefund" Click="OnRequestRefund" />
+                                    </StackPanel>
+                                    <TextBlock x:Uid="SettingsManageHint" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock x:Uid="SettingsSubscriptionNote" TextWrapping="Wrap"
+                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                </StackPanel>
+                                <StackPanel x:Name="ThisPcPanel" Spacing="16">
+                                    <Rectangle Style="{StaticResource SettingsDivider}" />
+                                    <StackPanel Spacing="8">
+                                        <TextBlock x:Uid="SettingsThisPcHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                        <Button x:Name="RemoveLicenseButton" x:Uid="SettingsLicenseRemove" Click="OnRemoveLicense" />
+                                        <TextBlock x:Uid="SettingsThisPcNote" TextWrapping="Wrap"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock x:Uid="SettingsHotkeyHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <CheckBox x:Name="CtrlBox" Content="Ctrl" MinWidth="0" Click="OnHotkeyChanged" />
-                        <CheckBox x:Name="AltBox" Content="Alt" MinWidth="0" Click="OnHotkeyChanged" />
-                        <CheckBox x:Name="ShiftBox" Content="Shift" MinWidth="0" Click="OnHotkeyChanged" />
-                        <CheckBox x:Name="WinBox" Content="Win" MinWidth="0" Click="OnHotkeyChanged" />
-                        <ComboBox x:Name="KeyBox" x:Uid="SettingsHotkeyKey" MinWidth="140" SelectionChanged="OnHotkeyChanged" />
-                    </StackPanel>
-                    <TextBlock x:Name="HotkeyStatus" TextWrapping="Wrap" />
-                    <ToggleSwitch x:Name="PrintScreenSwitch" x:Uid="SettingsPrintScreen" Toggled="OnPrintScreenToggled" />
-                    <TextBlock x:Name="PrintScreenHint" x:Uid="SettingsPrintScreenHint"
-                               TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                    <HyperlinkButton x:Name="PrintScreenSettingsLink" x:Uid="SettingsPrintScreenLink" Click="OnOpenKeyboardSettings"
-                                     Visibility="Collapsed" Padding="0" />
-                </StackPanel>
-
-                <StackPanel Spacing="4">
-                    <TextBlock x:Uid="SettingsStartupHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ToggleSwitch x:Name="StartupSwitch" x:Uid="SettingsStartup" Toggled="OnStartupToggled" />
-                    <TextBlock x:Name="StartupStatus" TextWrapping="Wrap" Visibility="Collapsed"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Uid="SettingsGeneralHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Uid="SettingsLanguageHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <ComboBox x:Name="LanguageBox" x:Uid="SettingsLanguage" MinWidth="220" SelectionChanged="OnLanguageChanged" />
+                                <TextBlock x:Name="LanguageNote" x:Uid="SettingsLanguageNote" TextWrapping="Wrap" Visibility="Collapsed"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                            <Rectangle Style="{StaticResource SettingsDivider}" />
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Uid="SettingsAppearanceHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <ComboBox x:Name="ThemeBox" x:Uid="SettingsTheme" MinWidth="220" SelectionChanged="OnThemeChanged" />
+                            </StackPanel>
+                            <Rectangle Style="{StaticResource SettingsDivider}" />
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Uid="SettingsStartupHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <ToggleSwitch x:Name="StartupSwitch" x:Uid="SettingsStartup" Toggled="OnStartupToggled" />
+                                <TextBlock x:Name="StartupStatus" TextWrapping="Wrap" Visibility="Collapsed"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock x:Uid="SettingsDefaultCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <ComboBox x:Name="ModeBox" x:Uid="SettingsMode" MinWidth="180" SelectionChanged="OnModeChanged" />
-                        <ComboBox x:Name="DelayBox" x:Uid="SettingsDelay" MinWidth="140" SelectionChanged="OnDelayChanged" />
-                    </StackPanel>
-                </StackPanel>
-
-                <StackPanel Spacing="4">
-                    <TextBlock x:Uid="SettingsAfterCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ToggleSwitch x:Name="ClipboardSwitch" x:Uid="SettingsClipboard" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="CloseAfterCopySwitch" x:Uid="SettingsCloseAfterCopy" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="ToastSwitch" x:Uid="SettingsToast" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="AutoSaveSwitch" x:Uid="SettingsAutoSave" Toggled="OnTogglesChanged" />
-                    <!-- The path takes what the buttons leave, so long button texts never push a button out of view. -->
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="FolderText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
-                        <Button Grid.Column="1" x:Uid="SettingsChangeFolder" Click="OnBrowse" />
-                        <Button Grid.Column="2" x:Name="ResetFolderButton" x:Uid="SettingsResetFolder" Click="OnResetFolder" />
-                        <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
-                    </Grid>
-                    <ToggleSwitch x:Name="OcrLineBreaksSwitch" x:Uid="SettingsOcrRemoveLineBreaks" Toggled="OnTogglesChanged" />
-                    <ComboBox x:Name="ColorFormatBox" x:Uid="SettingsColorFormat" MinWidth="220" SelectionChanged="OnColorFormatChanged" />
-                    <ToggleSwitch x:Name="CopyEditsSwitch" x:Uid="SettingsCopyEdits" Toggled="OnTogglesChanged" />
-                    <ToggleSwitch x:Name="BorderSwitch" x:Uid="SettingsBorder" Toggled="OnTogglesChanged" />
-                    <StackPanel x:Name="BorderOptions" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
-                        <DropDownButton x:Name="BorderColorButton" x:Uid="SettingsBorderColor" VerticalAlignment="Bottom">
-                            <Border x:Name="BorderSwatch" Width="40" Height="16" CornerRadius="2" BorderThickness="1"
-                                    BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}" />
-                            <DropDownButton.Flyout>
-                                <Flyout>
-                                    <ColorPicker x:Name="BorderPicker" ColorSpectrumShape="Ring" IsAlphaEnabled="False" IsMoreButtonVisible="False"
-                                                 IsColorChannelTextInputVisible="False" IsHexInputVisible="True" ColorChanged="OnBorderColorChanged" />
-                                </Flyout>
-                            </DropDownButton.Flyout>
-                        </DropDownButton>
-                        <NumberBox x:Name="BorderWidthBox" x:Uid="SettingsBorderWidth" Minimum="1" Maximum="20" Width="140"
-                                   SpinButtonPlacementMode="Inline" SmallChange="1" ValueChanged="OnBorderWidthChanged" />
-                    </StackPanel>
-                    <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
-                    <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Uid="SettingsCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="16">
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Uid="SettingsHotkeyHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <CheckBox x:Name="CtrlBox" Content="Ctrl" MinWidth="0" Click="OnHotkeyChanged" />
+                                    <CheckBox x:Name="AltBox" Content="Alt" MinWidth="0" Click="OnHotkeyChanged" />
+                                    <CheckBox x:Name="ShiftBox" Content="Shift" MinWidth="0" Click="OnHotkeyChanged" />
+                                    <CheckBox x:Name="WinBox" Content="Win" MinWidth="0" Click="OnHotkeyChanged" />
+                                    <ComboBox x:Name="KeyBox" x:Uid="SettingsHotkeyKey" MinWidth="140" SelectionChanged="OnHotkeyChanged" />
+                                </StackPanel>
+                                <TextBlock x:Name="HotkeyStatus" TextWrapping="Wrap" />
+                                <ToggleSwitch x:Name="PrintScreenSwitch" x:Uid="SettingsPrintScreen" Toggled="OnPrintScreenToggled" />
+                                <TextBlock x:Name="PrintScreenHint" x:Uid="SettingsPrintScreenHint"
+                                           TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <HyperlinkButton x:Name="PrintScreenSettingsLink" x:Uid="SettingsPrintScreenLink" Click="OnOpenKeyboardSettings"
+                                                 Visibility="Collapsed" Padding="0" />
+                            </StackPanel>
+                            <Rectangle Style="{StaticResource SettingsDivider}" />
+                            <StackPanel Spacing="8">
+                                <TextBlock x:Uid="SettingsDefaultCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <ComboBox x:Name="ModeBox" x:Uid="SettingsMode" MinWidth="180" SelectionChanged="OnModeChanged" />
+                                    <ComboBox x:Name="DelayBox" x:Uid="SettingsDelay" MinWidth="140" SelectionChanged="OnDelayChanged" />
+                                </StackPanel>
+                            </StackPanel>
+                            <Rectangle Style="{StaticResource SettingsDivider}" />
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Uid="SettingsAfterCaptureHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <ToggleSwitch x:Name="ClipboardSwitch" x:Uid="SettingsClipboard" Toggled="OnTogglesChanged" />
+                                <ToggleSwitch x:Name="CloseAfterCopySwitch" x:Uid="SettingsCloseAfterCopy" Toggled="OnTogglesChanged" />
+                                <ToggleSwitch x:Name="ToastSwitch" x:Uid="SettingsToast" Toggled="OnTogglesChanged" />
+                                <ToggleSwitch x:Name="AutoSaveSwitch" x:Uid="SettingsAutoSave" Toggled="OnTogglesChanged" />
+                                <!-- The path takes what the buttons leave, so long button texts never push a button out of view. -->
+                                <Grid ColumnSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Name="FolderText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <Button Grid.Column="1" x:Uid="SettingsChangeFolder" Click="OnBrowse" />
+                                    <Button Grid.Column="2" x:Name="ResetFolderButton" x:Uid="SettingsResetFolder" Click="OnResetFolder" />
+                                    <Button Grid.Column="3" x:Uid="SettingsOpenFolder" Click="OnOpenFolder" />
+                                </Grid>
+                            </StackPanel>
+                            <Rectangle Style="{StaticResource SettingsDivider}" />
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Uid="SettingsOutputHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <ToggleSwitch x:Name="OcrLineBreaksSwitch" x:Uid="SettingsOcrRemoveLineBreaks" Toggled="OnTogglesChanged" />
+                                <ComboBox x:Name="ColorFormatBox" x:Uid="SettingsColorFormat" MinWidth="220" SelectionChanged="OnColorFormatChanged" />
+                                <ToggleSwitch x:Name="CopyEditsSwitch" x:Uid="SettingsCopyEdits" Toggled="OnTogglesChanged" />
+                                <ToggleSwitch x:Name="BorderSwitch" x:Uid="SettingsBorder" Toggled="OnTogglesChanged" />
+                                <StackPanel x:Name="BorderOptions" Orientation="Horizontal" Spacing="8" Visibility="Collapsed">
+                                    <DropDownButton x:Name="BorderColorButton" x:Uid="SettingsBorderColor" VerticalAlignment="Bottom">
+                                        <Border x:Name="BorderSwatch" Width="40" Height="16" CornerRadius="2" BorderThickness="1"
+                                                BorderBrush="{ThemeResource ControlStrongStrokeColorDefaultBrush}" />
+                                        <DropDownButton.Flyout>
+                                            <Flyout>
+                                                <ColorPicker x:Name="BorderPicker" ColorSpectrumShape="Ring" IsAlphaEnabled="False" IsMoreButtonVisible="False"
+                                                             IsColorChannelTextInputVisible="False" IsHexInputVisible="True" ColorChanged="OnBorderColorChanged" />
+                                            </Flyout>
+                                        </DropDownButton.Flyout>
+                                    </DropDownButton>
+                                    <NumberBox x:Name="BorderWidthBox" x:Uid="SettingsBorderWidth" Minimum="1" Maximum="20" Width="140"
+                                               SpinButtonPlacementMode="Inline" SmallChange="1" ValueChanged="OnBorderWidthChanged" />
+                                </StackPanel>
+                                <ToggleSwitch x:Name="HistorySwitch" x:Uid="SettingsHistory" Toggled="OnHistoryToggled" />
+                                <TextBlock x:Name="HistoryHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <StackPanel Spacing="8">
                     <TextBlock x:Uid="SettingsRecordingHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <CheckBox x:Name="RecCtrlBox" Content="Ctrl" MinWidth="0" Click="OnRecordHotkeyChanged" />
-                        <CheckBox x:Name="RecAltBox" Content="Alt" MinWidth="0" Click="OnRecordHotkeyChanged" />
-                        <CheckBox x:Name="RecShiftBox" Content="Shift" MinWidth="0" Click="OnRecordHotkeyChanged" />
-                        <CheckBox x:Name="RecWinBox" Content="Win" MinWidth="0" Click="OnRecordHotkeyChanged" />
-                        <ComboBox x:Name="RecKeyBox" x:Uid="SettingsRecordHotkeyKey" MinWidth="140" SelectionChanged="OnRecordHotkeyChanged" />
-                    </StackPanel>
-                    <TextBlock x:Name="RecordHotkeyStatus" TextWrapping="Wrap" />
-                    <ToggleSwitch x:Name="SystemAudioSwitch" x:Uid="SettingsSystemAudio" Toggled="OnRecordTogglesChanged" />
-                    <ToggleSwitch x:Name="MicrophoneSwitch" x:Uid="SettingsMicrophone" Toggled="OnRecordTogglesChanged" />
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="RecordingsFolderText" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <Button Grid.Column="1" x:Uid="SettingsOpenRecordingsFolder" Click="OnOpenRecordingsFolder" />
-                    </Grid>
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="8">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <CheckBox x:Name="RecCtrlBox" Content="Ctrl" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                                <CheckBox x:Name="RecAltBox" Content="Alt" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                                <CheckBox x:Name="RecShiftBox" Content="Shift" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                                <CheckBox x:Name="RecWinBox" Content="Win" MinWidth="0" Click="OnRecordHotkeyChanged" />
+                                <ComboBox x:Name="RecKeyBox" x:Uid="SettingsRecordHotkeyKey" MinWidth="140" SelectionChanged="OnRecordHotkeyChanged" />
+                            </StackPanel>
+                            <TextBlock x:Name="RecordHotkeyStatus" TextWrapping="Wrap" />
+                            <ToggleSwitch x:Name="SystemAudioSwitch" x:Uid="SettingsSystemAudio" Toggled="OnRecordTogglesChanged" />
+                            <ToggleSwitch x:Name="MicrophoneSwitch" x:Uid="SettingsMicrophone" Toggled="OnRecordTogglesChanged" />
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="RecordingsFolderText" VerticalAlignment="Center" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                <Button Grid.Column="1" x:Uid="SettingsOpenRecordingsFolder" Click="OnOpenRecordingsFolder" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <StackPanel x:Name="AiSection" Spacing="8">
                     <TextBlock x:Uid="SettingsAiHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="AiKeyStatus" x:Uid="SettingsAiKeyStatus" TextWrapping="Wrap" />
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <PasswordBox x:Name="AiKeyBox" x:Uid="SettingsAiKey" Width="380" />
-                        <Button x:Uid="SettingsAiSave" Click="OnAiSave" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <Button x:Name="AiTestButton" x:Uid="SettingsAiTest" Click="OnAiTest" />
-                        <Button x:Name="AiRemoveButton" x:Uid="SettingsAiRemove" Click="OnAiRemove" />
-                    </StackPanel>
-                    <TextBlock x:Name="AiResultText" x:Uid="SettingsAiResult" TextWrapping="Wrap" />
-                    <ComboBox x:Name="AiModelBox" x:Uid="SettingsAiModel" MinWidth="220" SelectionChanged="OnAiModelChanged" />
-                    <ComboBox x:Name="AiEffortBox" x:Uid="SettingsAiEffort" MinWidth="220" SelectionChanged="OnAiEffortChanged" />
-                    <TextBlock x:Name="AiHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="8">
+                            <TextBlock x:Name="AiKeyStatus" x:Uid="SettingsAiKeyStatus" TextWrapping="Wrap" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <PasswordBox x:Name="AiKeyBox" x:Uid="SettingsAiKey" Width="380" />
+                                <Button x:Uid="SettingsAiSave" Click="OnAiSave" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button x:Name="AiTestButton" x:Uid="SettingsAiTest" Click="OnAiTest" />
+                                <Button x:Name="AiRemoveButton" x:Uid="SettingsAiRemove" Click="OnAiRemove" />
+                            </StackPanel>
+                            <TextBlock x:Name="AiResultText" x:Uid="SettingsAiResult" TextWrapping="Wrap" />
+                            <ComboBox x:Name="AiModelBox" x:Uid="SettingsAiModel" MinWidth="220" SelectionChanged="OnAiModelChanged" />
+                            <ComboBox x:Name="AiEffortBox" x:Uid="SettingsAiEffort" MinWidth="220" SelectionChanged="OnAiEffortChanged" />
+                            <TextBlock x:Name="AiHint" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
                 <StackPanel Spacing="8">
-                    <TextBlock x:Uid="SettingsLanguageHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ComboBox x:Name="LanguageBox" x:Uid="SettingsLanguage" MinWidth="220" SelectionChanged="OnLanguageChanged" />
-                    <TextBlock x:Name="LanguageNote" x:Uid="SettingsLanguageNote" TextWrapping="Wrap" Visibility="Collapsed"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                </StackPanel>
-
-                <StackPanel Spacing="8">
-                    <TextBlock x:Uid="SettingsAppearanceHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <ComboBox x:Name="ThemeBox" x:Uid="SettingsTheme" MinWidth="220" SelectionChanged="OnThemeChanged" />
-                </StackPanel>
-
-                <StackPanel Spacing="4">
                     <TextBlock x:Uid="SettingsAboutHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
-                    <TextBlock x:Name="VersionText" x:Uid="SettingsVersion" />
-                    <HyperlinkButton x:Uid="SettingsSourceLink" NavigateUri="https://github.com/IT-BAER/clipmark" Padding="0" />
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel Spacing="16">
+                            <StackPanel Spacing="4">
+                                <TextBlock x:Name="VersionText" x:Uid="SettingsVersion" />
+                                <HyperlinkButton x:Uid="SettingsSourceLink" NavigateUri="https://github.com/IT-BAER/clipmark" Padding="0" />
+                            </StackPanel>
+                            <StackPanel x:Name="UpdatePanel" Spacing="16" Visibility="Collapsed">
+                                <Rectangle Style="{StaticResource SettingsDivider}" />
+                                <StackPanel Spacing="8">
+                                    <TextBlock x:Uid="SettingsUpdateHeader" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                    <ToggleSwitch x:Name="UpdateCheckSwitch" x:Uid="SettingsUpdateCheck" Toggled="OnUpdateCheckToggled" />
+                                    <TextBlock x:Name="UpdateStatusText" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button x:Name="UpdateNowButton" x:Uid="SettingsUpdateNow" Click="OnCheckUpdate" />
+                                        <Button x:Name="UpdateDownloadButton" x:Uid="SettingsUpdateDownload" Click="OnDownloadUpdate" Visibility="Collapsed" />
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

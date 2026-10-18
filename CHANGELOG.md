@@ -6,6 +6,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Update check: once a day Clipmark asks GitHub whether a newer release exists (no identifier is sent) and offers a
+  popup with Download, Never and Later when you open the window on an empty editor, never over a capture. Download
+  opens the release page. Settings > About turns the check off or on, shows the last check, and has Check now and
+  Download. The Store build does not check.
 - Create GIF from a recording (GIF button after Share, as in Snipping Tool): Low (12 fps) or High (24 fps), long edge
   up to 1280 px, the first 30 seconds, Export or Copy, with progress and Cancel. A Low GIF stays under 7.5 MB so it
   fits a Claude upload; when it would be larger, Clipmark writes it again at a smaller size. Free.
@@ -64,6 +68,9 @@ and the project uses [Semantic Versioning](https://semver.org/).
   display language, or pick one in Settings > Language. German is reviewed; the others are machine-translated.
 
 ### Changed
+- Settings are grouped into cards: License and billing, General, Capture, Recording, Ask AI, About. With a paid
+  license, License and billing has Manage subscription (Stripe customer portal), Request a refund (Link support) and
+  Remove from this PC, which now says that it frees the seat and does not cancel billing.
 - Mouse wheel in the editor zooms around the cursor; Ctrl+mouse wheel sets the width, text size or ruler angle
   (before: the plain wheel did, and Ctrl+mouse wheel zoomed).
 - Output toolbar order: Copy, Save, Share, then Send to AI and Ask AI after a separator.

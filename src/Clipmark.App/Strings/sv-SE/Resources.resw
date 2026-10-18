@@ -812,11 +812,11 @@
     <value>Premium-utvärderingen har gått ut. Premium-verktygen är låsta, allt annat fungerar som vanligt.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga till Anthropic ({0}) med din egen API-nyckel, bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
+    <value>Fråga AI skickar skärmklippet och din fråga till Anthropic ({0}) med din API-nyckel, bara när du skickar en fråga.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium eller din egen nyckel. Med Premium fungerar Fråga AI utan nyckel via IT-BAER:s relä. Med din egen API-nyckel skickar Fråga AI skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga direkt till Anthropic ({0}), bara när du skickar en fråga. Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn. Appar som körs under ditt Windows-konto kan läsa den.</value>
+    <value>Fråga AI kräver Premium eller din egen API-nyckel. Inget skickas till Anthropic ({0}) förrän du skickar en fråga.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Inställningar</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Licens</value>
+    <value>Licens och fakturering</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Licensstatus</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark kunde inte skapa nyckeln för den här datorn: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>Fråga AI skickar skärmklippet som det visas (inklusive markeringar och maskeringar) och dina frågor till IT-BAER:s relä ({0}), som skickar dem vidare till Anthropic med IT-BAER:s API-nyckel. Kostnaden ingår i din Premium-licens. Inget skickas förrän du skickar en fråga, och varken Clipmark eller reläet sparar konversationen.</value>
+    <value>Skärmklippet (med markeringar och maskeringar) och dina frågor skickas till Anthropic via IT-BAER:s relä. Varken Clipmark eller reläet sparar konversationen.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>{0} USD kvar den här månaden</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Med Premium behöver Fråga AI ingen nyckel: skärmklippet som det visas (inklusive markeringar och maskeringar) och din fråga går via IT-BAER:s relä ({0}) till Anthropic, bara när du skickar en fråga. Om du har sparat en egen API-nyckel skickar Fråga AI dem direkt till Anthropic ({1}) och Anthropic fakturerar nyckeln. Nyckeln sparas i Windows Autentiseringshanteraren på den här datorn.</value>
+    <value>Med Premium behöver Fråga AI ingen nyckel: den går via IT-BAER:s relä ({0}). En sparad API-nyckel skickar i stället direkt till Anthropic ({1}).</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>Urklipp används av en annan app. GIF-filen kopierades inte.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Allmänt</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Skärmklipp</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Utdata</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Prenumeration</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Hantera prenumeration</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Begär återbetalning</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>Om du avbryter är Premium aktivt till slutet av den betalda perioden.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Den här datorn</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Borttagning frigör den här datorns plats för en annan dator. Faktureringen avslutas inte.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Logga in med e-postadressen du använde vid köpet. Stripe skickar en inloggningslänk till dig.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} är tillgängligt</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>Du använder Clipmark {0}. Hämta den nya versionen från utgivningssidan. Välj Aldrig för att sluta kontrollera; du kan slå på det igen under Inställningar &gt; Om.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Hämta</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Senare</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Aldrig</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Uppdateringar</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Sök efter uppdateringar automatiskt</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Sök efter uppdateringar automatiskt</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Kontrollera nu</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>Hämta</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Söker efter uppdateringar…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} är aktuell.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} är tillgängligt.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Det gick inte att nå uppdateringsservern. Försök igen senare.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Automatisk sökning efter uppdateringar är avstängd.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Senast kontrollerad: {0}</value>
   </data>
 </root>

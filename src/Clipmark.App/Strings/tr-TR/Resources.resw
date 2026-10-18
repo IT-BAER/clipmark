@@ -812,11 +812,11 @@
     <value>Premium denemesi sona erdi. Premium araçlar kilitli; diğer her şey çalışmaya devam eder.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde kendi API anahtarınızla Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
+    <value>AI'ya sor, ekran görüntüsünü ve sorunuzu API anahtarınızla Anthropic'e ({0}) gönderir; yalnızca bir soru gönderdiğinizde.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium veya kendi anahtarınız. Premium ile AI'ya sor, IT-BAER'in aktarıcısı üzerinden anahtarsız çalışır. Kendi API anahtarınızla AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuzu yalnızca bir soru gönderdiğinizde doğrudan Anthropic'e ({0}) gönderir. Anahtarın ücretini Anthropic faturalandırır. Anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur; Windows hesabınızda çalışan uygulamalar onu okuyabilir.</value>
+    <value>AI'ya sor için Premium veya kendi API anahtarınız gerekir. Siz soru gönderene kadar Anthropic'e ({0}) hiçbir şey gönderilmez.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>Ayarlar</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>Lisans</value>
+    <value>Lisans ve faturalandırma</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>Lisans durumu</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark bu bilgisayar için anahtar oluşturamadı: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>AI'ya sor, alıntıyı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorularınızı IT-BAER'in aktarıcısına ({0}) gönderir; aktarıcı bunları IT-BAER'in API anahtarıyla Anthropic'e iletir. Maliyet Premium lisansınıza dahildir. Siz bir soru gönderene kadar hiçbir şey gönderilmez; ne Clipmark ne de aktarıcı konuşmayı saklar.</value>
+    <value>Alıntınız (ek açıklamalar ve karartmalar dahil) ve sorularınız IT-BAER'in aktarıcısı üzerinden Anthropic'e gönderilir. Ne Clipmark ne de aktarıcı konuşmayı saklar.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>Bu ay {0} USD kaldı</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Premium ile AI'ya sor için anahtar gerekmez: alıntı görüntülendiği haliyle (ek açıklamalar ve karartmalar dahil) ve sorunuz, yalnızca bir soru gönderdiğinizde IT-BAER'in aktarıcısı ({0}) üzerinden Anthropic'e gider. Kendi API anahtarınızı kaydettiyseniz AI'ya sor bunları doğrudan Anthropic'e ({1}) gönderir ve anahtarın ücretini Anthropic faturalandırır; anahtar bu bilgisayarda Windows Kimlik Bilgileri Yöneticisi'nde tutulur.</value>
+    <value>Premium ile AI'ya sor anahtar gerektirmez: IT-BAER aktarıcısı ({0}) üzerinden çalışır. Kayıtlı bir API anahtarı bunun yerine doğrudan Anthropic'e ({1}) gönderir.</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>Emoji</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>Pano başka bir uygulama tarafından kullanılıyor; GIF kopyalanmadı.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>Genel</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>Alıntı</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>Çıktı</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>Abonelik</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>Aboneliği yönet</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>Geri ödeme iste</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>İptal ederseniz Premium, ödenen dönemin sonuna kadar etkin kalır.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>Bu bilgisayar</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>Kaldırma, bu bilgisayarın yerini başka bir bilgisayar için boşaltır. Faturalandırmayı iptal etmez.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>Satın alırken kullandığınız e-posta ile oturum açın. Stripe size bir giriş bağlantısı gönderir.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} kullanılabilir</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>Clipmark {0} kullanıyorsunuz. Yeni sürümü sürümler sayfasından indirin. Denetimi durdurmak için Hiçbir zaman'ı seçin; Ayarlar &gt; Hakkında bölümünden yeniden açabilirsiniz.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>Sonra</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>Hiçbir zaman</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>Güncellemeler</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>Güncellemeleri otomatik denetle</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>Güncellemeleri otomatik denetle</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>Şimdi denetle</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>İndir</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>Güncellemeler denetleniyor…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} güncel.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} kullanılabilir.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Güncelleme sunucusuna ulaşılamadı. Daha sonra yeniden deneyin.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>Otomatik güncelleme denetimi kapalı.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>Son denetim: {0}</value>
   </data>
 </root>

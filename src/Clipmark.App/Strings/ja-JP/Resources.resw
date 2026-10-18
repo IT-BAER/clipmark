@@ -812,11 +812,11 @@
     <value>Premium の試用期間は終了しました。Premium ツールはロックされていますが、それ以外は引き続き使用できます。</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を、お客様自身の API キーを使用して Anthropic ({0}) に送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
+    <value>[AI に質問] は、キャプチャと質問をお客様の API キーで Anthropic ({0}) に送信します。送信されるのは質問を送信したときだけです。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium またはお客様自身のキー。Premium では、[AI に質問] は IT-BAER のリレーを経由してキーなしで使用できます。お客様自身の API キーを使用する場合、[AI に質問] は表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を Anthropic ({0}) に直接送信します。送信されるのは質問を送信したときだけです。キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存され、お使いの Windows アカウントで実行中のアプリから読み取ることができます。</value>
+    <value>[AI に質問] には Premium またはお客様自身の API キーが必要です。質問を送信するまで、Anthropic ({0}) には何も送信されません。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>設定</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>ライセンス</value>
+    <value>ライセンスと請求</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>ライセンスの状態</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark はこの PC のキーを作成できませんでした: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>[AI に質問] は、表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問を IT-BAER のリレー ({0}) に送信し、リレーが IT-BAER の API キーを使用して Anthropic に転送します。料金は Premium ライセンスに含まれています。質問を送信するまでは何も送信されません。また、Clipmark もリレーも会話を保存しません。</value>
+    <value>キャプチャ (注釈と黒塗りを含む) と質問は、IT-BAER のリレー経由で Anthropic に送信されます。Clipmark もリレーも会話を保存しません。</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>今月の残り {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Premium では、[AI に質問] にキーは不要です。表示されているとおりのキャプチャ (注釈と黒塗りを含む) と質問は、質問を送信したときだけ IT-BAER のリレー ({0}) を経由して Anthropic に送信されます。お客様自身の API キーを保存している場合、[AI に質問] はそれらを Anthropic ({1}) に直接送信し、キーの料金は Anthropic から請求されます。キーはこの PC の Windows 資格情報マネージャーに保存されます。</value>
+    <value>Premium では [AI に質問] にキーは不要で、IT-BAER のリレー ({0}) を経由します。API キーを保存した場合は、代わりに Anthropic ({1}) へ直接送信されます。</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>絵文字</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>クリップボードが別のアプリで使用中のため、GIF をコピーできませんでした。</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>一般</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>キャプチャ</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>出力</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>サブスクリプション</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>サブスクリプションを管理</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>返金をリクエスト</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>解約しても、支払い済みの期間が終わるまで Premium を使用できます。</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>この PC</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>削除すると、この PC のライセンス枠が別の PC で使えるようになります。請求は解約されません。</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>購入時に使用したメールアドレスでサインインします。Stripe からログイン用リンクが届きます。</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} を利用できます</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>現在 Clipmark {0} を使用しています。新しいバージョンはリリースのページからダウンロードできます。「確認しない」を選ぶと更新の確認を停止します。設定 &gt; バージョン情報 で再びオンにできます。</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>後で</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>確認しない</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>更新プログラムを自動的に確認する</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>更新プログラムを自動的に確認する</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>今すぐ確認</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>ダウンロード</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>更新を確認しています…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} は最新です。</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} を利用できます。</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>更新サーバーに接続できませんでした。後でもう一度お試しください。</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>更新の自動確認はオフです。</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>最終確認: {0}</value>
   </data>
 </root>

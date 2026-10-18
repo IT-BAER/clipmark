@@ -812,11 +812,11 @@
     <value>Premium 试用已结束。Premium 工具已锁定，其他功能仍可正常使用。</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>“询问 AI”会使用您自己的 API 密钥，将所显示的截图（包括批注和涂黑内容）以及您的问题发送给 Anthropic ({0})，且仅在您发送问题时才会发送。Anthropic 对该密钥计费。密钥保存在这台电脑的 Windows 凭据管理器中；在您的 Windows 帐户下运行的应用可以读取它。</value>
+    <value>“询问 AI”会使用你的 API 密钥，将截图和你的问题发送给 Anthropic ({0})，仅在你发送问题时才会发送。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium 或您自己的密钥。使用 Premium 时，“询问 AI”通过 IT-BAER 的中继无需密钥即可使用。使用您自己的 API 密钥时，“询问 AI”会将所显示的截图（包括批注和涂黑内容）以及您的问题直接发送给 Anthropic ({0})，且仅在您发送问题时才会发送。Anthropic 对该密钥计费。密钥保存在这台电脑的 Windows 凭据管理器中；在您的 Windows 帐户下运行的应用可以读取它。</value>
+    <value>“询问 AI”需要 Premium 或你自己的 API 密钥。在你发送问题之前，不会向 Anthropic ({0}) 发送任何内容。</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>设置</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>许可证</value>
+    <value>许可证与账单</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>许可证状态</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark 无法为这台电脑创建密钥: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>“询问 AI”会将所显示的截图（包括批注和涂黑内容）以及您的问题发送到 IT-BAER 的中继 ({0})，由中继使用 IT-BAER 的 API 密钥转发给 Anthropic。费用包含在您的 Premium 许可证中。在您发送问题之前不会发送任何内容，Clipmark 和中继都不会保存对话。</value>
+    <value>截图（包括批注和涂黑内容）和您的问题会通过 IT-BAER 的中继发送给 Anthropic。Clipmark 和中继都不会保存对话。</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>本月剩余 {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>使用 Premium 时，“询问 AI”无需密钥：所显示的截图（包括批注和涂黑内容）以及您的问题仅在您发送问题时通过 IT-BAER 的中继 ({0}) 发送给 Anthropic。如果您保存了自己的 API 密钥，“询问 AI”会将它们直接发送给 Anthropic ({1})，并由 Anthropic 对该密钥计费；密钥保存在这台电脑的 Windows 凭据管理器中。</value>
+    <value>使用 Premium 时，“询问 AI”无需密钥，通过 IT-BAER 中继 ({0}) 运行。若已保存 API 密钥，则改为直接发送给 Anthropic ({1})。</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>表情符号</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>剪贴板正被其他应用使用，未能复制 GIF。</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>常规</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>截图</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>输出</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>订阅</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>管理订阅</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>申请退款</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>取消订阅后，Premium 在已付费周期结束前仍可使用。</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>这台电脑</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>删除后，这台电脑占用的名额会释放给其他电脑。这不会取消扣费。</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>请使用购买时的电子邮箱登录。Stripe 会向你发送登录链接。</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0} 可用</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>你正在使用 Clipmark {0}。请从发布页面下载新版本。选择“从不”将停止检查；你可以在 设置 &gt; 关于 中重新开启。</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>稍后</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>从不</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>自动检查更新</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>自动检查更新</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>立即检查</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>下载</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>正在检查更新…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0} 已是最新版本。</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0} 可用。</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>无法连接到更新服务器。请稍后再试。</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>自动检查更新已关闭。</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>上次检查：{0}</value>
   </data>
 </root>

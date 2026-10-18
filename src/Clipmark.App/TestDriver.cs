@@ -47,6 +47,7 @@ namespace Clipmark.App;
 /// | assert answer TEXT (last answer contains) | assert answers N | ready (a capture is shown, up to 15 s)
 /// | deliver W,H #RRGGBB (runs the capture delivery on a W x H image of that color, with the saved settings; the PNG path goes to DIR\delivered.txt)
 /// | settheme system|light|dark | assert theme Light|Dark (window content ActualTheme)
+/// | updatecheck (one update check against CLIPMARK_TEST_UPDATE_URL) | updateprompt (opens the update popup; dialogclick answers it)
 /// | overlay [video] [MODE] (starts the capture overlay with the saved settings, not awaited; the PNG path goes to DIR\delivered.txt, a failure to DIR\failed.txt)
 /// | omove X,Y | odown X,Y | oup X,Y (desktop px, posted to the overlay) | ocancel (right click) | okey ESC|LETTER [ctrl] | opill NAME (center of a pill button to DIR\pill.txt)
 /// | ocolor X,Y (frozen pixel as #RRGGBB to DIR\ocolor.txt) | oshot FILE (the pill monitor as it is painted) | owait (the overlay run finished, up to 20 s)
@@ -713,6 +714,15 @@ internal sealed class TestDriver
                 int stored = (await CaptureHistory.ListAsync()).Count;
                 if (stored != int.Parse(arg, CultureInfo.InvariantCulture))
                     throw new InvalidOperationException($"{stored} history items");
+                break;
+            case "updatecheck":
+                // updatecheck: one update check now (against CLIPMARK_TEST_UPDATE_URL), awaited.
+                await Update.UpdateService.CheckAsync();
+                break;
+            case "updateprompt":
+                // updateprompt: opens the update popup when a newer release is known (not awaited: answer it with dialogclick).
+                _ = _page.ShowUpdatePromptAsync(onlyIfIdle: false);
+                await Task.Delay(500);
                 break;
             case "askai":
                 _page.OpenAskAi();

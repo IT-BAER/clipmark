@@ -812,11 +812,11 @@
     <value>Premium 평가판이 종료되었습니다. Premium 도구는 잠겨 있으며 나머지 기능은 계속 사용할 수 있습니다.</value>
   </data>
   <data name="AiHint" xml:space="preserve">
-    <value>AI에게 묻기는 질문을 보낼 때에만 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 사용자의 API 키로 Anthropic({0})에 보냅니다. 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관되며 사용자의 Windows 계정에서 실행되는 앱이 읽을 수 있습니다.</value>
+    <value>AI에게 묻기는 캡처와 질문을 사용자의 API 키로 Anthropic ({0})에 보냅니다. 질문을 보낼 때만 전송됩니다.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiHintPremium" xml:space="preserve">
-    <value>Premium 또는 사용자의 키. Premium에서는 AI에게 묻기가 IT-BAER의 릴레이를 통해 키 없이 작동합니다. 사용자의 API 키를 사용하면 AI에게 묻기는 질문을 보낼 때에만 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 Anthropic({0})에 직접 보냅니다. 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관되며 사용자의 Windows 계정에서 실행되는 앱이 읽을 수 있습니다.</value>
+    <value>AI에게 묻기에는 Premium 또는 사용자의 API 키가 필요합니다. 질문을 보내기 전에는 Anthropic ({0})에 아무것도 전송되지 않습니다.</value>
     <comment>{0} = API host name</comment>
   </data>
   <data name="AiKeyNone" xml:space="preserve">
@@ -897,7 +897,7 @@
     <value>설정</value>
   </data>
   <data name="SettingsLicenseHeader.Text" xml:space="preserve">
-    <value>라이선스</value>
+    <value>라이선스 및 결제</value>
   </data>
   <data name="SettingsLicenseStatus.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
     <value>라이선스 상태</value>
@@ -1589,13 +1589,13 @@
     <value>Clipmark에서 이 PC의 키를 만들 수 없습니다: {0}</value>
   </data>
   <data name="AiConsentBodyRelay" xml:space="preserve">
-    <value>AI에게 묻기는 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문을 IT-BAER의 릴레이({0})로 보내고, 릴레이는 IT-BAER의 API 키로 Anthropic에 전달합니다. 비용은 Premium 라이선스에 포함되어 있습니다. 질문을 보내기 전에는 아무것도 전송되지 않으며 Clipmark와 릴레이 모두 대화를 저장하지 않습니다.</value>
+    <value>캡처(주석 및 가림 처리 포함)와 질문은 IT-BAER의 릴레이를 거쳐 Anthropic으로 전송됩니다. Clipmark와 릴레이 모두 대화를 저장하지 않습니다.</value>
   </data>
   <data name="AskAiRemaining" xml:space="preserve">
     <value>이번 달 남은 금액 {0} USD</value>
   </data>
   <data name="AiHintRelay" xml:space="preserve">
-    <value>Premium에서는 AI에게 묻기에 키가 필요하지 않습니다. 표시된 대로의 캡처(주석 및 가림 처리 포함)와 질문은 질문을 보낼 때에만 IT-BAER의 릴레이({0})를 거쳐 Anthropic으로 전송됩니다. 사용자의 API 키를 저장한 경우 AI에게 묻기는 이를 Anthropic({1})에 직접 보내며 요금은 Anthropic이 해당 키로 청구합니다. 키는 이 PC의 Windows 자격 증명 관리자에 보관됩니다.</value>
+    <value>Premium에서는 AI에게 묻기에 키가 필요 없으며 IT-BAER 릴레이({0})를 통해 실행됩니다. API 키를 저장하면 대신 Anthropic({1})으로 직접 전송됩니다.</value>
   </data>
   <data name="ShapeEmoji" xml:space="preserve">
     <value>이모지</value>
@@ -1714,5 +1714,83 @@
   </data>
   <data name="ClipboardBusyGif" xml:space="preserve">
     <value>클립보드를 다른 앱에서 사용 중이어서 GIF를 복사하지 못했습니다.</value>
+  </data>
+  <data name="SettingsGeneralHeader.Text" xml:space="preserve">
+    <value>일반</value>
+  </data>
+  <data name="SettingsCaptureHeader.Text" xml:space="preserve">
+    <value>캡처</value>
+  </data>
+  <data name="SettingsOutputHeader.Text" xml:space="preserve">
+    <value>출력</value>
+  </data>
+  <data name="SettingsSubscriptionHeader.Text" xml:space="preserve">
+    <value>구독</value>
+  </data>
+  <data name="SettingsLicenseManage.Content" xml:space="preserve">
+    <value>구독 관리</value>
+  </data>
+  <data name="SettingsLicenseRefund.Content" xml:space="preserve">
+    <value>환불 요청</value>
+  </data>
+  <data name="SettingsSubscriptionNote.Text" xml:space="preserve">
+    <value>구독을 취소해도 결제한 기간이 끝날 때까지 Premium을 사용할 수 있습니다.</value>
+  </data>
+  <data name="SettingsThisPcHeader.Text" xml:space="preserve">
+    <value>이 PC</value>
+  </data>
+  <data name="SettingsThisPcNote.Text" xml:space="preserve">
+    <value>제거하면 이 PC의 사용 자리가 다른 PC에서 사용할 수 있게 됩니다. 결제는 취소되지 않습니다.</value>
+  </data>
+  <data name="SettingsManageHint.Text" xml:space="preserve">
+    <value>구매할 때 사용한 이메일로 로그인하세요. Stripe가 로그인 링크를 보내 드립니다.</value>
+  </data>
+  <data name="UpdateTitle" xml:space="preserve">
+    <value>Clipmark {0}을(를) 사용할 수 있습니다</value>
+  </data>
+  <data name="UpdateBody" xml:space="preserve">
+    <value>현재 Clipmark {0}을(를) 사용 중입니다. 릴리스 페이지에서 새 버전을 다운로드하세요. ‘안 함’을 선택하면 확인을 중지하며, 설정 &gt; 정보에서 다시 켤 수 있습니다.</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="UpdateLater" xml:space="preserve">
+    <value>나중에</value>
+  </data>
+  <data name="UpdateNever" xml:space="preserve">
+    <value>안 함</value>
+  </data>
+  <data name="SettingsUpdateHeader.Text" xml:space="preserve">
+    <value>업데이트</value>
+  </data>
+  <data name="SettingsUpdateCheck.Header" xml:space="preserve">
+    <value>업데이트 자동 확인</value>
+  </data>
+  <data name="SettingsUpdateCheck.[using:Microsoft.UI.Xaml.Automation]AutomationProperties.Name" xml:space="preserve">
+    <value>업데이트 자동 확인</value>
+  </data>
+  <data name="SettingsUpdateNow.Content" xml:space="preserve">
+    <value>지금 확인</value>
+  </data>
+  <data name="SettingsUpdateDownload.Content" xml:space="preserve">
+    <value>다운로드</value>
+  </data>
+  <data name="UpdateChecking" xml:space="preserve">
+    <value>업데이트 확인 중…</value>
+  </data>
+  <data name="UpdateUpToDate" xml:space="preserve">
+    <value>Clipmark {0}은(는) 최신 버전입니다.</value>
+  </data>
+  <data name="UpdateAvailableStatus" xml:space="preserve">
+    <value>Clipmark {0}을(를) 사용할 수 있습니다.</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>업데이트 서버에 연결할 수 없습니다. 나중에 다시 시도하세요.</value>
+  </data>
+  <data name="UpdateOff" xml:space="preserve">
+    <value>업데이트 자동 확인이 꺼져 있습니다.</value>
+  </data>
+  <data name="UpdateLastChecked" xml:space="preserve">
+    <value>마지막 확인: {0}</value>
   </data>
 </root>

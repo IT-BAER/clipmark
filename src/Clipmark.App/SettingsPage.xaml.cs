@@ -1,10 +1,12 @@
 using Clipmark.App.Ai;
 using Clipmark.App.Output;
 using Clipmark.App.Shell;
+using Clipmark.App.Update;
 using Clipmark.Core.Ai;
 using Clipmark.Core.History;
 using Clipmark.Core.Licensing;
 using Clipmark.Core.Settings;
+using Clipmark.Core.Update;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -30,7 +32,7 @@ public sealed partial class SettingsPage : Page
         InitializeComponent();
         // Code, not a style: setters cannot use x:Uid, and the WinUI default follows the Windows display language.
         foreach (var toggle in new[] { PrintScreenSwitch, StartupSwitch, ClipboardSwitch, CloseAfterCopySwitch, ToastSwitch, AutoSaveSwitch, OcrLineBreaksSwitch, CopyEditsSwitch, BorderSwitch, HistorySwitch,
-                     SystemAudioSwitch, MicrophoneSwitch })
+                     SystemAudioSwitch, MicrophoneSwitch, UpdateCheckSwitch })
             (toggle.OnContent, toggle.OffContent) = (Loc.Get("ToggleOn"), Loc.Get("ToggleOff"));
         foreach (int key in Keys)
         {
@@ -102,12 +104,56 @@ public sealed partial class SettingsPage : Page
         ShowLicense();
         LicenseResultText.Text = AppLicense.LastServerMessage ?? "";
         // The background trial or refresh can finish while Settings is open.
-        Loaded += (_, _) => AppLicense.Changed += OnLicenseChanged;
-        Unloaded += (_, _) => AppLicense.Changed -= OnLicenseChanged;
+        Loaded += (_, _) =>
+        {
+            AppLicense.Changed += OnLicenseChanged;
+            UpdateService.Changed += ShowUpdate;
+        };
+        Unloaded += (_, _) =>
+        {
+            AppLicense.Changed -= OnLicenseChanged;
+            UpdateService.Changed -= ShowUpdate;
+        };
+        UpdateCheckSwitch.IsOn = s.UpdateCheck;
+        ShowUpdate();
         _loading = false;
     }
 
     private void OnLicenseChanged(Entitlement _) => ShowLicense();
+
+    /// <summary>Update controls: hidden for the Store build, which the Store updates.</summary>
+    private void ShowUpdate()
+    {
+        UpdatePanel.Visibility = UpdateService.Supported ? Visibility.Visible : Visibility.Collapsed;
+        var s = AppSettings.Current;
+        var available = UpdateService.Available;
+        UpdateNowButton.IsEnabled = !UpdateService.Checking;
+        UpdateDownloadButton.Visibility = available is null ? Visibility.Collapsed : Visibility.Visible;
+        string status = UpdateService.Checking ? Loc.Get("UpdateChecking")
+            : UpdateService.LastReached == false ? Loc.Get("UpdateFailed")
+            : available is not null ? Loc.Format("UpdateAvailableStatus", available.VersionText)
+            : UpdateService.LastReached == true ? Loc.Format("UpdateUpToDate", App.Version)
+            : s.UpdateCheck ? "" : Loc.Get("UpdateOff");
+        if (s.UpdateLastCheckUtc is { } last)
+            status = (status.Length == 0 ? "" : status + "\n") + Loc.Format("UpdateLastChecked", last.ToLocalTime().ToString("g"));
+        UpdateStatusText.Text = status;
+    }
+
+    private void OnUpdateCheckToggled(object sender, RoutedEventArgs e)
+    {
+        if (_loading)
+            return;
+        AppSettings.Update(s => s with { UpdateCheck = UpdateCheckSwitch.IsOn });
+        ShowUpdate();
+    }
+
+    private void OnCheckUpdate(object sender, RoutedEventArgs e) => _ = UpdateService.CheckAsync();
+
+    private async void OnDownloadUpdate(object sender, RoutedEventArgs e)
+    {
+        if (UpdateService.Available is { } release)
+            await Windows.System.Launcher.LaunchUriAsync(new Uri(release.PageUrl));
+    }
 
     /// <summary>Parameter "ai" (from the Ask AI flyout) scrolls to the Ask AI section.</summary>
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -132,7 +178,8 @@ public sealed partial class SettingsPage : Page
         LicenseEntry.Visibility = BuyButton.Visibility = unlicensed;
         if (AppLicense.NeedsActivation)
             LicenseEntry.Visibility = Visibility.Visible;
-        RemoveLicenseButton.Visibility = AppLicense.LicensedByToken && !AppLicense.NeedsActivation ? Visibility.Visible : Visibility.Collapsed;
+        BillingPanel.Visibility = AppLicense.LicensedByToken ? Visibility.Visible : Visibility.Collapsed;
+        ThisPcPanel.Visibility = AppLicense.NeedsActivation ? Visibility.Collapsed : Visibility.Visible;
         ShowHistory();
         AiHint.Text = AppLicense.CanUseRelay ? Loc.Format("AiHintRelay", RelayChat.Host, ClaudeChat.Host)
             : Loc.Format(license.IsEnabled(PremiumFeature.AiChat) ? "AiHint" : "AiHintPremium", ClaudeChat.Host);
@@ -297,6 +344,12 @@ public sealed partial class SettingsPage : Page
 
     private async void OnBuy(object sender, RoutedEventArgs e) =>
         await Windows.System.Launcher.LaunchUriAsync(new Uri(AppLicense.BuyUrl));
+
+    private async void OnManageSubscription(object sender, RoutedEventArgs e) =>
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(AppLicense.ManageSubscriptionUrl));
+
+    private async void OnRequestRefund(object sender, RoutedEventArgs e) =>
+        await Windows.System.Launcher.LaunchUriAsync(new Uri(AppLicense.RefundUrl));
 
     private void ShowHotkey(Hotkey hotkey)
     {
