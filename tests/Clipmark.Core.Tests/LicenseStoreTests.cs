@@ -56,6 +56,40 @@ public class LicenseStoreTests
     }
 
     [Fact]
+    public void A_saved_file_does_not_contain_the_plain_key()
+    {
+        string path = Path.Combine(Path.GetTempPath(), $"clipmark-license-{Guid.NewGuid():N}.json");
+        try
+        {
+            LicenseStore.Save(path, new LicenseFile("ABCDE-FGHIJ-KLMNO", "rl1.a.b"));
+
+            string json = File.ReadAllText(path);
+            Assert.DoesNotContain("ABCDE-FGHIJ-KLMNO", json);
+            Assert.Contains("rl1.a.b", json);
+            Assert.Equal(new LicenseFile("ABCDE-FGHIJ-KLMNO", "rl1.a.b"), LicenseStore.Load(path));
+        }
+        finally
+        {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
+    public void A_plain_text_key_is_protected_on_the_next_write()
+    {
+        var legacy = LicenseStore.Parse("""{ "key": "ABCDE-FGHIJ", "entitlement": null }""");
+
+        Assert.Equal(new LicenseFile("ABCDE-FGHIJ"), legacy);
+        Assert.DoesNotContain("ABCDE-FGHIJ", LicenseStore.Serialize(legacy));
+    }
+
+    [Fact]
+    public void A_protected_key_that_cannot_be_decrypted_reads_as_missing()
+    {
+        Assert.Equal(new LicenseFile(null), LicenseStore.Parse("""{ "keyProtected": "AAAA" }"""));
+    }
+
+    [Fact]
     public void An_old_file_with_local_trial_fields_still_loads_and_drops_them()
     {
         string path = Path.Combine(Path.GetTempPath(), $"clipmark-license-{Guid.NewGuid():N}.json");
