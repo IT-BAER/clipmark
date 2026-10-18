@@ -136,7 +136,7 @@ against Microsoft's [Snipping Tool help page](https://support.microsoft.com/en-u
 The source code is public under the [Elastic License 2.0](LICENSE): you may read, build and change it, but not remove or
 work around the license key check. Clipmark 1.0.0 was MIT licensed and has no license check: every feature is free.
 
-From the next release on, a new install starts a 30-day Premium trial at its first connection to the license server.
+From 1.1.0 on, a new install starts a 30-day Premium trial at its first connection to the license server.
 After the trial, these features need a license: select / move / resize / rotate, attached arrows, text labels, fill,
 eyedropper, saving editable PNGs, Send to AI, Ask AI and the capture history. Everything else, including capture,
 recording, OCR, crop and saving PNG or JPEG, stays free. You enter the activation code in Settings; activation needs the

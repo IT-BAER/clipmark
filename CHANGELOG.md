@@ -5,6 +5,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-18
+
 ### Added
 - Update check: once a day Clipmark asks GitHub whether a newer release exists (no identifier is sent) and offers a
   popup with Download, Never and Later when you open the window on an empty editor, never over a capture. Download
@@ -103,6 +105,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
   replaces the working one; activation then asks to update Clipmark. After a 30-day limit on trials or activations,
   Clipmark waits for the date the server named instead of asking again every hour. Ask AI uses the relay only when
   the license plan includes it.
+- A license key from an earlier version is kept in license.json encrypted for the Windows user (DPAPI) instead of
+  as plain text; a copied file does not carry the key to another user or PC.
+- When the server sends a license this PC cannot accept, Settings names the reason: the PC clock, the key of this
+  PC, or an update of Clipmark; an unreadable license file has its own message.
 - Recordings no longer start with a black frame.
 - The tray menu follows Windows dark mode; toggle switches show On / Off in the interface language.
 - The record bar dot is anti-aliased.
@@ -143,5 +149,6 @@ First public release.
 - Text recognition uses the Windows OCR languages installed on the PC.
 - A recording that is still running when Windows signs out or shuts down is not finalized.
 
-[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/IT-BAER/clipmark/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/IT-BAER/clipmark/releases/tag/v1.0.0
