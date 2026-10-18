@@ -54,12 +54,22 @@ public sealed record Entitlement(LicenseStatus Status, int TrialDaysLeft = 0)
     /// A token from the server replaces the stored state only if it verifies here (integration.md B3); null keeps the stored state.
     /// It removes a v1 key and a stored rate limit and sets the high-water mark to its iat (server time), so a clock once far ahead recovers.
     /// </summary>
-    public static LicenseFile? Accept(LicenseFile file, string token, IReadOnlyDictionary<string, ECDsa> keys, string app, string dev, DateTime nowUtc)
+    public static LicenseFile? Accept(LicenseFile file, string token, IReadOnlyDictionary<string, ECDsa> keys, string app, string dev, DateTime nowUtc,
+        out TokenVerdict verdict)
     {
-        if (EntitlementToken.Verify(token, keys, app, dev, new DateTimeOffset(nowUtc).ToUnixTimeSeconds(), out var claims) != TokenVerdict.Valid)
+        verdict = EntitlementToken.Verify(token, keys, app, dev, new DateTimeOffset(nowUtc).ToUnixTimeSeconds(), out var claims);
+        if (verdict != TokenVerdict.Valid)
             return null;
         return file with { Entitlement = token, Key = null, RetryAfterUtc = null, HighWaterUtc = DateTimeOffset.FromUnixTimeSeconds(claims!.Iat).UtcDateTime };
     }
+
+    /// <summary>Why <see cref="Accept"/> rejected a fresh server token. Issued in the future or already expired means the PC clock is wrong.</summary>
+    public static string RejectedText(TokenVerdict verdict) => verdict switch
+    {
+        TokenVerdict.IssuedInFuture or TokenVerdict.Expired => CoreText.T("RelayClock", "The clock of this PC is off. Check the Windows date and time, then try again."),
+        TokenVerdict.WrongDev => CoreText.T("RelayKeyRejected", "This PC's key was not accepted. Try again; if it keeps failing, contact support."),
+        _ => CoreText.T("LicenceUpdateRequired", "This license needs a newer version of Clipmark. Update Clipmark, then activate it again."),
+    };
 
     /// <summary>The plan feature that IT-BAER's relay (Ask AI) needs.</summary>
     public const string RelayFeature = "ai";

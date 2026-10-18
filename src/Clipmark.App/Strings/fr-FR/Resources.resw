@@ -1513,6 +1513,9 @@
   <data name="LicenceUpdateRequired" xml:space="preserve">
     <value>Cette licence nécessite une version plus récente de Clipmark. Mettez Clipmark à jour, puis activez-le à nouveau.</value>
   </data>
+  <data name="LicenceFileUnreadable" xml:space="preserve">
+    <value>Clipmark n&apos;a pas pu lire son fichier de licence. Réessayez dans un instant.</value>
+  </data>
   <data name="LicenceTrialExpired" xml:space="preserve">
     <value>L'essai Premium est terminé.</value>
   </data>

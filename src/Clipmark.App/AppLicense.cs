@@ -193,22 +193,24 @@ internal static class AppLicense
 
     internal static void RelayTaskMissing() => _relayTaskMissing = true;
 
-    /// <summary>Stores a fresh entitlement if it verifies here (see <see cref="Entitlement.Accept"/>); false keeps the stored state and sets the update message.</summary>
+    /// <summary>Stores a fresh entitlement if it verifies here (see <see cref="Entitlement.Accept"/>); false keeps the stored state and sets the reason as the message.</summary>
     private static bool Store(string token, string? installId, bool activated)
     {
         var key = DeviceKey.TryOpen();
         string dev = key?.Thumbprint ?? "";
         var now = DateTime.UtcNow;
-        bool stored = false;
+        bool read = false, stored = false;
+        var verdict = TokenVerdict.Malformed;
         Update(s =>
         {
-            if (Entitlement.Accept(s, token, EntitlementKeys, RelayRequest.App, dev, now) is not { } next)
+            read = true;
+            if (Entitlement.Accept(s, token, EntitlementKeys, RelayRequest.App, dev, now, out verdict) is not { } next)
                 return null;
             stored = true;
             return next with { InstallId = installId ?? dev, KeyStore = key?.KeyStore ?? s.KeyStore, ActivatedUtc = activated ? now : s.ActivatedUtc };
         }, null);
         if (!stored)
-            LastServerMessage = Loc.Get("LicenceUpdateRequired");
+            LastServerMessage = read ? Entitlement.RejectedText(verdict) : Loc.Get("LicenceFileUnreadable");
         return stored;
     }
 
@@ -241,11 +243,14 @@ internal static class AppLicense
         catch (Exception e) when (e is IOException or UnauthorizedAccessException) { return null; }
     }
 
-    /// <summary>A failed write loses licence bookkeeping only; the next server call restores it, so it must not stop the app.</summary>
+    /// <summary>
+    /// A failed write loses licence bookkeeping only; the next server call restores it, so it must not stop the app.
+    /// DPAPI fails (CryptographicException) without a loaded user profile; the file is then left unchanged.
+    /// </summary>
     private static void TrySave(LicenseFile file)
     {
         try { LicenseStore.Save(FilePath, file); }
-        catch (Exception e) when (e is IOException or UnauthorizedAccessException) { }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException or CryptographicException) { }
     }
 
 #if DEBUG
