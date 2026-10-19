@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Clipmark-reläet har nått sin månadsbudget. Använd din egen API-nyckel eller försök igen nästa månad.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI:n svarar bara på frågor om det här skärmklippet. Fråga om det som visas.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>Premium-AI är pausad efter flera avvisade förfrågningar. Försök igen efter {0}.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>Premium-AI är pausad efter flera avvisade förfrågningar. Försök igen i morgon.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Clipmark-reläet är tillfälligt otillgängligt. Försök igen om en stund.</value>
   </data>

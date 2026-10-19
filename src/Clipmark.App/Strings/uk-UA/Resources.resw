@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Ретранслятор Clipmark досяг місячного бюджету. Використайте власний API-ключ або повторіть спробу наступного місяця.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>ШІ відповідає лише на запитання про цей знімок. Запитайте про те, що на ньому показано.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>ШІ в Premium призупинено після кількох відхилених запитів. Повторіть спробу після {0}.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>ШІ в Premium призупинено після кількох відхилених запитів. Повторіть спробу завтра.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Ретранслятор Clipmark тимчасово недоступний. Повторіть спробу трохи пізніше.</value>
   </data>

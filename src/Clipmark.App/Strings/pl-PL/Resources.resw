@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Przekaźnik Clipmark osiągnął miesięczny budżet. Użyj własnego klucza API lub spróbuj ponownie w przyszłym miesiącu.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI odpowiada tylko na pytania dotyczące tego zrzutu. Zapytaj o to, co na nim widać.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>AI w Premium jest wstrzymane po kilku odrzuconych żądaniach. Spróbuj ponownie po {0}.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>AI w Premium jest wstrzymane po kilku odrzuconych żądaniach. Spróbuj ponownie jutro.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Przekaźnik Clipmark jest tymczasowo niedostępny. Spróbuj ponownie za chwilę.</value>
   </data>

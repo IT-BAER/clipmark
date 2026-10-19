@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Clipmark 中继已达到月度预算。请使用你自己的 API 密钥，或下个月再试。</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI 只回答关于此截图的问题。请询问截图中显示的内容。</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>由于多个请求被拒绝，Premium AI 已暂停。请在 {0} 之后重试。</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>由于多个请求被拒绝，Premium AI 已暂停。请明天重试。</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Clipmark 中继暂时不可用。请稍后重试。</value>
   </data>

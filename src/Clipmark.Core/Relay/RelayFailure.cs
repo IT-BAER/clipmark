@@ -62,7 +62,11 @@ public sealed record RelayFailure(int Status, string? Code, string? Detail, int?
         "quota_budget" => ResetsAt is { } at
             ? string.Format(CultureInfo.CurrentCulture, CoreText.T("RelayBudgetUntil", "Your monthly Premium AI budget is used up until {0}."), at.ToLocalTime().ToString("d", CultureInfo.CurrentCulture))
             : CoreText.T("RelayBudget", "Your monthly Premium AI budget is used up for this month."),
-        "app_budget_exhausted" => CoreText.T("RelayAppBudget", "The Clipmark relay has reached its monthly budget. Use your own API key or try again next month."),
+        "input_rejected" => CoreText.T("RelayInputRejected", "The AI only answers questions about this capture. Ask about what it shows."),
+        "guard_suspended" => ResetsAt is { } until
+            ? string.Format(CultureInfo.CurrentCulture, CoreText.T("RelayGuardPausedUntil", "Premium AI is paused after several declined requests. Try again after {0}."), until.ToLocalTime().ToString("g", CultureInfo.CurrentCulture))
+            : CoreText.T("RelayGuardPaused", "Premium AI is paused after several declined requests. Try again tomorrow."),
+        "app_budget_exhausted" =>CoreText.T("RelayAppBudget", "The Clipmark relay has reached its monthly budget. Use your own API key or try again next month."),
         "upstream_error" or "upstream_unavailable" => CoreText.T("ApiOverloaded", "Anthropic is overloaded or unavailable. Try again shortly."),
         "storage_unavailable" or "server_busy" => CoreText.T("RelayUnavailable", "The Clipmark relay is temporarily unavailable. Try again shortly."),
         "code_invalid" => CoreText.T("LicenceCodeInvalid", "This activation code is not valid. Check that you pasted all of it."),

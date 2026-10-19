@@ -35,6 +35,19 @@ public sealed class RelayFailureTests
     }
 
     [Fact]
+    public void A_guard_decline_and_a_guard_pause_have_their_own_sentences()
+    {
+        var declined = RelayFailure.Parse(422, "{\"error\":{\"code\":\"input_rejected\",\"message\":\"m\"}}");
+        var paused = RelayFailure.Parse(429, "{\"error\":{\"code\":\"guard_suspended\",\"message\":\"m\",\"resets_at\":\"2026-11-01T00:00:00Z\"}}");
+
+        Assert.Contains("only answers questions about this capture", declined.Message());
+        Assert.Contains("paused", paused.Message());
+        Assert.Contains("2026", paused.Message());
+        Assert.Contains("paused", RelayFailure.Parse(429, "{\"error\":{\"code\":\"guard_suspended\",\"message\":\"m\"}}").Message());
+        Assert.False(paused.EndsEntitlement);
+    }
+
+    [Fact]
     public void Clock_skew_carries_the_server_time()
     {
         var f = RelayFailure.Parse(401, "{\"error\":{\"code\":\"clock_skew\",\"message\":\"m\",\"server_time\":1760400000}}");

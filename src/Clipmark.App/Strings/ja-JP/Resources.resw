@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Clipmark リレーが月間予算に達しました。ご自身の API キーを使用するか、来月もう一度お試しください。</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI はこのキャプチャに関する質問にのみ回答します。表示されている内容について質問してください。</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>拒否された要求が続いたため、Premium AI は一時停止しています。{0} 以降にもう一度お試しください。</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>拒否された要求が続いたため、Premium AI は一時停止しています。明日もう一度お試しください。</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Clipmark リレーは一時的に利用できません。しばらくしてからもう一度お試しください。</value>
   </data>

@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Clipmark aktarıcısı aylık bütçesine ulaştı. Kendi API anahtarınızı kullanın veya gelecek ay yeniden deneyin.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI yalnızca bu alıntıyla ilgili soruları yanıtlar. Gösterilen içerik hakkında soru sorun.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>Birkaç istek reddedildiği için Premium yapay zekâ duraklatıldı. {0} sonrasında yeniden deneyin.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>Birkaç istek reddedildiği için Premium yapay zekâ duraklatıldı. Yarın yeniden deneyin.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Clipmark aktarıcısı geçici olarak kullanılamıyor. Kısa süre sonra yeniden deneyin.</value>
   </data>

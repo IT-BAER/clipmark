@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Clipmark 릴레이가 월간 예산에 도달했습니다. 직접 API 키를 사용하거나 다음 달에 다시 시도하세요.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>AI는 이 캡처에 대한 질문에만 답변합니다. 캡처에 표시된 내용에 대해 질문하세요.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>거부된 요청이 여러 번 있어 Premium AI가 일시 중지되었습니다. {0} 이후에 다시 시도하세요.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>거부된 요청이 여러 번 있어 Premium AI가 일시 중지되었습니다. 내일 다시 시도하세요.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Clipmark 릴레이를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도하세요.</value>
   </data>

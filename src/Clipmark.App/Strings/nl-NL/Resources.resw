@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>De Clipmark-relay heeft het maandbudget bereikt. Gebruik je eigen API-sleutel of probeer het volgende maand opnieuw.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>De AI beantwoordt alleen vragen over dit knipsel. Vraag naar wat het laat zien.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>Premium-AI is gepauzeerd na meerdere geweigerde aanvragen. Probeer het na {0} opnieuw.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>Premium-AI is gepauzeerd na meerdere geweigerde aanvragen. Probeer het morgen opnieuw.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>De Clipmark-relay is tijdelijk niet beschikbaar. Probeer het zo meteen opnieuw.</value>
   </data>

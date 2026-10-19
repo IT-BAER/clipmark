@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>Das Clipmark-Relay hat sein Monatsbudget erreicht. Verwenden Sie Ihren eigenen API-Schlüssel oder versuchen Sie es nächsten Monat erneut.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>Die KI beantwortet nur Fragen zu dieser Aufnahme. Fragen Sie nach dem, was sie zeigt.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>Premium-KI ist nach mehreren abgelehnten Anfragen pausiert. Versuchen Sie es nach {0} erneut.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>Premium-KI ist nach mehreren abgelehnten Anfragen pausiert. Versuchen Sie es morgen erneut.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>Das Clipmark-Relay ist vorübergehend nicht verfügbar. Versuchen Sie es in Kürze erneut.</value>
   </data>

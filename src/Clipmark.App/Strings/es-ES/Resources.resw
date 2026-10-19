@@ -1549,6 +1549,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>El relay de Clipmark ha alcanzado su presupuesto mensual. Usa tu propia clave de API o vuelve a intentarlo el mes que viene.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>La IA solo responde preguntas sobre esta captura. Pregunta por lo que muestra.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>La IA de Premium está en pausa tras varias solicitudes rechazadas. Vuelve a intentarlo después de {0}.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>La IA de Premium está en pausa tras varias solicitudes rechazadas. Vuelve a intentarlo mañana.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>El relay de Clipmark no está disponible temporalmente. Vuelve a intentarlo en breve.</value>
   </data>

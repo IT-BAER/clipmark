@@ -1551,6 +1551,15 @@
   <data name="RelayAppBudget" xml:space="preserve">
     <value>The Clipmark relay has reached its monthly budget. Use your own API key or try again next month.</value>
   </data>
+  <data name="RelayInputRejected" xml:space="preserve">
+    <value>The AI only answers questions about this capture. Ask about what it shows.</value>
+  </data>
+  <data name="RelayGuardPausedUntil" xml:space="preserve">
+    <value>Premium AI is paused after several declined requests. Try again after {0}.</value>
+  </data>
+  <data name="RelayGuardPaused" xml:space="preserve">
+    <value>Premium AI is paused after several declined requests. Try again tomorrow.</value>
+  </data>
   <data name="RelayUnavailable" xml:space="preserve">
     <value>The Clipmark relay is temporarily unavailable. Try again shortly.</value>
   </data>
