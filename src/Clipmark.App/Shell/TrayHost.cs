@@ -9,7 +9,6 @@ internal sealed unsafe class TrayHost : Win32Window
 {
     public const int CaptureHotkeyId = 1, RecordHotkeyId = 2;
     private const uint TrayId = 1, TrayCallback = WM_APP + 1;
-    private const int CmdCapture = 1, CmdOpen = 2, CmdSettings = 3, CmdExit = 4, CmdRecord = 5, CmdModeBase = 100, CmdDelayBase = 200;
 
     private readonly uint _taskbarCreated = RegisterWindowMessage("TaskbarCreated");
     private nint _icon;
@@ -30,7 +29,6 @@ internal sealed unsafe class TrayHost : Win32Window
 
     public TrayHost() : base(WS_POPUP, WS_EX_TOOLWINDOW, "Clipmark tray")
     {
-        AllowDarkMenus();
         AddIcon();
     }
 
@@ -86,58 +84,47 @@ internal sealed unsafe class TrayHost : Win32Window
         return 0;
     }
 
-    private void ShowMenu(int x, int y)
+    private TrayMenu? _menu;
+
+    /// <summary>The open menu's XamlRoot, for the test driver.</summary>
+    internal Microsoft.UI.Xaml.XamlRoot? MenuRoot => _menu?.Root;
+
+    internal Windows.Graphics.PointInt32 MenuHostPosition => _menu?.HostPosition ?? default;
+
+    /// <summary>Opens the context menu at the screen point (physical px).</summary>
+    internal void ShowMenu(int x, int y)
     {
         var s = Settings?.Invoke() ?? new ClipmarkSettings();
-        nint menu = CreatePopupMenu(), modes = CreatePopupMenu(), delays = CreatePopupMenu();
-        try
+        // The point is on the taskbar: anchor 12 DIP inside the work area, so the menu opens away from the taskbar with the
+        // gap of the shell menus (it opens from the anchor corner that keeps it on the screen).
+        var info = new MONITORINFO { cbSize = sizeof(MONITORINFO) };
+        if (GetMonitorInfo(MonitorFromPoint(new POINT { X = x, Y = y }, MONITOR_DEFAULTTONEAREST), ref info))
         {
-            foreach (var (mode, text, _) in MainPage.Modes)
-                AppendMenu(modes, s.Mode == mode ? MF_CHECKED : MF_STRING, CmdModeBase + (int)mode, text);
-            foreach (int d in ClipmarkSettings.DelayChoices)
-                AppendMenu(delays, s.DelaySeconds == d ? MF_CHECKED : MF_STRING, CmdDelayBase + d, MainPage.DelayText(d));
-
-            AppendMenu(menu, MF_STRING, CmdOpen, Loc.Get("TrayOpen"));
-            AppendMenu(menu, MF_STRING, CmdSettings, Loc.Get("TraySettings"));
-            AppendMenu(menu, MF_SEPARATOR, 0, null);
-            AppendMenu(menu, MF_STRING, CmdCapture, $"{Loc.Get("TrayNewCapture")}\t{s.Hotkey}");
-            AppendMenu(menu, MF_STRING, CmdRecord, $"{Loc.Get("TrayNewRecording")}\t{s.RecordHotkey}");
-            AppendMenu(menu, MF_POPUP, modes, Loc.Get("TrayMode"));
-            AppendMenu(menu, MF_POPUP, delays, Loc.Get("TrayDelay"));
-            AppendMenu(menu, MF_SEPARATOR, 0, null);
-            AppendMenu(menu, MF_STRING, CmdExit, Loc.Get("TrayExit"));
-            // The top level never shows checks: drop the reserved check-mark column (submenus keep it).
-            var info = new MENUINFO { cbSize = sizeof(MENUINFO), fMask = MIM_STYLE, dwStyle = MNS_NOCHECK };
-            SetMenuInfo(menu, &info);
-
-            // Without foreground the menu does not close on an outside click (documented TrackPopupMenu quirk).
-            SetForegroundWindow(Handle);
-            int cmd = TrackPopupMenuEx(menu, TPM_RIGHTBUTTON | TPM_RETURNCMD | TPM_NONOTIFY, x, y, Handle, 0);
-            PostMessage(Handle, WM_NULL, 0, 0);
-            Dispatch(cmd);
+            var work = info.rcWork;
+            int gap = (int)(12 * GetDpiForWindow(Handle) / 96);
+            x = Math.Clamp(x, work.Left + gap, work.Right - 1 - gap);
+            y = Math.Clamp(y, work.Top + gap, work.Bottom - 1 - gap);
         }
-        finally
-        {
-            DestroyMenu(menu); // destroys the submenus too
-        }
-    }
-
-    private void Dispatch(int cmd)
-    {
-        switch (cmd)
-        {
-            case CmdCapture: CaptureRequested?.Invoke(); break;
-            case CmdRecord: RecordRequested?.Invoke(); break;
-            case CmdOpen: OpenRequested?.Invoke(); break;
-            case CmdSettings: SettingsRequested?.Invoke(); break;
-            case CmdExit: ExitRequested?.Invoke(); break;
-            case >= CmdDelayBase: DelayChosen?.Invoke(cmd - CmdDelayBase); break;
-            case >= CmdModeBase: ModeChosen?.Invoke((CaptureMode)(cmd - CmdModeBase)); break;
-        }
+        var menu = _menu ??= new TrayMenu();
+        menu.Show(x, y, s.Theme,
+        [
+            menu.Item(Loc.Get("TrayOpen"), "\uE8A7", OpenRequested),
+            menu.Item(Loc.Get("TraySettings"), "\uE713", SettingsRequested),
+            new Microsoft.UI.Xaml.Controls.MenuFlyoutSeparator(),
+            menu.Item(Loc.Get("TrayNewCapture"), "\uF406", CaptureRequested, s.Hotkey.ToString()),
+            menu.Item(Loc.Get("TrayNewRecording"), "\uE714", RecordRequested, s.RecordHotkey.ToString()),
+            menu.SubMenu(Loc.Get("TrayMode"), MainPage.Modes.First(m => m.Mode == s.Mode).Glyph,
+                MainPage.Modes.Select(m => (m.Text, (string?)m.Glyph, m.Mode == s.Mode, (Action)(() => ModeChosen?.Invoke(m.Mode))))),
+            menu.SubMenu(Loc.Get("TrayDelay"), "\uE916",
+                ClipmarkSettings.DelayChoices.Select(d => (MainPage.DelayText(d), (string?)null, d == s.DelaySeconds, (Action)(() => DelayChosen?.Invoke(d))))),
+            new Microsoft.UI.Xaml.Controls.MenuFlyoutSeparator(),
+            menu.Item(Loc.Get("TrayExit"), "\uE7E8", ExitRequested),
+        ]);
     }
 
     public override void Dispose()
     {
+        _menu?.Close();
         var data = NewData();
         Shell_NotifyIcon(NIM_DELETE, &data);
         UnregisterHotKey(Handle, CaptureHotkeyId);

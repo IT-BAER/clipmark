@@ -11,7 +11,7 @@ internal static unsafe partial class Native
     public const uint WM_DESTROY = 0x0002, WM_PAINT = 0x000F, WM_CLOSE = 0x0010, WM_ERASEBKGND = 0x0014,
         WM_SETCURSOR = 0x0020, WM_KEYDOWN = 0x0100, WM_COMMAND = 0x0111, WM_MOUSEMOVE = 0x0200,
         WM_LBUTTONDOWN = 0x0201, WM_LBUTTONUP = 0x0202, WM_RBUTTONUP = 0x0205, WM_HOTKEY = 0x0312,
-        WM_CONTEXTMENU = 0x007B, WM_NULL = 0x0000, WM_APP = 0x8000, WM_CAPTURECHANGED = 0x0215, WM_MOUSEACTIVATE = 0x0021;
+        WM_CONTEXTMENU = 0x007B, WM_APP = 0x8000, WM_CAPTURECHANGED = 0x0215, WM_MOUSEACTIVATE = 0x0021;
     public const int MA_NOACTIVATE = 3;
     public const uint MOD_NOREPEAT = 0x4000;
     public const int VK_ESCAPE = 0x1B;
@@ -27,9 +27,6 @@ internal static unsafe partial class Native
     public const uint NIM_ADD = 0, NIM_MODIFY = 1, NIM_DELETE = 2, NIM_SETVERSION = 4;
     public const uint NIF_MESSAGE = 0x1, NIF_ICON = 0x2, NIF_TIP = 0x4, NIF_SHOWTIP = 0x80;
     public const uint NOTIFYICON_VERSION_4 = 4, NIN_SELECT = 0x400, NIN_KEYSELECT = 0x401;
-
-    public const uint MF_STRING = 0x0, MF_GRAYED = 0x1, MF_CHECKED = 0x8, MF_POPUP = 0x10, MF_SEPARATOR = 0x800;
-    public const uint TPM_RIGHTBUTTON = 0x2, TPM_RETURNCMD = 0x100, TPM_NONOTIFY = 0x80;
 
     public const uint IMAGE_ICON = 1, LR_LOADFROMFILE = 0x10;
     public const int SM_CXSMICON = 49, SM_CYSMICON = 50;
@@ -296,6 +293,7 @@ internal static unsafe partial class Native
     public static partial bool IsZoomed(nint hwnd);
 
     [LibraryImport("user32.dll", EntryPoint = "GetWindowLongPtrW")] public static partial nint GetWindowLongPtr(nint hwnd, int index);
+    [LibraryImport("user32.dll", EntryPoint = "SetWindowLongPtrW")] public static partial nint SetWindowLongPtr(nint hwnd, int index, nint value);
     [LibraryImport("user32.dll", EntryPoint = "GetClassNameW")] public static partial int GetClassName(nint hwnd, char* name, int max);
     [LibraryImport("user32.dll")] public static partial uint GetWindowThreadProcessId(nint hwnd, out uint processId);
 
@@ -357,18 +355,6 @@ internal static unsafe partial class Native
         nint prompt, uint flags, DATA_BLOB* dataOut);
 
     [LibraryImport("kernel32.dll")] public static partial nint LocalFree(nint mem);
-
-    [LibraryImport("user32.dll")] public static partial nint CreatePopupMenu();
-
-    [LibraryImport("user32.dll", EntryPoint = "AppendMenuW", StringMarshalling = StringMarshalling.Utf16)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool AppendMenu(nint menu, uint flags, nint id, string? text);
-
-    [LibraryImport("user32.dll")] public static partial int TrackPopupMenuEx(nint menu, uint flags, int x, int y, nint hwnd, nint tpm);
-
-    [LibraryImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool DestroyMenu(nint menu);
 
     // Processes and keyboard input (Send to AI)
     public const uint TH32CS_SNAPPROCESS = 0x2, PROCESS_QUERY_LIMITED_INFORMATION = 0x1000, TOKEN_QUERY = 0x8;
@@ -452,36 +438,6 @@ internal static unsafe partial class Native
 
     [LibraryImport("user32.dll", EntryPoint = "GetWindowTextW")] public static partial int GetWindowText(nint hwnd, char* text, int max);
     [LibraryImport("user32.dll")] public static partial uint SendInput(uint count, INPUT* inputs, int size);
-
-    public const uint MIM_STYLE = 0x10, MNS_NOCHECK = 0x80000000;
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct MENUINFO
-    {
-        public int cbSize;
-        public uint fMask, dwStyle, cyMax;
-        public nint hbrBack;
-        public uint dwContextHelpID;
-        public nuint dwMenuData;
-    }
-
-    [LibraryImport("user32.dll")]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    public static partial bool SetMenuInfo(nint menu, MENUINFO* info);
-
-    [LibraryImport("kernel32.dll")] public static partial nint GetProcAddress(nint module, nint ordinal);
-
-    /// <summary>Lets Win32 popup menus follow the Windows dark/light app mode.</summary>
-    public static void AllowDarkMenus()
-    {
-        // Undocumented uxtheme ordinals, stable since Windows 10 1903: 135 SetPreferredAppMode, 136 FlushMenuThemes.
-        nint uxtheme = NativeLibrary.Load("uxtheme.dll", typeof(Native).Assembly, DllImportSearchPath.System32);
-        nint setPreferredAppMode = GetProcAddress(uxtheme, 135), flushMenuThemes = GetProcAddress(uxtheme, 136);
-        if (setPreferredAppMode == 0 || flushMenuThemes == 0)
-            return;
-        ((delegate* unmanaged<int, int>)setPreferredAppMode)(1); // 1 = AllowDark
-        ((delegate* unmanaged<void>)flushMenuThemes)();
-    }
 
     // Clipboard
     [LibraryImport("user32.dll")]

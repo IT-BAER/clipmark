@@ -14,7 +14,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ### Changed
 - A capture larger than the window opens zoomed to fit and centered; smaller captures open at 100%.
-- The tray menu starts with Open Clipmark and Settings, then New capture, New recording, Mode and Delay.
+- The tray menu looks like the Windows 11 menus (icons, rounded corners, acrylic, the theme setting) and opens above
+  the taskbar; it starts with Open Clipmark and Settings, then New capture, New recording, Mode and Delay.
 - Ask AI treats text in the capture and in earlier turns as content, never as instructions, and answers a request
   that is not about the capture with one sentence. When the relay declines a question, or pauses Premium AI after
   several declined requests, the flyout says so and names the end of the pause; the license stays active.

@@ -54,6 +54,7 @@ namespace Clipmark.App;
 /// | ocolor X,Y (frozen pixel as #RRGGBB to DIR\ocolor.txt) | oshot FILE (the pill monitor as it is painted) | owait (the overlay run finished, up to 20 s)
 /// | setting colorformat hex|rgb|hsl | clipboard|toast|autosave|border on|off | borderwidth N | savefolder PATH
 /// | ruler on|off | rulerinfo (ruler half height in image px to DIR\ruler.txt) | rulerat X,Y ANGLE (image px, degrees) | assert ruler X,Y ANGLE (within 0.5 px / 0.1 degree; "off" = hidden)
+/// | tray X,Y (opens the tray menu at that desktop point; click, expand, shot and shotall then act on it) | tray off (back to the window)
 /// | exit (tray Exit, not awaited: the next line can answer the save prompt).
 /// </summary>
 internal sealed class TestDriver
@@ -74,9 +75,10 @@ internal sealed class TestDriver
     }
 
     private XamlRoot? _root;
+    private bool _tray;
 
-    /// <summary>The window's XamlRoot, kept while the page is navigated away (Settings).</summary>
-    private XamlRoot Root => _page.XamlRoot ?? _root ?? throw new InvalidOperationException("no XamlRoot");
+    /// <summary>The window's XamlRoot, kept while the page is navigated away (Settings); the tray menu's after "tray X,Y".</summary>
+    private XamlRoot Root => (_tray ? ((App)Application.Current).Tray?.MenuRoot : null) ?? _page.XamlRoot ?? _root ?? throw new InvalidOperationException("no XamlRoot");
 
     public void Start()
     {
@@ -227,7 +229,8 @@ internal sealed class TestDriver
                     throw new InvalidOperationException($"selection is '{selection}'");
                 break;
             case "shot":
-                await RenderAsync((UIElement)Root.Content, arg);
+                if (!_tray) // the tray menu's 1 px host has nothing to render
+                    await RenderAsync((UIElement)Root.Content, arg);
                 int n = 0;
                 foreach (var popup in VisualTreeHelper.GetOpenPopupsForXamlRoot(Root))
                 {
@@ -656,6 +659,28 @@ internal sealed class TestDriver
                 break;
             case "exit":
                 _ = ((App)Application.Current).ExitAsync();
+                break;
+            case "tray" when arg == "off":
+                _tray = false;
+                break;
+            case "tray":
+                var trayHost = ((App)Application.Current).Tray ?? throw new InvalidOperationException("no tray icon");
+                var trayAt = arg.Split(',').Select(v => int.Parse(v, CultureInfo.InvariantCulture)).ToArray();
+                trayHost.ShowMenu(trayAt[0], trayAt[1]);
+                _tray = true;
+                for (int t = 0; t < 50 && !VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).Any(); t++)
+                    await Task.Delay(100);
+                if (!VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).Any())
+                    throw new InvalidOperationException("tray menu did not open");
+                await Task.Delay(300);
+                // Visible menu (presenter, without the shadow) in desktop px to DIR\tray.txt: "L T R B"; the host is at the anchor.
+                var trayPresenter = (FrameworkElement)VisualTreeHelper.GetOpenPopupsForXamlRoot(Root).First().Child;
+                var trayOrigin = trayPresenter.TransformToVisual(null).TransformPoint(default);
+                double trayScale = Root.RasterizationScale;
+                var trayHostRect = trayHost.MenuHostPosition;
+                File.WriteAllText(Path.Combine(_dir, "tray.txt"), string.Join(' ',
+                    new[] { trayOrigin.X, trayOrigin.Y, trayOrigin.X + trayPresenter.ActualWidth, trayOrigin.Y + trayPresenter.ActualHeight }
+                        .Select((v, i) => (int)Math.Round(v * trayScale) + (i % 2 == 0 ? trayHostRect.X : trayHostRect.Y))));
                 break;
             case "wait":
                 await Task.Delay(int.Parse(arg, CultureInfo.InvariantCulture));

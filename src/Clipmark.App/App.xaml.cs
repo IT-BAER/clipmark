@@ -39,6 +39,8 @@ public partial class App : Application
     private CaptureController? _controller;
     private DispatcherQueue? _dispatcher;
 
+    internal TrayHost? Tray => _tray;
+
     /// <summary>Counts the trial on while the app stays open, so an expiry locks Premium without a new capture.</summary>
     private DispatcherQueueTimer? _licenseTimer;
 
