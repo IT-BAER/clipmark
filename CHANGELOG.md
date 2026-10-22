@@ -5,6 +5,21 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-22
+
+### Added
+- Microsoft Store package: an AOT x64 .msix that uses the Windows App SDK framework from the Store.
+- Ask AI: "Report answer by email" under each answer opens a prefilled mail with the Clipmark version, the model, the
+  question and the answer; the capture is not attached.
+
+### Changed
+- A capture larger than the window opens zoomed to fit and centered; smaller captures open at 100%.
+- The tray menu starts with Open Clipmark and Settings, then New capture, New recording, Mode and Delay.
+- Ask AI treats text in the capture and in earlier turns as content, never as instructions, and answers a request
+  that is not about the capture with one sentence. When the relay declines a question, or pauses Premium AI after
+  several declined requests, the flyout says so and names the end of the pause; the license stays active.
+- Ask AI over the relay no longer shows the monthly budget left.
+
 ## [1.1.0] - 2026-10-18
 
 ### Added
@@ -149,6 +164,7 @@ First public release.
 - Text recognition uses the Windows OCR languages installed on the PC.
 - A recording that is still running when Windows signs out or shuts down is not finalized.
 
-[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/IT-BAER/clipmark/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/IT-BAER/clipmark/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/IT-BAER/clipmark/releases/tag/v1.0.0

@@ -1,7 +1,7 @@
 <Project>
   <!-- One product version for every project; keep Package.appxmanifest Identity Version in step (x.y.z.0). -->
   <PropertyGroup>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Product>Clipmark</Product>
     <Company>IT-BAER</Company>
     <Copyright>Copyright (c) 2026 IT-BAER</Copyright>
