@@ -535,6 +535,9 @@ internal sealed class EditorCanvas
     /// <summary>Image origin inside the control, in DIPs.</summary>
     public Windows.Foundation.Point ImageOrigin => new(_origin.X / Scale, _origin.Y / Scale);
 
+    /// <summary>Center of the shown part of the image inside the control, in DIPs.</summary>
+    public Windows.Foundation.Point ShownCenterDips => new((_origin.X + View.X + View.Width / 2f) / Scale, (_origin.Y + View.Y + View.Height / 2f) / Scale);
+
     /// <summary>
     /// Sizes the control to cover the viewport (image centered) and the document bounds plus an edge; false when unchanged.
     /// Below zoom 1 the control stops growing with the viewport to bound GPU memory.

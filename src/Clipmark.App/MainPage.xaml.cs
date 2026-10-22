@@ -328,6 +328,7 @@ public sealed partial class MainPage : Page
             _editor.Close();
         }
         _editor = editor;
+        _fitOnOpen = true;
         RulerItem.IsChecked = false;
         _historyId = historyId;
         _historyRevision = _copyRevision = null;
@@ -427,11 +428,19 @@ public sealed partial class MainPage : Page
         }
     }
 
+    private bool _fitOnOpen; // the next layout with a loaded document sets the opening zoom
+
     /// <summary>Resizes the canvas to the viewport and document; the image keeps its place on screen.</summary>
     private void Relayout()
     {
         if (_editor is null)
             return;
+        if (_fitOnOpen && _editor.Document is not null && ImageScroller.ViewportWidth > 0)
+        {
+            _fitOnOpen = false;
+            FitOnOpen();
+            return;
+        }
         bool placed = _editor.Control.ActualWidth > 0;
         var before = _editor.Control.TransformToVisual(ImageScroller).TransformPoint(_editor.ImageOrigin);
         if (!_editor.Layout(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, ImageScroller.ZoomFactor) || !placed)
@@ -1791,6 +1800,18 @@ public sealed partial class MainPage : Page
     /// <summary>Zoom that shows the whole shown image in the viewport.</summary>
     internal double FitZoom => _editor is { } editor
         ? ZoomMath.Fit(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, editor.ShownSizeDips.Width, editor.ShownSizeDips.Height) : 1;
+
+    /// <summary>Opens a capture at 100%, or zoomed to fit when it is larger than the viewport, with the shown image centered.</summary>
+    private void FitOnOpen()
+    {
+        var editor = _editor!;
+        float zoom = (float)Math.Min(1, FitZoom);
+        double vw = ImageScroller.ViewportWidth, vh = ImageScroller.ViewportHeight;
+        editor.Layout(vw, vh, zoom);
+        ImageScroller.UpdateLayout();
+        var center = editor.ShownCenterDips;
+        ImageScroller.ChangeView(center.X * zoom - vw / 2, center.Y * zoom - vh / 2, zoom, true);
+    }
 
     /// <summary>Zooms to the factor around the viewport center.</summary>
     private void ZoomTo(double factor)

@@ -97,13 +97,13 @@ internal sealed unsafe class TrayHost : Win32Window
             foreach (int d in ClipmarkSettings.DelayChoices)
                 AppendMenu(delays, s.DelaySeconds == d ? MF_CHECKED : MF_STRING, CmdDelayBase + d, MainPage.DelayText(d));
 
+            AppendMenu(menu, MF_STRING, CmdOpen, Loc.Get("TrayOpen"));
+            AppendMenu(menu, MF_STRING, CmdSettings, Loc.Get("TraySettings"));
+            AppendMenu(menu, MF_SEPARATOR, 0, null);
             AppendMenu(menu, MF_STRING, CmdCapture, $"{Loc.Get("TrayNewCapture")}\t{s.Hotkey}");
             AppendMenu(menu, MF_STRING, CmdRecord, $"{Loc.Get("TrayNewRecording")}\t{s.RecordHotkey}");
             AppendMenu(menu, MF_POPUP, modes, Loc.Get("TrayMode"));
             AppendMenu(menu, MF_POPUP, delays, Loc.Get("TrayDelay"));
-            AppendMenu(menu, MF_SEPARATOR, 0, null);
-            AppendMenu(menu, MF_STRING, CmdOpen, Loc.Get("TrayOpen"));
-            AppendMenu(menu, MF_STRING, CmdSettings, Loc.Get("TraySettings"));
             AppendMenu(menu, MF_SEPARATOR, 0, null);
             AppendMenu(menu, MF_STRING, CmdExit, Loc.Get("TrayExit"));
             // The top level never shows checks: drop the reserved check-mark column (submenus keep it).
