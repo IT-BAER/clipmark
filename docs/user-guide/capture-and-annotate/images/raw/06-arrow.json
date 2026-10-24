@@ -1,0 +1,63 @@
+{
+  "id": "06-arrow",
+  "surface": "windows",
+  "image": "06-arrow.png",
+  "width": 1902,
+  "height": 1000,
+  "scale": 1.25,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 731,
+        "y": 421,
+        "width": 190,
+        "height": 102
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": null,
+  "masks": [],
+  "texts": [
+    "Clipmark",
+    "Non Client Input Sink Window",
+    "AppWindow Custom Title Bar",
+    "Minimize",
+    "Maximize",
+    "Close",
+    "New capture",
+    "New",
+    "New recording",
+    "Open",
+    "Capture history",
+    "Capture mode: Rectangle",
+    "Delay: No delay",
+    "Select",
+    "Pen",
+    "Highlighter",
+    "Eraser",
+    "Text",
+    "Shapes: Arrow",
+    "Eyedropper",
+    "Fill",
+    "Color and width: Red, Medium",
+    "Crop",
+    "Text actions",
+    "Undo",
+    "Redo",
+    "Copy",
+    "Save as",
+    "Share",
+    "Send to AI",
+    "Ask AI",
+    "More",
+    "Settings",
+    "Captured image"
+  ],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "window": "Clipmark",
+  "windows": [],
+  "capturedAt": "2026-10-23T20:41:40.689Z"
+}

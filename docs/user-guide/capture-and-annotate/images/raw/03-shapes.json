@@ -1,0 +1,68 @@
+{
+  "id": "03-shapes",
+  "surface": "windows",
+  "image": "03-shapes.png",
+  "width": 1902,
+  "height": 1000,
+  "scale": 1.25,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 844,
+        "y": 46,
+        "width": 93,
+        "height": 36
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": {
+    "x": 844,
+    "y": 46,
+    "width": 93,
+    "height": 36
+  },
+  "masks": [],
+  "texts": [
+    "Clipmark",
+    "Non Client Input Sink Window",
+    "AppWindow Custom Title Bar",
+    "Minimize",
+    "Maximize",
+    "Close",
+    "New capture",
+    "New",
+    "New recording",
+    "Open",
+    "Capture history",
+    "Capture mode: Rectangle",
+    "Delay: No delay",
+    "Select",
+    "Pen",
+    "Highlighter",
+    "Eraser",
+    "Text",
+    "Shapes: Rectangle",
+    "Eyedropper",
+    "Fill",
+    "Color and width: Red, Medium",
+    "Crop",
+    "Text actions",
+    "Undo",
+    "Redo",
+    "Copy",
+    "Save as",
+    "Share",
+    "Send to AI",
+    "Ask AI",
+    "More",
+    "Settings",
+    "Captured image"
+  ],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "window": "Clipmark",
+  "windows": [],
+  "capturedAt": "2026-10-23T20:44:41.875Z"
+}

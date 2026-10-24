@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "surface": "windows",
+  "app": {
+    "exe": "src/Clipmark.App/bin/x64/Debug/net10.0-windows10.0.26100.0/win-x64/Clipmark.App.exe",
+    "process": "Clipmark.App"
+  },
+  "privacy": {
+    "denylist": [],
+    "allowlist": []
+  },
+  "steps": [
+    {
+      "id": "01-start",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "01-start"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "name": "Photo"
+        },
+        {
+          "label": "2",
+          "name": "Rectangle"
+        }
+      ],
+      "note": "Overlay on the synthetic desktop; pill boxes come from TestDriver opill.",
+      "zoom": {
+        "name": "Photo"
+      }
+    },
+    {
+      "id": "02-select",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "02-select"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "box": [
+            710,
+            364,
+            1100,
+            620
+          ]
+        }
+      ]
+    },
+    {
+      "id": "03-shapes",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "03-shapes"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "name": "Shapes"
+        }
+      ],
+      "expect": [
+        "Shapes: Rectangle",
+        "Copy",
+        "Save as"
+      ],
+      "zoom": {
+        "name": "Shapes"
+      }
+    },
+    {
+      "id": "04-rectangle",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "04-rectangle"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "box": [
+            941,
+            321,
+            290,
+            140
+          ]
+        }
+      ],
+      "note": "Box = editor drag 540,80 830,220 plus the capture origin 401,241 in the window."
+    },
+    {
+      "id": "05-arrow-menu",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "05-arrow-menu"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "box": [
+            846,
+            290,
+            176,
+            46
+          ]
+        }
+      ],
+      "note": "The Shapes menu is a popup outside the UIA dump: box measured on the image.",
+      "zoom": {
+        "box": [
+          844,
+          190,
+          178,
+          110
+        ]
+      }
+    },
+    {
+      "id": "06-arrow",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "06-arrow"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "box": [
+            731,
+            421,
+            190,
+            102
+          ]
+        }
+      ],
+      "note": "Box = editor drag 330,282 520,180 plus the capture origin 401,241."
+    },
+    {
+      "id": "07-save",
+      "run": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        ".claude/user-guide/guide-shots.ps1",
+        "-Step",
+        "07-save"
+      ],
+      "targets": [
+        {
+          "label": "1",
+          "name": "Copy"
+        },
+        {
+          "label": "2",
+          "name": "Save as"
+        }
+      ],
+      "zoom": {
+        "name": "Copy"
+      }
+    }
+  ]
+}

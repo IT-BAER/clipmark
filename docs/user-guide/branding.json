@@ -1,0 +1,16 @@
+{
+  "product": "Clipmark",
+  "logo": "../../src/Clipmark.App/Assets/StoreLogo.png",
+  "colors": {
+    "primary": "#FF3B30"
+  },
+  "font": "Segoe UI",
+  "annotate": "#7C3AED",
+  "sources": {
+    "product": "folder name",
+    "primary": "assets/logo/clipmark.svg (logo red), set by hand",
+    "font": "default",
+    "logo": "src/Clipmark.App/Assets/StoreLogo.png",
+    "annotate": "violet by hand: the default red matches the red shapes drawn in the guide"
+  }
+}

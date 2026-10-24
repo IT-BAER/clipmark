@@ -1,0 +1,44 @@
+{
+  "id": "01-start",
+  "surface": "windows",
+  "image": "01-start.png",
+  "width": 2560,
+  "height": 1440,
+  "scale": 1,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 970,
+        "y": 39,
+        "width": 52,
+        "height": 48
+      }
+    },
+    {
+      "label": "2",
+      "box": {
+        "x": 1091,
+        "y": 39,
+        "width": 52,
+        "height": 48
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": {
+    "x": 970,
+    "y": 39,
+    "width": 52,
+    "height": 48
+  },
+  "masks": [],
+  "texts": [
+    "Photo",
+    "Rectangle"
+  ],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "windows": [],
+  "capturedAt": "2026-10-23T20:43:45.126Z"
+}

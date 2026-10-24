@@ -1,0 +1,68 @@
+{
+  "id": "05-arrow-menu",
+  "surface": "windows",
+  "image": "05-arrow-menu.png",
+  "width": 1902,
+  "height": 1000,
+  "scale": 1.25,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 846,
+        "y": 290,
+        "width": 176,
+        "height": 46
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": {
+    "x": 844,
+    "y": 190,
+    "width": 178,
+    "height": 110
+  },
+  "masks": [],
+  "texts": [
+    "Clipmark",
+    "Non Client Input Sink Window",
+    "AppWindow Custom Title Bar",
+    "Minimize",
+    "Maximize",
+    "Close",
+    "New capture",
+    "New",
+    "New recording",
+    "Open",
+    "Capture history",
+    "Capture mode: Rectangle",
+    "Delay: No delay",
+    "Select",
+    "Pen",
+    "Highlighter",
+    "Eraser",
+    "Text",
+    "Shapes: Rectangle",
+    "Eyedropper",
+    "Fill",
+    "Color and width: Red, Medium",
+    "Crop",
+    "Text actions",
+    "Undo",
+    "Redo",
+    "Copy",
+    "Save as",
+    "Share",
+    "Send to AI",
+    "Ask AI",
+    "More",
+    "Settings",
+    "Captured image"
+  ],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "window": "Clipmark",
+  "windows": [],
+  "capturedAt": "2026-10-23T20:41:33.572Z"
+}

@@ -1,0 +1,27 @@
+{
+  "id": "02-select",
+  "surface": "windows",
+  "image": "02-select.png",
+  "width": 2560,
+  "height": 1440,
+  "scale": 1,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 710,
+        "y": 364,
+        "width": 1100,
+        "height": 620
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": null,
+  "masks": [],
+  "texts": [],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "windows": [],
+  "capturedAt": "2026-10-23T20:35:25.969Z"
+}

@@ -1,0 +1,77 @@
+{
+  "id": "07-save",
+  "surface": "windows",
+  "image": "07-save.png",
+  "width": 1902,
+  "height": 1000,
+  "scale": 1.25,
+  "targets": [
+    {
+      "label": "1",
+      "box": {
+        "x": 1391,
+        "y": 46,
+        "width": 49,
+        "height": 36
+      }
+    },
+    {
+      "label": "2",
+      "box": {
+        "x": 1445,
+        "y": 46,
+        "width": 93,
+        "height": 36
+      }
+    }
+  ],
+  "missingTargets": [],
+  "zoom": {
+    "x": 1391,
+    "y": 46,
+    "width": 49,
+    "height": 36
+  },
+  "masks": [],
+  "texts": [
+    "Clipmark",
+    "Non Client Input Sink Window",
+    "AppWindow Custom Title Bar",
+    "Minimize",
+    "Maximize",
+    "Close",
+    "New capture",
+    "New",
+    "New recording",
+    "Open",
+    "Capture history",
+    "Capture mode: Rectangle",
+    "Delay: No delay",
+    "Select",
+    "Pen",
+    "Highlighter",
+    "Eraser",
+    "Text",
+    "Shapes: Arrow",
+    "Eyedropper",
+    "Fill",
+    "Color and width: Red, Medium",
+    "Crop",
+    "Text actions",
+    "Undo",
+    "Redo",
+    "Copy",
+    "Save as",
+    "Share",
+    "Send to AI",
+    "Ask AI",
+    "More",
+    "Settings",
+    "Captured image"
+  ],
+  "expectMissing": [],
+  "invokeErrors": [],
+  "window": "Clipmark",
+  "windows": [],
+  "capturedAt": "2026-10-23T20:44:00.853Z"
+}

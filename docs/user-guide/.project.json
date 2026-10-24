@@ -1,0 +1,18 @@
+{
+  "appTypes": ["windows"],
+  "run": {
+    "build": "dotnet build src/Clipmark.App -c Debug -p:Platform=x64 -p:WindowsPackageType=None",
+    "exe": "src/Clipmark.App/bin/x64/Debug/net10.0-windows10.0.26100.0/win-x64/Clipmark.App.exe",
+    "process": "Clipmark.App",
+    "capture": "Driven steps: .claude/user-guide/guide-shots.ps1 (git-excluded) drives the cloaked Debug app through TestDriver.cs; no real input on the desktop."
+  },
+  "locales": ["en-US", "de-DE", "and 14 more under src/Clipmark.App/Strings/"],
+  "labelsSource": "src/Clipmark.App/Strings/en-US/Resources.resw",
+  "testLogin": null,
+  "notes": [
+    "Overlay steps show a synthetic desktop (CLIPMARK_TEST_FRAME) full screen for a few seconds; warn the owner first.",
+    "The test overlay only reports the capture file; the harness opens it in the editor.",
+    "Shape menu items live in a popup that the UIA dump does not include: their targets are boxes.",
+    "Only the Debug exe is stopped; the Store app keeps running."
+  ]
+}
