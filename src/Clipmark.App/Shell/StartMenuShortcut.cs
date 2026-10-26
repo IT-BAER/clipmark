@@ -16,7 +16,7 @@ internal static unsafe class StartMenuShortcut
     private static readonly Guid PersistFileIid = new("0000010B-0000-0000-C000-000000000046");
     private static readonly Guid AppUserModelFmtid = new("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3");
 
-    public static string Path => System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), "Clipmark.lnk");
+    public static string Path => System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Programs), App.DisplayName + ".lnk");
 
     [StructLayout(LayoutKind.Sequential, Pack = 4)]
     private struct PropertyKey { public Guid Fmtid; public uint Pid; }

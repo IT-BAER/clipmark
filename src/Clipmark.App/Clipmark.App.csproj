@@ -16,6 +16,11 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <!-- Dev build for the owner's PC (publish-release.ps1 -Dev): "Clipmark (dev)" in window, tray, Start menu and exe description. -->
+  <PropertyGroup Condition="'$(ClipmarkDev)' == 'true'">
+    <DefineConstants>$(DefineConstants);CLIPMARK_DEV</DefineConstants>
+    <AssemblyTitle>Clipmark (dev)</AssemblyTitle>
+  </PropertyGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />

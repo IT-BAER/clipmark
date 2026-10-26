@@ -48,7 +48,7 @@ internal sealed unsafe class TrayHost : Win32Window
         data.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP | NIF_SHOWTIP;
         data.uCallbackMessage = TrayCallback;
         data.hIcon = _icon;
-        "Clipmark".AsSpan().CopyTo(new Span<char>(data.szTip, 127));
+        App.DisplayName.AsSpan().CopyTo(new Span<char>(data.szTip, 127));
         Shell_NotifyIcon(NIM_ADD, &data);
         data.uVersion = NOTIFYICON_VERSION_4;
         Shell_NotifyIcon(NIM_SETVERSION, &data);

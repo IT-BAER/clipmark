@@ -30,6 +30,12 @@ public partial class App : Application
     private const string InstanceKey = "Clipmark", DataName = "Clipmark";
     internal const bool OwnsShortcut = true;
 #endif
+#if CLIPMARK_DEV
+    // Dev build (-p:ClipmarkDev=true): same data and instance key as a release, only the visible name differs from the Store app.
+    internal const string DisplayName = "Clipmark (dev)";
+#else
+    internal const string DisplayName = "Clipmark";
+#endif
     /// <summary>Settings, license and capture history folder.</summary>
     internal static readonly string DataDir =
         TestDir ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), DataName);
