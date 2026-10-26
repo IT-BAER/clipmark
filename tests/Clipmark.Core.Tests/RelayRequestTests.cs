@@ -46,6 +46,41 @@ public sealed class RelayRequestTests
     }
 
     [Fact]
+    public void Ask_body_keeps_the_newest_turns_within_the_task_limit_starting_with_a_user_turn()
+    {
+        var c = new ChatConversation();
+        c.Start("QUJD", "image/png");
+        for (int i = 1; i <= 12; i++)
+        {
+            c.Ask($"q{i}"); c.AppendDelta($"a{i}"); c.Complete("end_turn");
+        }
+        c.Ask("q13");
+
+        var turns = Root(RelayRequest.BuildAsk(c, "claude-opus-5-5", "medium")).GetProperty("input").GetProperty("turns");
+
+        Assert.Equal(19, turns.GetArrayLength());
+        Assert.Equal("q4", turns[0].GetProperty("text").GetString());
+        Assert.Equal("q13", turns[18].GetProperty("text").GetString());
+        Assert.All(turns.EnumerateArray().Select((t, i) => (t, i)),
+            x => Assert.Equal(x.i % 2 == 0 ? "user" : "assistant", x.t.GetProperty("role").GetString()));
+    }
+
+    [Fact]
+    public void Ask_body_cuts_each_turn_to_8000_characters_without_splitting_a_surrogate_pair()
+    {
+        var c = new ChatConversation();
+        c.Start("QUJD", "image/png");
+        c.Ask(new string('q', 9000)); c.AppendDelta(new string('a', 7999) + "\U0001F600b"); c.Complete("end_turn");
+        c.Ask(new string('r', 8000));
+
+        var turns = Root(RelayRequest.BuildAsk(c, "claude-opus-5-5", "medium")).GetProperty("input").GetProperty("turns");
+
+        Assert.Equal(new string('q', 8000), turns[0].GetProperty("text").GetString());
+        Assert.Equal(new string('a', 7999), turns[1].GetProperty("text").GetString());
+        Assert.Equal(new string('r', 8000), turns[2].GetProperty("text").GetString());
+    }
+
+    [Fact]
     public void Path_names_the_clipmark_app_and_the_ask_task()
     {
         Assert.Equal("/v1/tasks/clipmark/ask", RelayRequest.AskPath);

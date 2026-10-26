@@ -1,0 +1,21 @@
+{
+  "comment": "Generated with clipmark tools/Clipmark.KeyTool (dotnet 10) on 2026-10-14 against a TEST issuer key. Never use this key for real licences.",
+  "issuer_spki_base64": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEvDbt458Xk23lzdHJbGyCSp/3KVDo2Tn0N/8TXK52FLjXZyzIorh2bxdy79mB/17kBjTMiZfX3uXqMrGAj/cccA==",
+  "vectors": [
+    {
+      "key": "AEAQA-AAAAA-AAABG-SABE2-WCSE3-OED3J-D6GMR-MPION-FI4TF-ZGWSS-5KCT6-DMPF5-UDYO6-6EUSA-4UFKL-QNCP2-VFLJY-DC7LF-3QNEU-ZSENT-PJSNI-LA2MD-5PXYG-3XKLT-QE",
+      "licence_id": "1234",
+      "issued": "2026-03-15"
+    },
+    {
+      "key": "AEA77-77777-77777-7AAAK-AZZBB-V4QWQ-XMUEB-QUYQ4-RVIFW-QGSW2-PECT6-UXRFB-5H3GN-ZFB7T-WG6C2-ZHTNQ-R6K5R-DUPGF-IQZS6-C2AIY-OTD6E-V2YNX-FQSDC-YROYZ-ZA",
+      "licence_id": "18446744073709551615",
+      "issued": "2026-01-01"
+    },
+    {
+      "key": "AEAQA-AAAAA-AAAAA-BAEPJ-HKOIM-J7B2C-XCRWD-SY4CV-E4EFO-7QSE2-LDIJH-J7V6N-55TU7-JBDT5-MNVUF-MDPI2-Y2DNN-ENGYK-FSRBF-RX7YP-OVHHL-2ZAHA-FKYFI-JYAKR-A4",
+      "licence_id": "1",
+      "issued": "2026-10-14"
+    }
+  ]
+}

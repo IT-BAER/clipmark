@@ -128,6 +128,7 @@ public sealed partial class MainPage
         _aiInput = new TextBox
         {
             PlaceholderText = Loc.Get("AskAiPlaceholder"), AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, MaxHeight = 120,
+            MaxLength = RelayRequest.MaxTurnChars,
         };
         AutomationProperties.SetName(_aiInput, Loc.Get("AskAiQuestionName"));
         ToolTipService.SetToolTip(_aiInput, Loc.Get("AskAiInputTip"));
@@ -331,8 +332,8 @@ public sealed partial class MainPage
         _aiCts = null;
         _aiTimer?.Stop();
         DrainAiText();
-        // Complete and Fail both end the turn; an answer without text (thinking only) returns its question.
-        string? unanswered = _chat.Fail();
+        // Both end the turn; an answer without text (thinking only) or a refusal returns its question.
+        string? unanswered = error is null && !cancelled ? _chat.Complete(stop) : _chat.Fail();
         if (unanswered is not null && _aiInput.Text.Length == 0)
             _aiInput.Text = unanswered; // no text came back: the question returns to the box
         SyncAiTurns();

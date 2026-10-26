@@ -60,8 +60,13 @@ public sealed class ChatConversation
             _turns.Add(new ChatTurn(ChatRole.Assistant, "", text));
     }
 
-    /// <summary>An answer without any text is dropped together with its question so the turns keep alternating.</summary>
-    public void Complete(string? stopReason) => Fail();
+    /// <summary>An answer without any text, or any refused answer, is dropped together with its question so the turns keep alternating; returns the question.</summary>
+    public string? Complete(string? stopReason)
+    {
+        if (stopReason == "refusal" && IsBusy && _turns[^1].Role == ChatRole.Assistant)
+            _turns.RemoveAt(_turns.Count - 1);
+        return Fail();
+    }
 
     /// <summary>Keeps a partial answer; otherwise removes the pending question and returns its text for the input box.</summary>
     public string? Fail()

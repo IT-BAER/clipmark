@@ -9,6 +9,9 @@ public static class RelayRequest
     public const string App = "clipmark", Task = "ask";
     public const string AskPath = "/v1/tasks/" + App + "/" + Task;
 
+    /// <summary>Turn limits of the clipmark/ask task file (max_items, max_chars_per_item); the relay refuses more with input_invalid.</summary>
+    public const int MaxTurns = 20, MaxTurnChars = 8000;
+
     /// <summary>The typed task input: image, alternating turns ending with the user, model and effort from the server allowlist. A pending answer is left out.</summary>
     public static byte[] BuildAsk(ChatConversation c, string model, string effort)
     {
@@ -25,11 +28,12 @@ public static class RelayRequest
             w.WriteString("data", c.ImageBase64);
             w.WriteEndObject();
             w.WriteStartArray("turns");
-            for (int i = 0; i < count; i++)
+            // The turns alternate and end with the user, so an odd window starts with a user turn.
+            for (int i = Math.Max(0, count - (MaxTurns - 1)); i < count; i++)
             {
                 w.WriteStartObject();
                 w.WriteString("role", turns[i].Role == ChatRole.User ? "user" : "assistant");
-                w.WriteString("text", turns[i].Text);
+                w.WriteString("text", Cut(turns[i].Text));
                 w.WriteEndObject();
             }
             w.WriteEndArray();
@@ -40,5 +44,13 @@ public static class RelayRequest
             w.WriteEndObject();
         }
         return buffer.ToArray();
+    }
+
+    /// <summary>The first MaxTurnChars UTF-16 units, one less when that would split a surrogate pair; never more code points than the relay counts.</summary>
+    private static string Cut(string text)
+    {
+        if (text.Length <= MaxTurnChars)
+            return text;
+        return text[..(char.IsHighSurrogate(text[MaxTurnChars - 1]) ? MaxTurnChars - 1 : MaxTurnChars)];
     }
 }

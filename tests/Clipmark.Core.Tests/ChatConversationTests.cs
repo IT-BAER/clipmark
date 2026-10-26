@@ -32,6 +32,20 @@ public sealed class ChatConversationTests
     }
 
     [Fact]
+    public void A_refusal_drops_the_partial_answer_and_returns_the_question()
+    {
+        var c = Started();
+        c.Ask("q1"); c.AppendDelta("a1");
+        Assert.Null(c.Complete("end_turn"));
+        c.Ask("q2");
+        c.AppendDelta("partial text");
+
+        Assert.Equal("q2", c.Complete("refusal"));
+        Assert.False(c.IsBusy);
+        Assert.Equal([(ChatRole.User, "q1"), (ChatRole.Assistant, "a1")], c.Turns.Select(t => (t.Role, t.Text)));
+    }
+
+    [Fact]
     public void Deltas_grow_the_last_assistant_turn_and_Complete_finishes_it()
     {
         var c = Started();
