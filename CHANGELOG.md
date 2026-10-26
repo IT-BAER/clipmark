@@ -5,6 +5,16 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-26
+
+### Added
+- User guide "Take a screenshot and mark it up" in `docs/user-guide`, as Markdown, HTML and PDF.
+
+### Fixed
+- Ask AI over the relay no longer fails after about ten questions in one chat: Clipmark sends the newest 19 turns
+  and cuts each to 8,000 characters, and the question box takes at most 8,000 characters.
+- Ask AI: when the model refuses an answer, the partial answer is removed and the question returns to the box.
+
 ## [1.1.1] - 2026-10-22
 
 ### Added
