@@ -449,19 +449,23 @@ internal sealed class TestDriver
                     .Select(v => v.ToString("R", CultureInfo.InvariantCulture))));
                 break;
             case "zoomtrace" when arg.StartsWith("start "):
-                // zoomtrace start X,Y | zoomtrace stop: per rendered frame "MS IX IY ZOOM CW CH DPISCALE DRAWS DRAWNZOOM" (as viewat, plus
-                // the canvas draws so far and the zoom of the last one) to DIR\trace.txt between start and stop.
+                // zoomtrace start X,Y | zoomtrace stop: per rendered frame "MS IX IY ZOOM CW CH DPISCALE DRAWS DRAWNZOOM HBAR VBAR" (as viewat,
+                // plus the canvas draws so far, the zoom of the last one and 1 for a scroll bar shown) to DIR\trace.txt between start and stop.
                 var traceEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
                 var traceXY = arg[6..].Split(',');
                 var tracePoint = new Windows.Foundation.Point(double.Parse(traceXY[0], CultureInfo.InvariantCulture), double.Parse(traceXY[1], CultureInfo.InvariantCulture));
                 var traceView = ImageView;
+                var traceBars = Descendants(traceView).OfType<Microsoft.UI.Xaml.Controls.Primitives.ScrollBar>().ToArray();
+                static double Shown(Microsoft.UI.Xaml.Controls.Primitives.ScrollBar bar) =>
+                    bar.Visibility == Visibility.Visible && bar.IndicatorMode != Microsoft.UI.Xaml.Controls.Primitives.ScrollingIndicatorMode.None ? 1 : 0;
                 var traceClock = System.Diagnostics.Stopwatch.StartNew();
                 _trace = [];
                 _traceFrame = (_, _) =>
                 {
                     var on = traceEditor.ToImage(traceView.TransformToVisual(traceEditor.Control).TransformPoint(tracePoint)) / traceEditor.DisplayScale;
                     _trace.Add(string.Join(' ', new double[] { traceClock.Elapsed.TotalMilliseconds, on.X, on.Y, traceEditor.Zoom,
-                        traceEditor.Control.ActualWidth, traceEditor.Control.ActualHeight, traceEditor.Control.DpiScale, traceEditor.Draws, traceEditor.DrawnZoom }
+                        traceEditor.Control.ActualWidth, traceEditor.Control.ActualHeight, traceEditor.Control.DpiScale, traceEditor.Draws, traceEditor.DrawnZoom,
+                        Shown(traceBars.First(b => b.Name == "HorizontalBar")), Shown(traceBars.First(b => b.Name == "VerticalBar")) }
                         .Select(v => v.ToString("0.###", CultureInfo.InvariantCulture))));
                 };
                 Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += _traceFrame;

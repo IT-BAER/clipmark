@@ -609,7 +609,7 @@ internal sealed class EditorCanvas
 
     /// <summary>
     /// Range of the view's top-left at that zoom and the viewport span, in image px. Per axis the view stays inside the shown
-    /// image plus an edge; where that fits the viewport, the image (or the crop) is centered.
+    /// image plus an edge; where the shown image fits the viewport, the image (or the crop) is centered and does not scroll.
     /// </summary>
     public (Vector2 Min, Vector2 Max, Vector2 Span) ViewRange(float zoom)
     {
@@ -620,6 +620,11 @@ internal sealed class EditorCanvas
         var centered = new Vector2(anchor.X + (anchor.Width - span.X) / 2, anchor.Y + (anchor.Height - span.Y) / 2);
         var min = Vector2.Min(centered, new Vector2(view.X, view.Y) - edge);
         var max = Vector2.Max(centered + span, new Vector2(view.Right, view.Bottom) + edge) - span;
+        // Half a px of slack: fit zoom makes the image as large as the viewport up to rounding.
+        if (view.Width <= span.X + 0.5f)
+            min.X = max.X = centered.X;
+        if (view.Height <= span.Y + 0.5f)
+            min.Y = max.Y = centered.Y;
         return (min, max, span);
     }
 

@@ -498,13 +498,13 @@ public sealed partial class MainPage : Page
 
     private static void SyncBar(ScrollBar bar, float min, float max, float span, float at)
     {
-        // A running zoom can show a view outside the range it settles in.
+        // A running zoom can show a view outside the range it settles in; only that range decides whether the bar shows.
         bar.Minimum = Math.Min(min, at);
         bar.Maximum = Math.Max(max, at);
         bar.ViewportSize = bar.LargeChange = span;
         bar.SmallChange = span / 10;
         bar.Value = at;
-        bar.Visibility = bar.Maximum - bar.Minimum >= 1 ? Visibility.Visible : Visibility.Collapsed;
+        bar.Visibility = max - min >= 1 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     /// <summary>Shows the scroll bars as the scroll viewer does on input; with auto-hide on (Windows setting) they go after 2 s unless the pointer is on one.</summary>
