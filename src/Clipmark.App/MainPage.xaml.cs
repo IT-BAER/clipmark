@@ -494,7 +494,7 @@ public sealed partial class MainPage : Page
     /// </summary>
     internal bool HandleKey(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_editor is null || _aiFlyout?.IsOpen == true || ToolRing.IsOpen)
+        if (_editor is null || _aiFlyout?.IsOpen == true || ToolRingOpen)
             return false; // Esc in the Ask AI flyout or the tool ring closes it, not the selection
         // Text being edited keeps every key except Esc, which commits it.
         if (_editor.IsEditingText)

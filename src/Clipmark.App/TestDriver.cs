@@ -23,7 +23,8 @@ namespace Clipmark.App;
 /// | drag [shift] [ctrl] [hold] X,Y X,Y... (image px; a point may be @rotate, @start, @end or @CropHandleName of the selection, plus an optional +DX,DY;
 /// hold = no release, to screenshot the drag) | release | hover X,Y (eyedropper loupe) | dblclick X,Y | type TEXT | nokey NAME [ctrl] (must not be handled)
 /// | assert count N | assert editing | assert hit X,Y (a press at image px X,Y in the scroll viewport reaches the canvas) | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
-/// | rightclick X,Y (image px: text menu on selected text, else the tool ring) | ringpick NAME | ringkey KEY | assert ring open|closed|X,Y | assert focus NAME
+/// | rightclick X,Y [MS] (image px: text menu on selected text, else the tool ring) | ringpick NAME | ringkey KEY [MS] | ringmotion on|off|system
+/// | assert ring open|closed|gone|X,Y | assert focus NAME
 /// | shot FILE (window, plus FILE-popupN.png per open popup) | shotall FILE (window with the open popups drawn in place) | save FILE (export PNG) | wait MS
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
@@ -227,12 +228,13 @@ internal sealed class TestDriver
                 await Task.Delay(100);
                 break;
             case "rightclick":
-                // rightclick X,Y: right-click at image px; fails when it opens neither the text menu nor the tool ring.
-                var at4 = arg.Split(',');
+                // rightclick X,Y [MS]: right-click at image px, then wait MS (300); fails when it opens neither the text menu nor the tool ring.
+                var rightWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var at4 = rightWords[0].Split(',');
                 if (!(_page.Editor ?? throw new InvalidOperationException("no capture shown")).RightClick(
                     new Vector2(float.Parse(at4[0], CultureInfo.InvariantCulture), float.Parse(at4[1], CultureInfo.InvariantCulture))))
                     throw new InvalidOperationException("no menu");
-                await Task.Delay(300);
+                await Task.Delay(rightWords.Length > 1 ? int.Parse(rightWords[1], CultureInfo.InvariantCulture) : 300);
                 break;
             case "ringpick":
                 // ringpick NAME: invokes the tool ring button with that automation name.
@@ -241,14 +243,26 @@ internal sealed class TestDriver
                 await Task.Delay(300);
                 break;
             case "ringkey":
-                // ringkey KEY: a key (VirtualKey name) in the open tool ring.
-                if (!_page.ToolRingKey(Enum.Parse<Windows.System.VirtualKey>(arg)))
+                // ringkey KEY [MS]: a key (VirtualKey name) in the open tool ring, then wait MS (100).
+                var ringKeyWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                if (!_page.ToolRingKey(Enum.Parse<Windows.System.VirtualKey>(ringKeyWords[0])))
                     throw new InvalidOperationException("key not handled");
-                await Task.Delay(100);
+                await Task.Delay(ringKeyWords.Length > 1 ? int.Parse(ringKeyWords[1], CultureInfo.InvariantCulture) : 100);
+                break;
+            case "ringmotion":
+                // ringmotion on|off|system: tool ring animations on, off, or as the Windows "Animation effects" setting says.
+                _page.RingMotion = arg == "system" ? null : arg == "on";
                 break;
             case "assert" when arg.StartsWith("ring "):
-                // assert ring open|closed|X,Y: X,Y = open and centered on image px X,Y (within 1 DIP).
+                // assert ring open|closed|gone|X,Y: closed = takes no input (it may still animate), gone = off screen,
+                // X,Y = open and centered on image px X,Y (within 1 DIP).
                 string ringState = arg[5..];
+                if (ringState == "gone")
+                {
+                    if (_page.ToolRingShown)
+                        throw new InvalidOperationException("tool ring still shown");
+                    break;
+                }
                 if (ringState == "closed" ? _page.ToolRingOpen : !_page.ToolRingOpen)
                     throw new InvalidOperationException($"tool ring is {(_page.ToolRingOpen ? "open" : "closed")}");
                 if (ringState.Contains(','))
