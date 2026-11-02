@@ -540,10 +540,11 @@ internal sealed class EditorCanvas
     public Windows.Foundation.Point ShownCenterDips => new((_origin.X + View.X + View.Width / 2f) / Scale, (_origin.Y + View.Y + View.Height / 2f) / Scale);
 
     /// <summary>
-    /// Sizes the control to cover the viewport (image centered) and the document bounds plus an edge; false when unchanged.
+    /// Sizes the control to cover the viewport at zoom <paramref name="cover"/> (default <paramref name="zoom"/>, image centered)
+    /// and the document bounds plus an edge; false when unchanged.
     /// Below zoom 1 the control renders at DpiScale = zoom, so its surface stays at screen resolution.
     /// </summary>
-    public bool Layout(double viewportWidth, double viewportHeight, float zoom)
+    public bool Layout(double viewportWidth, double viewportHeight, float zoom, float? cover = null)
     {
         if (Document is null)
             return false;
@@ -554,16 +555,9 @@ internal sealed class EditorCanvas
             Control.DpiScale = Math.Min(zoom, 1);
             Control.Invalidate();
         }
-        float fill = Scale / zoom;
-        int fw = (int)(viewportWidth * fill), fh = (int)(viewportHeight * fill);
-        var anchor = Document.Crop ?? new PixelRect(0, 0, Document.Width, Document.Height);
-        int fx = anchor.X + (int)Math.Floor((anchor.Width - fw) / 2.0), fy = anchor.Y + (int)Math.Floor((anchor.Height - fh) / 2.0);
-        var b = View;
-        int edge = (int)MathF.Ceiling(EdgeDips * Scale);
-        int left = Math.Min(fx, b.X - edge), top = Math.Min(fy, b.Y - edge);
-        int right = Math.Max(fx + fw, b.Right + edge), bottom = Math.Max(fy + fh, b.Bottom + edge);
-        var origin = new Vector2(-left, -top);
-        var size = new Vector2(right - left, bottom - top);
+        var bounds = Cover(viewportWidth, viewportHeight, cover ?? zoom);
+        var origin = new Vector2(-bounds.X, -bounds.Y);
+        var size = new Vector2(bounds.Width, bounds.Height);
         if (origin == _origin && size == _size)
             return false;
         _origin = origin;
@@ -573,6 +567,27 @@ internal sealed class EditorCanvas
         Control.Invalidate();
         PlaceTextBox();
         return true;
+    }
+
+    /// <summary>Control bounds Layout gives for that zoom, in DIPs at zoom 1 from the image origin.</summary>
+    public Windows.Foundation.Rect CoverDips(double viewportWidth, double viewportHeight, float zoom)
+    {
+        var c = Cover(viewportWidth, viewportHeight, zoom);
+        return new(c.X / Scale, c.Y / Scale, c.Width / Scale, c.Height / Scale);
+    }
+
+    /// <summary>Image px bounds that cover the viewport at that zoom (image centered) and the document bounds plus an edge.</summary>
+    private PixelRect Cover(double viewportWidth, double viewportHeight, float zoom)
+    {
+        float fill = Scale / zoom;
+        int fw = (int)(viewportWidth * fill), fh = (int)(viewportHeight * fill);
+        var anchor = Document!.Crop ?? new PixelRect(0, 0, Document.Width, Document.Height);
+        int fx = anchor.X + (int)Math.Floor((anchor.Width - fw) / 2.0), fy = anchor.Y + (int)Math.Floor((anchor.Height - fh) / 2.0);
+        var b = View;
+        int edge = (int)MathF.Ceiling(EdgeDips * Scale);
+        int left = Math.Min(fx, b.X - edge), top = Math.Min(fy, b.Y - edge);
+        int right = Math.Max(fx + fw, b.Right + edge), bottom = Math.Max(fy + fh, b.Bottom + edge);
+        return new(left, top, right - left, bottom - top);
     }
 
     /// <summary>Runs a selection command outside a drag and redraws; document edits also raise Changed through the document.</summary>

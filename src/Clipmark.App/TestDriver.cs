@@ -41,6 +41,7 @@ namespace Clipmark.App;
 /// | toast TEXT (text toast) | toastimage FILE (capture toast for FILE)
 /// | settext NAME VALUE (TextBox or PasswordBox, value = last word) | assert text NAME = TEXT (TextBlock or TextBox contains)
 /// | assert zoom F|fit (scroll viewer zoom factor within 0.02 of F or of the fit-to-window factor) | assert none NAME | assert tool TOOL | select NAME INDEX (ComboBox)
+/// | zoomwheel DELTA X,Y (plain wheel zoom at viewport DIP X,Y, animated, not awaited) | viewat X,Y (image point at viewport DIP X,Y, zoom, viewport and image size, canvas DpiScale to DIR\view.txt)
 /// | history on|off (setting) | historycount N (assert stored items) | openhistory N (Nth item, newest = 0)
 /// | askai (Ask AI button) | aiask TEXT (types the question, clicks Send) | aiwait (answer finished, up to 30 s)
 /// | aikey KEY|none (stores or deletes the API key) | aikeyenv VAR (key from an environment variable)
@@ -375,6 +376,25 @@ internal sealed class TestDriver
                 var at = wheelWords[1].Split(',');
                 _page.Wheel(int.Parse(wheelWords[0], CultureInfo.InvariantCulture), wheelWords.Contains("shift"),
                     new Vector2(float.Parse(at[0], CultureInfo.InvariantCulture), float.Parse(at[1], CultureInfo.InvariantCulture)));
+                break;
+            case "zoomwheel":
+                // zoomwheel DELTA X,Y: the plain wheel zoom with the pointer at viewport DIP X,Y.
+                var zoomWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var zoomAt = zoomWords[1].Split(',');
+                _page.ZoomAt(new Windows.Foundation.Point(double.Parse(zoomAt[0], CultureInfo.InvariantCulture), double.Parse(zoomAt[1], CultureInfo.InvariantCulture)),
+                    int.Parse(zoomWords[0], CultureInfo.InvariantCulture));
+                break;
+            case "viewat":
+                // viewat X,Y: "IX IY ZOOM VW VH IW IH DPISCALE" to DIR\view.txt: the image point at viewport DIP X,Y (DIPs at zoom 1 from
+                // the image origin), the zoom factor, the viewport size, the shown image size (DIPs at zoom 1) and the canvas DpiScale.
+                var viewEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
+                var viewAt = arg.Split(',');
+                var imageScroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
+                var onControl = imageScroller.TransformToVisual(viewEditor.Control).TransformPoint(
+                    new Windows.Foundation.Point(double.Parse(viewAt[0], CultureInfo.InvariantCulture), double.Parse(viewAt[1], CultureInfo.InvariantCulture)));
+                File.WriteAllText(Path.Combine(_dir, "view.txt"), string.Join(' ', new[] { onControl.X - viewEditor.ImageOrigin.X, onControl.Y - viewEditor.ImageOrigin.Y, _page.ZoomFactor,
+                    imageScroller.ViewportWidth, imageScroller.ViewportHeight, viewEditor.ShownSizeDips.Width, viewEditor.ShownSizeDips.Height, viewEditor.Control.DpiScale }
+                    .Select(v => v.ToString("R", CultureInfo.InvariantCulture))));
                 break;
             case "ruler":
                 _page.SetRuler(arg == "on");
