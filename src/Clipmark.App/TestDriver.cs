@@ -22,7 +22,7 @@ namespace Clipmark.App;
 /// Commands: open FILE | click NAME (automation name or menu item text) | expand NAME (open a split/drop-down menu)
 /// | drag [shift] [ctrl] [hold] X,Y X,Y... (image px; a point may be @rotate, @start, @end or @CropHandleName of the selection, plus an optional +DX,DY;
 /// hold = no release, to screenshot the drag) | release | hover X,Y (eyedropper loupe) | dblclick X,Y | type TEXT | nokey NAME [ctrl] (must not be handled)
-/// | assert count N | assert editing | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
+/// | assert count N | assert editing | assert hit X,Y (a press at image px X,Y in the scroll viewport reaches the canvas) | key NAME [shift] [ctrl] (VirtualKey name, runs the page key handling)
 /// | shot FILE (window, plus FILE-popupN.png per open popup) | shotall FILE (window with the open popups drawn in place) | save FILE (export PNG) | wait MS
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
@@ -205,6 +205,18 @@ internal sealed class TestDriver
                 break;
             case "release":
                 (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
+                break;
+            case "assert" when arg.StartsWith("hit "):
+                // assert hit X,Y: a press at image px X,Y, which must lie in the scroll viewport, reaches the canvas.
+                var hitEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
+                var at5 = arg[4..].Split(',');
+                var hitAt = hitEditor.Control.TransformToVisual(null).TransformPoint(hitEditor.ControlPoint(
+                    new Vector2(float.Parse(at5[0], CultureInfo.InvariantCulture), float.Parse(at5[1], CultureInfo.InvariantCulture))));
+                var scroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
+                if (!scroller.TransformToVisual(null).TransformBounds(new Windows.Foundation.Rect(0, 0, scroller.ViewportWidth, scroller.ViewportHeight)).Contains(hitAt))
+                    throw new InvalidOperationException($"point {hitAt} is outside the viewport");
+                if (!VisualTreeHelper.FindElementsInHostCoordinates(hitAt, (UIElement)Root.Content).Contains(hitEditor.Control))
+                    throw new InvalidOperationException($"canvas not hit at {hitAt}");
                 break;
             case "vstate":
                 // vstate NAME STATE: puts a control into a visual state (PointerOver, Pressed, Normal) without pointer input.

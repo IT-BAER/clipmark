@@ -449,7 +449,8 @@ internal sealed class EditorCanvas
         return await CanvasBitmap.LoadAsync(sender, stream, 96);
     }
 
-    private float Scale => Control.Dpi / 96;
+    // Display scale: Control.Dpi includes the DpiScale that Layout sets.
+    private float Scale => Control.Dpi / Control.DpiScale / 96;
 
     private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null || _selectingText || _movingRuler;
 
@@ -540,7 +541,7 @@ internal sealed class EditorCanvas
 
     /// <summary>
     /// Sizes the control to cover the viewport (image centered) and the document bounds plus an edge; false when unchanged.
-    /// Below zoom 1 the control stops growing with the viewport to bound GPU memory.
+    /// Below zoom 1 the control renders at DpiScale = zoom, so its surface stays at screen resolution.
     /// </summary>
     public bool Layout(double viewportWidth, double viewportHeight, float zoom)
     {
@@ -550,9 +551,10 @@ internal sealed class EditorCanvas
         if (zoom != _zoom)
         {
             _zoom = zoom;
+            Control.DpiScale = Math.Min(zoom, 1);
             Control.Invalidate();
         }
-        float fill = Scale / Math.Max(zoom, 1);
+        float fill = Scale / zoom;
         int fw = (int)(viewportWidth * fill), fh = (int)(viewportHeight * fill);
         var anchor = Document.Crop ?? new PixelRect(0, 0, Document.Width, Document.Height);
         int fx = anchor.X + (int)Math.Floor((anchor.Width - fw) / 2.0), fy = anchor.Y + (int)Math.Floor((anchor.Height - fh) / 2.0);
@@ -598,6 +600,9 @@ internal sealed class EditorCanvas
     }
 
     internal Vector2 PointOf(PointerRoutedEventArgs e) => ImagePoint(e);
+
+    /// <summary>Control DIP point of an image px point; it can lie outside the control.</summary>
+    internal Windows.Foundation.Point ControlPoint(Vector2 point) => new((point.X + _origin.X) / Scale, (point.Y + _origin.Y) / Scale);
 
     private (Vector2 Point, float Width)? _sizeHint;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
@@ -948,7 +953,8 @@ internal sealed class EditorCanvas
         using (ds.CreateLayer(1, new Windows.Foundation.Rect(view.X, view.Y, view.Width, view.Height)))
         {
             DrawBackground(ds);
-            DrawBase(ds);
+            // Below zoom 1 Win2D scales the image down (DpiScale); linear filtering breaks up small text.
+            DrawBase(ds, _zoom < 1 ? CanvasImageInterpolation.HighQualityCubic : CanvasImageInterpolation.Linear);
             // A selection drag shows its transformed copies in place of the originals, keeping the z-order.
             // Attached arrows follow their targets in the preview.
             var live = _selection is { Live.Count: > 0 } sel ? Document.WithAttached(sel.Live).ToDictionary(o => o.Id) : [];
@@ -1109,9 +1115,10 @@ internal sealed class EditorCanvas
     }
 
     /// <summary>The captured image and its redaction boxes.</summary>
-    private void DrawBase(CanvasDrawingSession ds)
+    private void DrawBase(CanvasDrawingSession ds, CanvasImageInterpolation interpolation = CanvasImageInterpolation.Linear)
     {
-        ds.DrawImage(_image);
+        var bounds = _image!.Bounds;
+        ds.DrawImage(_image, bounds, bounds, 1, interpolation);
         foreach (var r in Document!.Redactions)
             ds.FillRectangle(r.X, r.Y, r.Width, r.Height, Microsoft.UI.Colors.Black);
     }
