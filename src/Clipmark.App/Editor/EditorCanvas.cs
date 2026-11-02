@@ -55,10 +55,17 @@ internal sealed class EditorCanvas
     private ToolSession? _session;
     private SelectionSession? _selection;
     private EditorTool _tool;
-    // Image origin and control size in physical px; the control can be larger than the document.
-    private Vector2 _origin;
-    private Vector2 _size;
+    // View: zoom factor and the image px point at the viewport's top-left; the control fills the viewport.
+    private Vector2 _corner;
     private float _zoom = 1;
+    private readonly CompositeTransform _overlayView = new();
+    // Touch: a finger's press waits until it moves TouchSlopDips or lifts, so that a second finger in that time turns both
+    // into a pinch (zoom and pan) instead of a drag. Positions in control DIPs.
+    private const float TouchSlopDips = 4;
+    private readonly Dictionary<uint, Vector2> _touches = [];
+    private (uint Id, Vector2 At, bool Shift)? _pendingTouch;
+    private uint? _dragTouch;
+    private (float Distance, float Zoom, Vector2 Image)? _pinch;
     // Crop mode: the frame being edited (null outside crop mode) and the handle being dragged.
     private PixelRect? _cropFrame;
     private CropHandle? _handle;
@@ -171,7 +178,7 @@ internal sealed class EditorCanvas
     public event Action<Rgba>? ColorPicked;
 
     public CanvasControl Control { get; }
-    /// <summary>Canvas plus the text editing overlay; this goes into the scroll viewer.</summary>
+    /// <summary>Canvas plus the text editing overlay; it fills the image view.</summary>
     public FrameworkElement Host { get; }
     public EditorDocument? Document { get; private set; }
     /// <summary>Current tool; a drawing tool clears the selection, any change commits text being edited.</summary>
@@ -233,39 +240,29 @@ internal sealed class EditorCanvas
     {
         _path = path;
         _file = file;
-        Control = new CanvasControl
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-        };
+        Control = new CanvasControl();
         AutomationProperties.SetName(Control, Loc.Get("CanvasName"));
         Control.CreateResources += (s, e) => e.TrackAsyncAction(LoadAsync(s).AsAsyncAction());
         Control.Draw += OnDraw;
         Control.PointerPressed += OnPointerPressed;
         Control.PointerMoved += OnPointerMoved;
         Control.PointerReleased += (_, e) => Control.ReleasePointerCapture(e.Pointer);
-        Control.PointerCaptureLost += (_, _) => Release();
+        Control.PointerCaptureLost += (_, e) =>
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+                TouchUp(e.Pointer.PointerId);
+            else
+                Release();
+        };
         Control.PointerExited += (_, _) =>
         {
             _hover = null;
             Control.Invalidate();
         };
-        Control.DoubleTapped += (_, e) =>
-        {
-            var p = e.GetPosition(Control);
-            DoubleClick(new Vector2((float)p.X * Scale, (float)p.Y * Scale) - _origin);
-        };
-        Control.RightTapped += (_, e) =>
-        {
-            var p = e.GetPosition(Control);
-            e.Handled = RightClick(new Vector2((float)p.X * Scale, (float)p.Y * Scale) - _origin);
-        };
-        Host = _host = new CursorHost
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center,
-            Children = { Control, _overlay },
-        };
+        Control.DoubleTapped += (_, e) => DoubleClick(ToImage(e.GetPosition(Control)));
+        Control.RightTapped += (_, e) => e.Handled = RightClick(ToImage(e.GetPosition(Control)));
+        _overlay.RenderTransform = _overlayView;
+        Host = _host = new CursorHost { Children = { Control, _overlay } };
     }
 
     public bool IsEditingText => _textBox is not null;
@@ -357,8 +354,17 @@ internal sealed class EditorCanvas
         foreach (var key in new[] { "TextControlForegroundPointerOver", "TextControlForegroundFocused" })
             box.Resources[key] = brush;
         box.FontSize = _textSize / Scale;
-        Overlay.SetLeft(box, (_textAt.X + _origin.X) / Scale - 1);
-        Overlay.SetTop(box, (_textAt.Y + _origin.Y) / Scale - 1);
+        Overlay.SetLeft(box, _textAt.X / Scale - 1);
+        Overlay.SetTop(box, _textAt.Y / Scale - 1);
+    }
+
+    // The overlay holds DIPs at zoom 1 from the image origin and is scaled and moved with the view.
+    private void PlaceOverlay()
+    {
+        var offset = Offset / Scale;
+        _overlayView.ScaleX = _overlayView.ScaleY = _zoom;
+        _overlayView.TranslateX = offset.X;
+        _overlayView.TranslateY = offset.Y;
     }
 
     /// <summary>Ends text editing as one undo step: new text is added, edited text replaced, text left empty removed.</summary>
@@ -473,8 +479,8 @@ internal sealed class EditorCanvas
         return await CanvasBitmap.LoadAsync(sender, stream, 96);
     }
 
-    // Display scale: Control.Dpi includes the DpiScale that Layout sets.
-    private float Scale => Control.Dpi / Control.DpiScale / 96;
+    // Display scale: physical px per DIP (DpiScale stays 1, so the surface is the viewport in physical px).
+    private float Scale => Control.Dpi / 96;
 
     private bool Dragging => _session?.IsActive == true || _selection?.IsActive == true || _handle is not null || _selectingText || _movingRuler;
 
@@ -498,7 +504,7 @@ internal sealed class EditorCanvas
         _rulerShown = on;
         _movingRuler &= on;
         if (on)
-            _rulerCenter ??= new Vector2((float)center.X * Scale, (float)center.Y * Scale) - _origin;
+            _rulerCenter ??= ToImage(center);
         Control.Invalidate();
     }
 
@@ -557,61 +563,148 @@ internal sealed class EditorCanvas
     /// <summary>Size of the shown part of the image (the whole canvas while cropping) in DIPs at zoom 100%.</summary>
     public Windows.Foundation.Size ShownSizeDips => new(View.Width / Scale, View.Height / Scale);
 
-    /// <summary>Image origin inside the control, in DIPs.</summary>
-    public Windows.Foundation.Point ImageOrigin => new(_origin.X / Scale, _origin.Y / Scale);
+    /// <summary>Center of the shown part of the image, in image px.</summary>
+    public Vector2 ShownCenter => new(View.X + View.Width / 2f, View.Y + View.Height / 2f);
 
-    /// <summary>Center of the shown part of the image inside the control, in DIPs.</summary>
-    public Windows.Foundation.Point ShownCenterDips => new((_origin.X + View.X + View.Width / 2f) / Scale, (_origin.Y + View.Y + View.Height / 2f) / Scale);
+    /// <summary>Raised when the zoom, the view or the viewport size changes.</summary>
+    public event Action? ViewChanged;
+
+    /// <summary>Screen px per image px.</summary>
+    public float Zoom => _zoom;
+
+    /// <summary>Image px point at the viewport's top-left.</summary>
+    public Vector2 Corner => _corner;
+
+    /// <summary>Physical px per DIP.</summary>
+    internal float DisplayScale => Scale;
+
+    /// <summary>Viewport the control fills, in DIPs.</summary>
+    public Vector2 ViewportDips => _viewportDips;
+
+    // Viewport physical px of the image origin, in whole px so that zoom 1 maps image pixels to screen pixels.
+    private Vector2 Offset => new(MathF.Round(-_corner.X * _zoom), MathF.Round(-_corner.Y * _zoom));
+
+    /// <summary>Shows the image at that zoom with the image px point corner at the viewport's top-left, unclamped (see <see cref="ClampCorner"/>).</summary>
+    public void SetView(float zoom, Vector2 corner)
+    {
+        if (zoom == _zoom && corner == _corner)
+            return;
+        _zoom = zoom;
+        _corner = corner;
+        PlaceOverlay();
+        Control.Invalidate();
+        ViewChanged?.Invoke();
+    }
+
+    /// <summary>Sets the viewport size in DIPs; the view keeps its top-left.</summary>
+    public void Resize(double width, double height)
+    {
+        var size = new Vector2((float)width, (float)height);
+        if (size == _viewportDips)
+            return;
+        _viewportDips = size;
+        Control.Invalidate();
+        ViewChanged?.Invoke();
+    }
 
     /// <summary>
-    /// Sizes the control to cover the viewport at zoom <paramref name="cover"/> (default <paramref name="zoom"/>, image centered)
-    /// and the document bounds plus an edge; false when unchanged.
-    /// Below zoom 1 the control renders at DpiScale = zoom, so its surface stays at screen resolution.
+    /// Range of the view's top-left at that zoom and the viewport span, in image px. Per axis the view stays inside the shown
+    /// image plus an edge; where that fits the viewport, the image (or the crop) is centered.
     /// </summary>
-    public bool Layout(double viewportWidth, double viewportHeight, float zoom, float? cover = null)
+    public (Vector2 Min, Vector2 Max, Vector2 Span) ViewRange(float zoom)
     {
-        if (Document is null)
-            return false;
-        _viewportDips = new Vector2((float)viewportWidth, (float)viewportHeight);
-        if (zoom != _zoom)
-        {
-            _zoom = zoom;
-            Control.DpiScale = Math.Min(zoom, 1);
-            Control.Invalidate();
-        }
-        var bounds = Cover(viewportWidth, viewportHeight, cover ?? zoom);
-        var origin = new Vector2(-bounds.X, -bounds.Y);
-        var size = new Vector2(bounds.Width, bounds.Height);
-        if (origin == _origin && size == _size)
-            return false;
-        _origin = origin;
-        _size = size;
-        Control.Width = size.X / Scale;
-        Control.Height = size.Y / Scale;
-        Control.Invalidate();
-        PlaceTextBox();
-        return true;
-    }
-
-    /// <summary>Control bounds Layout gives for that zoom, in DIPs at zoom 1 from the image origin.</summary>
-    public Windows.Foundation.Rect CoverDips(double viewportWidth, double viewportHeight, float zoom)
-    {
-        var c = Cover(viewportWidth, viewportHeight, zoom);
-        return new(c.X / Scale, c.Y / Scale, c.Width / Scale, c.Height / Scale);
-    }
-
-    /// <summary>Image px bounds that cover the viewport at that zoom (image centered) and the document bounds plus an edge.</summary>
-    private PixelRect Cover(double viewportWidth, double viewportHeight, float zoom)
-    {
-        float fill = Scale / zoom;
-        int fw = (int)(viewportWidth * fill), fh = (int)(viewportHeight * fill);
+        var span = _viewportDips * Scale / zoom;
         var anchor = Document!.Crop ?? new PixelRect(0, 0, Document.Width, Document.Height);
-        int fx = anchor.X + (int)Math.Floor((anchor.Width - fw) / 2.0), fy = anchor.Y + (int)Math.Floor((anchor.Height - fh) / 2.0);
-        var b = View;
-        int edge = (int)MathF.Ceiling(EdgeDips * Scale);
-        int left = Math.Min(fx, b.X - edge), top = Math.Min(fy, b.Y - edge);
-        int right = Math.Max(fx + fw, b.Right + edge), bottom = Math.Max(fy + fh, b.Bottom + edge);
-        return new(left, top, right - left, bottom - top);
+        var view = View;
+        var edge = new Vector2(EdgeDips * Scale);
+        var centered = new Vector2(anchor.X + (anchor.Width - span.X) / 2, anchor.Y + (anchor.Height - span.Y) / 2);
+        var min = Vector2.Min(centered, new Vector2(view.X, view.Y) - edge);
+        var max = Vector2.Max(centered + span, new Vector2(view.Right, view.Bottom) + edge) - span;
+        return (min, max, span);
+    }
+
+    /// <summary>The top-left nearest to corner inside <see cref="ViewRange"/> at that zoom.</summary>
+    public Vector2 ClampCorner(float zoom, Vector2 corner)
+    {
+        var (min, max, _) = ViewRange(zoom);
+        return Vector2.Clamp(corner, min, max);
+    }
+
+    /// <summary>True while two fingers zoom and pan the view.</summary>
+    public bool Pinching => _pinch is not null;
+
+    /// <summary>A finger touched the canvas at a control DIP point; pointer input and the Debug test script both enter here.</summary>
+    internal void TouchDown(uint id, Vector2 at, bool shift)
+    {
+        _touches[id] = at;
+        if (_touches.Count == 2 && _pinch is null && (_pendingTouch is not null || !Dragging))
+        {
+            _pendingTouch = null;
+            var (a, b) = TwoTouches();
+            // The view's own point, without the whole-pixel snap of the drawing, which the zoom would magnify.
+            _pinch = (Vector2.Distance(a, b), _zoom, _corner + (a + b) / 2 * Scale / _zoom);
+        }
+        else if (_touches.Count == 1 && !Dragging)
+            _pendingTouch = (id, at, shift);
+    }
+
+    internal void TouchMove(uint id, Vector2 at, bool shift)
+    {
+        if (!_touches.ContainsKey(id))
+            return;
+        _touches[id] = at;
+        if (_pinch is { } pinch)
+        {
+            var (a, b) = TwoTouches();
+            float distance = Vector2.Distance(a, b);
+            float zoom = Math.Clamp(pinch.Zoom * (pinch.Distance > 0 ? distance / pinch.Distance : 1), (float)ZoomMath.Min, (float)ZoomMath.Max);
+            // The image point first under the center of the fingers stays under it.
+            SetView(zoom, pinch.Image - (a + b) / 2 * Scale / zoom);
+        }
+        else if (_pendingTouch is { } pending && pending.Id == id)
+        {
+            if (Vector2.Distance(at, pending.At) < TouchSlopDips)
+                return;
+            _pendingTouch = null;
+            _dragTouch = id;
+            Press(ToImage(pending.At), pending.Shift);
+            Drag(ToImage(at), shift);
+        }
+        else if (id == _dragTouch)
+            Drag(ToImage(at), shift);
+    }
+
+    internal void TouchUp(uint id)
+    {
+        if (!_touches.Remove(id))
+            return;
+        if (_pinch is not null)
+        {
+            if (_touches.Count >= 2)
+                return;
+            _pinch = null; // a finger still down does nothing until it lifts
+            SetView(_zoom, ClampCorner(_zoom, _corner));
+        }
+        else if (_pendingTouch is { } pending && pending.Id == id)
+        {
+            _pendingTouch = null;
+            Press(ToImage(pending.At), pending.Shift);
+            Release();
+        }
+        else if (id == _dragTouch)
+        {
+            _dragTouch = null;
+            Release();
+        }
+    }
+
+    private (Vector2, Vector2) TwoTouches()
+    {
+        using var e = _touches.Values.GetEnumerator();
+        e.MoveNext();
+        var a = e.Current;
+        e.MoveNext();
+        return (a, e.Current);
     }
 
     /// <summary>Runs a selection command outside a drag and redraws; document edits also raise Changed through the document.</summary>
@@ -641,7 +734,16 @@ internal sealed class EditorCanvas
     internal Vector2 PointOf(PointerRoutedEventArgs e) => ImagePoint(e);
 
     /// <summary>Control DIP point of an image px point; it can lie outside the control.</summary>
-    internal Windows.Foundation.Point ControlPoint(Vector2 point) => new((point.X + _origin.X) / Scale, (point.Y + _origin.Y) / Scale);
+    internal Windows.Foundation.Point ControlPoint(Vector2 point)
+    {
+        var p = (point * _zoom + Offset) / Scale;
+        return new(p.X, p.Y);
+    }
+
+    /// <summary>Image px point of a control DIP point.</summary>
+    internal Vector2 ToImage(Windows.Foundation.Point p) => ToImage(new Vector2((float)p.X, (float)p.Y));
+
+    private Vector2 ToImage(Vector2 dip) => (dip * Scale - Offset) / _zoom;
 
     private (Vector2 Point, float Width)? _sizeHint;
     private Microsoft.UI.Dispatching.DispatcherQueueTimer? _hintTimer;
@@ -662,14 +764,25 @@ internal sealed class EditorCanvas
         Control.Invalidate();
     }
 
-    private Vector2 ImagePoint(PointerRoutedEventArgs e)
+    private Vector2 ImagePoint(PointerRoutedEventArgs e) => ToImage(e.GetCurrentPoint(Control).Position);
+
+    private Vector2 DipOf(PointerRoutedEventArgs e)
     {
         var p = e.GetCurrentPoint(Control).Position;
-        return new Vector2((float)p.X * Scale, (float)p.Y * Scale) - _origin;
+        return new Vector2((float)p.X, (float)p.Y);
     }
 
     private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
     {
+        if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+        {
+            if (_session is not null && Control.CapturePointer(e.Pointer))
+            {
+                TouchDown(e.Pointer.PointerId, DipOf(e), IsShift(e));
+                e.Handled = true;
+            }
+            return;
+        }
         if (_session is null || Dragging || !e.GetCurrentPoint(Control).Properties.IsLeftButtonPressed)
             return;
         if (!Control.CapturePointer(e.Pointer))
@@ -680,6 +793,12 @@ internal sealed class EditorCanvas
 
     private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
     {
+        if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+        {
+            TouchMove(e.Pointer.PointerId, DipOf(e), IsShift(e));
+            e.Handled = true;
+            return;
+        }
         if (Tool == EditorTool.Eyedropper && !IsCropping)
             Hover(ImagePoint(e));
         bool ibeam = !IsCropping && (_selectingText || OcrSelection.HitTest(_textLines, ImagePoint(e), HitDips * Scale / _zoom) is not null);
@@ -986,18 +1105,31 @@ internal sealed class EditorCanvas
         ds.DrawText(ColorSample.Hex(picked), label.X + 6 * dip, label.Y + 2 * dip, Microsoft.UI.Colors.White, format);
     }
 
+    /// <summary>Number of draws and the zoom of the last one (Debug test script).</summary>
+    internal int Draws { get; private set; }
+    internal float DrawnZoom { get; private set; }
+
+    /// <summary>
+    /// Raised at the start of each draw, before the view is read: an animation sets the view of this frame here (and a
+    /// changed view asks for the next frame). From CompositionTarget.Rendering an Invalidate comes too late for the frame.
+    /// </summary>
+    public event Action? BeforeDraw;
+
     private void OnDraw(CanvasControl sender, CanvasDrawEventArgs args)
     {
+        BeforeDraw?.Invoke();
         if (_image is null || Document is null)
             return;
+        Draws++;
+        DrawnZoom = _zoom;
         var ds = args.DrawingSession;
         ds.TextAntialiasing = CanvasTextAntialiasing.Grayscale; // same text pixels as the export
-        ds.Transform = Matrix3x2.CreateTranslation(_origin) * Matrix3x2.CreateScale(1 / Scale);
+        ds.Transform = Matrix3x2.CreateScale(_zoom) * Matrix3x2.CreateTranslation(Offset) * Matrix3x2.CreateScale(1 / Scale);
         var view = View;
         using (ds.CreateLayer(1, new Windows.Foundation.Rect(view.X, view.Y, view.Width, view.Height)))
         {
             DrawBackground(ds);
-            // Below zoom 1 Win2D scales the image down (DpiScale); linear filtering breaks up small text.
+            // Linear filtering breaks up small text when it scales the image down.
             DrawBase(ds, _zoom < 1 ? CanvasImageInterpolation.HighQualityCubic : CanvasImageInterpolation.Linear);
             // A selection drag shows its transformed copies in place of the originals, keeping the z-order.
             // Attached arrows follow their targets in the preview.

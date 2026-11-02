@@ -295,9 +295,12 @@
                    TextAlignment="Center" TextWrapping="Wrap" Margin="24"
                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
 
-        <ScrollViewer x:Name="ImageScroller" Grid.Row="2" Visibility="Collapsed"
-                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"
-                      ZoomMode="Enabled" MinZoomFactor="0.1" MaxZoomFactor="8" />
+        <!-- The editor canvas fills the view and pans and zooms itself; the scroll bars show and move its view. -->
+        <Grid x:Name="ImageView" Grid.Row="2" Visibility="Collapsed" Background="Transparent">
+            <Border x:Name="ImageHost" />
+            <ScrollBar x:Name="HorizontalBar" Orientation="Horizontal" VerticalAlignment="Bottom" IndicatorMode="None" Visibility="Collapsed" />
+            <ScrollBar x:Name="VerticalBar" Orientation="Vertical" HorizontalAlignment="Right" IndicatorMode="None" Visibility="Collapsed" />
+        </Grid>
 
         <MediaPlayerElement x:Name="VideoPlayer" x:Uid="VideoPlayer" Grid.Row="2" Visibility="Collapsed" Margin="8,0,8,8"
                             AreTransportControlsEnabled="True" />

@@ -141,9 +141,9 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.R, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, RedactSelection);
         Shortcut(VirtualKey.Number0, VirtualKeyModifiers.Control, () => ZoomTo(1));
         foreach (var key in new[] { VirtualKey.Add, (VirtualKey)0xBB }) // numpad and main-row plus
-            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.In(ImageScroller.ZoomFactor)));
+            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.In(ZoomFactor)));
         foreach (var key in new[] { VirtualKey.Subtract, (VirtualKey)0xBD })
-            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.Out(ImageScroller.ZoomFactor)));
+            Shortcut(key, VirtualKeyModifiers.Control, () => ZoomTo(ZoomMath.Out(ZoomFactor)));
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control, () => _ = SaveAsync());
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
@@ -166,21 +166,28 @@ public sealed partial class MainPage : Page
         }
 #endif
 
-        ImageScroller.AddHandler(PointerWheelChangedEvent, new PointerEventHandler(OnScrollerWheel), true);
-        ImageScroller.SizeChanged += (_, _) => Relayout();
-        ImageScroller.ViewChanged += (_, e) =>
+        ImageView.SizeChanged += (_, _) => Relayout();
+        ImageView.AddHandler(PointerMovedEvent, new PointerEventHandler((_, e) =>
+            ShowBars(e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touch)), true);
+        HorizontalBar.ValueChanged += (_, e) =>
         {
-            if (e.IsIntermediate)
-                return;
-            // A wheel zoom lays the canvas out once the view of its last frame has landed: an earlier ChangeView would keep a stale factor.
-            if (_wheelZoom is { } target)
-            {
-                if (_wheelRunning || MathF.Abs(ImageScroller.ZoomFactor - target) > 1e-4f * target)
-                    return;
-                _wheelZoom = null;
-            }
-            Relayout();
+            if (!_syncingBars)
+                PanTo(new Vector2((float)e.NewValue, _editor?.Corner.Y ?? 0));
         };
+        VerticalBar.ValueChanged += (_, e) =>
+        {
+            if (!_syncingBars)
+                PanTo(new Vector2(_editor?.Corner.X ?? 0, (float)e.NewValue));
+        };
+        foreach (var bar in new[] { HorizontalBar, VerticalBar })
+        {
+            bar.PointerEntered += (_, _) => _onBar = true;
+            bar.PointerExited += (_, _) =>
+            {
+                _onBar = false;
+                ShowBars(touch: false);
+            };
+        }
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
         Unloaded += (_, _) => AppSettings.Changed -= OnSettingsChanged;
         ActualThemeChanged += (_, _) => OnSettingsChanged(AppSettings.Current); // the highlight holds brushes of one theme
@@ -289,7 +296,7 @@ public sealed partial class MainPage : Page
 
     internal EditorTool Tool => _tool;
 
-    internal float ZoomFactor => ImageScroller.ZoomFactor;
+    internal float ZoomFactor => _editor?.Zoom ?? 1;
 
     private string? _video;
 
@@ -354,23 +361,32 @@ public sealed partial class MainPage : Page
         SyncTextActions();
         _editor.CropFrameChanged += SyncCropFields;
         _editor.ColorPicked += OnColorPicked;
+        _editor.ViewChanged += () =>
+        {
+            SyncBars();
+            ShowBars(_editor?.Pinching == true);
+        };
         _editor.Control.PointerWheelChanged += (_, e) =>
         {
             if (_editor is not { } editor)
                 return;
-            e.Handled = true; // keeps the scroll viewer from scrolling
-            var point = e.GetCurrentPoint(ImageScroller);
-            _canvasWheel = point.Timestamp;
-            if ((e.KeyModifiers & (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift)) == 0)
-                ZoomAt(point.Position, point.Properties.MouseWheelDelta);
+            e.Handled = true;
+            var point = e.GetCurrentPoint(editor.Control);
+            int delta = point.Properties.MouseWheelDelta;
+            if (point.Properties.IsHorizontalMouseWheel)
+                PanTo(editor.Corner + new Vector2(delta * editor.DisplayScale / editor.Zoom, 0));
+            else if ((e.KeyModifiers & (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift)) == 0)
+                ZoomAt(point.Position, delta);
             else
-                Wheel(point.Properties.MouseWheelDelta, (e.KeyModifiers & VirtualKeyModifiers.Control) == 0, editor.PointOf(e));
+                Wheel(delta, (e.KeyModifiers & VirtualKeyModifiers.Control) == 0, editor.PointOf(e));
         };
         ApplyTool();
         UpdateHistory();
-        ImageScroller.Content = _editor.Host;
+        ImageHost.Child = _editor.Host;
         Hint.Visibility = Visibility.Collapsed;
-        ImageScroller.Visibility = Visibility.Visible;
+        ImageView.Visibility = Visibility.Visible;
+        if (!BarSettings.AutoHideScrollBars)
+            HorizontalBar.IndicatorMode = VerticalBar.IndicatorMode = ScrollingIndicatorMode.MouseIndicator;
         EditTools.Visibility = Visibility.Visible;
         OutputTools.Visibility = Visibility.Visible;
         FitToolbar();
@@ -395,8 +411,8 @@ public sealed partial class MainPage : Page
         _editor = null;
         RulerItem.IsChecked = false;
         _historyId = null;
-        ImageScroller.Content = null;
-        ImageScroller.Visibility = Visibility.Collapsed;
+        ImageHost.Child = null;
+        ImageView.Visibility = Visibility.Collapsed;
         EditTools.Visibility = Visibility.Collapsed;
         OutputTools.Visibility = Visibility.Collapsed;
         Hint.Visibility = Visibility.Visible;
@@ -443,41 +459,82 @@ public sealed partial class MainPage : Page
 
     private bool _fitOnOpen; // the next layout with a loaded document sets the opening zoom
 
-    /// <summary>Resizes the canvas to the viewport and document; the image keeps its place on screen.</summary>
+    /// <summary>Gives the canvas the view size and keeps its view inside the shown image (which a crop or undo can change).</summary>
     private void Relayout()
     {
-        if (_editor is null)
+        if (_editor is not { } editor)
             return;
-        if (_fitOnOpen && _editor.Document is not null && ImageScroller.ViewportWidth > 0)
+        editor.Resize(ImageView.ActualWidth, ImageView.ActualHeight);
+        if (editor.Document is null || ImageView.ActualWidth <= 0)
+            return;
+        if (_fitOnOpen)
         {
             _fitOnOpen = false;
             FitOnOpen();
             return;
         }
-        bool placed = _editor.Control.ActualWidth > 0;
-        var before = _editor.Control.TransformToVisual(ImageScroller).TransformPoint(_editor.ImageOrigin);
-        float zoom = ImageScroller.ZoomFactor, cover = zoom, sharp = zoom;
-        if (_wheelZoom is not null)
-        {
-            // Until a wheel zoom settles the canvas covers the viewport at its smallest factor, so the scroll viewer never
-            // clamps the target, and keeps the resolution it started with: a new DpiScale mid-animation recreates the surface (flicker).
-            cover = _wheelLow;
-            sharp = _wheelStart;
-        }
-        if (!_editor.Layout(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, sharp, cover) || !placed)
+        // A running wheel zoom or pinch owns the view until it ends.
+        if (_wheelZoom is null && !editor.Pinching)
+            editor.SetView(editor.Zoom, editor.ClampCorner(editor.Zoom, editor.Corner));
+        SyncBars();
+    }
+
+    private static readonly Windows.UI.ViewManagement.UISettings BarSettings = new();
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer? _barTimer;
+    private bool _onBar, _syncingBars;
+
+    /// <summary>Each scroll bar spans where the view may go at the current zoom and shows where it is.</summary>
+    private void SyncBars()
+    {
+        if (_editor is not { Document: not null } editor || editor.ViewportDips.X <= 0)
             return;
-        ImageScroller.UpdateLayout();
-        if (_wheelRunning)
-        {
-            // The scroll viewer's offsets and factor lag behind the frames; the zoom's own view is the one shown.
-            var corner = WheelCorner(_wheelNow);
-            var origin = _editor.ImageOrigin;
-            ImageScroller.ChangeView((origin.X + corner.X) * _wheelNow, (origin.Y + corner.Y) * _wheelNow, _wheelNow, true);
+        var (min, max, span) = editor.ViewRange(editor.Zoom);
+        var corner = editor.Corner;
+        _syncingBars = true;
+        SyncBar(HorizontalBar, min.X, max.X, span.X, corner.X);
+        SyncBar(VerticalBar, min.Y, max.Y, span.Y, corner.Y);
+        _syncingBars = false;
+    }
+
+    private static void SyncBar(ScrollBar bar, float min, float max, float span, float at)
+    {
+        // A running zoom can show a view outside the range it settles in.
+        bar.Minimum = Math.Min(min, at);
+        bar.Maximum = Math.Max(max, at);
+        bar.ViewportSize = bar.LargeChange = span;
+        bar.SmallChange = span / 10;
+        bar.Value = at;
+        bar.Visibility = bar.Maximum - bar.Minimum >= 1 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    /// <summary>Shows the scroll bars as the scroll viewer does on input; with auto-hide on (Windows setting) they go after 2 s unless the pointer is on one.</summary>
+    private void ShowBars(bool touch)
+    {
+        if (!BarSettings.AutoHideScrollBars)
             return;
+        HorizontalBar.IndicatorMode = VerticalBar.IndicatorMode = touch ? ScrollingIndicatorMode.TouchIndicator : ScrollingIndicatorMode.MouseIndicator;
+        if (_barTimer is null)
+        {
+            _barTimer = DispatcherQueue.CreateTimer();
+            _barTimer.Interval = TimeSpan.FromSeconds(2);
+            _barTimer.IsRepeating = false;
+            _barTimer.Tick += (_, _) =>
+            {
+                if (!_onBar)
+                    HorizontalBar.IndicatorMode = VerticalBar.IndicatorMode = ScrollingIndicatorMode.None;
+            };
         }
-        var after = _editor.Control.TransformToVisual(ImageScroller).TransformPoint(_editor.ImageOrigin);
-        ImageScroller.ChangeView(ImageScroller.HorizontalOffset + after.X - before.X,
-            ImageScroller.VerticalOffset + after.Y - before.Y, null, true);
+        _barTimer.Stop();
+        _barTimer.Start();
+    }
+
+    /// <summary>Moves the view's top-left to an image px point inside the shown image; ends a running wheel zoom.</summary>
+    private void PanTo(Vector2 corner)
+    {
+        if (_editor is not { Document: not null } editor)
+            return;
+        _wheelZoom = null;
+        editor.SetView(editor.Zoom, editor.ClampCorner(editor.Zoom, corner));
     }
 
     private readonly Dictionary<(VirtualKey, VirtualKeyModifiers), Func<bool>> _shortcuts = [];
@@ -996,8 +1053,7 @@ public sealed partial class MainPage : Page
             return;
         if (shift)
         {
-            _wheelZoom = null;
-            ImageScroller.ChangeView(null, ImageScroller.VerticalOffset - delta, null);
+            PanTo(_editor.Corner - new Vector2(0, delta * _editor.DisplayScale / _editor.Zoom));
             return;
         }
         _wheelRest += delta;
@@ -1815,21 +1871,20 @@ public sealed partial class MainPage : Page
     {
         RulerItem.IsChecked = on && _editor is not null;
         if (_editor is { } editor)
-            editor.SetRuler(on, ImageScroller.TransformToVisual(editor.Control).TransformPoint(
-                new Windows.Foundation.Point(ImageScroller.ViewportWidth / 2, ImageScroller.ViewportHeight / 2)));
+            editor.SetRuler(on, new Windows.Foundation.Point(ImageView.ActualWidth / 2, ImageView.ActualHeight / 2));
     }
 
     private void OnZoomReset(object sender, RoutedEventArgs e) => ZoomTo(1);
 
-    private void OnZoomIn(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.In(ImageScroller.ZoomFactor));
+    private void OnZoomIn(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.In(ZoomFactor));
 
-    private void OnZoomOut(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.Out(ImageScroller.ZoomFactor));
+    private void OnZoomOut(object sender, RoutedEventArgs e) => ZoomTo(ZoomMath.Out(ZoomFactor));
 
     private void OnZoomFit(object sender, RoutedEventArgs e) => ZoomTo(FitZoom);
 
     /// <summary>Zoom that shows the whole shown image in the viewport.</summary>
     internal double FitZoom => _editor is { } editor
-        ? ZoomMath.Fit(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, editor.ShownSizeDips.Width, editor.ShownSizeDips.Height) : 1;
+        ? ZoomMath.Fit(ImageView.ActualWidth, ImageView.ActualHeight, editor.ShownSizeDips.Width, editor.ShownSizeDips.Height) : 1;
 
     /// <summary>Opens a capture at 100%, or zoomed to fit when it is larger than the viewport, with the shown image centered.</summary>
     private void FitOnOpen()
@@ -1837,22 +1892,19 @@ public sealed partial class MainPage : Page
         var editor = _editor!;
         _wheelZoom = null;
         float zoom = (float)Math.Min(1, FitZoom);
-        double vw = ImageScroller.ViewportWidth, vh = ImageScroller.ViewportHeight;
-        editor.Layout(vw, vh, zoom);
-        ImageScroller.UpdateLayout();
-        var center = editor.ShownCenterDips;
-        ImageScroller.ChangeView(center.X * zoom - vw / 2, center.Y * zoom - vh / 2, zoom, true);
+        editor.SetView(zoom, editor.ClampCorner(zoom, editor.ShownCenter - editor.ViewportDips * editor.DisplayScale / zoom / 2));
+        SyncBars();
     }
 
     /// <summary>Zooms to the factor around the viewport center.</summary>
     private void ZoomTo(double factor)
     {
-        if (_editor is null)
+        if (_editor is not { Document: not null } editor)
             return;
         _wheelZoom = null;
-        float zoom = (float)Math.Clamp(factor, ImageScroller.MinZoomFactor, ImageScroller.MaxZoomFactor);
-        double ratio = zoom / ImageScroller.ZoomFactor, cx = ImageScroller.ViewportWidth / 2, cy = ImageScroller.ViewportHeight / 2;
-        ImageScroller.ChangeView((ImageScroller.HorizontalOffset + cx) * ratio - cx, (ImageScroller.VerticalOffset + cy) * ratio - cy, zoom, true);
+        float zoom = (float)Math.Clamp(factor, ZoomMath.Min, ZoomMath.Max);
+        var center = editor.ViewportDips * editor.DisplayScale / 2;
+        editor.SetView(zoom, editor.ClampCorner(zoom, editor.Corner + center / editor.Zoom - center / zoom));
     }
 
     /// <summary>Exports the flattened image as the copy does into a temp PNG; null when no image is shown.</summary>
@@ -1893,109 +1945,87 @@ public sealed partial class MainPage : Page
             ShowError(Loc.Format("OpenFolderFailed", folder));
     }
 
-    /// <summary>Timestamp of the last wheel event the canvas handled; the scroll viewer sees it again (handledEventsToo).</summary>
-    private ulong _canvasWheel;
-
-    /// <summary>Plain wheel beside the image zooms like over it; Ctrl / Shift there leave the scroll viewer alone.</summary>
-    private void OnScrollerWheel(object sender, PointerRoutedEventArgs e)
-    {
-        var point = e.GetCurrentPoint(ImageScroller);
-        if (point.Timestamp == _canvasWheel || (e.KeyModifiers & (VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift)) != 0)
-            return;
-        ZoomAt(point.Position, point.Properties.MouseWheelDelta);
-        e.Handled = true;
-    }
-
-    // Running wheel zoom (points in DIPs at zoom 1 from the image origin): target factor and the view top-left it ends at,
-    // the factor shown now and where the step started, the viewport point it zooms around, the image point under it in
-    // the target view and how far the shown point under it was from that when the step started, the smallest factor since
-    // the zoom started (the canvas covers the viewport at it) and the first factor (the canvas keeps its resolution).
+    // Running wheel zoom (points in image px, the viewport point in physical px): target factor and the view top-left it
+    // ends at, the factor shown now and where the step started, the viewport point it zooms around, the image point under
+    // it in the target view and how far the shown point under it was from that when the step started.
     private float? _wheelZoom;
-    private float _wheelNow, _wheelFrom, _wheelLow, _wheelStart;
-    private Windows.Foundation.Point _wheelCorner, _wheelAt, _wheelImage, _wheelDrift;
-    private TimeSpan _wheelTime;
-    private bool _wheelRunning; // frames still move the zoom
+    private float _wheelNow, _wheelFrom;
+    private Vector2 _wheelCorner, _wheelAt, _wheelImage, _wheelDrift;
+    private readonly System.Diagnostics.Stopwatch _wheelClock = new();
+    private EditorCanvas? _wheelEditor; // the canvas whose frames move the zoom
     private const float WheelMs = 40; // time constant: 90 % of a step after about 90 ms
 
     /// <summary>
-    /// One wheel step (delta 120) zooms by 1.25 around the viewport point, animated frame by frame. A step before the view
+    /// One wheel step (delta 120) zooms by 1.25 around the viewport DIP point, animated frame by frame. A step before the view
     /// settles continues from the target, so quick steps add up to the view one jump per step gives; the image point under
     /// the cursor stays under it every frame (drifting only where the end view must differ).
     /// </summary>
     internal void ZoomAt(Windows.Foundation.Point p, int delta)
     {
-        if (_editor is not { } editor)
+        if (_editor is not { Document: not null } editor || editor.Pinching)
             return;
-        var origin = editor.ImageOrigin;
-        Windows.Foundation.Point shown;
+        Vector2 shown;
         if (_wheelZoom is null)
         {
-            _wheelNow = _wheelLow = _wheelStart = ImageScroller.ZoomFactor;
-            _wheelCorner = shown = new(ImageScroller.HorizontalOffset / _wheelNow - origin.X, ImageScroller.VerticalOffset / _wheelNow - origin.Y);
+            _wheelNow = editor.Zoom;
+            _wheelCorner = shown = editor.Corner;
         }
         else
             shown = WheelCorner(_wheelNow);
         float from = _wheelZoom ?? _wheelNow;
-        float zoom = Math.Clamp(from * MathF.Pow(1.25f, delta / 120f), ImageScroller.MinZoomFactor, ImageScroller.MaxZoomFactor);
-        // The step ends inside the canvas the view settles with: an axis where that canvas fits the viewport centers the image.
-        double vw = ImageScroller.ViewportWidth, vh = ImageScroller.ViewportHeight;
-        var settled = editor.CoverDips(vw, vh, zoom);
-        static double Fit(double corner, double start, double length, double view) =>
-            length <= view ? start + (length - view) / 2 : Math.Clamp(corner, start, start + length - view);
-        _wheelCorner = new(Fit(_wheelCorner.X + p.X / from - p.X / zoom, settled.X, settled.Width, vw / zoom),
-            Fit(_wheelCorner.Y + p.Y / from - p.Y / zoom, settled.Y, settled.Height, vh / zoom));
+        float zoom = Math.Clamp(from * MathF.Pow(1.25f, delta / 120f), (float)ZoomMath.Min, (float)ZoomMath.Max);
+        var at = new Vector2((float)p.X, (float)p.Y) * editor.DisplayScale;
+        // The step ends inside the range the view settles in: an axis where the image fits the viewport centers it.
+        _wheelCorner = editor.ClampCorner(zoom, _wheelCorner + at / from - at / zoom);
         _wheelFrom = _wheelNow;
-        _wheelAt = p;
-        _wheelImage = new(_wheelCorner.X + p.X / zoom, _wheelCorner.Y + p.Y / zoom);
-        _wheelDrift = new(shown.X + p.X / _wheelNow - _wheelImage.X, shown.Y + p.Y / _wheelNow - _wheelImage.Y);
+        _wheelAt = at;
+        _wheelImage = _wheelCorner + at / zoom;
+        _wheelDrift = shown + at / _wheelNow - _wheelImage;
         _wheelZoom = zoom;
-        if (!_wheelRunning)
+        if (_wheelEditor != editor)
         {
-            _wheelRunning = true;
-            _wheelTime = default;
-            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += OnWheelFrame;
-        }
-        // Zooming out grows the canvas with room for three more steps, so those do not resize it mid-animation.
-        if (zoom < _wheelLow)
-        {
-            _wheelLow = Math.Max(ImageScroller.MinZoomFactor, zoom / 1.953125f);
-            Relayout();
+            if (_wheelEditor is { } old)
+                old.BeforeDraw -= OnWheelFrame;
+            _wheelEditor = editor;
+            editor.BeforeDraw += OnWheelFrame;
+            _wheelClock.Restart();
+            editor.Control.Invalidate();
         }
     }
 
-    /// <summary>View top-left (DIPs at zoom 1 from the image origin) at factor z of the running step.</summary>
-    private Windows.Foundation.Point WheelCorner(float z)
+    /// <summary>View top-left (image px) at factor z of the running step.</summary>
+    private Vector2 WheelCorner(float z)
     {
-        double t = _wheelZoom is { } target && target != _wheelFrom ? Math.Log(z / _wheelFrom) / Math.Log(target / _wheelFrom) : 1;
-        return new(_wheelImage.X - _wheelAt.X / z + _wheelDrift.X * (1 - t), _wheelImage.Y - _wheelAt.Y / z + _wheelDrift.Y * (1 - t));
+        float t = _wheelZoom is { } target && target != _wheelFrom ? MathF.Log(z / _wheelFrom) / MathF.Log(target / _wheelFrom) : 1;
+        return _wheelImage - _wheelAt / z + _wheelDrift * (1 - t);
     }
 
-    /// <summary>Moves the wheel zoom part of the way to its target each frame; the last frame lays the canvas out for the target.</summary>
-    private void OnWheelFrame(object? sender, object e)
+    /// <summary>Moves the wheel zoom part of the way to its target in each draw of the canvas; a moved view draws the next frame.</summary>
+    private void OnWheelFrame()
     {
-        if (_wheelZoom is not { } target || _editor is not { } editor)
+        var editor = _wheelEditor!;
+        if (_wheelZoom is not { } target || editor != _editor || editor.Pinching)
         {
-            _wheelRunning = false;
-            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= OnWheelFrame;
+            _wheelZoom = null;
+            editor.BeforeDraw -= OnWheelFrame;
+            _wheelEditor = null;
             return;
         }
-        var time = ((Microsoft.UI.Xaml.Media.RenderingEventArgs)e).RenderingTime;
-        float dt = _wheelTime == default ? 16 : (float)(time - _wheelTime).TotalMilliseconds;
-        if (dt <= 0)
-            return; // Rendering can fire twice for one frame
-        _wheelTime = time;
+        float dt = (float)_wheelClock.Elapsed.TotalMilliseconds;
+        _wheelClock.Restart();
         float z = _wheelNow * MathF.Pow(target / _wheelNow, 1 - MathF.Exp(-dt / WheelMs));
         if (MathF.Abs(z / target - 1) < 2e-3f)
             z = target;
         _wheelNow = z;
-        var corner = WheelCorner(z);
-        var origin = editor.ImageOrigin;
-        ImageScroller.ChangeView((origin.X + corner.X) * z, (origin.Y + corner.Y) * z, z, true);
+        editor.SetView(z, z == target ? _wheelCorner : WheelCorner(z));
         if (z != target)
+        {
+            editor.Control.Invalidate(); // also when this frame left the view as it was
             return;
-        // ViewChanged lays the canvas out when this view lands.
-        _wheelRunning = false;
-        Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= OnWheelFrame;
+        }
+        _wheelZoom = null;
+        editor.BeforeDraw -= OnWheelFrame;
+        _wheelEditor = null;
     }
 
     internal void ShowError(string text)

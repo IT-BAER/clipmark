@@ -212,13 +212,13 @@ internal sealed class TestDriver
                 (_page.Editor ?? throw new InvalidOperationException("no capture shown")).Release();
                 break;
             case "assert" when arg.StartsWith("hit "):
-                // assert hit X,Y: a press at image px X,Y, which must lie in the scroll viewport, reaches the canvas.
+                // assert hit X,Y: a press at image px X,Y, which must lie in the image view, reaches the canvas.
                 var hitEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
                 var at5 = arg[4..].Split(',');
                 var hitAt = hitEditor.Control.TransformToVisual(null).TransformPoint(hitEditor.ControlPoint(
                     new Vector2(float.Parse(at5[0], CultureInfo.InvariantCulture), float.Parse(at5[1], CultureInfo.InvariantCulture))));
-                var scroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
-                if (!scroller.TransformToVisual(null).TransformBounds(new Windows.Foundation.Rect(0, 0, scroller.ViewportWidth, scroller.ViewportHeight)).Contains(hitAt))
+                var hitView = ImageView;
+                if (!hitView.TransformToVisual(null).TransformBounds(new Windows.Foundation.Rect(0, 0, hitView.ActualWidth, hitView.ActualHeight)).Contains(hitAt))
                     throw new InvalidOperationException($"point {hitAt} is outside the viewport");
                 if (!VisualTreeHelper.FindElementsInHostCoordinates(hitAt, (UIElement)Root.Content).Contains(hitEditor.Control))
                     throw new InvalidOperationException($"canvas not hit at {hitAt}");
@@ -435,31 +435,33 @@ internal sealed class TestDriver
                     int.Parse(zoomWords[0], CultureInfo.InvariantCulture));
                 break;
             case "viewat":
-                // viewat X,Y: "IX IY ZOOM VW VH IW IH DPISCALE" to DIR\view.txt: the image point at viewport DIP X,Y (DIPs at zoom 1 from
-                // the image origin), the zoom factor, the viewport size, the shown image size (DIPs at zoom 1) and the canvas DpiScale.
+                // viewat X,Y: "IX IY ZOOM VW VH IW IH DPISCALE CW CH" to DIR\view.txt: the image point at viewport DIP X,Y (DIPs at zoom 1
+                // from the image origin), the zoom factor, the viewport size, the shown image size (DIPs at zoom 1), the canvas
+                // DpiScale and the canvas size in DIPs. The point is the view's own, without the whole-pixel snap of the drawing.
                 var viewEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
                 var viewAt = arg.Split(',');
-                var imageScroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
-                var onControl = imageScroller.TransformToVisual(viewEditor.Control).TransformPoint(
+                var onControl = ImageView.TransformToVisual(viewEditor.Control).TransformPoint(
                     new Windows.Foundation.Point(double.Parse(viewAt[0], CultureInfo.InvariantCulture), double.Parse(viewAt[1], CultureInfo.InvariantCulture)));
-                File.WriteAllText(Path.Combine(_dir, "view.txt"), string.Join(' ', new[] { onControl.X - viewEditor.ImageOrigin.X, onControl.Y - viewEditor.ImageOrigin.Y, _page.ZoomFactor,
-                    imageScroller.ViewportWidth, imageScroller.ViewportHeight, viewEditor.ShownSizeDips.Width, viewEditor.ShownSizeDips.Height, viewEditor.Control.DpiScale }
+                var onImage = viewEditor.Corner / viewEditor.DisplayScale + new Vector2((float)onControl.X, (float)onControl.Y) / viewEditor.Zoom;
+                File.WriteAllText(Path.Combine(_dir, "view.txt"), string.Join(' ', new[] { onImage.X, onImage.Y, _page.ZoomFactor,
+                    ImageView.ActualWidth, ImageView.ActualHeight, viewEditor.ShownSizeDips.Width, viewEditor.ShownSizeDips.Height, viewEditor.Control.DpiScale,
+                    viewEditor.Control.ActualWidth, viewEditor.Control.ActualHeight }
                     .Select(v => v.ToString("R", CultureInfo.InvariantCulture))));
                 break;
             case "zoomtrace" when arg.StartsWith("start "):
-                // zoomtrace start X,Y | zoomtrace stop: per rendered frame "MS IX IY ZOOM CW CH DPISCALE" (as viewat, plus the canvas
-                // size in DIPs) to DIR\trace.txt between start and stop.
+                // zoomtrace start X,Y | zoomtrace stop: per rendered frame "MS IX IY ZOOM CW CH DPISCALE DRAWS DRAWNZOOM" (as viewat, plus
+                // the canvas draws so far and the zoom of the last one) to DIR\trace.txt between start and stop.
                 var traceEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
                 var traceXY = arg[6..].Split(',');
                 var tracePoint = new Windows.Foundation.Point(double.Parse(traceXY[0], CultureInfo.InvariantCulture), double.Parse(traceXY[1], CultureInfo.InvariantCulture));
-                var traceScroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
+                var traceView = ImageView;
                 var traceClock = System.Diagnostics.Stopwatch.StartNew();
                 _trace = [];
                 _traceFrame = (_, _) =>
                 {
-                    var on = traceScroller.TransformToVisual(traceEditor.Control).TransformPoint(tracePoint);
-                    _trace.Add(string.Join(' ', new[] { traceClock.Elapsed.TotalMilliseconds, on.X - traceEditor.ImageOrigin.X, on.Y - traceEditor.ImageOrigin.Y,
-                        traceScroller.ZoomFactor, traceEditor.Control.Width, traceEditor.Control.Height, traceEditor.Control.DpiScale }
+                    var on = traceEditor.ToImage(traceView.TransformToVisual(traceEditor.Control).TransformPoint(tracePoint)) / traceEditor.DisplayScale;
+                    _trace.Add(string.Join(' ', new double[] { traceClock.Elapsed.TotalMilliseconds, on.X, on.Y, traceEditor.Zoom,
+                        traceEditor.Control.ActualWidth, traceEditor.Control.ActualHeight, traceEditor.Control.DpiScale, traceEditor.Draws, traceEditor.DrawnZoom }
                         .Select(v => v.ToString("0.###", CultureInfo.InvariantCulture))));
                 };
                 Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += _traceFrame;
@@ -467,6 +469,26 @@ internal sealed class TestDriver
             case "zoomtrace":
                 Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= _traceFrame;
                 File.WriteAllLines(Path.Combine(_dir, "trace.txt"), _trace);
+                break;
+            case "bar":
+                // bar h|v VALUE: moves the image view's horizontal or vertical scroll bar to VALUE (image px), as a drag of its thumb does.
+                var scrollBarWords = arg.Split(' ');
+                ((Microsoft.UI.Xaml.Controls.Primitives.ScrollBar)Descendants(Root.Content).OfType<FrameworkElement>()
+                    .First(v => v.Name == (scrollBarWords[0] == "h" ? "HorizontalBar" : "VerticalBar"))).Value = double.Parse(scrollBarWords[1], CultureInfo.InvariantCulture);
+                break;
+            case "touch":
+                // touch down|move|up ID X,Y: a finger at viewport DIP X,Y (the canvas touch handling; up ignores X,Y).
+                var touchWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var touchEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
+                uint touchId = uint.Parse(touchWords[1], CultureInfo.InvariantCulture);
+                var touchXY = touchWords.Length > 2 ? touchWords[2].Split(',') : ["0", "0"];
+                var touchAt = new Vector2(float.Parse(touchXY[0], CultureInfo.InvariantCulture), float.Parse(touchXY[1], CultureInfo.InvariantCulture));
+                switch (touchWords[0])
+                {
+                    case "down": touchEditor.TouchDown(touchId, touchAt, false); break;
+                    case "move": touchEditor.TouchMove(touchId, touchAt, false); break;
+                    default: touchEditor.TouchUp(touchId); break;
+                }
                 break;
             case "ruler":
                 _page.SetRuler(arg == "on");
@@ -951,6 +973,9 @@ internal sealed class TestDriver
         Microsoft.UI.Xaml.Documents.LineBreak => "\n",
         _ => "",
     }));
+
+    /// <summary>The editor's image view (canvas and scroll bars).</summary>
+    private FrameworkElement ImageView => Descendants(Root.Content).OfType<FrameworkElement>().First(v => v.Name == "ImageView");
 
     private static IEnumerable<DependencyObject> Descendants(DependencyObject root)
     {

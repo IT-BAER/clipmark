@@ -80,12 +80,12 @@ public sealed partial class MainPage
         }
         // Page coordinates: the popup and its layer start at the page origin.
         var center = editor.Control.TransformToVisual(this).TransformPoint(at);
-        var view = ImageScroller.TransformToVisual(this).TransformPoint(default);
+        var view = ImageView.TransformToVisual(this).TransformPoint(default);
         double size = ToolRingPanel.Width;
         ToolRingLayer.Width = ActualWidth;
         ToolRingLayer.Height = ActualHeight;
-        Canvas.SetLeft(ToolRingPanel, Math.Clamp(center.X - size / 2, view.X, view.X + Math.Max(0, ImageScroller.ActualWidth - size)));
-        Canvas.SetTop(ToolRingPanel, Math.Clamp(center.Y - size / 2, view.Y, view.Y + Math.Max(0, ImageScroller.ActualHeight - size)));
+        Canvas.SetLeft(ToolRingPanel, Math.Clamp(center.X - size / 2, view.X, view.X + Math.Max(0, ImageView.ActualWidth - size)));
+        Canvas.SetTop(ToolRingPanel, Math.Clamp(center.Y - size / 2, view.Y, view.Y + Math.Max(0, ImageView.ActualHeight - size)));
         _ringClosing = false;
         ToolRingLayer.IsHitTestVisible = true;
         ToolRing.IsOpen = true;
