@@ -1811,4 +1811,8 @@
   <data name="UpdateLastChecked" xml:space="preserve">
     <value>Last checked: {0}</value>
   </data>
+  <data name="ToolRingName" xml:space="preserve">
+    <value>Tools</value>
+    <comment>Screen reader name of the right-click tool ring</comment>
+  </data>
 </root>

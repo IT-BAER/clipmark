@@ -301,5 +301,28 @@
 
         <MediaPlayerElement x:Name="VideoPlayer" x:Uid="VideoPlayer" Grid.Row="2" Visibility="Collapsed" Margin="8,0,8,8"
                             AreTransportControlsEnabled="True" />
+
+        <!-- Right-click tool ring (MainPage.ToolRing.cs puts the tool buttons on the circle and animates it); the hole shows the
+             clicked point. The layer covers the page while open: a press outside the ring closes it and reaches nothing else. -->
+        <Popup x:Name="ToolRing" Grid.RowSpan="3">
+            <Canvas x:Name="ToolRingLayer" Background="Transparent">
+                <Grid x:Name="ToolRingPanel" Width="208" Height="208" TabFocusNavigation="Cycle">
+                    <Path x:Name="ToolRingDisk" RenderTransformOrigin="0.5,0.5"
+                          Fill="{ThemeResource SolidBackgroundFillColorBaseBrush}" Stroke="{ThemeResource SurfaceStrokeColorFlyoutBrush}" StrokeThickness="1">
+                        <Path.RenderTransform>
+                            <ScaleTransform />
+                        </Path.RenderTransform>
+                        <Path.Data>
+                            <GeometryGroup FillRule="EvenOdd">
+                                <EllipseGeometry Center="104,104" RadiusX="103.5" RadiusY="103.5" />
+                                <EllipseGeometry Center="104,104" RadiusX="48" RadiusY="48" />
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                    <Ellipse x:Name="ToolRingDot" Width="8" Height="8" Fill="White" Stroke="Black" StrokeThickness="1" />
+                    <Canvas x:Name="ToolRingButtons" />
+                </Grid>
+            </Canvas>
+        </Popup>
     </Grid>
 </Page>

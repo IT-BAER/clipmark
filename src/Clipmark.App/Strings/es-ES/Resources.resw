@@ -1808,4 +1808,8 @@
   <data name="UpdateLastChecked" xml:space="preserve">
     <value>Última comprobación: {0}</value>
   </data>
+  <data name="ToolRingName" xml:space="preserve">
+    <value>Herramientas</value>
+    <comment>Screen reader name of the right-click tool ring</comment>
+  </data>
 </root>
