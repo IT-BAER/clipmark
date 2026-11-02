@@ -5,6 +5,26 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-02
+
+### Added
+- Right-click tool ring on the editor canvas: a right-click outside selected text opens a ring of Pen, Highlighter,
+  Text, Rectangle, Oval, Arrow, Line, Emoji, Eyedropper and Eraser at the pointer. Text starts typing and Emoji places
+  the current emoji at the clicked point. Arrow keys move around the ring, Enter picks, Esc or a click outside closes
+  it. The ring opens and closes with a short animation, without motion when Windows animation effects are off.
+- Hold the middle mouse button and drag to move the image.
+
+### Changed
+- Wheel zoom is smooth and keeps the point under the pointer in place; quick wheel steps add up without lost steps.
+- The editor draws the image and the objects sharp at every zoom, and the image is no longer drawn again when a zoom
+  ends. Below 100 % zoom, small text in the image stays readable.
+- Touch: one finger draws, two fingers pinch to zoom and move the image.
+- Scroll bars stay hidden while the whole image fits in the window.
+
+### Fixed
+- Below 100 % zoom a drawing can start beside the image. Before, the press did nothing, a new object was cut off at the
+  image edge, and the image jumped when the button was released.
+
 ## [1.1.2] - 2026-10-26
 
 ### Added
@@ -175,7 +195,9 @@ First public release.
 - Text recognition uses the Windows OCR languages installed on the PC.
 - A recording that is still running when Windows signs out or shuts down is not finalized.
 
-[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/IT-BAER/clipmark/compare/v1.1.2...v1.2.0
+[1.1.2]: https://github.com/IT-BAER/clipmark/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/IT-BAER/clipmark/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/IT-BAER/clipmark/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/IT-BAER/clipmark/releases/tag/v1.0.0
