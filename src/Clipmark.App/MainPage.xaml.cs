@@ -337,6 +337,7 @@ public sealed partial class MainPage : Page
         _editor.Problem += ShowError;
         _editor.TextSelectionChanged += OnTextSelectionChanged;
         _editor.TextMenuRequested += ShowTextMenu;
+        _editor.ToolRingRequested += OpenToolRing;
         _textKey = null;
         SyncTextActions();
         _editor.CropFrameChanged += SyncCropFields;
@@ -493,8 +494,8 @@ public sealed partial class MainPage : Page
     /// </summary>
     internal bool HandleKey(VirtualKey key, VirtualKeyModifiers modifiers)
     {
-        if (_editor is null || _aiFlyout?.IsOpen == true)
-            return false; // Esc in the Ask AI flyout closes the flyout, not the selection
+        if (_editor is null || _aiFlyout?.IsOpen == true || ToolRing.IsOpen)
+            return false; // Esc in the Ask AI flyout or the tool ring closes it, not the selection
         // Text being edited keeps every key except Esc, which commits it.
         if (_editor.IsEditingText)
         {

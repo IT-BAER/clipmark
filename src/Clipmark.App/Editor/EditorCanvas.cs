@@ -130,17 +130,41 @@ internal sealed class EditorCanvas
         TextSelectionChanged?.Invoke();
     }
 
-    /// <summary>Right-click at an image px point: on selected text raises <see cref="TextMenuRequested"/>; false elsewhere.</summary>
+    /// <summary>Raised on a right-click elsewhere on the canvas, with the point in image px and in control DIPs.</summary>
+    public event Action<Vector2, Windows.Foundation.Point>? ToolRingRequested;
+
+    /// <summary>
+    /// Right-click at an image px point: on selected text raises <see cref="TextMenuRequested"/>, elsewhere
+    /// <see cref="ToolRingRequested"/>; false while cropping or dragging.
+    /// </summary>
     public bool RightClick(Vector2 point)
     {
-        if (_textSelection is not { } s)
-            return false;
         var pad = new Vector2(HitDips * Scale / _zoom);
-        if (!OcrSelection.Boxes(_textLines, s.Anchor, s.Focus).Any(b => new FloatRect(b.Min - pad, b.Max + pad).Contains(point)))
+        if (_textSelection is { } s && OcrSelection.Boxes(_textLines, s.Anchor, s.Focus).Any(b => new FloatRect(b.Min - pad, b.Max + pad).Contains(point)))
+        {
+            TextMenuRequested?.Invoke(ControlPoint(point));
+            return true;
+        }
+        if (Document is null || IsCropping || Dragging)
             return false;
-        var dips = (point + _origin) / Scale;
-        TextMenuRequested?.Invoke(new Windows.Foundation.Point(dips.X, dips.Y));
+        ToolRingRequested?.Invoke(point, ControlPoint(point));
         return true;
+    }
+
+    /// <summary>Tool ring pick at an image px point: Text edits the text there or starts new text, Emoji places the current emoji centered there.</summary>
+    public void PlaceAt(Vector2 point)
+    {
+        if (Document is null || IsCropping || Dragging)
+            return;
+        CommitText();
+        if (Tool == EditorTool.Text)
+            BeginText(point, Document.HitTest(point, HitDips * Scale / _zoom) as TextObject);
+        else if (Tool == EditorTool.Emoji)
+        {
+            BeginSession(point, shift: false);
+            _session!.End();
+            Control.Invalidate();
+        }
     }
 
     /// <summary>Raised when the eyedropper picks a color (alpha 255).</summary>
@@ -708,7 +732,12 @@ internal sealed class EditorCanvas
             Control.Invalidate();
             return;
         }
-        _session.Tool = Tool;
+        BeginSession(point, shift);
+    }
+
+    private void BeginSession(Vector2 point, bool shift)
+    {
+        _session!.Tool = Tool;
         _session.Color = Color;
         _session.Width = StrokeWidth;
         _session.SnapTolerance = HitDips * Scale / _zoom;
