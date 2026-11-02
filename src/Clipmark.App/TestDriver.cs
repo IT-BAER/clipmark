@@ -79,6 +79,8 @@ internal sealed class TestDriver
 
     private XamlRoot? _root;
     private bool _tray;
+    private List<string> _trace = [];
+    private EventHandler<object>? _traceFrame;
 
     /// <summary>The window's XamlRoot, kept while the page is navigated away (Settings); the tray menu's after "tray X,Y".</summary>
     private XamlRoot Root => (_tray ? ((App)Application.Current).Tray?.MenuRoot : null) ?? _page.XamlRoot ?? _root ?? throw new InvalidOperationException("no XamlRoot");
@@ -443,6 +445,28 @@ internal sealed class TestDriver
                 File.WriteAllText(Path.Combine(_dir, "view.txt"), string.Join(' ', new[] { onControl.X - viewEditor.ImageOrigin.X, onControl.Y - viewEditor.ImageOrigin.Y, _page.ZoomFactor,
                     imageScroller.ViewportWidth, imageScroller.ViewportHeight, viewEditor.ShownSizeDips.Width, viewEditor.ShownSizeDips.Height, viewEditor.Control.DpiScale }
                     .Select(v => v.ToString("R", CultureInfo.InvariantCulture))));
+                break;
+            case "zoomtrace" when arg.StartsWith("start "):
+                // zoomtrace start X,Y | zoomtrace stop: per rendered frame "MS IX IY ZOOM CW CH DPISCALE" (as viewat, plus the canvas
+                // size in DIPs) to DIR\trace.txt between start and stop.
+                var traceEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
+                var traceXY = arg[6..].Split(',');
+                var tracePoint = new Windows.Foundation.Point(double.Parse(traceXY[0], CultureInfo.InvariantCulture), double.Parse(traceXY[1], CultureInfo.InvariantCulture));
+                var traceScroller = Descendants(Root.Content).OfType<ScrollViewer>().First(v => v.Name == "ImageScroller");
+                var traceClock = System.Diagnostics.Stopwatch.StartNew();
+                _trace = [];
+                _traceFrame = (_, _) =>
+                {
+                    var on = traceScroller.TransformToVisual(traceEditor.Control).TransformPoint(tracePoint);
+                    _trace.Add(string.Join(' ', new[] { traceClock.Elapsed.TotalMilliseconds, on.X - traceEditor.ImageOrigin.X, on.Y - traceEditor.ImageOrigin.Y,
+                        traceScroller.ZoomFactor, traceEditor.Control.Width, traceEditor.Control.Height, traceEditor.Control.DpiScale }
+                        .Select(v => v.ToString("0.###", CultureInfo.InvariantCulture))));
+                };
+                Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += _traceFrame;
+                break;
+            case "zoomtrace":
+                Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= _traceFrame;
+                File.WriteAllLines(Path.Combine(_dir, "trace.txt"), _trace);
                 break;
             case "ruler":
                 _page.SetRuler(arg == "on");

@@ -172,9 +172,13 @@ public sealed partial class MainPage : Page
         {
             if (e.IsIntermediate)
                 return;
-            // A final view at another factor is an interrupted step of the wheel zoom; it keeps its target.
-            if (_wheelZoom is { } target && MathF.Abs(ImageScroller.ZoomFactor - target) <= 1e-4f * target)
+            // A wheel zoom lays the canvas out once the view of its last frame has landed: an earlier ChangeView would keep a stale factor.
+            if (_wheelZoom is { } target)
+            {
+                if (_wheelRunning || MathF.Abs(ImageScroller.ZoomFactor - target) > 1e-4f * target)
+                    return;
                 _wheelZoom = null;
+            }
             Relayout();
         };
         Loaded += (_, _) => AppSettings.Changed += OnSettingsChanged;
@@ -456,13 +460,21 @@ public sealed partial class MainPage : Page
         if (_wheelZoom is not null)
         {
             // Until a wheel zoom settles the canvas covers the viewport at its smallest factor, so the scroll viewer never
-            // clamps the target, and renders for its largest, at most twice the smallest so the surface stays small.
+            // clamps the target, and keeps the resolution it started with: a new DpiScale mid-animation recreates the surface (flicker).
             cover = _wheelLow;
-            sharp = Math.Min(_wheelHigh, 2 * _wheelLow);
+            sharp = _wheelStart;
         }
         if (!_editor.Layout(ImageScroller.ViewportWidth, ImageScroller.ViewportHeight, sharp, cover) || !placed)
             return;
         ImageScroller.UpdateLayout();
+        if (_wheelRunning)
+        {
+            // The scroll viewer's offsets and factor lag behind the frames; the zoom's own view is the one shown.
+            var corner = WheelCorner(_wheelNow);
+            var origin = _editor.ImageOrigin;
+            ImageScroller.ChangeView((origin.X + corner.X) * _wheelNow, (origin.Y + corner.Y) * _wheelNow, _wheelNow, true);
+            return;
+        }
         var after = _editor.Control.TransformToVisual(ImageScroller).TransformPoint(_editor.ImageOrigin);
         ImageScroller.ChangeView(ImageScroller.HorizontalOffset + after.X - before.X,
             ImageScroller.VerticalOffset + after.Y - before.Y, null, true);
@@ -1894,41 +1906,96 @@ public sealed partial class MainPage : Page
         e.Handled = true;
     }
 
-    // Running wheel zoom: target factor, the point at the viewport's top-left in DIPs at zoom 1 from the image origin,
-    // and the smallest and largest factor since it started.
+    // Running wheel zoom (points in DIPs at zoom 1 from the image origin): target factor and the view top-left it ends at,
+    // the factor shown now and where the step started, the viewport point it zooms around, the image point under it in
+    // the target view and how far the shown point under it was from that when the step started, the smallest factor since
+    // the zoom started (the canvas covers the viewport at it) and the first factor (the canvas keeps its resolution).
     private float? _wheelZoom;
-    private Windows.Foundation.Point _wheelCorner;
-    private float _wheelLow, _wheelHigh;
+    private float _wheelNow, _wheelFrom, _wheelLow, _wheelStart;
+    private Windows.Foundation.Point _wheelCorner, _wheelAt, _wheelImage, _wheelDrift;
+    private TimeSpan _wheelTime;
+    private bool _wheelRunning; // frames still move the zoom
+    private const float WheelMs = 40; // time constant: 90 % of a step after about 90 ms
 
     /// <summary>
-    /// One wheel step (delta 120) zooms by 1.25 around the viewport point, animated. A step before the view settles
-    /// continues from the target, so quick steps add up and the point under the cursor stays fixed in the target view.
+    /// One wheel step (delta 120) zooms by 1.25 around the viewport point, animated frame by frame. A step before the view
+    /// settles continues from the target, so quick steps add up to the view one jump per step gives; the image point under
+    /// the cursor stays under it every frame (drifting only where the end view must differ).
     /// </summary>
     internal void ZoomAt(Windows.Foundation.Point p, int delta)
     {
         if (_editor is not { } editor)
             return;
         var origin = editor.ImageOrigin;
-        float from = _wheelZoom ?? ImageScroller.ZoomFactor;
+        Windows.Foundation.Point shown;
         if (_wheelZoom is null)
         {
-            _wheelLow = _wheelHigh = from;
-            _wheelCorner = new(ImageScroller.HorizontalOffset / from - origin.X, ImageScroller.VerticalOffset / from - origin.Y);
+            _wheelNow = _wheelLow = _wheelStart = ImageScroller.ZoomFactor;
+            _wheelCorner = shown = new(ImageScroller.HorizontalOffset / _wheelNow - origin.X, ImageScroller.VerticalOffset / _wheelNow - origin.Y);
         }
+        else
+            shown = WheelCorner(_wheelNow);
+        float from = _wheelZoom ?? _wheelNow;
         float zoom = Math.Clamp(from * MathF.Pow(1.25f, delta / 120f), ImageScroller.MinZoomFactor, ImageScroller.MaxZoomFactor);
-        // The target stays inside the canvas the view settles with: an axis where that canvas fits the viewport centers the image.
+        // The step ends inside the canvas the view settles with: an axis where that canvas fits the viewport centers the image.
         double vw = ImageScroller.ViewportWidth, vh = ImageScroller.ViewportHeight;
         var settled = editor.CoverDips(vw, vh, zoom);
         static double Fit(double corner, double start, double length, double view) =>
             length <= view ? start + (length - view) / 2 : Math.Clamp(corner, start, start + length - view);
         _wheelCorner = new(Fit(_wheelCorner.X + p.X / from - p.X / zoom, settled.X, settled.Width, vw / zoom),
             Fit(_wheelCorner.Y + p.Y / from - p.Y / zoom, settled.Y, settled.Height, vh / zoom));
+        _wheelFrom = _wheelNow;
+        _wheelAt = p;
+        _wheelImage = new(_wheelCorner.X + p.X / zoom, _wheelCorner.Y + p.Y / zoom);
+        _wheelDrift = new(shown.X + p.X / _wheelNow - _wheelImage.X, shown.Y + p.Y / _wheelNow - _wheelImage.Y);
         _wheelZoom = zoom;
-        _wheelLow = Math.Min(_wheelLow, zoom);
-        _wheelHigh = Math.Max(_wheelHigh, zoom);
-        Relayout();
-        origin = editor.ImageOrigin;
-        ImageScroller.ChangeView((origin.X + _wheelCorner.X) * zoom, (origin.Y + _wheelCorner.Y) * zoom, zoom, false);
+        if (!_wheelRunning)
+        {
+            _wheelRunning = true;
+            _wheelTime = default;
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering += OnWheelFrame;
+        }
+        // Zooming out grows the canvas with room for three more steps, so those do not resize it mid-animation.
+        if (zoom < _wheelLow)
+        {
+            _wheelLow = Math.Max(ImageScroller.MinZoomFactor, zoom / 1.953125f);
+            Relayout();
+        }
+    }
+
+    /// <summary>View top-left (DIPs at zoom 1 from the image origin) at factor z of the running step.</summary>
+    private Windows.Foundation.Point WheelCorner(float z)
+    {
+        double t = _wheelZoom is { } target && target != _wheelFrom ? Math.Log(z / _wheelFrom) / Math.Log(target / _wheelFrom) : 1;
+        return new(_wheelImage.X - _wheelAt.X / z + _wheelDrift.X * (1 - t), _wheelImage.Y - _wheelAt.Y / z + _wheelDrift.Y * (1 - t));
+    }
+
+    /// <summary>Moves the wheel zoom part of the way to its target each frame; the last frame lays the canvas out for the target.</summary>
+    private void OnWheelFrame(object? sender, object e)
+    {
+        if (_wheelZoom is not { } target || _editor is not { } editor)
+        {
+            _wheelRunning = false;
+            Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= OnWheelFrame;
+            return;
+        }
+        var time = ((Microsoft.UI.Xaml.Media.RenderingEventArgs)e).RenderingTime;
+        float dt = _wheelTime == default ? 16 : (float)(time - _wheelTime).TotalMilliseconds;
+        if (dt <= 0)
+            return; // Rendering can fire twice for one frame
+        _wheelTime = time;
+        float z = _wheelNow * MathF.Pow(target / _wheelNow, 1 - MathF.Exp(-dt / WheelMs));
+        if (MathF.Abs(z / target - 1) < 2e-3f)
+            z = target;
+        _wheelNow = z;
+        var corner = WheelCorner(z);
+        var origin = editor.ImageOrigin;
+        ImageScroller.ChangeView((origin.X + corner.X) * z, (origin.Y + corner.Y) * z, z, true);
+        if (z != target)
+            return;
+        // ViewChanged lays the canvas out when this view lands.
+        _wheelRunning = false;
+        Microsoft.UI.Xaml.Media.CompositionTarget.Rendering -= OnWheelFrame;
     }
 
     internal void ShowError(string text)
