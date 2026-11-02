@@ -473,8 +473,8 @@ public sealed partial class MainPage : Page
             FitOnOpen();
             return;
         }
-        // A running wheel zoom or pinch owns the view until it ends.
-        if (_wheelZoom is null && !editor.Pinching)
+        // A running wheel zoom, pinch or pan owns the view until it ends.
+        if (_wheelZoom is null && !editor.Pinching && !editor.Panning)
             editor.SetView(editor.Zoom, editor.ClampCorner(editor.Zoom, editor.Corner));
         SyncBars();
     }
@@ -1962,7 +1962,7 @@ public sealed partial class MainPage : Page
     /// </summary>
     internal void ZoomAt(Windows.Foundation.Point p, int delta)
     {
-        if (_editor is not { Document: not null } editor || editor.Pinching)
+        if (_editor is not { Document: not null } editor || editor.Pinching || editor.Panning)
             return;
         Vector2 shown;
         if (_wheelZoom is null)
@@ -2004,7 +2004,7 @@ public sealed partial class MainPage : Page
     private void OnWheelFrame()
     {
         var editor = _wheelEditor!;
-        if (_wheelZoom is not { } target || editor != _editor || editor.Pinching)
+        if (_wheelZoom is not { } target || editor != _editor || editor.Pinching || editor.Panning)
         {
             _wheelZoom = null;
             editor.BeforeDraw -= OnWheelFrame;

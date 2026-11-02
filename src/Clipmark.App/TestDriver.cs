@@ -480,6 +480,19 @@ internal sealed class TestDriver
                 ((Microsoft.UI.Xaml.Controls.Primitives.ScrollBar)Descendants(Root.Content).OfType<FrameworkElement>()
                     .First(v => v.Name == (scrollBarWords[0] == "h" ? "HorizontalBar" : "VerticalBar"))).Value = double.Parse(scrollBarWords[1], CultureInfo.InvariantCulture);
                 break;
+            case "pan":
+                // pan down|move X,Y | pan up: a middle-button drag at viewport DIP X,Y (the canvas middle-button handling; a refused down is ignored).
+                var panWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var panEditor = _page.Editor ?? throw new InvalidOperationException("no capture shown");
+                var panXY = panWords.Length > 1 ? panWords[1].Split(',') : ["0", "0"];
+                var panAt = new Vector2(float.Parse(panXY[0], CultureInfo.InvariantCulture), float.Parse(panXY[1], CultureInfo.InvariantCulture));
+                switch (panWords[0])
+                {
+                    case "down": panEditor.PanStart(panAt); break;
+                    case "move": panEditor.PanMove(panAt); break;
+                    default: panEditor.PanEnd(); break;
+                }
+                break;
             case "touch":
                 // touch down|move|up ID X,Y: a finger at viewport DIP X,Y (the canvas touch handling; up ignores X,Y).
                 var touchWords = arg.Split(' ', StringSplitOptions.RemoveEmptyEntries);

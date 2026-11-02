@@ -66,6 +66,9 @@ internal sealed class EditorCanvas
     private (uint Id, Vector2 At, bool Shift)? _pendingTouch;
     private uint? _dragTouch;
     private (float Distance, float Zoom, Vector2 Image)? _pinch;
+    // Middle-button pan: pointer (control DIPs) and view top-left at the press.
+    private (Vector2 At, Vector2 Corner)? _pan;
+    private static readonly InputCursor Hand = InputSystemCursor.Create(InputSystemCursorShape.Hand);
     // Crop mode: the frame being edited (null outside crop mode) and the handle being dragged.
     private PixelRect? _cropFrame;
     private CropHandle? _handle;
@@ -251,6 +254,8 @@ internal sealed class EditorCanvas
         {
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
                 TouchUp(e.Pointer.PointerId);
+            else if (Panning)
+                PanEnd();
             else
                 Release();
         };
@@ -638,6 +643,33 @@ internal sealed class EditorCanvas
     /// <summary>True while two fingers zoom and pan the view.</summary>
     public bool Pinching => _pinch is not null;
 
+    /// <summary>True while a middle-button drag pans the view.</summary>
+    public bool Panning => _pan is not null;
+
+    /// <summary>Middle button down at a control DIP point: the image follows the pointer until <see cref="PanEnd"/>; false during a drag or pinch.</summary>
+    internal bool PanStart(Vector2 at)
+    {
+        if (Document is null || Dragging || _pinch is not null || _pan is not null)
+            return false;
+        _pan = (at, _corner);
+        _host.Cursor = Hand;
+        return true;
+    }
+
+    internal void PanMove(Vector2 at)
+    {
+        if (_pan is { } pan)
+            SetView(_zoom, ClampCorner(_zoom, pan.Corner - (at - pan.At) * Scale / _zoom));
+    }
+
+    internal void PanEnd()
+    {
+        if (_pan is null)
+            return;
+        _pan = null;
+        _host.Cursor = _ibeam ? IBeam : null;
+    }
+
     /// <summary>A finger touched the canvas at a control DIP point; pointer input and the Debug test script both enter here.</summary>
     internal void TouchDown(uint id, Vector2 at, bool shift)
     {
@@ -788,6 +820,17 @@ internal sealed class EditorCanvas
             }
             return;
         }
+        if (e.GetCurrentPoint(Control).Properties.IsMiddleButtonPressed)
+        {
+            if (PanStart(DipOf(e)))
+            {
+                if (Control.CapturePointer(e.Pointer))
+                    e.Handled = true;
+                else
+                    PanEnd();
+            }
+            return;
+        }
         if (_session is null || Dragging || !e.GetCurrentPoint(Control).Properties.IsLeftButtonPressed)
             return;
         if (!Control.CapturePointer(e.Pointer))
@@ -801,6 +844,12 @@ internal sealed class EditorCanvas
         if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
         {
             TouchMove(e.Pointer.PointerId, DipOf(e), IsShift(e));
+            e.Handled = true;
+            return;
+        }
+        if (Panning)
+        {
+            PanMove(DipOf(e));
             e.Handled = true;
             return;
         }
