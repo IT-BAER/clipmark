@@ -13,7 +13,7 @@ internal static class AnthropicKeyStore
 
     private static string TargetName()
     {
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_REGROOT") is { Length: > 0 } root)
             return Target + "/" + root;
 #endif

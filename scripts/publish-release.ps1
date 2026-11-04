@@ -6,6 +6,11 @@ $ErrorActionPreference = 'Stop'
 # ILCompiler's link step calls vswhere.exe by bare name; the VS Installer folder is not on PATH by default.
 $env:PATH = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer;$env:PATH"
 $root = Split-Path $PSScriptRoot -Parent
+# Release gate: scripts\smoke-aot.ps1 passed on this exact commit with no tracked changes (Debug builds hide AOT-only failures).
+$commit = (& git -C $root rev-parse HEAD).Trim()
+if (-not $Dev -and ((& git -C $root status --porcelain --untracked-files=no) -or -not (Test-Path (Join-Path $root "artifacts\smoke\pass-$commit.txt")))) {
+    throw "no smoke pass for ${commit}: commit all changes, then run pwsh scripts\smoke-aot.ps1"
+}
 $version = ([xml](Get-Content (Join-Path $root 'Directory.Build.props'))).Project.PropertyGroup.Version
 $name = if ($Dev) { "Clipmark-$version-dev-win-x64" } else { "Clipmark-$version-win-x64" }
 $out = Join-Path $root $(if ($Dev) { 'artifacts\release-dev' } else { 'artifacts\release' })

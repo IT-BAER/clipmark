@@ -9,7 +9,7 @@ namespace Clipmark.App.Ai;
 internal static class ClaudeChat
 {
     private static readonly Uri BaseUri = new(
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         Environment.GetEnvironmentVariable("CLIPMARK_TEST_AI_BASE") is { Length: > 0 } testBase ? testBase :
 #endif
         "https://api.anthropic.com/");

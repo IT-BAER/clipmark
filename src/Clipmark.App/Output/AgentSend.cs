@@ -16,7 +16,7 @@ internal static class AgentSend
     public static List<AgentTarget> FindTargets(out List<ProcessEntry> processes)
     {
         processes = Processes();
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         // Store screenshots: "Agent|Host|Title;..." stands in for the sessions on this desktop (icons still come from running apps).
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_AGENTS") is { Length: > 0 } testAgents)
             return testAgents.Split(';').Select(t => t.Split('|'))

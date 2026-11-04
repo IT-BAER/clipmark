@@ -82,7 +82,7 @@ internal static unsafe class ScreenCapture
             SelectObject(memDc, old);
             if (!ok)
                 throw new InvalidOperationException("BitBlt failed.");
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
             // Store screenshots: a raw top-down BGRA file of exactly the virtual-screen size replaces the captured desktop.
             if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_FRAME") is { Length: > 0 } testFrame)
             {

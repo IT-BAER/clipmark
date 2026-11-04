@@ -158,7 +158,7 @@ public sealed partial class MainPage : Page
         Unloaded += (_, _) => ((UIElement)XamlRoot.Content).PreviewKeyDown -= editKeys;
         KeyboardAcceleratorPlacementMode = KeyboardAcceleratorPlacementMode.Hidden;
         ApplyTool();
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         if (App.TestDir is { } testDir)
         {
             var driver = new TestDriver(this, testDir);

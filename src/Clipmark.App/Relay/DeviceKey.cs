@@ -32,7 +32,7 @@ internal sealed class DeviceKey
 
     public static string KeyName()
     {
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_REGROOT") is { Length: > 0 } root)
             return Name + "/" + root;
 #endif

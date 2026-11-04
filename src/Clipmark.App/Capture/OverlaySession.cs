@@ -41,7 +41,7 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     public CaptureMode Mode => _mode;
 
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
     /// <summary>The overlay on screen (test driver only).</summary>
     internal static OverlaySession? Active { get; private set; }
 
@@ -114,7 +114,7 @@ internal sealed unsafe class OverlaySession : IDisposable
                 _pillHost = w;
         }
         _pillHost ??= _windows[0];
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         Active = this;
 #endif
     }
@@ -719,7 +719,7 @@ internal sealed unsafe class OverlaySession : IDisposable
 
     public void Dispose()
     {
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         if (Active == this)
             Active = null;
 #endif
@@ -808,7 +808,7 @@ internal sealed unsafe class OverlayWindow : Win32Window
             case WM_CLOSE:
                 _session.Cancel();
                 return 0;
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
             // Test scripts: WM_APP + 1 / 2 / 3 = move / left down / left up at the desktop point in lParam (x low, y high word);
             // WM_APP + 4 = key wParam, lParam bit 0 = Ctrl held; WM_APP + 5 = right click (cancels the drag).
             case TestCancel:

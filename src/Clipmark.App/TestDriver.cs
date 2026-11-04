@@ -1,4 +1,4 @@
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
 using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices.WindowsRuntime;

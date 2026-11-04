@@ -87,7 +87,7 @@ internal sealed unsafe partial class RecordBar : Win32Window
     /// <summary>Keeps the window out of screenshots and recordings (Debug: CLIPMARK_TEST_SHOWBAR=1 keeps it visible for review grabs).</summary>
     internal static void ExcludeFromCapture(nint hwnd)
     {
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         if (Environment.GetEnvironmentVariable("CLIPMARK_TEST_SHOWBAR") == "1")
             return;
 #endif
@@ -159,7 +159,7 @@ internal sealed unsafe partial class RecordBar : Win32Window
         }
     }
 
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
     /// <summary>Test scripts: the Pause / Resume tooltip text as the control holds it, or null without the control.</summary>
     internal string? TestTip()
     {
@@ -261,7 +261,7 @@ internal sealed unsafe partial class RecordBar : Win32Window
                 if (released is { } b && b == pressed)
                     Click(b);
                 return 0;
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
             // Test scripts: WM_APP + 4 with the button index in wParam.
             case TestClick:
                 Click((RecordBarButton)wParam);

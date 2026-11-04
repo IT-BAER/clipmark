@@ -16,7 +16,7 @@ internal static class UpdateService
     private const string LatestUrl = "https://api.github.com/repos/IT-BAER/clipmark/releases/latest";
 
     private static readonly Uri LatestUri = new(
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         Environment.GetEnvironmentVariable("CLIPMARK_TEST_UPDATE_URL") is { Length: > 0 } testUrl ? testUrl :
 #endif
         LatestUrl);
@@ -32,7 +32,7 @@ internal static class UpdateService
 
     /// <summary>False for the Store build and, in a Debug test run, unless CLIPMARK_TEST_UPDATE_URL names a test server.</summary>
     public static bool Supported =>
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         (App.TestDir is null || Environment.GetEnvironmentVariable("CLIPMARK_TEST_UPDATE_URL") is { Length: > 0 }) &&
 #endif
         !Output.CaptureOutput.IsPackaged();

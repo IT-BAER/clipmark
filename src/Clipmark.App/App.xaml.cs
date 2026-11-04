@@ -19,8 +19,8 @@ namespace Clipmark.App;
 /// </summary>
 public partial class App : Application
 {
-#if DEBUG
-    /// <summary>Test mode (Debug only): the window stays cloaked and TestDriver takes commands from this folder.</summary>
+#if DEBUG || CLIPMARK_SMOKE
+    /// <summary>Test mode (Debug and smoke builds): the window stays cloaked and TestDriver takes commands from this folder.</summary>
     internal static readonly string? TestDir = Environment.GetEnvironmentVariable("CLIPMARK_TEST_DIR");
     // Debug builds run next to an installed release: own instance key and data folder, and they leave its Start menu shortcut alone.
     private const string InstanceKey = "Clipmark.Debug", DataName = "Clipmark.Debug";
@@ -58,7 +58,7 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
-#if DEBUG
+#if DEBUG || CLIPMARK_SMOKE
         // Screenshot checks in the other theme without changing the Windows setting.
         if (Enum.TryParse<ApplicationTheme>(Environment.GetEnvironmentVariable("CLIPMARK_TEST_THEME"), out var theme))
             RequestedTheme = theme;

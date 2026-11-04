@@ -21,6 +21,11 @@
     <DefineConstants>$(DefineConstants);CLIPMARK_DEV</DefineConstants>
     <AssemblyTitle>Clipmark (dev)</AssemblyTitle>
   </PropertyGroup>
+  <!-- Smoke build (scripts/smoke-aot.ps1): Release + Native AOT with TestDriver and the test-mode hooks, never shipped. -->
+  <PropertyGroup Condition="'$(ClipmarkSmoke)' == 'true'">
+    <DefineConstants>$(DefineConstants);CLIPMARK_SMOKE</DefineConstants>
+    <AssemblyTitle>Clipmark (smoke)</AssemblyTitle>
+  </PropertyGroup>
 
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
