@@ -231,7 +231,8 @@ public sealed partial class MainPage
             return;
         }
         var story = new Storyboard();
-        var disk = (ScaleTransform)ToolRingDisk.RenderTransform;
+        // Named in XAML: under AOT, RenderTransform of a XAML-built transform is the base Transform and the cast fails.
+        var disk = ToolRingDiskScale;
         int ms = open ? RingOpenMs : RingCloseMs;
         double shown = open ? 0 : 1, gone = 1 - shown;
         Animate(story, ToolRingDisk, "Opacity", shown, gone, 0, open ? ms * 2 / 3 : ms);

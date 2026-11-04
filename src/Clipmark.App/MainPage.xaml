@@ -313,7 +313,7 @@
                     <Path x:Name="ToolRingDisk" RenderTransformOrigin="0.5,0.5"
                           Fill="{ThemeResource SolidBackgroundFillColorBaseBrush}" Stroke="{ThemeResource SurfaceStrokeColorFlyoutBrush}" StrokeThickness="1">
                         <Path.RenderTransform>
-                            <ScaleTransform />
+                            <ScaleTransform x:Name="ToolRingDiskScale" />
                         </Path.RenderTransform>
                         <Path.Data>
                             <GeometryGroup FillRule="EvenOdd">
