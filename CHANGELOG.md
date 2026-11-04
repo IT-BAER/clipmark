@@ -5,6 +5,11 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-11-04
+
+### Fixed
+- Clipmark 1.2.0 closed at once when a right-click opened the tool ring on the editor canvas. The ring opens again.
+
 ## [1.2.0] - 2026-11-02
 
 ### Added
@@ -195,7 +200,8 @@ First public release.
 - Text recognition uses the Windows OCR languages installed on the PC.
 - A recording that is still running when Windows signs out or shuts down is not finalized.
 
-[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/IT-BAER/clipmark/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/IT-BAER/clipmark/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/IT-BAER/clipmark/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/IT-BAER/clipmark/compare/v1.1.0...v1.1.1
