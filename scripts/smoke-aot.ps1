@@ -94,6 +94,7 @@ try {
     Case $s 'view: touch pinch zooms, draws nothing' @('click Pen', 'assert count 0', 'touch down 1 200,200', 'touch down 2 400,200', 'touch move 2 480,220', 'touch move 1 150,180', 'touch up 2', 'touch up 1', 'wait 300', 'assert count 0')
     Case $s 'draw: pen stroke, undo, redo' @('key Number0 ctrl', 'wait 300', 'click Pen', 'drag 100,100 200,150 300,120', 'assert count 1', 'key Z ctrl', 'assert count 0', 'key Y ctrl', 'assert count 1')
     Case $s 'draw: eraser removes the stroke' @('click Eraser', 'drag 150,110 150,118 150,125 150,132 150,140', 'assert count 0', 'key Z ctrl', 'assert count 1', 'click Pen')
+    Case $s 'keys: P selects Pen' @('click Highlighter', 'assert tool Highlighter', 'key P', 'assert tool Pen')
     Case $s 'view: wheel zoom in and out' @('zoomwheel 120 300,200', 'wait 800', 'zoomwheel -120 300,200', 'wait 800', "viewat 0,0")
     Case $s 'view: middle-button pan' @('key Number0 ctrl', 'wait 300', 'pan down 300,200', 'pan move 260,170', 'pan move 220,140', 'pan up', 'bar h 100', 'bar v 100')
     Case $s 'crop: open and cancel' @('click Crop', 'assert ring closed', 'key Escape')

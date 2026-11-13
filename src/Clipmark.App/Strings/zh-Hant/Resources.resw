@@ -1354,7 +1354,7 @@
     <comment>More menu toggle; shows a drawing ruler over the image</comment>
   </data>
   <data name="PrintItem.Text" xml:space="preserve">
-    <value>列印</value>
+    <value>列印 (Ctrl+P)</value>
   </data>
   <data name="PaintItem.Text" xml:space="preserve">
     <value>在小畫家中編輯</value>

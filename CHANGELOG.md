@@ -5,6 +5,10 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Print (Ctrl+P or the More menu) opens the Windows print dialog with a preview, as in Snipping Tool, instead of the
+  Print Pictures wizard. The image fits the page and is never enlarged.
+
 ## [1.2.1] - 2026-11-04
 
 ### Fixed

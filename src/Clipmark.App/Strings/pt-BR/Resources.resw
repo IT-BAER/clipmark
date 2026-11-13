@@ -1354,7 +1354,7 @@
     <comment>More menu toggle; shows a drawing ruler over the image</comment>
   </data>
   <data name="PrintItem.Text" xml:space="preserve">
-    <value>Imprimir</value>
+    <value>Imprimir (Ctrl+P)</value>
   </data>
   <data name="PaintItem.Text" xml:space="preserve">
     <value>Editar no Paint</value>

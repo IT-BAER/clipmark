@@ -1354,7 +1354,7 @@
     <comment>More menu toggle; shows a drawing ruler over the image</comment>
   </data>
   <data name="PrintItem.Text" xml:space="preserve">
-    <value>Skriv ut</value>
+    <value>Skriv ut (Ctrl+P)</value>
   </data>
   <data name="PaintItem.Text" xml:space="preserve">
     <value>Redigera i Paint</value>

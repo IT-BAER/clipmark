@@ -1,6 +1,6 @@
 # Clipmark Privacy Policy
 
-Last updated: 18 October 2026
+Last updated: 13 November 2026
 
 Clipmark is a screen capture, annotation and screen recording app for Windows, made by IT-BAER. This policy explains what Clipmark does with your data. Short version: Clipmark works offline and has no account. It contacts IT-BAER's licence server (releash.it-baer.net) to start your trial, to activate a license and to renew it about every two weeks; these calls carry a key that identifies this PC's Clipmark installation, never your captures, your name or your email address. Once a day it also asks GitHub whether a newer release exists, which you can turn off. The optional Ask AI feature sends the capture and your question to Anthropic, either directly under your own Anthropic API key or, for Premium without an own key, through IT-BAER's relay.
 
@@ -16,7 +16,7 @@ Clipmark makes no network connections except the license calls, the update check
 
 Everything below stays on your PC:
 
-- **Screenshots and recordings.** Clipmark captures the screen area you choose, only when you start a capture or a recording. Screenshots go to the clipboard and, if you turn on automatic saving, to your Pictures\Screenshots folder (or the folder you pick). Recordings are saved to Videos\Screen Recordings. You decide where files go and whom you share them with. Share, Print and Edit in Paint write a PNG copy to a Clipmark folder in your Windows temp folder and hand it to that app; Clipmark deletes these copies at its next start once they are a day old.
+- **Screenshots and recordings.** Clipmark captures the screen area you choose, only when you start a capture or a recording. Screenshots go to the clipboard and, if you turn on automatic saving, to your Pictures\Screenshots folder (or the folder you pick). Recordings are saved to Videos\Screen Recordings. You decide where files go and whom you share them with. Share and Edit in Paint write a PNG copy to a Clipmark folder in your Windows temp folder and hand it to that app; Clipmark deletes these copies at its next start once they are a day old. Print hands the image to the Windows print dialog.
 - **Microphone and system audio.** Clipmark records audio only while a screen recording runs and only if you turned on "Record the microphone" or "Record system audio" in Settings. Windows asks for your permission before Clipmark can use the microphone.
 - **Text recognition and QR codes.** Copying text from a capture uses an OCR engine inside Clipmark (with the text recognition built into Windows as a fallback), and QR codes are read by a library inside Clipmark. All of them run on your PC. No image is uploaded.
 - **Links.** Clipmark opens a web page only when you click a link: Buy Clipmark Premium, Manage subscription (Stripe), Request a refund (Link support), Download in an update message or in Settings, Source code and releases (GitHub), or Open link next to a QR code that contains a web address. Your browser then loads that page, and the website's own privacy policy applies.

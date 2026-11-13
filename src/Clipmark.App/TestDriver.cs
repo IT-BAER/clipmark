@@ -29,7 +29,7 @@ namespace Clipmark.App;
 /// | saveas FILE (Save as without the picker; .jpg = JPEG) | close (WM_CLOSE to the window) | assert empty|clean|dirty
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
 /// | assert enabled|disabled NAME
-/// | saveeditable FILE | textwait (text actions finished) | assert status TEXT (text actions status contains) | assert redactions N
+/// | saveeditable FILE | textwait (text actions finished) | printwait (the print dialog drew a preview since the last printwait) | assert status TEXT (text actions status contains) | assert redactions N
 /// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
 /// | record X,Y,W,H MS FILE [system] [mic] [pause=AT:LEN]... [mute=system|mic:AT:LEN]... (records that desktop region straight to FILE,
 /// pausing / muting at AT ms after the start for LEN ms; warnings go to DIR\warnings.txt)
@@ -75,7 +75,10 @@ internal sealed class TestDriver
         _timer = page.DispatcherQueue.CreateTimer();
         _timer.Interval = TimeSpan.FromMilliseconds(100);
         _timer.Tick += async (_, _) => await PollAsync();
+        ImagePrint.Previewed += () => _printPreviews++;
     }
+
+    private int _printPreviews;
 
     private XamlRoot? _root;
     private bool _tray;
@@ -342,6 +345,16 @@ internal sealed class TestDriver
                         throw new InvalidOperationException("text recognition did not finish");
                     await Task.Delay(100);
                 }
+                break;
+            case "printwait":
+                // Waits until the print dialog drew a preview page since the last printwait (up to 20 s).
+                for (int t = 0; _printPreviews == 0; t += 100)
+                {
+                    if (t > 20000)
+                        throw new InvalidOperationException("no print preview");
+                    await Task.Delay(100);
+                }
+                _printPreviews = 0;
                 break;
             case "assert" when arg.StartsWith("status "):
                 string status = Descendants(Root.Content).OfType<TextBlock>().FirstOrDefault(x => x.Name == "TextActionsStatus")?.Text ?? throw new InvalidOperationException("no status");

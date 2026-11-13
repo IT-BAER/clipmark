@@ -148,6 +148,7 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
         Shortcut(VirtualKey.O, VirtualKeyModifiers.Control, () => _ = OpenAsync(), needsCapture: false);
+        Shortcut(VirtualKey.P, VirtualKeyModifiers.Control, () => _ = PrintAsync());
         // On the window root: after a canvas click nothing in the page has focus and keys start at the root.
         KeyEventHandler editKeys = (_, e) =>
         {
@@ -1919,8 +1920,23 @@ public sealed partial class MainPage : Page
         return path;
     }
 
-    private async void OnPrint(object sender, RoutedEventArgs e) =>
-        await ShellExportAsync("PrintFailed", path => new System.Diagnostics.ProcessStartInfo(path) { Verb = "print", UseShellExecute = true });
+    private void OnPrint(object sender, RoutedEventArgs e) => _ = PrintAsync();
+
+    /// <summary>The Windows print dialog for the flattened image, as in Snipping Tool.</summary>
+    private async Task PrintAsync()
+    {
+        if (_video is not null || _editor?.Export() is not { } image)
+            return;
+        try
+        {
+            await ImagePrint.ShowAsync(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), image,
+                ex => DispatcherQueue.TryEnqueue(() => ShowError(Loc.Format("PrintFailed", ex.Message))));
+        }
+        catch (Exception ex)
+        {
+            ShowError(Loc.Format("PrintFailed", ex.Message));
+        }
+    }
 
     private async void OnEditInPaint(object sender, RoutedEventArgs e) =>
         await ShellExportAsync("PaintFailed", path => new System.Diagnostics.ProcessStartInfo("mspaint.exe", $"\"{path}\"") { UseShellExecute = true });

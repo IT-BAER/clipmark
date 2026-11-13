@@ -176,7 +176,7 @@ Your screenshots and recordings stay where you saved them.
 | New capture | Ctrl+Print Screen, tray icon click, or New; Ctrl+E in the capture overlay toggles Quick markup |
 | New recording | Ctrl+Shift+Print Screen, tray menu, or the camera button; the same hotkey or a tray icon click stops it |
 | Tools | V select, P pen, H highlighter, E eraser, R / C / L / A shapes, M emoji, T text, I eyedropper, G fill |
-| Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new |
+| Editing | Ctrl+Z / Ctrl+Y, Ctrl+C copy, Ctrl+S save, Ctrl+Shift+S save editable, Ctrl+O open, Ctrl+N new, Ctrl+P print |
 | Zoom | Mouse wheel, Ctrl+0 100%, Ctrl+Plus / Ctrl+Minus zoom in / out |
 | Width, text size, ruler angle | Ctrl+mouse wheel (Shift+mouse wheel scrolls) |
 | Text actions | Ctrl+Shift+R redact the selected text |
