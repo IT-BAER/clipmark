@@ -5,6 +5,8 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-11-15
+
 ### Changed
 - Print (Ctrl+P or the More menu) opens the Windows print dialog with a preview, as in Snipping Tool, instead of the
   Print Pictures wizard. The image fits the page and is never enlarged.
@@ -204,7 +206,8 @@ First public release.
 - Text recognition uses the Windows OCR languages installed on the PC.
 - A recording that is still running when Windows signs out or shuts down is not finalized.
 
-[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/IT-BAER/clipmark/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/IT-BAER/clipmark/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/IT-BAER/clipmark/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/IT-BAER/clipmark/compare/v1.1.2...v1.2.0
 [1.1.2]: https://github.com/IT-BAER/clipmark/compare/v1.1.1...v1.1.2
