@@ -30,7 +30,7 @@ namespace Clipmark.App;
 /// | assert selected N | assert crop X,Y,W,H | set NAME VALUE (types into a NumberBox, then moves focus so it evaluates; a Slider takes the value)
 /// | assert enabled|disabled NAME
 /// | saveeditable FILE | textwait (text actions finished) | printwait (the print dialog drew a preview since the last printwait) | assert status TEXT (text actions status contains) | assert redactions N
-/// | assert editable (opened with live objects) | assert message TEXT (open error bar contains)
+/// | assert editable (opened with live objects) | assert message TEXT (open error bar contains) | assert nomessage (error bar closed)
 /// | record X,Y,W,H MS FILE [system] [mic] [pause=AT:LEN]... [mute=system|mic:AT:LEN]... (records that desktop region straight to FILE,
 /// pausing / muting at AT ms after the start for LEN ms; warnings go to DIR\warnings.txt)
 /// | recordsession X,Y,W,H MS [cancel|fastcancel] [system] [mic] (the record bar flow with its countdown, saved to Videos\Screen Recordings; path to DIR\recorded.txt)
@@ -365,6 +365,10 @@ internal sealed class TestDriver
                 int redactions = _page.Editor?.Document?.Redactions.Count ?? 0;
                 if (redactions != int.Parse(arg[11..], CultureInfo.InvariantCulture))
                     throw new InvalidOperationException($"{redactions} redactions");
+                break;
+            case "assert" when arg == "nomessage":
+                if (Descendants(Root.Content).OfType<InfoBar>().First() is { IsOpen: true } errorBar)
+                    throw new InvalidOperationException($"message is '{errorBar.Message}'");
                 break;
             case "assert" when arg.StartsWith("message "):
                 var bar = Descendants(Root.Content).OfType<InfoBar>().First();

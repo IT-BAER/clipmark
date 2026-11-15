@@ -4,6 +4,7 @@ using Clipmark.Core.Layout;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Printing;
 using Microsoft.UI.Dispatching;
+using System.Runtime.InteropServices;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.Printing;
 
@@ -25,7 +26,7 @@ internal static class ImagePrint
     public static event Action? Previewed;
 
     /// <summary>Opens the print dialog for the image; <paramref name="failed"/> gets errors from the dialog's callbacks.</summary>
-    public static async Task ShowAsync(nint hwnd, CapturedImage image, Action<Exception> failed)
+    public static void Show(nint hwnd, CapturedImage image, Action<Exception> failed)
     {
         if (!s_windows.Contains(hwnd))
         {
@@ -53,7 +54,21 @@ internal static class ImagePrint
             using var ds = args.CreateDrawingSession();
             Draw(ds, args.PrintTaskOptions.GetPageDescription(1));
         });
-        await PrintManagerInterop.ShowPrintUIForWindowAsync(hwnd);
+        ShowPrintUI(hwnd);
+    }
+
+    /// <remarks>
+    /// Not PrintManagerInterop.ShowPrintUIForWindowAsync: under Native AOT its cast of the result to IAsyncOperation&lt;bool&gt;
+    /// throws after the dialog opened. The operation is released unobserved, so its result and late errors are not reported.
+    /// </remarks>
+    private static unsafe void ShowPrintUI(nint hwnd)
+    {
+        Guid operation = new("cdb5efb3-5788-509d-9be1-71ccb8a3362a"); // IAsyncOperation<Boolean>
+        using var interop = WinRT.ActivationFactory.Get("Windows.Graphics.Printing.PrintManager", new Guid("c5435a42-8d43-4e7b-a68a-ef311e392087"));
+        nint self = interop.ThisPtr, result;
+        // IPrintManagerInterop vtable: IInspectable (6 slots), GetForWindow, ShowPrintUIForWindowAsync.
+        Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<nint, nint, Guid*, nint*, int>)(*(void***)self)[7])(self, hwnd, &operation, &result));
+        Marshal.Release(result);
     }
 
     private static void OnPrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs args) => Guard(() =>

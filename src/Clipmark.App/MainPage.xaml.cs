@@ -148,7 +148,7 @@ public sealed partial class MainPage : Page
         Shortcut(VirtualKey.S, VirtualKeyModifiers.Control | VirtualKeyModifiers.Shift, () => _ = SaveAsync(editable: true));
         Shortcut(VirtualKey.N, VirtualKeyModifiers.Control, NewCapture, needsCapture: false);
         Shortcut(VirtualKey.O, VirtualKeyModifiers.Control, () => _ = OpenAsync(), needsCapture: false);
-        Shortcut(VirtualKey.P, VirtualKeyModifiers.Control, () => _ = PrintAsync());
+        Shortcut(VirtualKey.P, VirtualKeyModifiers.Control, Print);
         // On the window root: after a canvas click nothing in the page has focus and keys start at the root.
         KeyEventHandler editKeys = (_, e) =>
         {
@@ -1920,16 +1920,16 @@ public sealed partial class MainPage : Page
         return path;
     }
 
-    private void OnPrint(object sender, RoutedEventArgs e) => _ = PrintAsync();
+    private void OnPrint(object sender, RoutedEventArgs e) => Print();
 
     /// <summary>The Windows print dialog for the flattened image, as in Snipping Tool.</summary>
-    private async Task PrintAsync()
+    private void Print()
     {
         if (_video is not null || _editor?.Export() is not { } image)
             return;
         try
         {
-            await ImagePrint.ShowAsync(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), image,
+            ImagePrint.Show(Win32Interop.GetWindowFromWindowId(XamlRoot.ContentIslandEnvironment.AppWindowId), image,
                 ex => DispatcherQueue.TryEnqueue(() => ShowError(Loc.Format("PrintFailed", ex.Message))));
         }
         catch (Exception ex)

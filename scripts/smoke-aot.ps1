@@ -83,6 +83,20 @@ function Case($s, $label, [string[]]$lines) {
     } catch { "RED   $label :: $($_.Exception.Message.Trim())"; $script:red++ }
 }
 
+function Close-PrintDialog {
+    Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
+    $ae = [System.Windows.Automation.AutomationElement]
+    $id = New-Object System.Windows.Automation.PropertyCondition ($ae::AutomationIdProperty, 'printerSelector')
+    for ($t = 0; $t -lt 5000; $t += 200) {
+        foreach ($w in $ae::RootElement.FindAll([System.Windows.Automation.TreeScope]::Children, [System.Windows.Automation.Condition]::TrueCondition)) {
+            if ($w.Current.ClassName -eq 'ApplicationFrameWindow' -and $w.Current.Name -like 'Clipmark*' -and $w.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $id)) {
+                $w.GetCurrentPattern([System.Windows.Automation.WindowPattern]::Pattern).Close(); return
+            }
+        }
+        Start-Sleep -Milliseconds 200
+    }
+}
+
 $s = $null
 try {
     $s = Start-Smoke 'main'
@@ -102,6 +116,10 @@ try {
     Case $s 'theme: dark and light render' @('settheme dark', "shot $d\dark.png", 'settheme light', "shot $d\light.png")
     Case $s 'export: PNG and JPEG' @('drag 50,50 150,80', "save $d\out.png", "saveas $d\out.jpg")
     if ($script:red -eq 0 -and -not ((Test-Path "$d\out.png") -and (Test-Path "$d\out.jpg"))) { 'RED   export files missing'; $script:red++ }
+    # The Windows print dialog belongs to another process and shows uncloaked for about 2 s; UIA closes it, nothing is printed.
+    Case $s 'print: Ctrl+P opens the dialog with a preview, no error' @('key P ctrl', 'printwait', 'wait 300', 'assert nomessage')
+    Close-PrintDialog
+    Case $s 'print: dialog closed, no error' @('wait 800', 'assert nomessage')
 } catch { "RED   start :: $($_.Exception.Message.Trim())"; $script:red++ }
 finally { if ($s -and -not $s.Proc.HasExited) { Stop-Process -Id $s.Proc.Id -Force } }
 
